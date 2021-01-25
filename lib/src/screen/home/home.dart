@@ -143,7 +143,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   void fabsAnimation() {
     if (mounted) {
       _homeM.animationController = AnimationController(
-          vsync: this, duration: Duration(milliseconds: 250));
+        duration: Duration(milliseconds: 250),
+        vsync: this,
+      );
       _homeM.degOneTranslationAnimation =
           Tween(begin: 0.0, end: 1.0).animate(_homeM.animationController);
       setState(() {});
