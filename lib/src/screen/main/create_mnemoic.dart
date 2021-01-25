@@ -2,8 +2,9 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 
 class CreateMnemonic extends StatelessWidget {
-  String mnemonic =
-      "defense indoor vendor service cream hard maid dtail seat mobile position kangaroo";
+  String mnemonic;
+  
+  CreateMnemonic({this.mnemonic});
   //  Future<void> _generateMnemonic() async {
   //   setState(() {
   //     _submitting = true;
@@ -71,10 +72,8 @@ class CreateMnemonic extends StatelessWidget {
             action: () async {
               await dialog(
                   context,
-                  Text(
-                      'Sorry! we are not allow you to screen shot mnemonic, please write down your mnemonic on paper before you go next !'),
-                  Text("Please note",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Sorry! we are not allow you to screen shot mnemonic, please write down your mnemonic on paper before you go next !'),
+                  Text("Please note", style: TextStyle(fontWeight: FontWeight.bold)),
                   action: FlatButton(
                     child: Text('Next'),
                     onPressed: () {

@@ -1,9 +1,32 @@
+import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 
 class ContentsBackup extends StatelessWidget{
 
   final double bpSize = 16.0;
+
+  WalletSDK sdk;
+
+  String _mnemonicCode;
+
+  ContentsBackup(WalletSDK sdk){
+    _generateMnemonic(sdk);
+  }
+
+  static const root = '/contentsBackup';
+
+   Future<void> _generateMnemonic(WalletSDK sdk) async {
+      // setState(() {
+      //   _submitting = true;
+      // });
+    _mnemonicCode = await sdk.api.keyring.generateMnemonic();
+      // widget.showResult(context, 'generateMnemonic', seed);
+      // setState(() {
+      //   _submitting = false;
+      // }
+  }
+
   
   Widget build(BuildContext context){
     return Scaffold(
@@ -95,9 +118,7 @@ class ContentsBackup extends StatelessWidget{
                 await dialog(context, Text('We are not allow you to screen shot mnemonic'), Text("Message"));
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateMnemonic()
-                  )
+                  MaterialPageRoute(builder: (context) => CreateMnemonic(mnemonic: _mnemonicCode))
                 );
               },
             )

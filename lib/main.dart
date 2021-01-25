@@ -6,6 +6,8 @@ import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
+import 'package:wallet_apps/src/screen/main/contents_backup.dart';
+import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 
 void main() async {
@@ -117,8 +119,8 @@ class AppState extends State<App> {
             theme: AppStyle.myTheme(),
             routes: {
               MySplashScreen.route: (_) => MySplashScreen(keyring),
-              Home.route: (_) =>
-                  Home(sdk, keyring, _apiConnected, mBalance, _msgChannel),
+              ContentsBackup.root: (_) => ContentsBackup(sdk),
+              Home.route: (_) => Home(sdk, keyring, _apiConnected, mBalance, _msgChannel),
               ImportAcc.route: (_) => ImportAcc(sdk, keyring),
               Account.route: (_) => Account(sdk, keyring),
             },
