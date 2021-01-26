@@ -1,3 +1,5 @@
+import 'package:polkawallet_sdk/polkawallet_sdk.dart';
+import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 
 import 'package:wallet_apps/src/components/portfolio_c.dart';
@@ -20,6 +22,9 @@ class HomeBody extends StatelessWidget {
   final bool apiStatus;
   final List<Color> pieColorList;
   final Map<String, double> dataMap;
+  final String kpiBalance;
+  final WalletSDK sdk;
+  final Keyring keyring;
 
   HomeBody({
     this.bloc,
@@ -35,6 +40,9 @@ class HomeBody extends StatelessWidget {
     this.apiStatus,
     this.pieColorList,
     this.dataMap,
+    this.kpiBalance,
+    this.sdk,
+    this.keyring,
   });
 
   Widget build(BuildContext context) {
@@ -175,9 +183,11 @@ class HomeBody extends StatelessWidget {
             onTap: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => AssetInfo(
-                      accBalance: accBalance,
+                  RouteAnimation(
+                    enterPage: AssetInfo(
+                      accBalance: kpiBalance,
+                      sdk: sdk,
+                      keyring: keyring,
                     ),
                   )
                   // Navigator.push(
@@ -189,7 +199,8 @@ class HomeBody extends StatelessWidget {
                   //   ),
                   );
             },
-            child: buildRowList(portfolioM.list, portfolioRateM.totalRate)),
+            child: buildRowList(
+                portfolioM.list, portfolioRateM.totalRate, kpiBalance)),
 
         Container(
           margin: EdgeInsets.only(top: 16),

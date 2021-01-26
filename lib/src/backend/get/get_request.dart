@@ -28,6 +28,16 @@ class GetRequest {
     return response;
   }
 
+  Future<String> totalSupply(String from) async {
+    final res = await _http
+        .get('http://localhost:3000/:service/contract/totalsupply$from');
+    var resJson = json.decode(res.body);
+    print(resJson);
+    // ModelAsset().assetBalance = resJson['balanceOf'];
+    String response = resJson['totalSupply'];
+    return response;
+  }
+
   Future<_http.Response> getUserProfile() async {
     /* Get User Profile */
     _backend.token = await Provider.fetchToken();

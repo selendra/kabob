@@ -12,9 +12,10 @@ class Home extends StatefulWidget {
   final bool apiConnected;
   final String mBalance;
   final String msgChannel;
+  final String kpiBalance;
 
   Home(this.sdk, this.keyring, this.apiConnected, this.mBalance,
-      this.msgChannel);
+      this.msgChannel, this.kpiBalance);
   static const route = '/home';
   State<StatefulWidget> createState() {
     return HomeState();
@@ -429,6 +430,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             apiStatus: widget.apiConnected,
             pieColorList: pieColorList,
             dataMap: dataMap,
+            kpiBalance: widget.kpiBalance,
+            sdk: widget.sdk,
+            keyring: widget.keyring,
 
             // getWallet: createPin,
           )),

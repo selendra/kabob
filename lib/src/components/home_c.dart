@@ -218,33 +218,33 @@ class AddAssetRowButton extends StatelessWidget {
 }
 
 /* Build Portfolio If Have List Of Portfolio */
-Widget buildRowList(List<dynamic> portfolioData, int rate) {
+Widget buildRowList(List<dynamic> portfolioData, int rate, String kpiBalance) {
   return ListView.builder(
     padding: EdgeInsets.all(0),
     shrinkWrap: true,
     itemCount: 1,
     physics: BouncingScrollPhysics(),
     itemBuilder: (BuildContext context, int index) {
-      return portFolioItemRow(portfolioData, index, rate);
+      return portFolioItemRow(portfolioData, index, rate, kpiBalance);
     },
   );
 }
 
-Widget portFolioItemRow(List<dynamic> portfolioData, int index, int rate) {
+Widget portFolioItemRow(
+    List<dynamic> portfolioData, int index, int rate, String kpiBalance) {
   print(rate.isEven);
   return rowDecorationStyle(
       child: Row(
     children: <Widget>[
-      MyCircularImage(
+      Container(
+        width: 50,
+        height: 50,
         padding: EdgeInsets.all(6),
         margin: EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
             color: hexaCodeToColor(AppColors.secondary),
             borderRadius: BorderRadius.circular(40)),
-        imagePath: 'assets/sld_logo.svg',
-        width: 50,
-        height: 50,
-        colorImage: Colors.white,
+        child: Image.asset('assets/koompi_white_logo.png'),
       ),
 
       Expanded(
@@ -286,8 +286,7 @@ Widget portFolioItemRow(List<dynamic> portfolioData, int index, int rate) {
           children: [
             MyText(
                 width: double.infinity,
-                text: ModelAsset()
-                    .assetBalance, //portfolioData[0]["data"]['balance'],
+                text: kpiBalance, //portfolioData[0]["data"]['balance'],
                 color: "#FFFFFF",
                 fontSize: 18,
                 textAlign: TextAlign.right,

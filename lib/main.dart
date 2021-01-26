@@ -47,6 +47,7 @@ class AppState extends State<App> {
   bool _sdkReady = false;
   bool _apiConnected = false;
   String mBalance = '0';
+  String kpiBalance = '0';
   String _msgChannel;
 
   @override
@@ -70,6 +71,7 @@ class AppState extends State<App> {
   Future<void> _initContract() async {
     await GetRequest().initContract().then((value) {
       print(value);
+      print(keyring.keyPairs[0].toJson());
       print('address: ${keyring.keyPairs[0].address}');
       print('pubKey: ${keyring.keyPairs[0].pubKey}');
       _balanceOf(keyring.keyPairs[0].address, keyring.keyPairs[0].address);
@@ -106,7 +108,7 @@ class AppState extends State<App> {
       if (value != null) {
         print(value);
         setState(() {
-          // ModelAsset().assetBalance = value;
+          kpiBalance = value;
         });
       }
     });
@@ -168,18 +170,18 @@ class AppState extends State<App> {
         builder: (context, orientation) {
           SizeConfig().init(constraints, orientation);
           return Provider(
-              child: MaterialApp(
-            initialRoute: '/',
-            title: 'Kaabop',
-            theme: AppStyle.myTheme(),
-            routes: {
-              MySplashScreen.route: (_) => MySplashScreen(keyring),
-              Home.route: (_) =>
-                  Home(sdk, keyring, _apiConnected, mBalance, _msgChannel),
-              ImportAcc.route: (_) => ImportAcc(sdk, keyring),
-              Account.route: (_) => Account(sdk, keyring),
-            },
-            builder: (context, widget) => ResponsiveWrapper.builder(
+            child: MaterialApp(
+              initialRoute: '/',
+              title: 'Kaabop',
+              theme: AppStyle.myTheme(),
+              routes: {
+                MySplashScreen.route: (_) => MySplashScreen(keyring),
+                Home.route: (_) => Home(sdk, keyring, _apiConnected, mBalance,
+                    _msgChannel, kpiBalance),
+                ImportAcc.route: (_) => ImportAcc(sdk, keyring),
+                Account.route: (_) => Account(sdk, keyring),
+              },
+              builder: (context, widget) => ResponsiveWrapper.builder(
                 BouncingScrollWrapper.builder(context, widget),
                 maxWidth: 1200,
                 minWidth: 450,
@@ -189,8 +191,10 @@ class AppState extends State<App> {
                   ResponsiveBreakpoint.autoScale(800, name: TABLET),
                   ResponsiveBreakpoint.resize(1000, name: DESKTOP),
                   ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-                ]),
-          ));
+                ],
+              ),
+            ),
+          );
         },
       );
     });
