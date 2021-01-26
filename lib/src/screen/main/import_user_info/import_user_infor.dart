@@ -3,6 +3,10 @@ import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
+  final String mnemonic;
+  final Function importFromMnemonic;
+
+  ImportUserInfo(this.mnemonic, this.importFromMnemonic);
   @override
   State<StatefulWidget> createState() {
     return ImportUserInfoState();

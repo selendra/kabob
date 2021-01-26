@@ -1,3 +1,4 @@
+import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
@@ -35,6 +36,38 @@ class ImportAccState extends State<ImportAcc> {
     newVersionNotifier(context);
     AppServices.noInternetConnection(globalKey);
     super.initState();
+  }
+
+  Future<void> _importFromMnemonic(
+      String mnemonic, String name, String pw) async {
+    try {
+      final json = await widget.sdk.api.keyring.importAccount(
+        widget.keyring,
+        keyType: KeyType.mnemonic,
+        key: mnemonic,
+        name: name,
+        password: pw,
+      );
+      final acc = await widget.sdk.api.keyring.addAccount(
+        widget.keyring,
+        keyType: KeyType.mnemonic,
+        acc: json,
+        password: pw,
+      );
+      if (acc != null) {
+        await dialog(context, Text("You haved imported successfully"),
+            Text('Congratulation'),
+            action: FlatButton(
+                onPressed: () {
+                  Navigator.pushReplacementNamed(context, Home.route);
+                },
+                child: Text('Continue')));
+      }
+      print(acc.address);
+      print(acc.name);
+    } catch (e) {
+      print("Hello error $e");
+    }
   }
 
   void tokenExpireChecker(BuildContext context) async {
@@ -134,9 +167,11 @@ class ImportAccState extends State<ImportAcc> {
         body: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: ImportAccBody(
-              importAccModel: _importAccModel,
-              onChanged: onChanged,
-              onSubmit: onSubmit),
+            importAccModel: _importAccModel,
+            onChanged: onChanged,
+            onSubmit: onSubmit,
+            importFromMnemonic: _importFromMnemonic,
+          ),
         ) //welcomeBody(context, navigatePage),
         );
   }

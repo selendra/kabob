@@ -121,18 +121,19 @@ class AddAssetState extends State<AddAsset> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        key: globalKey,
-        body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: AddAssetBody(
-            assetM: _modelAsset,
-            validateAssetCode: validateAssetCode,
-            validateIssuer: validateIssuer,
-            popScreen: popScreen,
-            onChanged: onChanged,
-            onSubmit: onSubmit,
-            submitAsset: submitAsset,
-          ),
-        ));
+      key: globalKey,
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: AddAssetBody(
+          assetM: _modelAsset,
+          validateAssetCode: validateAssetCode,
+          validateIssuer: validateIssuer,
+          popScreen: popScreen,
+          onChanged: onChanged,
+          onSubmit: onSubmit,
+          submitAsset: submitAsset,
+        ),
+      ),
+    );
   }
 }

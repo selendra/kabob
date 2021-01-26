@@ -1,28 +1,52 @@
 import 'package:wallet_apps/index.dart';
 import 'package:http/http.dart' as _http;
 
-class GetRequest{
-
+class GetRequest {
   SelendraApi _sldApi = SelendraApi();
 
   Backend _backend = Backend();
+  String response;
+
+  Future<String> initContract() async {
+    try {
+      final res = await _http.get('http://localhost:3000/:service/contract/');
+      var resJson = json.decode(res.body);
+      response = resJson;
+    } catch (e) {
+      print(e.toString());
+    }
+    return response;
+  }
+
+  Future<String> balanceOf(String from, String who) async {
+    final res = await _http
+        .get('http://localhost:3000/:service/contract/balanceof/$from/$who');
+    var resJson = json.decode(res.body);
+    print(resJson);
+    // ModelAsset().assetBalance = resJson['balanceOf'];
+    String response = resJson['balanceOf'];
+    return response;
+  }
 
   Future<_http.Response> getUserProfile() async {
     /* Get User Profile */
     _backend.token = await Provider.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.get("${_sldApi.api}/userprofile",
-        headers: _backend.conceteHeader("authorization", "Bearer ${_backend.token['token']}")
-      );
+          headers: _backend.conceteHeader(
+              "authorization", "Bearer ${_backend.token['token']}"));
       return _backend.response;
     }
     return null;
   }
 
-  Future<_http.Response> checkExpiredToken() async { /* Expired Token In Welcome Screen */
+  Future<_http.Response> checkExpiredToken() async {
+    /* Expired Token In Welcome Screen */
     _backend.token = await Provider.fetchToken();
     if (_backend.token != null) {
-      _backend.response = await _http.get("${_sldApi.api}/userprofile", headers: _backend.conceteHeader("authorization", "Bearer ${_backend.token['token']}"));
+      _backend.response = await _http.get("${_sldApi.api}/userprofile",
+          headers: _backend.conceteHeader(
+              "authorization", "Bearer ${_backend.token['token']}"));
       return _backend.response;
     }
     return null;
@@ -32,17 +56,22 @@ class GetRequest{
   Future<_http.Response> trxHistory() async {
     _backend.token = await Provider.fetchToken();
     if (_backend.token != null) {
-      _backend.response = await _http.get("${_sldApi.api}/trx-history", headers: _backend.conceteHeader("authorization", "Bearer ${_backend.token['token']}"));
+      _backend.response = await _http.get("${_sldApi.api}/trx-history",
+          headers: _backend.conceteHeader(
+              "authorization", "Bearer ${_backend.token['token']}"));
       return _backend.response;
     }
     return null;
   }
 
-  Future<_http.Response> getPortfolio() async { /* User Porfolio */
+  Future<_http.Response> getPortfolio() async {
+    /* User Porfolio */
     _backend.token = await Provider.fetchToken();
     // print("My token ${_backend.token}");
     if (_backend.token != null) {
-      _backend.response = await _http.get("${_sldApi.api}/portforlio", headers: _backend.conceteHeader("authorization", "Bearer ${_backend.token['token']}"));
+      _backend.response = await _http.get("${_sldApi.api}/portforlio",
+          headers: _backend.conceteHeader(
+              "authorization", "Bearer ${_backend.token['token']}"));
       return _backend.response;
     }
     return null;
@@ -52,7 +81,8 @@ class GetRequest{
     _backend.token = await Provider.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.get("${_sldApi.api}/get-all-branches",
-          headers: _backend.conceteHeader("authorization", "Bearer ${_backend.token['token']}"));
+          headers: _backend.conceteHeader(
+              "authorization", "Bearer ${_backend.token['token']}"));
       return json.decode(_backend.response.body);
     }
     return null;
@@ -62,7 +92,8 @@ class GetRequest{
     _backend.token = await Provider.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.get("${_sldApi.api}/get-receipt",
-          headers: _backend.conceteHeader("authorization", "Bearer ${_backend.token['token']}"));
+          headers: _backend.conceteHeader(
+              "authorization", "Bearer ${_backend.token['token']}"));
       return json.decode(_backend.response.body);
     }
     return null;
@@ -73,9 +104,10 @@ class GetRequest{
   Future<List<dynamic>> listBranches() async {
     _backend.token = await Provider.fetchToken();
     if (_backend.token != null) {
-      _backend.response = await _http.get('${_sldApi.api}/listBranches', headers: {
-        HttpHeaders.authorizationHeader: "Bearer ${_backend.token['TOKEN']}"
-      });
+      _backend.response = await _http.get('${_sldApi.api}/listBranches',
+          headers: {
+            HttpHeaders.authorizationHeader: "Bearer ${_backend.token['TOKEN']}"
+          });
       _backend.data = json.decode(_backend.response.body);
       return _backend.data['message'];
     }

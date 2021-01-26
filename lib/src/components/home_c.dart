@@ -255,11 +255,11 @@ Widget portFolioItemRow(List<dynamic> portfolioData, int index, int rate) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               MyText(
-                text: "KPI",
+                text: ModelAsset.assetSymbol,
                 color: "#FFFFFF",
                 fontSize: 18,
               ),
-              MyText(text: "Koompi", fontSize: 15),
+              MyText(text: ModelAsset.assetOrganization, fontSize: 15),
             ],
           ),
         ),
@@ -286,7 +286,8 @@ Widget portFolioItemRow(List<dynamic> portfolioData, int index, int rate) {
           children: [
             MyText(
                 width: double.infinity,
-                text: "0", //portfolioData[0]["data"]['balance'],
+                text: ModelAsset()
+                    .assetBalance, //portfolioData[0]["data"]['balance'],
                 color: "#FFFFFF",
                 fontSize: 18,
                 textAlign: TextAlign.right,

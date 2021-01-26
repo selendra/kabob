@@ -148,24 +148,24 @@ class HomeBody extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                         Expanded(child: Container()),
-                        GestureDetector(
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.add,
-                                  color: hexaCodeToColor(
-                                      AppColors.secondary_text)),
-                              MyText(
-                                  text: "Add",
-                                  color: AppColors.secondary_text,
-                                  left: 6),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                                context, RouteAnimation(enterPage: AddAsset()));
-                          },
-                        )
+                        // GestureDetector(
+                        //   child: Row(
+                        //     mainAxisSize: MainAxisSize.min,
+                        //     children: [
+                        //       Icon(Icons.add,
+                        //           color: hexaCodeToColor(
+                        //               AppColors.secondary_text)),
+                        //       MyText(
+                        //           text: "Add",
+                        //           color: AppColors.secondary_text,
+                        //           left: 6),
+                        //     ],
+                        //   ),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //         context, RouteAnimation(enterPage: AddAsset()));
+                        //   },
+                        // )
                       ],
                     ))
               ],

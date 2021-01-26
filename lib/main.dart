@@ -1,3 +1,4 @@
+import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:polkawallet_sdk/api/types/balanceData.dart';
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
@@ -66,13 +67,22 @@ class AppState extends State<App> {
     }
   }
 
+  Future<void> _initContract() async {
+    await GetRequest().initContract().then((value) {
+      print(value);
+      print('address: ${keyring.keyPairs[0].address}');
+      print('pubKey: ${keyring.keyPairs[0].pubKey}');
+      _balanceOf(keyring.keyPairs[0].address, keyring.keyPairs[0].address);
+    });
+  }
+
   Future<void> connectNode() async {
     final node = NetworkParams();
 
     node.name = 'Indranet hosted By Selendra';
     node.endpoint = 'wss://rpc-testnet.selendra.org';
 
-    node.ss58 = 0;
+    node.ss58 = 42;
     final res = await sdk.api.connectNode(keyring, [node]);
 
     print('res $res');
@@ -81,11 +91,58 @@ class AppState extends State<App> {
         _apiConnected = true;
 
         _subscribeBalance();
+        _initContract();
+
+        //_importFromMnemonic();
       });
       // _importFromMnemonic();
 
     }
   }
+
+  Future<void> _balanceOf(String from, String who) async {
+    await GetRequest().balanceOf(from, who).then((value) {
+      print(value);
+      if (value != null) {
+        print(value);
+        setState(() {
+          // ModelAsset().assetBalance = value;
+        });
+      }
+    });
+  }
+
+  // Future<void> _importFromMnemonic() async {
+  //   try {
+  //     final json = await sdk.api.keyring.importAccount(
+  //       keyring,
+  //       keyType: KeyType.mnemonic,
+  //       key:
+  //           'wing know chapter eight shed lens mandate lake twenty useless bless glory',
+  //       name: 'Chay',
+  //       password: '123456',
+  //     );
+  //     final acc = await sdk.api.keyring.addAccount(
+  //       keyring,
+  //       keyType: KeyType.mnemonic,
+  //       acc: json,
+  //       password: '123456',
+  //     );
+  //     // if (acc != null) {
+  //     //   await dialog(context, Text("You haved imported successfully"),
+  //     //       Text('Congratulation'),
+  //     //       action: FlatButton(
+  //     //           onPressed: () {
+  //     //             Navigator.pushReplacementNamed(context, Home.route);
+  //     //           },
+  //     //           child: Text('Continue')));
+  //     // }
+  //     print(acc.address);
+  //     print(acc.name);
+  //   } catch (e) {
+  //     print("Hello error $e");
+  //   }
+  // }
 
   Future<void> _subscribeBalance() async {
     print('subscribe');
