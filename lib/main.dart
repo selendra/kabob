@@ -5,7 +5,9 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
+import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
 import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
@@ -42,8 +44,11 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  final Keyring keyring = Keyring();
-  final WalletSDK sdk = WalletSDK();
+
+  CreateAccModel _createAccModel = CreateAccModel();
+
+  // final Keyring keyring = Keyring();
+  // final WalletSDK sdk = WalletSDK();
   BalanceData _balance;
   bool _sdkReady = false;
   bool _apiConnected = false;
@@ -52,14 +57,16 @@ class AppState extends State<App> {
 
   @override
   void initState() {
+    _createAccModel.keyring = Keyring();
+    _createAccModel.sdk = WalletSDK();
     _initApi();
     super.initState();
   }
 
   Future<void> _initApi() async {
-    await keyring.init();
+    await _createAccModel.keyring.init();
 
-    await sdk.init(keyring);
+    await _createAccModel.sdk.init(_createAccModel.keyring);
     setState(() {
       _sdkReady = true;
     });
@@ -75,7 +82,7 @@ class AppState extends State<App> {
     node.endpoint = 'wss://rpc-testnet.selendra.org';
 
     node.ss58 = 0;
-    final res = await sdk.api.connectNode(keyring, [node]);
+    final res = await _createAccModel.sdk.api.connectNode(_createAccModel.keyring, [node]);
 
     print('res $res');
     if (res != null) {
@@ -92,7 +99,7 @@ class AppState extends State<App> {
   Future<void> _subscribeBalance() async {
     print('subscribe');
     final channel =
-        await sdk.api.account.subscribeBalance(keyring.current.address, (res) {
+        await _createAccModel.sdk.api.account.subscribeBalance(_createAccModel.keyring.current.address, (res) {
       setState(() {
         _balance = res;
         mBalance = int.parse(_balance.freeBalance).toString();
@@ -118,11 +125,12 @@ class AppState extends State<App> {
             title: 'Kaabop',
             theme: AppStyle.myTheme(),
             routes: {
-              MySplashScreen.route: (_) => MySplashScreen(keyring),
-              ContentsBackup.root: (_) => ContentsBackup(sdk),
-              Home.route: (_) => Home(sdk, keyring, _apiConnected, mBalance, _msgChannel),
-              ImportAcc.route: (_) => ImportAcc(sdk, keyring),
-              Account.route: (_) => Account(sdk, keyring),
+              MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
+              ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
+              ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
+              Home.route: (_) => Home(_createAccModel.sdk, _createAccModel.keyring, _apiConnected, mBalance, _msgChannel),
+              ImportAcc.route: (_) => ImportAcc(_createAccModel.sdk, _createAccModel.keyring),
+              Account.route: (_) => Account(_createAccModel.sdk, _createAccModel.keyring),
             },
             builder: (context, widget) => ResponsiveWrapper.builder(
                 BouncingScrollWrapper.builder(context, widget),

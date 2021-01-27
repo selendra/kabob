@@ -2,10 +2,15 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
+import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 
 class MySplashScreen extends StatefulWidget {
-  final Keyring keyring;
-  MySplashScreen(this.keyring);
+  
+  CreateAccModel accModel;
+  
+  MySplashScreen(this.accModel);
 
   static const route = '/';
   @override
@@ -27,12 +32,31 @@ class MySplashScreenState extends State<MySplashScreen> {
   initState() {
     // checkBiometric();
     // checkExpiredToken();
+    widget.accModel.mnemonicList = [
+      "defense",
+      "indoor",
+      "vendor",
+      "service",
+      "cream",
+      "hard",
+      "maid",
+      "detail",
+      "seat",
+      "mobile",
+      "position",
+      "kangaroo",
+    ];
+    print("Hello");
     Future.delayed(Duration(seconds: 3), () async {
       getCurrentAccount().then((value) {
-        print("Get acc $value");
+        print("Current $value");
         if (value.isEmpty) {
-          Navigator.pushReplacement(
-              context, RouteAnimation(enterPage: Welcome()));
+          // Navigator.pushReplacement(
+          //     context, RouteAnimation(enterPage: Welcome()));
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (context) => MyUserInfo(widget.accModel)) //onfirmMnemonic(widget.accModel))
+          );
         } else {
           Navigator.pushReplacementNamed(context, Home.route);
         }
@@ -43,7 +67,7 @@ class MySplashScreenState extends State<MySplashScreen> {
   }
 
   Future<List<KeyPairData>> getCurrentAccount() async {
-    final List<KeyPairData> ls = widget.keyring.keyPairs;
+    final List<KeyPairData> ls = widget.accModel.keyring.keyPairs;
 
     return ls;
   }

@@ -1,10 +1,13 @@
+import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 
 class CreateMnemonic extends StatelessWidget {
-  String mnemonic;
+
+  CreateAccModel accModel;
   
-  CreateMnemonic({this.mnemonic});
+  CreateMnemonic({this.accModel});
   //  Future<void> _generateMnemonic() async {
   //   setState(() {
   //     _submitting = true;
@@ -51,7 +54,7 @@ class CreateMnemonic extends StatelessWidget {
                 ),
                 Card(
                     child: MyText(
-                        text: mnemonic,
+                        text: accModel.mnemonic,
                         textAlign: TextAlign.left,
                         fontSize: 25,
                         color: AppColors.secondary_text,
@@ -78,9 +81,9 @@ class CreateMnemonic extends StatelessWidget {
                     child: Text('Next'),
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ConfirmMnemonic()));
+                        context,
+                        MaterialPageRoute(builder: (context) => ConfirmMnemonic(accModel))
+                      );
                     },
                   ));
             },
