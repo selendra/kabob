@@ -189,58 +189,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                 ],
               ),
             ),
-
-            // Expanded(
-            //   child: Padding(
-            //     padding: EdgeInsets.only(left: 16, right: 16, top: 16),
-            //     child: GridView.builder(
-            //       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            //         maxCrossAxisExtent: 100,
-            //         crossAxisSpacing: 15.0,
-            //         mainAxisSpacing: 15.0,
-            //         childAspectRatio: 1.5
-            //       ),
-            //       itemCount: mnemonicList.length,
-            //       itemBuilder: (context, int i){
-            //         return Container(
-            //           alignment: Alignment.center,
-            //           color: hexaCodeToColor(AppColors.cardColor),
-            //           height: 10,
-            //           child: MyText(
-            //             text: mnemonicList[i][i],
-            //             fontSize: 18,
-            //             color: AppColors.secondary_text,
-            //             fontWeight: FontWeight.bold,
-            //             // pLeft: 6, right: 10,
-            //           )
-            //         );
-            //       },
-            //     )
-            //     // builder(
-            //     //   physics: NeverScrollableScrollPhysics(),
-            //     //   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-            //     //     maxCrossAxisExtent: 100,
-            //     //     crossAxisSpacing: 10.0,
-            //     //     mainAxisSpacing: 5.0
-            //     //   ),//(orientation == Orientation.portrait) ? 2 : 3),
-            //     //   // scrollDirection: Axis.horizontal,
-            //     //   itemCount: 10,
-            //     //   itemBuilder: (context, int i){
-            //     //     return Container(
-            //     //       color: hexaCodeToColor(AppColors.cardColor),
-            //     //       height: 10,
-            //     //       child: MyText(
-            //     //         text: mnemonicList[i][i],
-            //     //         fontSize: 25,
-            //     //         color: AppColors.secondary_text,
-            //     //         fontWeight: FontWeight.bold,
-            //     //         pLeft: 6, right: 16, top: 16
-            //     //       )
-            //     //     );
-            //     //   }
-            //     // ),
-            //   )
-            // ),
+            
             _buildWordsButtons(),
 
             Expanded(

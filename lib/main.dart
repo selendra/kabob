@@ -14,6 +14,7 @@ import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
 import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
+import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
 void main() async {
   // Avoid Error, " accessed before the binding was initialized "
@@ -209,9 +210,10 @@ class AppState extends State<App> {
             routes: {
               MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
               ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
+              ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
               Home.route: (_) => Home(_createAccModel.sdk, _createAccModel.keyring, _apiConnected, mBalance, _msgChannel, kpiBalance),
-              ImportAcc.route: (_) => ImportAcc(_createAccModel.sdk, _createAccModel.keyring),
+              ImportAcc.route: (_) => ImportAcc(_createAccModel),
               Account.route: (_) => Account(_createAccModel.sdk, _createAccModel.keyring),
             },
             builder: (context, widget) => ResponsiveWrapper.builder(

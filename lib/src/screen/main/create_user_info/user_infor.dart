@@ -152,25 +152,34 @@ class MyUserInfoState extends State<MyUserInfo> {
     // Show Loading Process
     dialogLoading(context);
 
-    final json = await widget.accModel.sdk.api.keyring.importAccount(
-      widget.accModel.keyring,
-      keyType: KeyType.mnemonic,
-      key: widget.accModel.mnemonic,
-      name: _userInfoM.controlFirstName.text,
-      password: _userInfoM.confirmPasswordCon.text,
-    );
+    try {
+      final json = await widget.accModel.sdk.api.keyring.importAccount(
+        widget.accModel.keyring,
+        keyType: KeyType.mnemonic,
+        key: widget.accModel.mnemonic,
+        name: _userInfoM.controlFirstName.text,
+        password: _userInfoM.confirmPasswordCon.text,
+      );
 
-    widget.accModel.sdk.api.keyring.addAccount(
-      widget.accModel.keyring, 
-      keyType: KeyType.mnemonic, 
-      acc: json, 
-      password: _userInfoM.confirmPasswordCon.text
-    ).then((value) => print("Hello my $value"));
+      widget.accModel.sdk.api.keyring.addAccount(
+        widget.accModel.keyring, 
+        keyType: KeyType.mnemonic, 
+        acc: json, 
+        password: _userInfoM.confirmPasswordCon.text
+      ).then((value) async {
 
-    // await Future.delayed(Duration(seconds: 2), () {
-    //   Navigator.pushNamedAndRemoveUntil(
-    //       context, Home.route, ModalRoute.withName('/'));
-    // });
+        // Close Loading Process
+        Navigator.pop(context);
+
+        await Future.delayed(Duration(seconds: 2), () {
+          Navigator.pushNamedAndRemoveUntil(
+              context, Home.route, ModalRoute.withName('/'));
+        });
+      });
+    } catch (e){
+      await dialog(context, Text(e.toString()), Text("Message"));
+    }
+
   }
 
   PopupMenuItem item(Map<String, dynamic> list) {
