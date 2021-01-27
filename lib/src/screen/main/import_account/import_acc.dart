@@ -63,8 +63,8 @@ class ImportAccState extends State<ImportAcc> {
                 },
                 child: Text('Continue')));
       }
-      print(acc.address);
-      print(acc.name);
+      // print(acc.address);
+      // print(acc.name);
     } catch (e) {
       print("Hello error $e");
     }

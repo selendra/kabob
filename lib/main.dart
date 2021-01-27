@@ -3,7 +3,6 @@ import 'package:polkawallet_sdk/api/types/balanceData.dart';
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
-import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
@@ -65,8 +64,17 @@ class AppState extends State<App> {
     });
     if (_sdkReady) {
       connectNode();
+      // getDecrypt();
     }
   }
+
+  // void getDecrypt() async {
+  //   final seed = await KeyringPrivateStore().getDecryptedSeed(
+  //     '0xa2d1d33cc490d34ccc6938f8b30430428da815a85bf5927adc85d9e27cbbfc1a',
+  //     '123456',
+  //   );
+  //   print('raw seed' + seed.toString());
+  // }
 
   Future<void> _initContract() async {
     await GetRequest().initContract().then((value) {
@@ -74,14 +82,34 @@ class AppState extends State<App> {
       print(keyring.keyPairs[0].toJson());
       print('address: ${keyring.keyPairs[0].address}');
       print('pubKey: ${keyring.keyPairs[0].pubKey}');
+      //final String pairs = jsonEncode(keyring.store.list);
+      // print('address' + keyring.keyPairs[0].address);
+
+      // print(pairs);
+      // transfer();
       _balanceOf(keyring.keyPairs[0].address, keyring.keyPairs[0].address);
     });
   }
 
+  // Future<void> transfer() async {
+  //   final String pairs = jsonEncode(keyring.store.list);
+  //   final res =
+  //       await http.post('http://localhost:3000/:service/contract/transfer',
+  //           headers: <String, String>{
+  //             "content-type": "application/json",
+  //           },
+  //           body: jsonEncode(<String, dynamic>{
+  //             "pair": pairs,
+  //             "to": '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
+  //             "value": 1,
+  //           }));
+  //   print(res);
+  // }
+
   Future<void> connectNode() async {
     final node = NetworkParams();
 
-    node.name = 'Indranet hosted By Selendra';
+    node.name = 'Indracore';
     node.endpoint = 'wss://rpc-testnet.selendra.org';
 
     node.ss58 = 42;
@@ -180,6 +208,10 @@ class AppState extends State<App> {
                     _msgChannel, kpiBalance),
                 ImportAcc.route: (_) => ImportAcc(sdk, keyring),
                 Account.route: (_) => Account(sdk, keyring),
+                ReceiveWallet.route: (_) => ReceiveWallet(
+                      sdk: sdk,
+                      keyring: keyring,
+                    ),
               },
               builder: (context, widget) => ResponsiveWrapper.builder(
                 BouncingScrollWrapper.builder(context, widget),

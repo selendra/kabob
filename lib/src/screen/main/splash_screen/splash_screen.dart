@@ -27,7 +27,7 @@ class MySplashScreenState extends State<MySplashScreen> {
   initState() {
     // checkBiometric();
     // checkExpiredToken();
-    Future.delayed(Duration(seconds: 3), () async {
+    Future.delayed(Duration(seconds: 2), () async {
       getCurrentAccount().then((value) {
         print("Get acc $value");
         if (value.isEmpty) {

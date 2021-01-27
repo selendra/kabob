@@ -48,6 +48,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   String accAddress;
   String mBalance = '0';
   String _msgChannel;
+  String _kpiSupply = '0';
 
   BalanceData _balance;
 
@@ -113,6 +114,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.userData = {};
       setChartData();
       getCurrentAccount();
+      //totalSupply();
       /* User Profile */
       // getUserData();
       // fetchPortfolio();
@@ -392,8 +394,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   void toReceiveToken() async {
     /* Navigate Receive Token */
-    await Navigator.of(context)
-        .push(RouteAnimation(enterPage: ReceiveWallet(homeM: _homeM)));
+    await Navigator.of(context).push(RouteAnimation(
+        enterPage: ReceiveWallet(
+      sdk: widget.sdk,
+      keyring: widget.keyring,
+    )));
     if (Platform.isAndroid)
       await AndroidPlatform.resetBrightness();
     else

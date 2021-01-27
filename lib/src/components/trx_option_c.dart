@@ -95,11 +95,12 @@ class TrxOptionMethod {
   }
 
   static void navigateFillAddress(
-      BuildContext context,
-      List<dynamic> portfolioList,
-      Function resetDbdState,
-      WalletSDK sdk,
-      Keyring keyring) async {
+    BuildContext context,
+    List<dynamic> portfolioList,
+    Function resetDbdState,
+    WalletSDK sdk,
+    Keyring keyring,
+  ) async {
     var response = await Navigator.push(
         context,
         MaterialPageRoute(

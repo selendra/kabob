@@ -91,12 +91,18 @@ class HomeBody extends StatelessWidget {
                                 color: "#FFFFFF",
                                 fontSize: 20,
                               ),
-                              MyText(
-                                text: 'SEL',
-                                color: AppColors.secondary_text,
-                                fontSize: 30,
-                                textAlign: TextAlign.start,
-                                fontWeight: FontWeight.bold,
+                              Container(
+                                width: 100,
+                                child: MyText(
+                                  text: !apiStatus
+                                      ? "Connecting to Remote Node"
+                                      : "Indracore",
+                                  color: AppColors.secondary_text,
+                                  fontSize: 18,
+                                  textAlign: TextAlign.start,
+                                  fontWeight: FontWeight.bold,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
@@ -127,9 +133,7 @@ class HomeBody extends StatelessWidget {
                         child: MyText(
                           top: 16,
                           width: 200,
-                          text: !apiStatus
-                              ? "Connecting to Remote Node"
-                              : accAddress ?? "address",
+                          text: accAddress ?? "address",
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
