@@ -143,6 +143,9 @@ class ImportAccState extends State<ImportAcc> {
 
   void clearInput(){
     _importAccModel.mnemonicCon.clear();
+    setState((){
+      enable = false;
+    });
   }
 
   void onSubmit() {}

@@ -58,7 +58,8 @@ class HomeBody extends StatelessWidget {
         // TOKEN
         Container(
             padding: const EdgeInsets.all(16),
-            child: Column(
+            child: Expanded(
+              child: Column(
               children: [
                 Container(
                   width: double.infinity,
@@ -269,6 +270,7 @@ class HomeBody extends StatelessWidget {
                       ],
                     ))
               ],
+            )
             )),
 
         GestureDetector(

@@ -157,7 +157,7 @@ class MyUserInfoState extends State<MyUserInfo> {
         widget.accModel.keyring,
         keyType: KeyType.mnemonic,
         key: widget.accModel.mnemonic,
-        name: _userInfoM.controlFirstName.text,
+        name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
 
