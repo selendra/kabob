@@ -9,8 +9,6 @@ class ContentsBackup extends StatelessWidget{
 
   CreateAccModel createAccM;
 
-  String _mnemonicCode;
-
   ContentsBackup(CreateAccModel createAccModel){
     this.createAccM = createAccModel;
     _generateMnemonic(createAccModel.sdk);
@@ -23,6 +21,7 @@ class ContentsBackup extends StatelessWidget{
       //   _submitting = true;
       // });
     createAccM.mnemonic = await sdk.api.keyring.generateMnemonic();
+    createAccM.mnemonicList = createAccM.mnemonic.split(' ');
       // widget.showResult(context, 'generateMnemonic', seed);
       // setState(() {
       //   _submitting = false;

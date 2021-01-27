@@ -5,19 +5,9 @@ import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 
 class CreateMnemonic extends StatelessWidget {
 
-  CreateAccModel accModel;
+  final CreateAccModel accModel;
   
   CreateMnemonic({this.accModel});
-  //  Future<void> _generateMnemonic() async {
-  //   setState(() {
-  //     _submitting = true;
-  //   });
-  //   final String seed = await widget.sdk.api.keyring.generateMnemonic();
-  //   widget.showResult(context, 'generateMnemonic', seed);
-  //   setState(() {
-  //     _submitting = false;
-  //   });
-  // }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,17 +42,21 @@ class CreateMnemonic extends StatelessWidget {
                   color: "#FFFFFF",
                   bottom: 12,
                 ),
+
+                // Display Mnemonic
                 Card(
-                    child: MyText(
-                        text: accModel.mnemonic,
-                        textAlign: TextAlign.left,
-                        fontSize: 25,
-                        color: AppColors.secondary_text,
-                        fontWeight: FontWeight.bold,
-                        pLeft: 16,
-                        right: 16,
-                        top: 16,
-                        bottom: 16))
+                  child: MyText(
+                    text: accModel.mnemonic,
+                    textAlign: TextAlign.left,
+                    fontSize: 25,
+                    color: AppColors.secondary_text,
+                    fontWeight: FontWeight.bold,
+                    pLeft: 16,
+                    right: 16,
+                    top: 16,
+                    bottom: 16
+                  )
+                )
               ],
             ),
           ),

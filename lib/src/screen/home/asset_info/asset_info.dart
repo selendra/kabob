@@ -1,16 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:polkawallet_sdk/polkawallet_sdk.dart';
+import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/src/components/component.dart';
 
 import '../../../../index.dart';
 
 class AssetInfo extends StatefulWidget {
   final String accBalance;
-  AssetInfo({@required this.accBalance});
+  final WalletSDK sdk;
+  final Keyring keyring;
+  AssetInfo({@required this.accBalance, this.sdk, this.keyring});
   @override
   _AssetInfoState createState() => _AssetInfoState();
 }
 
 class _AssetInfoState extends State<AssetInfo> {
+  TextEditingController _callerController = TextEditingController();
+  TextEditingController _accountController = TextEditingController();
+  FocusNode _callerNode = FocusNode();
+  FocusNode _accountNode = FocusNode();
+
+  String onChanged(String value) {
+    return value;
+  }
+
+  String onSubmit(String value) {
+    return value;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +45,7 @@ class _AssetInfoState extends State<AssetInfo> {
               padding: const EdgeInsets.all(16.0),
               child: Container(
                 width: double.infinity,
+                height: MediaQuery.of(context).size.height * 0.15,
                 padding:
                     EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 25),
                 decoration: BoxDecoration(
@@ -44,30 +62,168 @@ class _AssetInfoState extends State<AssetInfo> {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                       ),
-                      child: SvgPicture.asset('assets/sld_logo.svg'),
+                      child: Image.asset('assets/koompi_white_logo.png'),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MyText(
-                          text: "Balance",
-                          color: "#FFFFFF",
-                          fontSize: 20,
-                        ),
-                        SizedBox(height: 5),
-                        MyText(
-                          text: widget.accBalance.substring(0, 9) + " KPI",
-                          color: AppColors.secondary_text,
-                          fontSize: 30,
-                        ),
-                      ],
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      height: 80,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          MyText(
+                            text: "Balance",
+                            color: "#FFFFFF",
+                            fontSize: 20,
+                          ),
+                          SizedBox(height: 5),
+                          MyText(
+                            text: widget.accBalance + " KPI",
+                            color: AppColors.secondary_text,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
             Container(
-              margin: EdgeInsets.only(left: 16, right: 16),
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      try {
+                        await GetRequest()
+                            .totalSupply(widget.keyring.keyPairs[0].address)
+                            .then((value) async {
+                          if (value != null) {
+                            await dialog(
+                                context,
+                                MyText(
+                                  text: value,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text('Total Supply of KPI'));
+                          }
+                        });
+                      } catch (e) {
+                        print(e.toString());
+                      }
+
+                      // MyBottomSheet().trxOptions(
+                      //   context: context,
+                      //   //portfolioList: homeM.portfolioList,
+                      //   // resetHomeData: resetDbdState,
+                      //   sdk: widget.sdk,
+                      //   keyring: widget.keyring,
+                      // );
+                    },
+                    child: Column(
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.width * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: hexaCodeToColor(AppColors.cardColor),
+                          ),
+                          child: Icon(
+                            Icons.receipt,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        MyText(
+                          text:
+                              "Total Supply", //portfolioData[0]["data"]['balance'],
+                          color: "#FFFFFF",
+                          fontSize: 14,
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: Column(
+                      children: [
+                        Container(
+                          height: MediaQuery.of(context).size.width * 0.15,
+                          width: MediaQuery.of(context).size.width * 0.15,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: hexaCodeToColor(AppColors.cardColor),
+                          ),
+                          child: Icon(
+                            Icons.swap_vert,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        MyText(
+                          text:
+                              "Balance Of", //portfolioData[0]["data"]['balance'],
+                          color: "#FFFFFF",
+                          fontSize: 14,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.15,
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: hexaCodeToColor(AppColors.cardColor),
+                        ),
+                        child: Icon(
+                          Icons.check_box,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      MyText(
+                        text: "Approve", //portfolioData[0]["data"]['balance'],
+                        color: "#FFFFFF",
+                        fontSize: 14,
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.15,
+                        width: MediaQuery.of(context).size.width * 0.15,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: hexaCodeToColor(AppColors.cardColor),
+                        ),
+                        child: Icon(
+                          Icons.receipt,
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      MyText(
+                        text:
+                            "Allowance", //portfolioData[0]["data"]['balance'],
+                        color: "#FFFFFF",
+                        fontSize: 14,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 16, right: 16, top: 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -114,7 +270,6 @@ class _AssetInfoState extends State<AssetInfo> {
                         height: 50,
                         colorImage: Colors.white,
                       ),
-
                       Expanded(
                         child: Container(
                           margin: const EdgeInsets.only(right: 16),
@@ -132,19 +287,6 @@ class _AssetInfoState extends State<AssetInfo> {
                           ),
                         ),
                       ),
-
-                      // Container(
-                      //   width: 80,
-                      //   margin: EdgeInsets.only(right: 20),
-                      //   alignment: Alignment.center,
-                      //   child: SizedBox(
-                      //     height: 25,
-                      //     child: LineChart(
-                      //       portfolioChart
-                      //     ),
-                      //   ),
-                      // ),
-
                       Expanded(
                         child: Container(
                           margin: EdgeInsets.only(right: 16),

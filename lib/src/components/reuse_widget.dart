@@ -228,6 +228,18 @@ Future dialog(BuildContext context, var text, var title,
   return result;
 }
 
+// Future<void> balanceOfDialog(BuildContext context) async {
+//   return showDialog(
+//     context: context,
+//     barrierDismissible: false,
+//     builder: (context) {
+//       return AlertDialog(
+//         Tit
+//       );
+//     },
+//   );
+// }
+
 Widget textMessage({String text: "Message", fontSize: 20.0}) {
   return FittedBox(
     child: Text(text,

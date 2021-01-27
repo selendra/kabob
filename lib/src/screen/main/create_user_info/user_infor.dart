@@ -152,12 +152,20 @@ class MyUserInfoState extends State<MyUserInfo> {
     // Show Loading Process
     dialogLoading(context);
 
+    final json = await widget.accModel.sdk.api.keyring.importAccount(
+      widget.accModel.keyring,
+      keyType: KeyType.mnemonic,
+      key: widget.accModel.mnemonic,
+      name: _userInfoM.controlFirstName.text,
+      password: _userInfoM.confirmPasswordCon.text,
+    );
+
     widget.accModel.sdk.api.keyring.addAccount(
       widget.accModel.keyring, 
       keyType: KeyType.mnemonic, 
-      acc: {'pubKey': widget.accModel.keyring.keyPairs}, 
+      acc: json, 
       password: _userInfoM.confirmPasswordCon.text
-    ).then((value) => print("Hello $value"));
+    ).then((value) => print("Hello my $value"));
 
     // await Future.delayed(Duration(seconds: 2), () {
     //   Navigator.pushNamedAndRemoveUntil(

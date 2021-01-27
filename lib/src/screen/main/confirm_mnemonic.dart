@@ -6,7 +6,7 @@ import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 
 class ConfirmMnemonic extends StatefulWidget{
 
-  CreateAccModel accModel;
+  final CreateAccModel accModel;
 
   ConfirmMnemonic(this.accModel);
 
@@ -24,41 +24,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
 
   bool enable = false;
 
-  // List<String> _wordsLeft;
-
-  List _wordsLeft = [
-    // {0: 'defense'}, 
-    // {1: "indoor"}, 
-    // {2: 'vendor'}, 
-    // {3: 'service'} ,
-    // {4: 'cream'}, 
-    // {5: 'hard'},
-    // {6: 'maid'}, 
-    // {7: 'detail'},
-    // {8: 'seat'}, 
-    // {9: 'mobile'}, 
-    // {10: 'position'},
-    // {11: 'kangaroo'}
-  ];
-
-  // List<Map<int, String>> mnemonicList = [
-  //   {0: 'defense'}, 
-  //   {1: "indoor"}, 
-  //   {2: 'vendor'}, 
-  //   {3: 'service'} ,
-  //   {4: 'cream'}, 
-  //   {5: 'hard'},
-  //   {6: 'maid'}, 
-  //   {7: 'detail'},
-  //   {8: 'seat'}, 
-  //   {9: 'mobile'}, 
-  //   {10: 'position'},
-  //   {11: 'kangaroo'}
-  // ];
-
-  _confirmMnemonic(WalletSDK sdk){
-    // sdk.api.keyring.
-  }
+  List _wordsLeft = [];
 
   Widget _buildWordsButtons() {
 
@@ -144,6 +110,8 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
   
   @override
   initState(){
+    print("My mnemonic list ${widget.accModel.mnemonicList}");
+    print("My mnemonic STring ${widget.accModel.mnemonic}");
     for(var i in widget.accModel.mnemonicList){
       _wordsLeft.add(i); // Use For Sort Mnemonic
       _mnemonic.add(i); // Use For Compare

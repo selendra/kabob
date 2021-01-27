@@ -30,46 +30,30 @@ class MySplashScreenState extends State<MySplashScreen> {
 
   @override
   initState() {
+    AppServices.clearStorage();
     // checkBiometric();
     // checkExpiredToken();
-    widget.accModel.mnemonicList = [
-      "defense",
-      "indoor",
-      "vendor",
-      "service",
-      "cream",
-      "hard",
-      "maid",
-      "detail",
-      "seat",
-      "mobile",
-      "position",
-      "kangaroo",
-    ];
-    print("Hello");
-    Future.delayed(Duration(seconds: 3), () async {
-      getCurrentAccount().then((value) {
-        print("Current $value");
-        if (value.isEmpty) {
-          // Navigator.pushReplacement(
-          //     context, RouteAnimation(enterPage: Welcome()));
-          Navigator.push(
-            context, 
-            MaterialPageRoute(builder: (context) => MyUserInfo(widget.accModel)) //onfirmMnemonic(widget.accModel))
-          );
-        } else {
-          Navigator.pushReplacementNamed(context, Home.route);
-        }
-      });
-      //Navigator.pushReplacement(context, RouteAnimation(enterPage: Home()));
-    });
+    print("Splash screen");
+    getCurrentAccount();
     super.initState();
   }
 
-  Future<List<KeyPairData>> getCurrentAccount() async {
-    final List<KeyPairData> ls = widget.accModel.keyring.keyPairs;
+  void getCurrentAccount() async {
+    await Future.delayed(Duration(seconds: 3), (){
+      print("My Keyring 22" + widget.accModel.keyring.keyPairs.toString());
+      final List<KeyPairData> ls = widget.accModel.keyring.keyPairs.toList();
 
-    return ls;
+      if (ls.isEmpty) {
+        Navigator.pushReplacement(
+            context, RouteAnimation(enterPage: Welcome()));
+        // Navigator.push(
+        //   context, 
+        //   MaterialPageRoute(builder: (context) => MyUserInfo(widget.accModel)) //onfirmMnemonic(widget.accModel))
+        // );
+      } else {
+        Navigator.pushReplacementNamed(context, Home.route);
+      }
+    });
   }
 
   @override
