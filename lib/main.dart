@@ -71,10 +71,10 @@ class AppState extends State<App> {
 
   Future<void> _initApi() async {
 
-    await _createAccModel.keyring.init();
-
     print("init");
     await FlutterWebviewPlugin().reload();
+
+    await _createAccModel.keyring.init();
 
     await _createAccModel.sdk.init(_createAccModel.keyring);
 

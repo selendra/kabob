@@ -51,14 +51,19 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<void> _importFromMnemonic() async {
+
+    print(" firstName ${_userInfoM.controlFirstName.text}");
+    print(" Password ${_userInfoM.confirmPasswordCon.text}");
+    
     try {
       final json = await widget.importAccModel.sdk.api.keyring.importAccount(
         widget.importAccModel.keyring,
         keyType: KeyType.mnemonic,
         key: widget.importAccModel.mnemonicList.join(" "),
-        name: _userInfoM.controlFirstName.text,
+        name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
+      print("My json $json");
 
       final acc = await widget.importAccModel.sdk.api.keyring.addAccount(
         widget.importAccModel.keyring,
@@ -66,12 +71,18 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         acc: json,
         password: _userInfoM.confirmPasswordCon.text,
       );
+
+      print("My account name ${acc.name}");
       if (acc != null) {
         await dialog(context, Text("You haved imported successfully"),
             Text('Congratulation'),
             action: FlatButton(
                 onPressed: () {
-                  Navigator.pushReplacementNamed(context, Home.route);
+                  Navigator.pushNamedAndRemoveUntil(
+                    context, 
+                    Home.route,
+                    ModalRoute.withName('/')
+                  );
                 },
                 child: Text('Continue')));
       }
@@ -80,7 +91,11 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     } catch (e) {
        await dialog(context, Text("Invalid mnemonic"),
             Text('Message'),);
+      Navigator.pop(context);
     }
+
+    // Close Dialog Loading
+    Navigator.pop(context);
   }
 
   void switchBiometric(bool value) async {
@@ -147,7 +162,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     } else {
       FocusScope.of(context).unfocus();
       enableButton();
-      if (_userInfoM.enable) await _importFromMnemonic();
+      if (_userInfoM.enable) submitProfile();
     }
   }
 
@@ -193,10 +208,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     // Show Loading Process
     dialogLoading(context);
 
-    await Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushNamedAndRemoveUntil(
-          context, Home.route, ModalRoute.withName('/'));
-    });
+    await _importFromMnemonic();
 
   }
 

@@ -74,7 +74,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.userData['wallet'] = accAddress;
       _subscribeBalance();
     });
-    print(ls[0].name);
+    print("Hello name ${ls[0].name}");
   }
 
   Future<void> _subscribeBalance() async {
@@ -99,6 +99,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   initState() {
     /* Initialize State */
+    print("My name ${widget.keyring.current.name}");
     _homeM.portfolioList = null;
     _portfolioM.list = [];
     if (mounted) {
