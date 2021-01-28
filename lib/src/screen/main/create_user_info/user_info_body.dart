@@ -51,8 +51,8 @@ class MyUserInfoBody extends StatelessWidget{
                   pBottom: 16.0,
                   labelText: "User name",
                   textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
-                  controller: modelUserInfo.controlFirstName, 
-                  focusNode: modelUserInfo.nodeFirstName, 
+                  controller: modelUserInfo.userNameCon, 
+                  focusNode: modelUserInfo.userNameNode,
                   validateField: validateFirstName, 
                   textColor: "#FFFFFF",
                   onChanged: onChanged, 
@@ -63,8 +63,8 @@ class MyUserInfoBody extends StatelessWidget{
                   pBottom: 16.0,
                   labelText: "Password",
                   textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
-                  controller: modelUserInfo.controlMidName, 
-                  focusNode: modelUserInfo.nodeMidName, 
+                  controller: modelUserInfo.passwordCon, 
+                  focusNode: modelUserInfo.passwordNode, 
                   validateField: validateMidName, 
                   textColor: "#FFFFFF",
                   onChanged: onChanged, 
@@ -75,8 +75,8 @@ class MyUserInfoBody extends StatelessWidget{
                   pBottom: 16.0,
                   labelText: "Confirm Password",
                   textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
-                  controller: modelUserInfo.controlMidName, 
-                  focusNode: modelUserInfo.nodeMidName, 
+                  controller: modelUserInfo.confirmPasswordCon, 
+                  focusNode: modelUserInfo.confirmPasswordNode, 
                   validateField: validateMidName, 
                   textColor: "#FFFFFF",
                   onChanged: onChanged, 
@@ -113,7 +113,7 @@ class MyUserInfoBody extends StatelessWidget{
           textButton: "Submit",
           edgeMargin: EdgeInsets.only(top: 29, left: 66, right: 66),
           hasShadow: modelUserInfo.enable,
-          action: modelUserInfo.enable == false ? null : submitProfile
+          action: submitProfile//modelUserInfo.enable == false ? null : submitProfile
         )
       ],
     );

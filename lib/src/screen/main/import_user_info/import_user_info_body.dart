@@ -7,8 +7,8 @@ class ImportUserInfoBody extends StatelessWidget{
   final Function onChanged;
   final Function changeGender;
   final Function validateFirstName;
-  final Function validateMidName;
-  final Function validateLastName;
+  final Function validatepassword;
+  final Function validateConfirmPassword;
   final Function submitProfile;
   final Function popScreen;
   final Function switchBio;
@@ -20,8 +20,8 @@ class ImportUserInfoBody extends StatelessWidget{
     this.onChanged,
     this.changeGender,
     this.validateFirstName,
-    this.validateMidName,
-    this.validateLastName,
+    this.validatepassword,
+    this.validateConfirmPassword,
     this.submitProfile,
     this.popScreen,
     this.switchBio,
@@ -51,8 +51,8 @@ class ImportUserInfoBody extends StatelessWidget{
                   pBottom: 16.0,
                   labelText: "User name",
                   textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
-                  controller: modelUserInfo.controlFirstName, 
-                  focusNode: modelUserInfo.nodeFirstName, 
+                  controller: modelUserInfo.userNameCon, 
+                  focusNode: modelUserInfo.userNameNode,
                   validateField: validateFirstName, 
                   textColor: "#FFFFFF",
                   onChanged: onChanged, 
@@ -63,9 +63,9 @@ class ImportUserInfoBody extends StatelessWidget{
                   pBottom: 16.0,
                   labelText: "Password",
                   textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
-                  controller: modelUserInfo.controlMidName, 
-                  focusNode: modelUserInfo.nodeMidName, 
-                  validateField: validateMidName, 
+                  controller: modelUserInfo.passwordCon, 
+                  focusNode: modelUserInfo.passwordNode, 
+                  validateField: validatepassword,
                   textColor: "#FFFFFF",
                   onChanged: onChanged, 
                   onSubmit: onSubmit
@@ -75,9 +75,9 @@ class ImportUserInfoBody extends StatelessWidget{
                   pBottom: 16.0,
                   labelText: "Confirm Password",
                   textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
-                  controller: modelUserInfo.controlMidName, 
-                  focusNode: modelUserInfo.nodeMidName, 
-                  validateField: validateMidName, 
+                  controller: modelUserInfo.confirmPasswordCon, 
+                  focusNode: modelUserInfo.confirmPasswordNode, 
+                  validateField: validateConfirmPassword, 
                   textColor: "#FFFFFF",
                   onChanged: onChanged, 
                   onSubmit: onSubmit

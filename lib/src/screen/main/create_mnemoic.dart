@@ -1,19 +1,13 @@
+import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 
 class CreateMnemonic extends StatelessWidget {
-  String mnemonic =
-      "defense indoor vendor service cream hard maid dtail seat mobile position kangaroo";
-  //  Future<void> _generateMnemonic() async {
-  //   setState(() {
-  //     _submitting = true;
-  //   });
-  //   final String seed = await widget.sdk.api.keyring.generateMnemonic();
-  //   widget.showResult(context, 'generateMnemonic', seed);
-  //   setState(() {
-  //     _submitting = false;
-  //   });
-  // }
+
+  final CreateAccModel accModel;
+  
+  CreateMnemonic({this.accModel});
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,17 +42,21 @@ class CreateMnemonic extends StatelessWidget {
                   color: "#FFFFFF",
                   bottom: 12,
                 ),
+
+                // Display Mnemonic
                 Card(
-                    child: MyText(
-                        text: mnemonic,
-                        textAlign: TextAlign.left,
-                        fontSize: 25,
-                        color: AppColors.secondary_text,
-                        fontWeight: FontWeight.bold,
-                        pLeft: 16,
-                        right: 16,
-                        top: 16,
-                        bottom: 16))
+                  child: MyText(
+                    text: accModel.mnemonic,
+                    textAlign: TextAlign.left,
+                    fontSize: 25,
+                    color: AppColors.secondary_text,
+                    fontWeight: FontWeight.bold,
+                    pLeft: 16,
+                    right: 16,
+                    top: 16,
+                    bottom: 16
+                  )
+                )
               ],
             ),
           ),
@@ -71,17 +69,15 @@ class CreateMnemonic extends StatelessWidget {
             action: () async {
               await dialog(
                   context,
-                  Text(
-                      'Sorry! we are not allow you to screen shot mnemonic, please write down your mnemonic on paper before you go next !'),
-                  Text("Please note",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text('Sorry! we are not allow you to screen shot mnemonic, please write down your mnemonic on paper before you go next !'),
+                  Text("Please note", style: TextStyle(fontWeight: FontWeight.bold)),
                   action: FlatButton(
                     child: Text('Next'),
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ConfirmMnemonic()));
+                        context,
+                        MaterialPageRoute(builder: (context) => ConfirmMnemonic(accModel))
+                      );
                     },
                   ));
             },

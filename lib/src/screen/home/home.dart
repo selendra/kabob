@@ -75,7 +75,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.userData['wallet'] = accAddress;
       _subscribeBalance();
     });
-    print(ls[0].name);
+    print("Hello name ${ls[0].name}");
   }
 
   Future<void> _subscribeBalance() async {
@@ -112,6 +112,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   initState() {
     /* Initialize State */
+    print("My name ${widget.keyring.current.name}");
     _homeM.portfolioList = null;
     _kpiBalance = widget.kpiBalance;
     _portfolioM.list = [];
@@ -424,6 +425,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     _homeM.globalKey.currentState.openDrawer();
   }
 
+  void refresh() {
+    _balanceOf(
+        widget.keyring.keyPairs[0].address, widget.keyring.keyPairs[0].address);
+  }
+
   @override
   Widget build(BuildContext context) {
     final bloc = Bloc();
@@ -453,8 +459,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             kpiBalance: _kpiBalance,
             sdk: widget.sdk,
             keyring: widget.keyring,
-
-            // getWallet: createPin,
+            refresh: refresh,
           )),
       floatingActionButton: SizedBox(
           width: 64,

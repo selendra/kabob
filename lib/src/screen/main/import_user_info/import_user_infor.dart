@@ -1,12 +1,21 @@
+import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
-  final String mnemonic;
-  final Function importFromMnemonic;
+  // final String mnemonic;
+  // final Function importFromMnemonic;
 
-  ImportUserInfo(this.mnemonic, this.importFromMnemonic);
+  final CreateAccModel importAccModel;
+
+  static const route = '/importUserInfo';
+
+  // ImportUserInfo(this.mnemonic, this.importFromMnemonic);
+
+  ImportUserInfo(this.importAccModel);
+
   @override
   State<StatefulWidget> createState() {
     return ImportUserInfoState();
@@ -24,7 +33,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   @override
   void initState() {
-    getToken();
+    print(widget.importAccModel.mnemonicList);
     AppServices.noInternetConnection(_userInfoM.globalKey);
     /* If Registering Account */
     // if (widget.passwords != null) getToken();
@@ -34,11 +43,59 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   @override
   void dispose() {
     /* Clear Everything When Pop Screen */
-    _userInfoM.controlFirstName.clear();
-    _userInfoM.controlMidName.clear();
-    _userInfoM.controlLastName.clear();
+    _userInfoM.userNameCon.clear();
+    _userInfoM.passwordCon.clear();
+    _userInfoM.confirmPasswordCon.clear();
     _userInfoM.enable = false;
     super.dispose();
+  }
+
+  Future<void> _importFromMnemonic() async {
+
+    print(" firstName ${_userInfoM.controlFirstName.text}");
+    print(" Password ${_userInfoM.confirmPasswordCon.text}");
+    
+    try {
+      final json = await widget.importAccModel.sdk.api.keyring.importAccount(
+        widget.importAccModel.keyring,
+        keyType: KeyType.mnemonic,
+        key: widget.importAccModel.mnemonicList.join(" "),
+        name: _userInfoM.userNameCon.text,
+        password: _userInfoM.confirmPasswordCon.text,
+      );
+      print("My json $json");
+
+      final acc = await widget.importAccModel.sdk.api.keyring.addAccount(
+        widget.importAccModel.keyring,
+        keyType: KeyType.mnemonic,
+        acc: json,
+        password: _userInfoM.confirmPasswordCon.text,
+      );
+
+      print("My account name ${acc.name}");
+      if (acc != null) {
+        await dialog(context, Text("You haved imported successfully"),
+            Text('Congratulation'),
+            action: FlatButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context, 
+                    Home.route,
+                    ModalRoute.withName('/')
+                  );
+                },
+                child: Text('Continue')));
+      }
+      print(acc.address);
+      print(acc.name);
+    } catch (e) {
+       await dialog(context, Text("Invalid mnemonic"),
+            Text('Message'),);
+      Navigator.pop(context);
+    }
+
+    // Close Dialog Loading
+    Navigator.pop(context);
   }
 
   void switchBiometric(bool value) async {
@@ -76,26 +133,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     Navigator.pop(context);
   }
 
-  /* Get Token To Make Authentication With Add User Info */
-  void getToken() async {
-    // try{
-    //   if(widget.registerBy == "email"){
-    //     _backend.response = await _postRequest.loginByEmail(widget.userAccount, widget.passwords);
-    //   } else {
-    //     _backend.response = await _postRequest.loginByPhone(widget.userAccount, widget.passwords);
-    //   }
-    //   _backend.mapData = json.decode(_backend.response.body);
-    //   if (_backend.mapData.containsKey('token')) {
-    //     await StorageServices.setData(_backend.mapData, "user_token");
-    //   }
-    // } on SocketException catch (e){
-    //   await Future.delayed(Duration(milliseconds: 300), () { });
-    //   AppServices.openSnackBar(_userInfoM.globalKey, e.message);
-    // } catch (e){
-    //   await dialog(context, Text("${e.message}"), Text("Message"));
-    // }
-  }
-
   /* Change Select Gender */
   void changeGender(String gender) async {
     _userInfoM.genderLabel = gender;
@@ -117,15 +154,15 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     });
   }
 
-  void onSubmit() {
-    if (_userInfoM.nodeFirstName.hasFocus) {
-      FocusScope.of(context).requestFocus(_userInfoM.nodeMidName);
+  void onSubmit() async {
+    if (_userInfoM.userNameNode.hasFocus) {
+      FocusScope.of(context).requestFocus(_userInfoM.passwordNode);
     } else if (_userInfoM.nodeMidName.hasFocus) {
-      FocusScope.of(context).requestFocus(_userInfoM.nodeLastName);
+      FocusScope.of(context).requestFocus(_userInfoM.confirmPasswordNode);
     } else {
-      _userInfoM.nodeFirstName.unfocus();
-      _userInfoM.nodeMidName.unfocus();
-      _userInfoM.nodeLastName.unfocus();
+      FocusScope.of(context).unfocus();
+      enableButton();
+      if (_userInfoM.enable) submitProfile();
     }
   }
 
@@ -139,29 +176,29 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       if (_userInfoM.responseFirstname == null)
         return null;
       else
-        _userInfoM.responseFirstname += "first name";
+        _userInfoM.responseFirstname += "user name";
     }
     return _userInfoM.responseFirstname;
   }
 
-  String validateMidName(String value) {
+  String validatePassword(String value) {
     if (_userInfoM.nodeMidName.hasFocus) {
-      _userInfoM.responseMidname = instanceValidate.validateUserInfo(value);
+      _userInfoM.responseMidname = instanceValidate.validatePassword(value);
       if (_userInfoM.responseMidname == null)
         return null;
       else
-        _userInfoM.responseMidname += "mid name";
+        _userInfoM.responseMidname += "password";
     }
     return _userInfoM.responseMidname;
   }
 
-  String validateLastName(String value) {
+  String validateConfirmPassword(String value) {
     if (_userInfoM.nodeLastName.hasFocus) {
-      _userInfoM.responseLastname = instanceValidate.validateUserInfo(value);
+      _userInfoM.responseLastname = instanceValidate.validatePassword(value);
       if (_userInfoM.responseLastname == null)
         return null;
       else
-        _userInfoM.responseLastname += "last name";
+        _userInfoM.responseLastname += "confirm password";
     }
     return _userInfoM.responseLastname;
   }
@@ -171,56 +208,8 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     // Show Loading Process
     dialogLoading(context);
 
-    await Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushNamedAndRemoveUntil(
-          context, Home.route, ModalRoute.withName('/'));
-    });
+    await _importFromMnemonic();
 
-    // try{
-    //   // Post Request Submit Profile
-    //   await _postRequest.uploadProfile(_userInfoM).then((value) async {
-
-    //     _backend.response = value;
-
-    //     if (_backend.response != null){
-
-    //       // Convert String To Object
-    //       _backend.mapData = json.decode(_backend.response.body);
-
-    //       // Close Loading Process
-    //       Navigator.pop(context);
-    //       if (_backend.response != null && _backend.mapData['token'] == null) {
-    //         // Set Profile Success
-    //         await dialog(context, Text("${_backend.mapData['message']}", textAlign: TextAlign.center,), Icon(Icons.done_all, color: hexaCodeToColor(AppColors.greenColor)));
-    //         // if (widget.passwords != null) {
-    //         //   // Clear Storage
-    //         //   AppServices.clearStorage();
-    //         //   // Remove All Screen And Push Login Screen
-    //         //   await Future.delayed(Duration(microseconds: 500), () {
-    //         //     Navigator.pushAndRemoveUntil(
-    //         //       context,
-    //         //       MaterialPageRoute(builder: (context) => Login()),
-    //         //       ModalRoute.withName('/')
-    //         //     );
-    //         //   });
-    //         // } else {
-    //         //   await Future.delayed(Duration(microseconds: 500), () {
-    //         //     Navigator.pop(context);
-    //         //   });
-    //         // }
-    //       } else {
-    //         await dialog(context, Text("${_backend.mapData}"), Text("Message"));
-    //         Navigator.pop(context);
-    //       }
-
-    //     }
-    //   });
-    // } on SocketException catch (e){
-    //   await Future.delayed(Duration(milliseconds: 300), () { });
-    //   AppServices.openSnackBar(_userInfoM.globalKey, e.message);
-    // } catch (e){
-    //   await dialog(context, Text("${e.message}"), Text("Message"));
-    // }
   }
 
   PopupMenuItem item(Map<String, dynamic> list) {
@@ -236,19 +225,21 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     return Scaffold(
       key: _userInfoM.globalKey,
       body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: ImportUserInfoBody(
-              modelUserInfo: _userInfoM,
-              onSubmit: onSubmit,
-              onChanged: onChanged,
-              changeGender: changeGender,
-              validateFirstName: validateFirstName,
-              validateMidName: validateMidName,
-              validateLastName: validateLastName,
-              submitProfile: submitProfile,
-              popScreen: popScreen,
-              switchBio: switchBiometric,
-              item: item)),
+        height: MediaQuery.of(context).size.height,
+        child: ImportUserInfoBody(
+          modelUserInfo: _userInfoM,
+          onSubmit: onSubmit,
+          onChanged: onChanged,
+          changeGender: changeGender,
+          validateFirstName: validateFirstName,
+          validatepassword: validatePassword,
+          validateConfirmPassword: validateConfirmPassword,
+          submitProfile: submitProfile,
+          popScreen: popScreen,
+          switchBio: switchBiometric,
+          item: item
+        )
+      ),
     );
   }
 }

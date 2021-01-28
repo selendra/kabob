@@ -3,6 +3,7 @@ import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/src/components/component.dart';
 import 'package:http/http.dart' as http;
+import 'package:wallet_apps/src/models/model_asset_info.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 import '../../../../index.dart';
 
@@ -24,7 +25,7 @@ class _AssetInfoState extends State<AssetInfo> {
   TextEditingController _fromController = TextEditingController();
 
   AssetInfoC _c = AssetInfoC();
-  ModelAsset _modelAsset = ModelAsset();
+  ModelAssetInfo _modelAssetInfo = ModelAssetInfo();
 
   FocusNode _ownerNode = FocusNode();
   FocusNode _spenderNode = FocusNode();
@@ -34,14 +35,6 @@ class _AssetInfoState extends State<AssetInfo> {
   String _kpiSupply = '0';
   String _kpiBalance = '0';
   bool _loading = false;
-
-  String onChanged(String value) {
-    return value;
-  }
-
-  String onSubmit(String value) {
-    return value;
-  }
 
   void submitAllowance() {
     if (_ownerController.text != null && _spenderController.text != null) {
@@ -114,16 +107,6 @@ class _AssetInfoState extends State<AssetInfo> {
 
     print(res);
   }
-
-  // String validateAmount(String value) {
-  //   if (_scanPayM.nodeAmount.hasFocus) {
-  //     _scanPayM.responseAmount = instanceValidate.validateSendToken(value);
-  //     enableButton();
-  //     if (_scanPayM.responseAmount != null)
-  //       return _scanPayM.responseAmount += "amount";
-  //   }
-  //   return _scanPayM.responseAmount;
-  // }
 
   Future<void> transferFrom(
       String recieverAddress, String from, String pass, int amount) async {
@@ -245,6 +228,39 @@ class _AssetInfoState extends State<AssetInfo> {
     });
   }
 
+  String onChanged(String value) {
+    return value;
+  }
+
+  String onChangedBalancOf(String value) {
+    _modelAssetInfo.formBalanceOf.currentState.validate();
+    return value;
+  }
+
+  String onChangedApprove(String value) {
+    _modelAssetInfo.formApprove.currentState.validate();
+    return value;
+  }
+
+  String onChangedAllow(String value) {
+    _modelAssetInfo.formAllowance.currentState.validate();
+    return value;
+  }
+
+  String onSubmit(String value) {
+    return value;
+  }
+
+  // String validateAmount(String value) {
+  //   if (_scanPayM.nodeAmount.hasFocus) {
+  //     _scanPayM.responseAmount = instanceValidate.validateSendToken(value);
+  //     enableButton();
+  //     if (_scanPayM.responseAmount != null)
+  //       return _scanPayM.responseAmount += "amount";
+  //   }
+  //   return _scanPayM.responseAmount;
+  // }
+
   @override
   void initState() {
     _kpiBalance = widget.kpiBalance;
@@ -334,9 +350,10 @@ class _AssetInfoState extends State<AssetInfo> {
                                     onTap: () {
                                       AssetInfoC().showBalanceOf(
                                           context,
+                                          _modelAssetInfo.formBalanceOf,
                                           _recieverController,
                                           _ownerNode,
-                                          onChanged,
+                                          onChangedBalancOf,
                                           onSubmit,
                                           submitBalanceOf);
                                     },
@@ -452,13 +469,14 @@ class _AssetInfoState extends State<AssetInfo> {
                             onTap: () {
                               AssetInfoC().showApprove(
                                   context,
+                                  _modelAssetInfo.formApprove,
                                   _recieverController,
                                   _amountController,
                                   _pinController,
                                   _ownerNode,
                                   _spenderNode,
                                   _passNode,
-                                  onChanged,
+                                  onChangedApprove,
                                   onSubmit,
                                   submitApprove);
                             },
@@ -493,11 +511,12 @@ class _AssetInfoState extends State<AssetInfo> {
                               //allowance();
                               AssetInfoC().showAllowance(
                                 context,
+                                _modelAssetInfo.formAllowance,
                                 _ownerController,
                                 _spenderController,
                                 _ownerNode,
                                 _spenderNode,
-                                onChanged,
+                                onChangedAllow,
                                 onSubmit,
                                 submitAllowance,
                               );
@@ -607,19 +626,11 @@ class _AssetInfoState extends State<AssetInfo> {
                                     children: [
                                       MyText(
                                           width: double.infinity,
-                                          text:
-                                              "0", //portfolioData[0]["data"]['balance'],
+                                          text: "0",
                                           color: "#FFFFFF",
                                           fontSize: 18,
                                           textAlign: TextAlign.right,
                                           overflow: TextOverflow.ellipsis),
-                                      // MyText(
-                                      //   width: double.infinity,
-                                      //   text: "+",//"${!rate.isNegative ? '+' : ''}$rate",
-                                      //   textAlign: TextAlign.right,
-                                      //   color: AppColors.secondary_text,//!rate.isNegative ? AppColors.secondary_text : "#ff1900",
-                                      //   fontSize: 15
-                                      // ),
                                     ],
                                   ),
                                 ),

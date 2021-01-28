@@ -2,10 +2,14 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
+import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 
 class MySplashScreen extends StatefulWidget {
-  final Keyring keyring;
-  MySplashScreen(this.keyring);
+  CreateAccModel accModel;
+
+  MySplashScreen(this.accModel);
 
   static const route = '/';
   @override
@@ -25,27 +29,30 @@ class MySplashScreenState extends State<MySplashScreen> {
 
   @override
   initState() {
+    AppServices.clearStorage();
     // checkBiometric();
     // checkExpiredToken();
-    Future.delayed(Duration(seconds: 1), () async {
-      getCurrentAccount().then((value) {
-        // print("Get acc $value");
-        if (value.isEmpty) {
-          Navigator.pushReplacement(
-              context, RouteAnimation(enterPage: Welcome()));
-        } else {
-          Navigator.pushReplacementNamed(context, Home.route);
-        }
-      });
-      //Navigator.pushReplacement(context, RouteAnimation(enterPage: Home()));
-    });
+    print("Splash screen");
+    getCurrentAccount();
     super.initState();
   }
 
-  Future<List<KeyPairData>> getCurrentAccount() async {
-    final List<KeyPairData> ls = widget.keyring.keyPairs;
+  void getCurrentAccount() async {
+    await Future.delayed(Duration(seconds: 3), () {
+      print("My Keyring 22" + widget.accModel.keyring.keyPairs.toString());
+      final List<KeyPairData> ls = widget.accModel.keyring.keyPairs.toList();
 
-    return ls;
+      if (ls.isEmpty) {
+        Navigator.pushReplacement(
+            context, RouteAnimation(enterPage: Welcome()));
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => MyUserInfo(widget.accModel)) //onfirmMnemonic(widget.accModel))
+        // );
+      } else {
+        Navigator.pushReplacementNamed(context, Home.route);
+      }
+    });
   }
 
   @override

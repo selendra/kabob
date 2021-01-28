@@ -7,13 +7,15 @@ class ImportAccBody extends StatelessWidget {
   final ImportAccModel importAccModel;
   final Function onChanged;
   final Function onSubmit;
-  final Function importFromMnemonic;
+  final Function clearInput;
+  final bool enable;
 
   ImportAccBody({
     this.importAccModel,
     this.onChanged,
     this.onSubmit,
-    this.importFromMnemonic,
+    this.clearInput,
+    this.enable
   });
 
   Widget build(BuildContext context) {
@@ -110,19 +112,13 @@ class ImportAccBody extends StatelessWidget {
           MyFlatButton(
             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
             textButton: 'Next',
-            action: () async {
-              if (importAccModel.mnemonicCon.text != null) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ImportUserInfo(
-                      importAccModel.mnemonicCon.text,
-                      importFromMnemonic,
-                    ),
-                  ),
-                );
-              }
-            },
+            action: enable == false ? null : () async {
+              await Navigator.pushNamed(
+                context,
+                ImportUserInfo.route
+              );
+              clearInput();
+            }
           )
         ],
       ),

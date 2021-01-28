@@ -22,6 +22,10 @@ class ModelUserInfo {
   TextEditingController controlFirstName = TextEditingController();
   TextEditingController controlMidName = TextEditingController();
   TextEditingController controlLastName = TextEditingController();
+
+  TextEditingController userNameCon = TextEditingController();
+  TextEditingController passwordCon = TextEditingController();
+  TextEditingController confirmPasswordCon = TextEditingController();
   
   TextEditingController controlOccupation = TextEditingController(text: '');
   TextEditingController controlNationality = TextEditingController(text: '');
@@ -30,6 +34,10 @@ class ModelUserInfo {
   FocusNode nodeOccupatioin = FocusNode();
   FocusNode nodeNationality = FocusNode();
   FocusNode nodeCountry = FocusNode();
+  
+  FocusNode userNameNode = FocusNode();
+  FocusNode passwordNode = FocusNode();
+  FocusNode confirmPasswordNode = FocusNode();
   
   String firstName;
   String midName;

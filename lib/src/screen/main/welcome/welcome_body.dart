@@ -24,10 +24,7 @@ class WelcomeBody extends StatelessWidget {
                 edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
                 textButton: 'Create Account',
                 action: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ContentsBackup()));
+                  Navigator.pushNamed(context, ContentsBackup.route);
                 },
               ),
               MyFlatButton(

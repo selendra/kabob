@@ -1,9 +1,33 @@
+import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 
 class ContentsBackup extends StatelessWidget{
 
   final double bpSize = 16.0;
+
+  CreateAccModel createAccM;
+
+  ContentsBackup(CreateAccModel createAccModel){
+    this.createAccM = createAccModel;
+    _generateMnemonic(createAccModel.sdk);
+  }
+
+  static const route = '/contentsBackup';
+
+  Future<void> _generateMnemonic(WalletSDK sdk) async {
+      // setState(() {
+      //   _submitting = true;
+      // });
+    createAccM.mnemonic = await sdk.api.keyring.generateMnemonic();
+    createAccM.mnemonicList = createAccM.mnemonic.split(' ');
+      // widget.showResult(context, 'generateMnemonic', seed);
+      // setState(() {
+      //   _submitting = false;
+      // }
+  }
+
   
   Widget build(BuildContext context){
     return Scaffold(
@@ -92,12 +116,9 @@ class ContentsBackup extends StatelessWidget{
               edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
               textButton: 'Next',
               action: () async {
-                await dialog(context, Text('We are not allow you to screen shot mnemonic'), Text("Message"));
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateMnemonic()
-                  )
+                  MaterialPageRoute(builder: (context) => CreateMnemonic(accModel: createAccM))
                 );
               },
             )
