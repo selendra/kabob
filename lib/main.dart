@@ -64,6 +64,7 @@ class AppState extends State<App> {
     });
     if (_sdkReady) {
       connectNode();
+
       // getDecrypt();
     }
   }
@@ -87,7 +88,6 @@ class AppState extends State<App> {
 
       // print(pairs);
       // transfer();
-      _balanceOf(keyring.keyPairs[0].address, keyring.keyPairs[0].address);
     });
   }
 
@@ -121,7 +121,8 @@ class AppState extends State<App> {
         _apiConnected = true;
 
         _subscribeBalance();
-        _initContract();
+        _balanceOf(keyring.keyPairs[0].address, keyring.keyPairs[0].address);
+        //_initContract();
 
         //_importFromMnemonic();
       });

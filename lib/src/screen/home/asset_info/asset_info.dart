@@ -7,10 +7,10 @@ import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 import '../../../../index.dart';
 
 class AssetInfo extends StatefulWidget {
-  final String accBalance;
+  final String kpiBalance;
   final WalletSDK sdk;
   final Keyring keyring;
-  AssetInfo({@required this.accBalance, this.sdk, this.keyring});
+  AssetInfo({@required this.kpiBalance, this.sdk, this.keyring});
   @override
   _AssetInfoState createState() => _AssetInfoState();
 }
@@ -18,9 +18,17 @@ class AssetInfo extends StatefulWidget {
 class _AssetInfoState extends State<AssetInfo> {
   TextEditingController _ownerController = TextEditingController();
   TextEditingController _spenderController = TextEditingController();
+  TextEditingController _recieverController = TextEditingController();
+  TextEditingController _amountController = TextEditingController();
+  TextEditingController _pinController = TextEditingController();
+
+  AssetInfoC c = AssetInfoC();
+
   FocusNode _ownerNode = FocusNode();
   FocusNode _spenderNode = FocusNode();
+  FocusNode _passNode = FocusNode();
   String _kpiSupply = '0';
+  String _kpiBalance = '0';
   bool _loading = false;
 
   String onChanged(String value) {
@@ -37,20 +45,107 @@ class _AssetInfoState extends State<AssetInfo> {
     }
   }
 
-  Future<void> approve() async {
+  void submitApprove() {
+    if (_amountController.text != null &&
+        _recieverController.text != null &&
+        _pinController.text != null) {
+      approve(_recieverController.text, _pinController.text,
+          int.parse(_amountController.text));
+    }
+  }
+
+  void submitTransferFrom() {
+    if (_amountController.text != null &&
+        _recieverController.text != null &&
+        _pinController.text != null) {
+      transferFrom(_recieverController.text, _pinController.text,
+          int.parse(_amountController.text));
+    }
+  }
+
+  void submitBalanceOf() {
+    if (_recieverController.text != null) {
+      _balanceOf(widget.keyring.keyPairs[0].address, _recieverController.text);
+    }
+  }
+
+  Future<void> approve(String recieverAddress, String pass, int amount) async {
+    Navigator.pop(context);
+    setState(() {
+      _loading = true;
+    });
     final pairs = await KeyringPrivateStore()
-        .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', '123456');
-    print(pairs['seed']);
+        .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
+    //print(pairs['seed']);
     final res =
-        await http.post('http://localhost:3000/:service/contract/transfer',
+        await http.post('http://localhost:3000/:service/contract/approve',
             headers: <String, String>{
               "content-type": "application/json",
             },
             body: jsonEncode(<String, dynamic>{
               "sender": pairs['seed'],
-              "to": '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
-              "value": 100,
+              "to": recieverAddress,
+              "value": amount,
             }));
+
+    var resJson = jsonDecode(res.body);
+    if (resJson == null) {
+      await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
+    } else {
+      await dialog(
+          context,
+          MyText(
+            text: 'Approve Successfully!',
+            textAlign: TextAlign.center,
+          ),
+          Text('Approve'));
+    }
+    _amountController.text = '';
+    _recieverController.text = '';
+    _pinController.text = '';
+
+    setState(() {
+      _loading = false;
+    });
+
+    print(res);
+  }
+
+  Future<void> transferFrom(
+      String recieverAddress, String pass, int amount) async {
+    Navigator.pop(context);
+    setState(() {
+      _loading = true;
+    });
+    final pairs = await KeyringPrivateStore()
+        .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
+
+    final res =
+        await http.post('http://localhost:3000/:service/contract/transferfrom',
+            headers: <String, String>{
+              "content-type": "application/json",
+            },
+            body: jsonEncode(<String, dynamic>{
+              "sender": pairs['seed'],
+              "to": recieverAddress,
+              "value": amount,
+            }));
+
+    var resJson = jsonDecode(res.body);
+
+    if (resJson == null) {
+      await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
+    } else {
+      await dialog(
+          context, Text('Transfer From Successfully'), Text('Transfer From'));
+    }
+    _amountController.text = '';
+    _recieverController.text = '';
+    _pinController.text = '';
+
+    setState(() {
+      _loading = false;
+    });
 
     print(res);
   }
@@ -97,8 +192,40 @@ class _AssetInfoState extends State<AssetInfo> {
     }
   }
 
+  Future<void> _balanceOf(String from, String who) async {
+    Navigator.pop(context);
+    setState(() {
+      _loading = true;
+    });
+    await GetRequest().balanceOf(from, who).then((value) async {
+      print(value);
+      if (value != null) {
+        print(value);
+        await dialog(
+            context,
+            MyText(
+              text: 'Account Balance: $value',
+              textAlign: TextAlign.center,
+            ),
+            Text('Balance Of'));
+      } else {
+        await dialog(
+            context,
+            MyText(
+              text: 'Invalid Address',
+              textAlign: TextAlign.center,
+            ),
+            Text('Balance Of'));
+      }
+    });
+    setState(() {
+      _loading = false;
+    });
+  }
+
   @override
   void initState() {
+    _kpiBalance = widget.kpiBalance;
     totalSupply();
     super.initState();
   }
@@ -156,7 +283,7 @@ class _AssetInfoState extends State<AssetInfo> {
                                 ),
                                 SizedBox(height: 5),
                                 MyText(
-                                  text: widget.accBalance + " KPI",
+                                  text: _kpiBalance + " KPI",
                                   color: AppColors.secondary_text,
                                   fontSize: 40,
                                   fontWeight: FontWeight.bold,
@@ -166,14 +293,35 @@ class _AssetInfoState extends State<AssetInfo> {
                           ),
                           Expanded(
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Align(
-                                  alignment: Alignment.bottomRight,
+                                  alignment: Alignment.topRight,
                                   child: MyText(
                                     text: "Total Supply: $_kpiSupply",
                                     color: AppColors.secondary_text,
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    AssetInfoC().showBalanceOf(
+                                        context,
+                                        _recieverController,
+                                        _ownerNode,
+                                        onChanged,
+                                        onSubmit,
+                                        submitBalanceOf);
+                                  },
+                                  child: Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: MyText(
+                                      text: "Check Balance",
+                                      color: AppColors.secondary_text,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -226,12 +374,24 @@ class _AssetInfoState extends State<AssetInfo> {
                         GestureDetector(
                           onTap: () {
                             //transfer();
+                            AssetInfoC().showtransferFrom(
+                                context,
+                                _recieverController,
+                                _amountController,
+                                _pinController,
+                                _ownerNode,
+                                _spenderNode,
+                                _passNode,
+                                onChanged,
+                                onSubmit,
+                                submitTransferFrom);
 
                             // MyBottomSheet().trxOptions(
                             //   context: context,
                             //   sdk: widget.sdk,
                             //   keyring: widget.keyring,
                             // );
+                            // c.transferFrom = true;
                           },
                           child: Column(
                             children: [
@@ -258,28 +418,44 @@ class _AssetInfoState extends State<AssetInfo> {
                             ],
                           ),
                         ),
-                        Column(
-                          children: [
-                            Container(
-                              height: MediaQuery.of(context).size.width * 0.15,
-                              width: MediaQuery.of(context).size.width * 0.15,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: hexaCodeToColor(AppColors.cardColor),
+                        GestureDetector(
+                          onTap: () {
+                            AssetInfoC().showApprove(
+                                context,
+                                _recieverController,
+                                _amountController,
+                                _pinController,
+                                _ownerNode,
+                                _spenderNode,
+                                _passNode,
+                                onChanged,
+                                onSubmit,
+                                submitApprove);
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                height:
+                                    MediaQuery.of(context).size.width * 0.15,
+                                width: MediaQuery.of(context).size.width * 0.15,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: hexaCodeToColor(AppColors.cardColor),
+                                ),
+                                child: Icon(
+                                  Icons.check_box,
+                                  color: Colors.white,
+                                ),
                               ),
-                              child: Icon(
-                                Icons.check_box,
-                                color: Colors.white,
+                              SizedBox(height: 10),
+                              MyText(
+                                text:
+                                    "Approve", //portfolioData[0]["data"]['balance'],
+                                color: "#FFFFFF",
+                                fontSize: 14,
                               ),
-                            ),
-                            SizedBox(height: 10),
-                            MyText(
-                              text:
-                                  "Approve", //portfolioData[0]["data"]['balance'],
-                              color: "#FFFFFF",
-                              fontSize: 14,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         GestureDetector(
                           onTap: () {

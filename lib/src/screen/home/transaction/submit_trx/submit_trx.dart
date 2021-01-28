@@ -6,6 +6,7 @@ import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:http/http.dart' as http;
+import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
   final String _walletKey;
@@ -30,6 +31,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   PostRequest _postRequest = PostRequest();
 
   Backend _backend = Backend();
+  AssetInfoC c = AssetInfoC();
 
   bool disable = false;
   bool _loading = false;
@@ -37,6 +39,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   @override
   void initState() {
     _scanPayM.asset = "SEL";
+    print(c.transferFrom);
     // _scanPayM.portfolio.add("KPI");
 
     AppServices.noInternetConnection(_scanPayM.globalKey);
@@ -181,8 +184,6 @@ class SubmitTrxState extends State<SubmitTrx> {
     final pairs = await KeyringPrivateStore()
         .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', '$pass');
 
-    print(pairs['seed']);
-
     final res =
         await http.post('http://localhost:3000/:service/contract/transfer',
             headers: <String, String>{
@@ -215,7 +216,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   Future<void> transferFrom() async {
     final pairs = await KeyringPrivateStore()
         .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', '123456');
-    print(pairs['seed']);
+
     final res =
         await http.post('http://localhost:3000/:service/contract/transferfrom',
             headers: <String, String>{
@@ -224,7 +225,7 @@ class SubmitTrxState extends State<SubmitTrx> {
             body: jsonEncode(<String, dynamic>{
               "sender": pairs['seed'],
               "to": '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
-              "value": 100,
+              "value": 20,
             }));
 
     print(res);
@@ -309,26 +310,21 @@ class SubmitTrxState extends State<SubmitTrx> {
           _loading = true;
         });
         //print(pin);
-        int amount = int.parse(_scanPayM.controlAmount.text) * pow(10, 18);
 
-        if (amount != null) {
-          if (_scanPayM.asset == 'SEL') {
-            sendTx(
-                _scanPayM.controlReceiverAddress.text, amount.toString(), pin);
-          } else {
-            transfer(
-                _scanPayM.controlReceiverAddress.text, pin, amount.toString());
-          }
+        if (_scanPayM.asset == 'SEL') {
+          int amount = int.parse(_scanPayM.controlAmount.text) * pow(10, 18);
+
+          sendTx(_scanPayM.controlReceiverAddress.text, amount.toString(), pin);
         } else {
-          print('amount is null');
+          transfer(_scanPayM.controlReceiverAddress.text, pin,
+              _scanPayM.controlAmount.text);
         }
-
-        // print(_scanPayM.controlAmount.text);
-        // print(_scanPayM.controlReceiverAddress.text);
-
       } else {
-        print(pin);
+        print('amount is null');
       }
+
+      // print(_scanPayM.controlAmount.text);
+      // print(_scanPayM.controlReceiverAddress.text);
     });
   }
 

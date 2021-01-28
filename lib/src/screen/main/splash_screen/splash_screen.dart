@@ -27,9 +27,9 @@ class MySplashScreenState extends State<MySplashScreen> {
   initState() {
     // checkBiometric();
     // checkExpiredToken();
-    Future.delayed(Duration(seconds: 2), () async {
+    Future.delayed(Duration(seconds: 1), () async {
       getCurrentAccount().then((value) {
-        print("Get acc $value");
+        // print("Get acc $value");
         if (value.isEmpty) {
           Navigator.pushReplacement(
               context, RouteAnimation(enterPage: Welcome()));
@@ -178,8 +178,8 @@ class MySplashScreenState extends State<MySplashScreen> {
         body: Align(
             alignment: Alignment.center,
             child: Container(
-                width: 200.0,
-                height: 200.0,
+                width: 150.0,
+                height: 150.0,
                 child: SvgPicture.asset('assets/sld_logo.svg')
                 // CustomAnimation.flareAnimation(_flareControls, "assets/animation/splash_screen.flr", "splash_screen"),
                 )));
