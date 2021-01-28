@@ -209,10 +209,8 @@ class AppState extends State<App> {
                     _msgChannel, kpiBalance),
                 ImportAcc.route: (_) => ImportAcc(sdk, keyring),
                 Account.route: (_) => Account(sdk, keyring),
-                ReceiveWallet.route: (_) => ReceiveWallet(
-                      sdk: sdk,
-                      keyring: keyring,
-                    ),
+                ReceiveWallet.route: (_) =>
+                    ReceiveWallet(sdk: sdk, keyring: keyring),
               },
               builder: (context, widget) => ResponsiveWrapper.builder(
                 BouncingScrollWrapper.builder(context, widget),
