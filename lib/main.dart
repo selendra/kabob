@@ -130,34 +130,32 @@ class AppState extends State<App> {
   // }
 
   Future<void> connectNode() async {
-    try {
-      final node = NetworkParams();
+    print('connectNode');
+    final node = NetworkParams();
 
-      node.name = 'Indranet hosted By Selendra';
-      node.endpoint = 'wss://rpc-testnet.selendra.org';
+    node.name = 'Indranet hosted By Selendra';
+    node.endpoint = 'wss://rpc-testnet.selendra.org';
+    node.ss58 = 0;
+    final res = await _createAccModel.sdk.api
+        .connectNode(_createAccModel.keyring, [node]);
 
-      node.ss58 = 0;
-      final res = await _createAccModel.sdk.api
-          .connectNode(_createAccModel.keyring, [node]);
+    print('resConnectNode $res');
+    setState(() {});
+    if (res != null) {
+      setState(() {
+        _apiConnected = true;
 
-      print('res $res');
-      setState(() {});
-      if (res != null) {
-        setState(() {
-          _apiConnected = true;
+        _subscribeBalance();
+        // _balanceOf(_createAccModel.keyring.keyPairs[0].address,
+        //     _createAccModel.keyring.keyPairs[0].address);
+        //_initContract();
 
-          _subscribeBalance();
-          _balanceOf(_createAccModel.keyring.keyPairs[0].address,
-              _createAccModel.keyring.keyPairs[0].address);
-          //_initContract();
+        //_importFromMnemonic();
+      });
+      // _importFromMnemonic();
 
-          //_importFromMnemonic();
-        });
-        // _importFromMnemonic();
-
-      }
-    } catch (e) {
-      print("Connect node error $e");
+    } else {
+      print('res null');
     }
   }
 
@@ -211,8 +209,8 @@ class AppState extends State<App> {
         .subscribeBalance(_createAccModel.keyring.current.address, (res) {
       setState(() {
         _balance = res;
-        mBalance = int.parse(_balance.freeBalance).toString();
-        print(mBalance);
+        mBalance = BigInt.parse(_balance.freeBalance).toString();
+        //print(mBalance);
       });
     });
 

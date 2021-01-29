@@ -1,5 +1,6 @@
 // import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:polkawallet_sdk/api/types/balanceData.dart';
+import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
@@ -73,26 +74,32 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
       _homeM.userData['first_name'] = accName;
       _homeM.userData['wallet'] = accAddress;
-      _subscribeBalance();
+      // _subscribeBalance();
     });
     print("Hello name ${ls[0].name}");
   }
 
-  Future<void> _subscribeBalance() async {
-    print('subscribe');
-    final channel = await widget.sdk.api.account
-        .subscribeBalance(widget.keyring.current.address, (res) {
-      setState(() {
-        _balance = res;
-        mBalance = int.parse(_balance.freeBalance).toString();
-        print(mBalance);
-      });
-    });
+  // Future<void> _subscribeBalance() async {
+  //   print('subscribe');
+  //   final channel = await widget.sdk.api.account
+  //       .subscribeBalance(widget.keyring.current.address, (res) {
+  //     print(res);
+  //     setState(() {
+  //       _balance = res;
+  //       mBalance = int.parse(_balance.freeBalance).toString();
+  //       print(mBalance);
+  //     });
+  //   });
 
-    setState(() {
-      _msgChannel = channel;
-      print('$channel');
-    });
+  //   print('mbalance: $mBalance');
+
+  //   setState(() {
+  //     _msgChannel = channel;
+  //     print('$channel');
+  //   });
+  // }
+  Future<void> _queryBalance() async {
+    final res = await widget.sdk.api.account.queryBalance('_testAddress');
   }
 
   Future<void> _balanceOf(String from, String who) async {
@@ -105,6 +112,28 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         });
       }
     });
+  }
+
+  Future<void> connectNode() async {
+    print('connectNode');
+    final node = NetworkParams();
+
+    node.name = 'Indranet hosted By Selendra';
+    node.endpoint = 'wss://rpc-testnet.selendra.org';
+    node.ss58 = 0;
+    final res = await widget.sdk.api.connectNode(widget.keyring, [node]);
+
+    print('resConnectNode $res');
+
+    if (res != null) {
+      print(res);
+      // _subscribeBalance();
+
+      // _importFromMnemonic();
+
+    } else {
+      print('rese null');
+    }
   }
 
   String action = "no_action";
@@ -128,9 +157,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.userData = {};
       setChartData();
       getCurrentAccount();
-      _subscribeBalance();
-      _balanceOf(widget.keyring.keyPairs[0].address,
-          widget.keyring.keyPairs[0].address);
+      // _balanceOf(widget.keyring.keyPairs[0].address,
+      //     widget.keyring.keyPairs[0].address);
 
       /* User Profile */
       // getUserData();
@@ -147,9 +175,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    if (widget.msgChannel != null) {
-      widget.sdk.api.unsubscribeMessage(widget.msgChannel);
-    }
+    // if (widget.msgChannel != null) {
+    //   widget.sdk.api.unsubscribeMessage(widget.msgChannel);
+    // }
     super.dispose();
   }
 
@@ -453,7 +481,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             homeM: _homeM,
             accName: accName,
             accAddress: accAddress,
-            accBalance: widget.mBalance ?? mBalance,
+            accBalance: widget.mBalance,
             apiStatus: widget.apiConnected,
             pieColorList: pieColorList,
             dataMap: dataMap,

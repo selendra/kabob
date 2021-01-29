@@ -97,6 +97,7 @@ dependencies:
   #for secure wallet function
   polkawallet_sdk: ^0.0.8
   animations: ^1.1.2
+  
 
   #Contact
   contacts_service: ^0.4.6 
@@ -117,6 +118,7 @@ flutter_icons:
   image_path: "assets/images/sld_icon.png"
   ios: true
   android: true
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
