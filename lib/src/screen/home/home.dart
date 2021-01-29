@@ -74,7 +74,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
       _homeM.userData['first_name'] = accName;
       _homeM.userData['wallet'] = accAddress;
-      // _subscribeBalance();
     });
     print("Hello name ${ls[0].name}");
   }
@@ -98,9 +97,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   //     print('$channel');
   //   });
   // }
-  Future<void> _queryBalance() async {
-    final res = await widget.sdk.api.account.queryBalance('_testAddress');
-  }
 
   Future<void> _balanceOf(String from, String who) async {
     await GetRequest().balanceOf(from, who).then((value) {
@@ -143,7 +139,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     /* Initialize State */
     print("My name ${widget.keyring.current.name}");
     _homeM.portfolioList = null;
-    _kpiBalance = widget.kpiBalance;
     _portfolioM.list = [];
     if (mounted) {
       _homeM.result = {};
@@ -485,7 +480,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             apiStatus: widget.apiConnected,
             pieColorList: pieColorList,
             dataMap: dataMap,
-            kpiBalance: _kpiBalance,
+            kpiBalance: widget.kpiBalance,
             sdk: widget.sdk,
             keyring: widget.keyring,
             refresh: refresh,

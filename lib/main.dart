@@ -60,7 +60,6 @@ class AppState extends State<App> {
 
   @override
   void initState() {
-    print("Hello my App");
     _createAccModel.keyring = Keyring();
     _createAccModel.sdk = WalletSDK();
     _initApi();
@@ -68,7 +67,6 @@ class AppState extends State<App> {
   }
 
   Future<void> _initApi() async {
-    print("init");
     await FlutterWebviewPlugin().reload();
 
     await _createAccModel.keyring.init();
@@ -77,8 +75,9 @@ class AppState extends State<App> {
 
     _sdkReady = true;
 
-    print("My sdk $_sdkReady");
     if (_sdkReady) {
+      await _balanceOf(_createAccModel.keyring.keyPairs[0].address,
+          _createAccModel.keyring.keyPairs[0].address);
       connectNode();
 
       // getDecrypt();
@@ -146,14 +145,7 @@ class AppState extends State<App> {
         _apiConnected = true;
 
         _subscribeBalance();
-        // _balanceOf(_createAccModel.keyring.keyPairs[0].address,
-        //     _createAccModel.keyring.keyPairs[0].address);
-        //_initContract();
-
-        //_importFromMnemonic();
       });
-      // _importFromMnemonic();
-
     } else {
       print('res null');
     }
