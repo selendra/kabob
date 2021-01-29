@@ -226,6 +226,7 @@ class MyAppBar extends StatelessWidget {
   final String title;
   final Function onPressed;
   final Color color;
+  final Widget tile;
 
   MyAppBar(
       {this.pLeft = 0,
@@ -235,7 +236,9 @@ class MyAppBar extends StatelessWidget {
       this.margin = const EdgeInsets.fromLTRB(0, 16, 0, 0),
       @required this.title,
       this.color,
-      this.onPressed});
+      this.onPressed,
+      this.tile
+    });
 
   Widget build(BuildContext context) {
     return Container(
@@ -261,7 +264,9 @@ class MyAppBar extends StatelessWidget {
               text: title,
               left: 15,
               fontSize: 22,
-            )
+            ),
+
+            tile ?? Container()
           ],
         ));
   }
