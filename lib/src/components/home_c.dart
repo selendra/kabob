@@ -3,6 +3,7 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/screen/home/contact_book/contact_book.dart';
 
 final fontSizePort = 17.0;
 final fontColorPort = Colors.white;
@@ -385,15 +386,12 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(child: Container()),
               Expanded(
                   child: MyIconButton(
-                icon: 'combo_chart.svg',
+                icon: 'contact_list.svg',
                 onPressed: () async {
-                  Navigator.push(
-                      context,
-                      RouteAnimation(
-                          enterPage: Portfolio(
-                        listData: portfolioM.list,
-                        listChart: homeM.circularChart,
-                      )));
+                  Navigator.pushNamed(
+                    context,
+                    "/contactList"
+                  );
                 },
               )),
               Expanded(
