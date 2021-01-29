@@ -8,15 +8,14 @@ class ContactBookBody extends StatelessWidget {
 
   final ContactBookModel model;
 
-  final CreateAccModel accModel;
+  final Function getContact;
 
-  final List<ContactBookModel> contactList;
-
-  ContactBookBody({this.accModel, this.model, this.contactList});
+  ContactBookBody({this.model, this.getContact});
 
 
   @override
   Widget build(BuildContext context) {
+    print(model.contactBookList);
     return Column(
       children: [
 
@@ -24,10 +23,6 @@ class ContactBookBody extends StatelessWidget {
           title: "Contact List",
           onPressed: () {
             Navigator.pop(context);
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (context) => AddContact())
-            // );
           },
           tile: Expanded(
             child: Align(
@@ -45,14 +40,17 @@ class ContactBookBody extends StatelessWidget {
                   await FlutterContactPicker.hasPermission().then((value) async {
                     
                     if (value) {
-                      await FlutterContactPicker.pickPhoneContact().then((value) {
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(
-                            builder: (context) => AddContact(accModel: accModel, contact: value),
-                          )
-                        );
-                      });
+                      var result = await FlutterContactPicker.pickPhoneContact();
+
+                      dynamic response = await Navigator.push(
+                        context, 
+                        MaterialPageRoute(
+                          builder: (context) => AddContact(contact: result),
+                        )
+                      );
+                        
+                      print(response);
+                      if (response == true) getContact();
                     }
                   });
                   // try{
@@ -75,10 +73,10 @@ class ContactBookBody extends StatelessWidget {
         ),
 
         Expanded(
-          child: Padding(
+          child: model.contactBookList == null ? Center(child: MyText(text: 'No contact', color: "#FFFFFF", fontSize: 25,)) : model.contactBookList.isEmpty ? Center(child: CircularProgressIndicator())  : Padding(
             padding: EdgeInsets.all(16),
             child: ListView.builder(
-              itemCount: contactList.length,
+              itemCount: model.contactBookList.length,
               itemBuilder: (context, int index){
                 return Card(
                   margin: EdgeInsets.only(bottom: 16.0),
@@ -101,7 +99,7 @@ class ContactBookBody extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MyText(
-                              text: contactList[index].userName.text,
+                              text: model.contactBookList[index].userName.text,
                               color: "#FFFFFF",
                               fontSize: 20,
                             ),

@@ -7,11 +7,9 @@ import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact
 import 'package:wallet_apps/src/screen/home/contact_book/contact_book_body.dart';
 
 class AddContact extends StatefulWidget {
-
-  final CreateAccModel accModel;
   final PhoneContact contact;
 
-  AddContact({this.accModel, this.contact});
+  AddContact({this.contact});
   
   @override
   _AddContactState createState() => _AddContactState();
@@ -26,26 +24,30 @@ class _AddContactState extends State<AddContact> {
     try {
       // Show Loading
       dialogLoading(context);
-      // final pass = await StorageServices.fetchData('pass');
-      // print(widget.accModel.sdk.api.keyring.addContact(keyring, acc))
-      final acc = await widget.accModel.sdk.api.keyring.importAccount(
-        widget.accModel.keyring,
-        keyType: KeyType.mnemonic,
-        name: "Daveat",
-        password: '123456',
-      );
+      
+      await Future.delayed(Duration(seconds: 1), (){});
+      Map<String, dynamic> contactData = {
+        'username': _addContactModel.userName.text,
+        'phone': _addContactModel.contactNumber.text,
+        'address': _addContactModel.address.text,
+        'memo': _addContactModel.memo.text
+      };
 
-      await widget.accModel.sdk.api.keyring.addContact(widget.accModel.keyring, acc).then((value) {
+      await StorageServices.addMoreData(contactData, 'contactList');
 
-        // Close Dialog Loading
-        Navigator.pop(context);
-        print("Add contact  response $value");
-      });
+      await StorageServices.fetchData('contactList');
+
+      // Close Dialog Loading
+      Navigator.pop(context);
+
+      await dialog(context, Text("Successfully add new contact!\n Please check your contact book"), Text("Congratualtion"));
+      // Close Screen
+      Navigator.pop(context, true);
     } catch (e) {
-      print("My error $e");
-    }
     // Close Dialog Loading
     Navigator.pop(context);
+      print("My error $e");
+    }
   }
 
   @override

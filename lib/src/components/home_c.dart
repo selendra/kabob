@@ -388,9 +388,9 @@ class MyBottomAppBar extends StatelessWidget {
                   child: MyIconButton(
                 icon: 'contact_list.svg',
                 onPressed: () async {
-                  Navigator.pushNamed(
+                  Navigator.push(
                     context,
-                    "/contactList"
+                    MaterialPageRoute(builder: (context) => ContactBook())
                   );
                 },
               )),

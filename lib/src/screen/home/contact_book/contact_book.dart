@@ -5,9 +5,11 @@ import 'package:wallet_apps/src/screen/home/contact_book/contact_book_body.dart'
 
 class ContactBook extends StatefulWidget {
 
-  final CreateAccModel accModel;
+  // final CreateAccModel accModel;
+  
+  // final List contactList;
 
-  ContactBook(this.accModel);
+  // ContactBook(this.accModel, this.contactList);
 
   static const String route = '/contactList';
 
@@ -19,17 +21,36 @@ class _ContactBookState extends State<ContactBook> {
 
   ContactBookModel _contactBookModel = ContactBookModel();
 
-  List<ContactBookModel> contactBookList = [
-    ContactBookModel.initList(address: "1", username: "Daveat", memo: "IT"),
-    ContactBookModel.initList(address: "2", username: "God", memo: "IT"),
-    ContactBookModel.initList(address: "3", username: "d", memo: "IT"),
-    ContactBookModel.initList(address: "4", username: "v", memo: "IT"),
-    ContactBookModel.initList(address: "5", username: "a", memo: "IT"),
-    ContactBookModel.initList(address: "6", username: "c", memo: "IT"),
-  ];
+  void getContact() async {
+    _contactBookModel.contactBookList.clear();
+    var value = await StorageServices.fetchData('contactList');
+
+    print(value);
+    if(value == null) {
+      _contactBookModel.contactBookList = null;
+      print("My contact");
+    }
+    else {
+      print("Ke contact");
+      for(var i in value){
+        _contactBookModel.contactBookList.add(
+          ContactBookModel.initList(
+            contactNum: i['phone'], 
+            username: i['username'], 
+            address: i['address'], 
+            memo: i['memo'],
+          ),
+        );
+
+      } 
+    }
+    print(_contactBookModel.contactBookList);
+    setState(() {});
+  }
 
   @override
   initState(){
+    getContact();
     // print(widget.sdkModel.keyring.contacts)
     super.initState();
   }
@@ -41,8 +62,7 @@ class _ContactBookState extends State<ContactBook> {
         height: MediaQuery.of(context).size.height,
         child: ContactBookBody(
           model: _contactBookModel,
-          contactList: contactBookList,
-          accModel: widget.accModel 
+          getContact: getContact
         )
       )
     );

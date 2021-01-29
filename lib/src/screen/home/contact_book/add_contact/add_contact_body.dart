@@ -62,35 +62,7 @@ class AddContactBody extends StatelessWidget {
 
                 // Row(
                 //   children: [
-                //     MyInputField(
-                //       labelText: "Address",
-                //       prefixText: null,
-                //       textInputFormatter: [
-                //         LengthLimitingTextInputFormatter(TextField.noMaxLength)
-                //       ],
-                //       inputType: TextInputType.text,
-                //       controller: model.address,
-                //       focusNode: model.addressNode,
-                //       validateField: (String fun){},
-                //       onChanged: (String value){
-
-                //       },
-                //       pBottom: 16,
-                //       onSubmit: (){}
-                //     ),
-
-                //     // Expanded(
-                //     //   child: IconButton(
-                //     //     icon: Icon(Icons.ac_unit),
-                //     //     onPressed: (){
-                          
-                //     //     },
-                //     //   )
-                //     // )
-                //   ],
-                // ),
-
-                MyInputField(
+                    MyInputField(
                       labelText: "Address",
                       prefixText: null,
                       textInputFormatter: [
@@ -106,6 +78,17 @@ class AddContactBody extends StatelessWidget {
                       pBottom: 16,
                       onSubmit: (){}
                     ),
+
+                //     // Expanded(
+                //     //   child: IconButton(
+                //     //     icon: Icon(Icons.ac_unit),
+                //     //     onPressed: (){
+                          
+                //     //     },
+                //     //   )
+                //     // )
+                //   ],
+                // ),
 
                 MyInputField(
                   labelText: "Memo",
