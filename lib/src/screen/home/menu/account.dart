@@ -85,7 +85,7 @@ class _AccountState extends State<Account> {
                 child: Text(pairs['seed'])),
             Text('Backup Key'));
       } else {
-        await dialog(context, Text('Decrypt failure'), Text('Backup Key'));
+        await dialog(context, Text('Incorrect Pin'), Text('Backup Key'));
       }
     } catch (e) {
       await dialog(context, Text(e.toString()), Text('Opps'));

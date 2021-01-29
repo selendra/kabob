@@ -73,30 +73,40 @@ class _AssetInfoState extends State<AssetInfo> {
     });
     final pairs = await KeyringPrivateStore()
         .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
-    //print(pairs['seed']);
-    final res =
-        await http.post('http://localhost:3000/:service/contract/approve',
-            headers: <String, String>{
-              "content-type": "application/json",
-            },
-            body: jsonEncode(<String, dynamic>{
-              "sender": pairs['seed'],
-              "to": recieverAddress,
-              "value": amount,
-            }));
+    if (pairs['seed'] != null) {
+      final res =
+          await http.post('http://localhost:3000/:service/contract/approve',
+              headers: <String, String>{
+                "content-type": "application/json",
+              },
+              body: jsonEncode(<String, dynamic>{
+                "sender": pairs['seed'],
+                "to": recieverAddress,
+                "value": amount,
+              }));
 
-    var resJson = jsonDecode(res.body);
-    if (resJson == null) {
-      await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
+      var resJson = jsonDecode(res.body);
+      if (resJson == null) {
+        await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
+      } else {
+        await dialog(
+            context,
+            MyText(
+              text: 'Approve Successfully!',
+              textAlign: TextAlign.center,
+            ),
+            Text('Approve'));
+      }
     } else {
       await dialog(
           context,
           MyText(
-            text: 'Approve Successfully!',
+            text: 'Incorrect Pin',
             textAlign: TextAlign.center,
           ),
           Text('Approve'));
     }
+
     _amountController.text = '';
     _recieverController.text = '';
     _pinController.text = '';
@@ -104,8 +114,6 @@ class _AssetInfoState extends State<AssetInfo> {
     setState(() {
       _loading = false;
     });
-
-    print(res);
   }
 
   Future<void> transferFrom(
@@ -116,27 +124,37 @@ class _AssetInfoState extends State<AssetInfo> {
     });
     final pairs = await KeyringPrivateStore()
         .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
-
-    final res =
-        await http.post('http://localhost:3000/:service/contract/transferfrom',
-            headers: <String, String>{
-              "content-type": "application/json",
-            },
-            body: jsonEncode(<String, dynamic>{
-              "sender": pairs['seed'],
-              "from": from,
-              "to": recieverAddress,
-              "value": amount,
-            }));
-
-    var resJson = jsonDecode(res.body);
-
-    if (resJson == null) {
-      await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
-    } else {
+    if (pairs['seed'] == null) {
       await dialog(
-          context, Text('Transfer From Successfully'), Text('Transfer From'));
+          context,
+          MyText(
+            text: 'Incorrect Pin',
+            textAlign: TextAlign.center,
+          ),
+          Text('Approve'));
+    } else {
+      final res = await http.post(
+          'http://localhost:3000/:service/contract/transferfrom',
+          headers: <String, String>{
+            "content-type": "application/json",
+          },
+          body: jsonEncode(<String, dynamic>{
+            "sender": pairs['seed'],
+            "from": from,
+            "to": recieverAddress,
+            "value": amount,
+          }));
+
+      var resJson = jsonDecode(res.body);
+
+      if (resJson == null) {
+        await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
+      } else {
+        await dialog(
+            context, Text('Transfer From Successfully'), Text('Transfer From'));
+      }
     }
+
     _amountController.text = '';
     _recieverController.text = '';
     _pinController.text = '';
@@ -144,8 +162,6 @@ class _AssetInfoState extends State<AssetInfo> {
     setState(() {
       _loading = false;
     });
-
-    print(res);
   }
 
   Future<void> allowance(String owner, String spender) async {
@@ -228,7 +244,8 @@ class _AssetInfoState extends State<AssetInfo> {
     });
   }
 
-  String onChanged(String value) {
+  String onChangedTransferFrom(String value) {
+    _modelAssetInfo.formTransferFrom.currentState.validate();
     return value;
   }
 
@@ -420,6 +437,7 @@ class _AssetInfoState extends State<AssetInfo> {
                               //transfer();
                               AssetInfoC().showtransferFrom(
                                   context,
+                                  _modelAssetInfo.formTransferFrom,
                                   _fromController,
                                   _recieverController,
                                   _amountController,
@@ -428,7 +446,7 @@ class _AssetInfoState extends State<AssetInfo> {
                                   _ownerNode,
                                   _spenderNode,
                                   _passNode,
-                                  onChanged,
+                                  onChangedTransferFrom,
                                   onSubmit,
                                   submitTransferFrom);
 

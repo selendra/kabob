@@ -104,8 +104,9 @@ class AssetInfoC {
                     focusNode: _ownerNode,
                     onChanged: onChangedApprove,
                     onSubmit: onSubmit,
-                    validateField: (value) =>
-                        value.isEmpty ? 'Please fill in Pin address' : null,
+                    validateField: (value) => value.isEmpty
+                        ? 'Please fill in Reciever address'
+                        : null,
                   ),
                   SizedBox(height: 16),
                   MyInputField(
@@ -154,6 +155,7 @@ class AssetInfoC {
 
   void showtransferFrom(
       BuildContext context,
+      GlobalKey<FormState> _transferFromKey,
       TextEditingController _fromController,
       TextEditingController _recieverController,
       TextEditingController _amountController,
@@ -162,7 +164,7 @@ class AssetInfoC {
       FocusNode _ownerNode,
       FocusNode _spenderNode,
       FocusNode _passNode,
-      Function onChanged,
+      Function onChangedTransferFrom,
       Function onSubmit,
       Function submitApprove) {
     showModalBottomSheet(
@@ -172,60 +174,73 @@ class AssetInfoC {
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
           child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(25.0),
-              height: MediaQuery.of(context).size.height / 1,
-              color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: 20),
-                  MyInputField(
-                    labelText: 'From Address',
-                    controller: _fromController,
-                    focusNode: _fromNode,
-                    onChanged: onChanged,
-                    onSubmit: onSubmit,
-                  ),
-                  SizedBox(height: 16),
-                  MyInputField(
-                    labelText: 'Reciever Address',
-                    controller: _recieverController,
-                    focusNode: _ownerNode,
-                    onChanged: onChanged,
-                    onSubmit: onSubmit,
-                  ),
-                  SizedBox(height: 16),
-                  MyInputField(
-                    labelText: 'Amount',
-                    controller: _amountController,
-                    focusNode: _spenderNode,
-                    inputType: TextInputType.number,
-                    onChanged: onChanged,
-                    onSubmit: onSubmit,
-                  ),
-                  SizedBox(height: 16),
-                  MyInputField(
-                    labelText: 'Pin',
-                    controller: _pinController,
-                    focusNode: _passNode,
-                    obcureText: true,
-                    onChanged: onChanged,
-                    onSubmit: onSubmit,
-                  ),
-                  SizedBox(height: 15),
-                  MyFlatButton(
-                      textButton: "Submit",
-                      buttonColor: AppColors.secondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: size18,
-                      edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
-                      hasShadow: true,
-                      action: () {
-                        submitApprove();
-                      } //scanPayM.enable == false ? null : clickSend
-                      ),
-                ],
+            child: Form(
+              key: _transferFromKey,
+              child: Container(
+                padding: const EdgeInsets.all(25.0),
+                height: MediaQuery.of(context).size.height / 1.5,
+                color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    MyInputField(
+                      labelText: 'From Address',
+                      controller: _fromController,
+                      focusNode: _fromNode,
+                      onChanged: onChangedTransferFrom,
+                      onSubmit: onSubmit,
+                      validateField: (value) =>
+                          value.isEmpty ? 'Please fill in from address' : null,
+                    ),
+                    SizedBox(height: 16),
+                    MyInputField(
+                      labelText: 'Reciever Address',
+                      controller: _recieverController,
+                      focusNode: _ownerNode,
+                      onChanged: onChangedTransferFrom,
+                      onSubmit: onSubmit,
+                      validateField: (value) => value.isEmpty
+                          ? 'Please fill in Reciever Address'
+                          : null,
+                    ),
+                    SizedBox(height: 16),
+                    MyInputField(
+                      labelText: 'Amount',
+                      controller: _amountController,
+                      focusNode: _spenderNode,
+                      inputType: TextInputType.number,
+                      onChanged: onChangedTransferFrom,
+                      onSubmit: onSubmit,
+                      validateField: (value) =>
+                          value.isEmpty ? 'Please fill in Amount' : null,
+                    ),
+                    SizedBox(height: 16),
+                    MyInputField(
+                      labelText: 'Pin',
+                      controller: _pinController,
+                      focusNode: _passNode,
+                      obcureText: true,
+                      onChanged: onChangedTransferFrom,
+                      onSubmit: onSubmit,
+                      validateField: (value) =>
+                          value.isEmpty ? 'Please fill in Pin' : null,
+                    ),
+                    SizedBox(height: 15),
+                    MyFlatButton(
+                        textButton: "Submit",
+                        buttonColor: AppColors.secondary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: size18,
+                        edgeMargin:
+                            EdgeInsets.only(top: 40, left: 66, right: 66),
+                        hasShadow: true,
+                        action: () {
+                          submitApprove();
+                        } //scanPayM.enable == false ? null : clickSend
+                        ),
+                  ],
+                ),
               ),
             ),
           ),

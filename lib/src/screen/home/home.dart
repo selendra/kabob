@@ -128,9 +128,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.userData = {};
       setChartData();
       getCurrentAccount();
+      _subscribeBalance();
       _balanceOf(widget.keyring.keyPairs[0].address,
           widget.keyring.keyPairs[0].address);
-      //totalSupply();
+
       /* User Profile */
       // getUserData();
       // fetchPortfolio();

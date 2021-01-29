@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
@@ -183,31 +182,35 @@ class SubmitTrxState extends State<SubmitTrx> {
   Future<void> transfer(String to, String pass, String value) async {
     final pairs = await KeyringPrivateStore()
         .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', '$pass');
-
-    final res =
-        await http.post('http://localhost:3000/:service/contract/transfer',
-            headers: <String, String>{
-              "content-type": "application/json",
-            },
-            body: jsonEncode(<String, dynamic>{
-              "pair": pairs['seed'],
-              "to": to,
-              "value": '5',
-            }));
-    //  print(res);
-
-    var resJson = json.decode(res.body);
-    print(resJson['result']);
-    if (resJson['result'] != null) {
-      await dialog(context, Text('Your transaction was successful'),
-          Text('Transaction Success'),
-          action: FlatButton(
-              onPressed: () {
-                Navigator.pushNamedAndRemoveUntil(
-                    context, Home.route, ModalRoute.withName('/'));
+    if (pairs['seed'] == null) {
+      await dialog(context, Text('Incorrect Password'), Text('Transfer'));
+    } else {
+      final res =
+          await http.post('http://localhost:3000/:service/contract/transfer',
+              headers: <String, String>{
+                "content-type": "application/json",
               },
-              child: Text('Okay')));
+              body: jsonEncode(<String, dynamic>{
+                "pair": pairs['seed'],
+                "to": to,
+                "value": '5',
+              }));
+      //  print(res);
+
+      var resJson = json.decode(res.body);
+      print(resJson['result']);
+      if (resJson['result'] != null) {
+        await dialog(context, Text('Your transaction was successful'),
+            Text('Transaction Success'),
+            action: FlatButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Home.route, ModalRoute.withName('/'));
+                },
+                child: Text('Okay')));
+      }
     }
+
     setState(() {
       _loading = false;
     });

@@ -1,7 +1,6 @@
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
-
 import 'package:wallet_apps/src/components/portfolio_c.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -63,12 +62,12 @@ class HomeBody extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                RaisedButton(
-                  onPressed: () {
-                    refresh();
-                  },
-                  child: Text('refresh'),
-                ),
+                // RaisedButton(
+                //   onPressed: () {
+                //     refresh();
+                //   },
+                //   child: Text('refresh'),
+                // ),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, Account.route);
@@ -293,23 +292,17 @@ class HomeBody extends StatelessWidget {
 
         GestureDetector(
             onTap: () {
+              refresh();
               Navigator.push(
-                  context,
-                  RouteAnimation(
-                    enterPage: AssetInfo(
-                      kpiBalance: kpiBalance,
-                      sdk: sdk,
-                      keyring: keyring,
-                    ),
-                  )
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => Portfolio(
-                  //         listData: portfolioM.list,
-                  //         listChart: homeM.circularChart),
-                  //   ),
-                  );
+                context,
+                RouteAnimation(
+                  enterPage: AssetInfo(
+                    kpiBalance: kpiBalance,
+                    sdk: sdk,
+                    keyring: keyring,
+                  ),
+                ),
+              );
             },
             child: buildRowList(
                 portfolioM.list, portfolioRateM.totalRate, kpiBalance)),
