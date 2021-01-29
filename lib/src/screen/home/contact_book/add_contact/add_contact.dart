@@ -10,22 +10,20 @@ class AddContact extends StatefulWidget {
   final PhoneContact contact;
 
   AddContact({this.contact});
-  
+
   @override
   _AddContactState createState() => _AddContactState();
 }
 
 class _AddContactState extends State<AddContact> {
-
   ContactBookModel _addContactModel = ContactBookModel();
 
   void submitContact() async {
-    
     try {
       // Show Loading
       dialogLoading(context);
-      
-      await Future.delayed(Duration(seconds: 1), (){});
+
+      await Future.delayed(Duration(seconds: 1), () {});
       Map<String, dynamic> contactData = {
         'username': _addContactModel.userName.text,
         'phone': _addContactModel.contactNumber.text,
@@ -40,18 +38,22 @@ class _AddContactState extends State<AddContact> {
       // Close Dialog Loading
       Navigator.pop(context);
 
-      await dialog(context, Text("Successfully add new contact!\n Please check your contact book"), Text("Congratualtion"));
+      await dialog(
+          context,
+          Text(
+              "Successfully add new contact!\n Please check your contact book"),
+          Text("Congratualtion"));
       // Close Screen
       Navigator.pop(context, true);
     } catch (e) {
-    // Close Dialog Loading
-    Navigator.pop(context);
+      // Close Dialog Loading
+      Navigator.pop(context);
       print("My error $e");
     }
   }
 
   @override
-  initState(){
+  initState() {
     _addContactModel.contactNumber.text = widget.contact.phoneNumber.number;
     _addContactModel.userName.text = widget.contact.fullName;
     super.initState();
@@ -60,13 +62,9 @@ class _AddContactState extends State<AddContact> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: AddContactBody(
-          model: _addContactModel,
-          submitContact: submitContact
-        )
-      )
-    );
+        body: BodyScaffold(
+            height: MediaQuery.of(context).size.height,
+            child: AddContactBody(
+                model: _addContactModel, submitContact: submitContact)));
   }
 }
