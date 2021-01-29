@@ -149,6 +149,7 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   // Submit Profile User
   void submitAcc() async {
+    
     // Show Loading Process
     dialogLoading(context);
 
@@ -167,6 +168,8 @@ class MyUserInfoState extends State<MyUserInfo> {
         acc: json, 
         password: _userInfoM.confirmPasswordCon.text
       ).then((value) async {
+
+        await StorageServices.setData(_userInfoM.confirmPasswordCon.text, 'pass');
 
         // Close Loading Process
         Navigator.pop(context);

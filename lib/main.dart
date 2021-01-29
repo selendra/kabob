@@ -8,6 +8,7 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/screen/home/contact_book/contact_book.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
@@ -152,15 +153,19 @@ class AppState extends State<App> {
   }
 
   Future<void> _balanceOf(String from, String who) async {
-    await GetRequest().balanceOf(from, who).then((value) {
-      print(value);
-      if (value != null) {
+    try {
+      await GetRequest().balanceOf(from, who).then((value) {
         print(value);
-        setState(() {
-          kpiBalance = value;
-        });
-      }
-    });
+        if (value != null) {
+          print(value);
+          setState(() {
+            kpiBalance = value;
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   // Future<void> _importFromMnemonic() async {
@@ -224,10 +229,12 @@ class AppState extends State<App> {
               title: 'Kaabop',
               theme: AppStyle.myTheme(),
               routes: {
+                // '/': (_) => ContactBook(),
                 MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
                 ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
                 ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
                 ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
+                // ContactBook.route: (_) => ContactBook(_createAccModel),
                 Home.route: (_) => Home(
                     _createAccModel.sdk,
                     _createAccModel.keyring,

@@ -12,6 +12,22 @@ class StorageServices{
     return _preferences;
   }
 
+  static Future<SharedPreferences> addMoreData(dynamic _data, String _path) async {
+    List<Map<String, dynamic>> ls = [];
+    _preferences = await SharedPreferences.getInstance();
+    if(_preferences.containsKey(_path)){
+      var _dataString = _preferences.getString(_path);
+      ls = List<Map<String, dynamic>>.from(jsonDecode(_dataString));
+      ls.add(_data);
+    } else {
+      ls.add(_data);
+    }
+
+    _decode = jsonEncode(ls);
+    _preferences.setString(_path, _decode);
+    return _preferences;
+  }
+
   static Future<SharedPreferences> setUserID(String _data, String _path) async {
     _preferences = await SharedPreferences.getInstance();
     _decode = jsonEncode(_data);
