@@ -6,6 +6,7 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/models/fmt.dart';
 
 class Home extends StatefulWidget {
   final WalletSDK sdk;
@@ -78,25 +79,24 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     print("Hello name ${ls[0].name}");
   }
 
-  // Future<void> _subscribeBalance() async {
-  //   print('subscribe');
-  //   final channel = await widget.sdk.api.account
-  //       .subscribeBalance(widget.keyring.current.address, (res) {
-  //     print(res);
-  //     setState(() {
-  //       _balance = res;
-  //       mBalance = int.parse(_balance.freeBalance).toString();
-  //       print(mBalance);
-  //     });
-  //   });
+  Future<void> _subscribeBalance() async {
+    print('subscribe');
+    final channel = await widget.sdk.api.account
+        .subscribeBalance(widget.keyring.current.address, (res) {
+      print(res);
+      setState(() {
+        _balance = res;
+        mBalance = Fmt.balance(_balance.freeBalance, 18);
+      });
+    });
 
-  //   print('mbalance: $mBalance');
+    print('mbalance: $mBalance');
 
-  //   setState(() {
-  //     _msgChannel = channel;
-  //     print('$channel');
-  //   });
-  // }
+    setState(() {
+      _msgChannel = channel;
+      print('$channel');
+    });
+  }
 
   Future<void> _balanceOf(String from, String who) async {
     await GetRequest().balanceOf(from, who).then((value) {
@@ -152,6 +152,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.userData = {};
       setChartData();
       getCurrentAccount();
+      //_subscribeBalance();
       // _balanceOf(widget.keyring.keyPairs[0].address,
       //     widget.keyring.keyPairs[0].address);
 
@@ -170,9 +171,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // if (widget.msgChannel != null) {
-    //   widget.sdk.api.unsubscribeMessage(widget.msgChannel);
-    // }
     super.dispose();
   }
 

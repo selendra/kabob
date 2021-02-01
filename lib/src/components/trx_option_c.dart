@@ -42,8 +42,7 @@ class TrxOptionMethod {
     if (await Permission.contacts.request().isGranted) {
       String number = '';
       var response;
-      final PhoneContact _contact =
-          await FlutterContactPicker.pickPhoneContact();
+      final PhoneContact _contact =await FlutterContactPicker.pickPhoneContact();
       // final Contact _contact = await ContactsService.openDeviceContactPicker();
       //Get Contact And Asign To Number Variable
 

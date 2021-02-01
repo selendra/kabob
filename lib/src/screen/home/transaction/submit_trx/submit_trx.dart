@@ -1,10 +1,12 @@
 import 'dart:math';
 import 'package:flare_flutter/flare_controls.dart';
+import 'package:intl/intl.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:http/http.dart' as http;
+import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
@@ -244,50 +246,37 @@ class SubmitTrxState extends State<SubmitTrx> {
     final txInfo = TxInfoData('balances', 'transfer', sender);
     try {
       final hash = await widget.sdk.api.tx.signAndSend(
-        txInfo,
-        [
-          // params.to
-          // _testAddressGav,
-          target,
-          // params.amount
-          amount,
-        ],
-        pin,
-        onStatusChange: (status) async {
-          print(status);
-          if (status == 'Broadcast') {
-          } else if (status == 'Ready') {
-            setState(() {
-              _loading = false;
-            });
-            await dialog(context, Text('Your transaction was successful'),
-                Text('Transaction Success'),
-                action: FlatButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Home.route, ModalRoute.withName('/'));
-                    },
-                    child: Text('Okay')));
-          }
-        },
-      );
+          txInfo,
+          [
+            // params.to
+            // _testAddressGav,
+            target,
+            // params.amount
+            Fmt.tokenInt(amount.trim(), 18).toString(),
+          ],
+          pin, onStatusChange: (status) async {
+        print(status);
+      });
 
       //print('tx status: $_status');
       print('hash: $hash');
-      setState(() {
-        mhash = hash[0];
-      });
+
+      if (hash != null) {
+        await dialog(context, Text('Your transaction was successful'),
+            Text('Transaction Success'),
+            action: FlatButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Home.route, ModalRoute.withName('/'));
+                },
+                child: Text('Okay')));
+      }
     } catch (e) {
       print(e.toString());
       setState(() {
         _loading = false;
       });
       await dialog(context, Text("${e.toString()}"), Text("Opps"));
-      // if (e != null) {
-      //   // setState(() {
-      //   //   _loading = false;
-      //   // });
-      // }
     }
     setState(() {
       _loading = false;
@@ -309,15 +298,11 @@ class SubmitTrxState extends State<SubmitTrx> {
       if (pin != null &&
           _scanPayM.controlAmount.text != null &&
           _scanPayM.controlReceiverAddress.text != null) {
-        setState(() {
-          _loading = true;
-        });
         //print(pin);
 
         if (_scanPayM.asset == 'SEL') {
-          int amount = int.parse(_scanPayM.controlAmount.text) * pow(10, 18);
-
-          sendTx(_scanPayM.controlReceiverAddress.text, amount.toString(), pin);
+          sendTx(_scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text, pin);
         } else {
           transfer(_scanPayM.controlReceiverAddress.text, pin,
               _scanPayM.controlAmount.text);
