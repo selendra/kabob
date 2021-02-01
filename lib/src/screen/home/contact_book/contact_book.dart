@@ -21,7 +21,7 @@ class _ContactBookState extends State<ContactBook> {
 
   ContactBookModel _contactBookModel = ContactBookModel();
 
-  void getContact() async {
+  Future<void> getContact() async {
     _contactBookModel.contactBookList.clear();
     var value = await StorageServices.fetchData('contactList');
 

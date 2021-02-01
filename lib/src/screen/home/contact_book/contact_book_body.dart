@@ -38,8 +38,7 @@ class ContactBookBody extends StatelessWidget {
                       await FlutterContactPicker.requestPermission()
                           .then((value) async {
                         if (value) {
-                          var result =
-                              await FlutterContactPicker.pickPhoneContact();
+                          var result = await FlutterContactPicker.pickPhoneContact();
 
                           dynamic response = await Navigator.push(
                               context,
@@ -49,7 +48,7 @@ class ContactBookBody extends StatelessWidget {
                               ));
 
                           print(response);
-                          if (response == true) getContact();
+                          if (response == true) await getContact();
                         }
                       });
 
