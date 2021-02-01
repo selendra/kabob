@@ -7,7 +7,6 @@ import 'package:wallet_apps/src/models/m_import_acc.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart';
 
 class ImportAcc extends StatefulWidget {
-
   final CreateAccModel importAccModel;
 
   ImportAcc(this.importAccModel);
@@ -20,7 +19,6 @@ class ImportAcc extends StatefulWidget {
 }
 
 class ImportAccState extends State<ImportAcc> {
-
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
 
   ImportAccModel _importAccModel = ImportAccModel();
@@ -114,20 +112,21 @@ class ImportAccState extends State<ImportAcc> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
   }
 
-  void validateMnemonic(){
+  void validateMnemonic() {
     tempMnemonic = _importAccModel.mnemonicCon.text;
     widget.importAccModel.mnemonicList = tempMnemonic.split(' ');
     if (widget.importAccModel.mnemonicList.length == 12) {
       print("Equal");
-      setState((){
+      setState(() {
         enable = true;
       });
-    } 
+    }
     // Validate User Input Less Than 12 Words And Greater Than 12 Words To Disable Button
-    else if (widget.importAccModel.mnemonicList.length < 12 || widget.importAccModel.mnemonicList.length > 12) {
+    else if (widget.importAccModel.mnemonicList.length < 12 ||
+        widget.importAccModel.mnemonicList.length > 12) {
       print("Less or greater");
-      if (enable){
-        setState((){
+      if (enable) {
+        setState(() {
           enable = false;
         });
       }
@@ -141,9 +140,9 @@ class ImportAccState extends State<ImportAcc> {
     validateMnemonic();
   }
 
-  void clearInput(){
+  void clearInput() {
     _importAccModel.mnemonicCon.clear();
-    setState((){
+    setState(() {
       enable = false;
     });
   }
@@ -152,17 +151,16 @@ class ImportAccState extends State<ImportAcc> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      key: globalKey,
-      body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: ImportAccBody(
-          importAccModel: _importAccModel,
-          onChanged: onChanged,
-          onSubmit: onSubmit,
-          clearInput: clearInput,
-          enable: enable
-        ),
-      ) //welcomeBody(context, navigatePage),
-    );
+        key: globalKey,
+        body: BodyScaffold(
+          height: MediaQuery.of(context).size.height,
+          child: ImportAccBody(
+              importAccModel: _importAccModel,
+              onChanged: onChanged,
+              onSubmit: onSubmit,
+              clearInput: clearInput,
+              enable: enable),
+        ) //welcomeBody(context, navigatePage),
+        );
   }
 }

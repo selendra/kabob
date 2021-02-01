@@ -5,7 +5,6 @@ import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/service/webViewRunner.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
-import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
@@ -49,7 +48,6 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-
   CreateAccModel _createAccModel = CreateAccModel();
 
   // final Keyring keyring = Keyring();
@@ -63,7 +61,6 @@ class AppState extends State<App> {
 
   @override
   void initState() {
-    print("Hello my App");
     _createAccModel.keyring = Keyring();
     _createAccModel.sdk = WalletSDK();
     _initApi();
@@ -71,8 +68,6 @@ class AppState extends State<App> {
   }
 
   Future<void> _initApi() async {
-
-    print("init");
     await FlutterWebviewPlugin().reload();
 
     await _createAccModel.keyring.init();
@@ -80,10 +75,13 @@ class AppState extends State<App> {
     await _createAccModel.sdk.init(_createAccModel.keyring);
 
     _sdkReady = true;
-    
-    print("My sdk $_sdkReady");
+
     if (_sdkReady) {
+      await _balanceOf(_createAccModel.keyring.keyPairs[0].address,
+          _createAccModel.keyring.keyPairs[0].address);
       connectNode();
+
+      // getDecrypt();
     }
     // try {
     // } on SocketException catch (e){
@@ -93,6 +91,14 @@ class AppState extends State<App> {
     // }
   }
 
+  // void getDecrypt() async {
+  //   final seed = await KeyringPrivateStore().getDecryptedSeed(
+  //     '0xa2d1d33cc490d34ccc6938f8b30430428da815a85bf5927adc85d9e27cbbfc1a',
+  //     '123456',
+  //   );
+  //   print('raw seed' + seed.toString());
+  // }
+
   Future<void> _initContract() async {
     try {
       await GetRequest().initContract().then((value) {
@@ -100,39 +106,49 @@ class AppState extends State<App> {
         print(_createAccModel.keyring.keyPairs[0].toJson());
         print('address: ${_createAccModel.keyring.keyPairs[0].address}');
         print('pubKey: ${_createAccModel.keyring.keyPairs[0].pubKey}');
-        _balanceOf(_createAccModel.keyring.keyPairs[0].address, _createAccModel.keyring.keyPairs[0].address);
+        _balanceOf(_createAccModel.keyring.keyPairs[0].address,
+            _createAccModel.keyring.keyPairs[0].address);
       });
     } catch (e) {
       print("My exception $e");
     }
   }
 
+  // Future<void> transfer() async {
+  //   final String pairs = jsonEncode(keyring.store.list);
+  //   final res =
+  //       await http.post('http://localhost:3000/:service/contract/transfer',
+  //           headers: <String, String>{
+  //             "content-type": "application/json",
+  //           },
+  //           body: jsonEncode(<String, dynamic>{
+  //             "pair": pairs,
+  //             "to": '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
+  //             "value": 1,
+  //           }));
+  //   print(res);
+  // }
+
   Future<void> connectNode() async {
-    try {
-      final node = NetworkParams();
+    print('connectNode');
+    final node = NetworkParams();
 
-      node.name = 'Indranet hosted By Selendra';
-      node.endpoint = 'wss://rpc-testnet.selendra.org';
+    node.name = 'Indranet hosted By Selendra';
+    node.endpoint = 'wss://rpc-testnet.selendra.org';
+    node.ss58 = 0;
+    final res = await _createAccModel.sdk.api
+        .connectNode(_createAccModel.keyring, [node]);
 
-      node.ss58 = 0;
-      final res = await _createAccModel.sdk.api.connectNode(_createAccModel.keyring, [node]);
+    print('resConnectNode $res');
+    setState(() {});
+    if (res != null) {
+      setState(() {
+        _apiConnected = true;
 
-      print('res $res');
-      setState(() {});
-      if (res != null) {
-        setState(() {
-          _apiConnected = true;
-
-          _subscribeBalance();
-          // _initContract();
-
-          //_importFromMnemonic();
-        });
-        // _importFromMnemonic();
-
-      }
-    } catch (e){
-      print("Connect node error $e");
+        _subscribeBalance();
+      });
+    } else {
+      print('res null');
     }
   }
 
@@ -182,12 +198,12 @@ class AppState extends State<App> {
 
   Future<void> _subscribeBalance() async {
     print('subscribe');
-    final channel =
-        await _createAccModel.sdk.api.account.subscribeBalance(_createAccModel.keyring.current.address, (res) {
+    final channel = await _createAccModel.sdk.api.account
+        .subscribeBalance(_createAccModel.keyring.current.address, (res) {
       setState(() {
         _balance = res;
-        mBalance = int.parse(_balance.freeBalance).toString();
-        print(mBalance);
+        mBalance = BigInt.parse(_balance.freeBalance).toString();
+        //print(mBalance);
       });
     });
 
@@ -204,7 +220,7 @@ class AppState extends State<App> {
         builder: (context, orientation) {
           SizeConfig().init(constraints, orientation);
           return Provider(
-              child: MaterialApp(
+            child: MaterialApp(
             initialRoute: '/',
             title: 'Kaabop',
             theme: AppStyle.myTheme(),
@@ -214,7 +230,7 @@ class AppState extends State<App> {
               ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
-              // ContactBook.route: (_) => ContactBook(_createAccModel),
+              // ContactBook.route: (_) => ContactBook  _createAccModel),
               Home.route: (_) => Home(_createAccModel.sdk, _createAccModel.keyring, _apiConnected, mBalance, _msgChannel, kpiBalance),
               ImportAcc.route: (_) => ImportAcc(_createAccModel),
               Account.route: (_) => Account(_createAccModel.sdk, _createAccModel.keyring),

@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
-        android:label="SELENDRA"
+        android:label="KAABOP"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

@@ -382,8 +382,7 @@ Future<File> camera() async {
 }
 
 /* QR Code Generate Function */
-Widget qrCodeGenerator(
-    HomeModel homeM, String logoName, GlobalKey _keyQrShare) {
+Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
@@ -410,7 +409,7 @@ Widget qrCodeGenerator(
               size: Size(40, 40),
             ),
             // version: QrVersions.auto,
-            data: homeM.userData['wallet'],
+            data: wallet,
           )),
     ],
   );
@@ -571,9 +570,11 @@ Widget customDropDown(String label, List list, dynamic _model,
               color: Colors.white,
             ),
             itemBuilder: (BuildContext context) {
-              return list.map((list) {
-                return item(list);
-              }).toList();
+              return list == null
+                  ? []
+                  : list.map((list) {
+                      return item(list);
+                    }).toList();
             },
           ),
         )

@@ -1,3 +1,5 @@
+import 'package:polkawallet_sdk/polkawallet_sdk.dart';
+import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 
 class ReceiveWalletBody extends StatelessWidget {
@@ -5,8 +7,17 @@ class ReceiveWalletBody extends StatelessWidget {
   final GlobalKey<ScaffoldState> globalKey;
   final HomeModel homeM;
   final GetWalletMethod method;
+  final String name;
+  final String wallet;
 
-  ReceiveWalletBody({this.keyQrShare, this.globalKey, this.homeM, this.method});
+  ReceiveWalletBody({
+    this.keyQrShare,
+    this.globalKey,
+    this.homeM,
+    this.method,
+    this.name,
+    this.wallet,
+  });
 
   Widget build(BuildContext context) {
     return Column(
@@ -17,7 +28,7 @@ class ReceiveWalletBody extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        homeM.userData['wallet'] == null
+        wallet == 'wallet address'
             ? Expanded(
                 child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -48,20 +59,17 @@ class ReceiveWalletBody extends StatelessWidget {
                             child: Column(
                               mainAxisSize: MainAxisSize.max,
                               children: [
-                                qrCodeGenerator(homeM, AppConfig.logoQrEmbedded,
-                                    keyQrShare),
+                                qrCodeGenerator(wallet,
+                                    AppConfig.logoQrEmbedded, keyQrShare),
                                 MyText(
-                                  text: homeM.userData[
-                                          'first_name'] //== '' && homeM.userData['mid_name'] == '' && homeM.userData['last_name'] == ''
-                                      ? 'User name'
-                                      : "${homeM.userData['first_name']} ${homeM.userData['mid_name']} ${homeM.userData['last_name']}",
+                                  text: name,
                                   bottom: 16,
                                   top: 16,
                                   color: "#FFFFFF",
                                 ),
                                 MyText(
                                   width: 300,
-                                  text: "${homeM.userData['wallet']}",
+                                  text: wallet,
                                   color: AppColors.secondary_text,
                                   fontSize: 16,
                                   bottom: 16,
@@ -90,8 +98,7 @@ class ReceiveWalletBody extends StatelessWidget {
                             ],
                           ),
                           onPressed: () {
-                            method.qrShare(
-                                keyQrShare, homeM.userData['wallet']);
+                            method.qrShare(keyQrShare, wallet);
                           },
                         )),
                     FlatButton(
@@ -107,8 +114,8 @@ class ReceiveWalletBody extends StatelessWidget {
                         ],
                       ),
                       onPressed: () {
-                        Clipboard.setData(ClipboardData(
-                            text: homeM.userData['wallet'])); /* Copy Text */
+                        Clipboard.setData(
+                            ClipboardData(text: wallet)); /* Copy Text */
                         method.snackBar('Copied', globalKey);
                       },
                     )

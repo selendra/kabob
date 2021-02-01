@@ -52,8 +52,13 @@ class MyBottomSheet {
                             icon: "icons/form.svg",
                             subTitle: "Fill wallet",
                             action: () {
-                              TrxOptionMethod.navigateFillAddress(context,
-                                  portfolioList, resetHomeData, sdk, keyring);
+                              TrxOptionMethod.navigateFillAddress(
+                                context,
+                                portfolioList,
+                                resetHomeData,
+                                sdk,
+                                keyring,
+                              );
                             })),
                     Expanded(
                         child: MyBottomSheetItem(

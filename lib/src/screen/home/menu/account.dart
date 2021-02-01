@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
+import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/src/components/component.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
-
+import 'package:wallet_apps/src/screen/home/menu/account_c.dart';
 import '../../../../index.dart';
 
 class Account extends StatefulWidget {
@@ -18,6 +19,34 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   KeyPairData _currentAcc;
+  TextEditingController _pinController = TextEditingController();
+  TextEditingController _oldPinController = TextEditingController();
+  TextEditingController _newPinController = TextEditingController();
+
+  FocusNode _pinNode = FocusNode();
+  FocusNode _oldNode = FocusNode();
+  FocusNode _newNode = FocusNode();
+  bool _loading = false;
+
+  String onChanged(String value) {
+    return value;
+  }
+
+  String onSubmit(String value) {
+    return value;
+  }
+
+  void submitBackUpKey() {
+    if (_pinController.text != null) {
+      getBackupKey(_pinController.text);
+    }
+  }
+
+  void submitChangePin() {
+    if (_oldPinController.text != null && _newPinController.text != null) {
+      _changePin(_oldPinController.text, _newPinController.text);
+    }
+  }
 
   void deleteAccout() async {
     await dialog(context, Text('Are you sure to delete your account?'),
@@ -39,49 +68,73 @@ class _AccountState extends State<Account> {
     }
   }
 
-  Future<void> _changePassword(String oldPass, String newPass) async {
+  Future<void> getBackupKey(String pass) async {
+    Navigator.pop(context);
     try {
-      final res = await widget.sdk.api.keyring
-//        .changePassword(widget.keyring, _testAcc, _testPass, 'a654321');
-          .changePassword(widget.keyring, oldPass, newPass);
+      final pairs = await KeyringPrivateStore()
+          .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
+      print(pairs);
 
-      if (res != null) {
-        await dialog(context, Text('You password has changed!!'),
-            Text('Change Passworld'));
+      if (pairs['seed'] != null) {
+        await dialog(
+            context,
+            GestureDetector(
+                onTap: () {
+                  copyToClipBoard(pairs['seed'], context);
+                },
+                child: Text(pairs['seed'])),
+            Text('Backup Key'));
+      } else {
+        await dialog(context, Text('Incorrect Pin'), Text('Backup Key'));
       }
     } catch (e) {
       await dialog(context, Text(e.toString()), Text('Opps'));
     }
+    _pinController.text = '';
   }
 
-  void changePasswordDialog() async {
-    await dialog(
-        context,
-        Container(
-          height: MediaQuery.of(context).size.height / 4,
-          child: Column(
-            children: [
-              TextField(
-                decoration: InputDecoration(hintText: 'Old Password'),
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: 'New Password'),
-              ),
-            ],
+  Future<void> _changePin(String oldPass, String newPass) async {
+    Navigator.pop(context);
+    setState(() {
+      _loading = true;
+    });
+    final res = await widget.sdk.api.keyring
+        .changePassword(widget.keyring, oldPass, newPass);
+    print(res);
+    if (res != null) {
+      await dialog(
+          context, Text('You password has changed!!'), Text('Change Pin'));
+    } else {
+      await dialog(context, Text('Change Failed'), Text('Opps'));
+      setState(() {
+        _loading = false;
+      });
+    }
+    setState(() {
+      _loading = false;
+    });
+    _oldPinController.text = '';
+    _newPinController.text = '';
+  }
+
+  void copyToClipBoard(String text, BuildContext context) {
+    Clipboard.setData(
+      ClipboardData(
+        text: text,
+      ),
+    ).then((value) => {
+          Scaffold.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Copied to Clipboard'),
+              duration: Duration(seconds: 3),
+            ),
           ),
-        ),
-        Text('Change Password'));
+        });
   }
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (widget.keyring.keyPairs.length > 0) {
-        setState(() {
-          _currentAcc = widget.keyring.keyPairs[0];
-        });
-      }
-    });
+    _currentAcc = widget.keyring.keyPairs[0];
     super.initState();
   }
 
@@ -90,112 +143,252 @@ class _AccountState extends State<Account> {
     return Scaffold(
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                MyAppBar(
-                  title: "Account",
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Container(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: hexaCodeToColor(AppColors.cardColor),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.only(
-                              right: 16, top: 16, left: 16, bottom: 16),
+        child: _loading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Stack(
+                children: [
+                  Column(
+                    children: [
+                      MyAppBar(
+                        title: "Account",
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
+                            color: hexaCodeToColor(AppColors.cardColor),
                           ),
-
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              MyText(
-                                text: 'Name: ${_currentAcc.name}',
-                                color: "#FFFFFF",
-                                fontSize: 18,
+                              Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.only(
+                                    left: 20, right: 20, top: 25, bottom: 25),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: hexaCodeToColor(AppColors.cardColor),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.centerLeft,
+                                          margin: EdgeInsets.only(right: 16),
+                                          width: 70,
+                                          height: 70,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: SvgPicture.asset(
+                                              'assets/male_avatar.svg'),
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            MyText(
+                                              text: '${_currentAcc.name}',
+                                              color: "#FFFFFF",
+                                              fontSize: 20,
+                                            ),
+                                            Container(
+                                              width: 100,
+                                              child: MyText(
+                                                text: "Indracore",
+                                                color: AppColors.secondary_text,
+                                                fontSize: 18,
+                                                textAlign: TextAlign.start,
+                                                fontWeight: FontWeight.bold,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Expanded(child: Container()),
+                                      ],
+                                    ),
+                                    // GestureDetector(
+                                    //   onTap: () {
+                                    //     Clipboard.setData(ClipboardData(text: ''))
+                                    //         .then((value) => {
+                                    //               Scaffold.of(context).showSnackBar(
+                                    //                   SnackBar(
+                                    //                       content: Text(
+                                    //                           'Copied to Clipboard')))
+                                    //             });
+                                    //   },
+                                    //   child: MyText(
+                                    //     top: 16,
+                                    //     width: 200,
+                                    //     text: "address",
+                                    //     overflow: TextOverflow.ellipsis,
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
                               ),
-                              SizedBox(
-                                height: 16,
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                margin: EdgeInsets.only(
+                                    right: 16, left: 16, bottom: 16),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Builder(
+                                      builder: (context) => GestureDetector(
+                                        onTap: () {
+                                          copyToClipBoard(
+                                              _currentAcc.pubKey, context);
+                                        },
+                                        child: Row(
+                                          children: [
+                                            MyText(
+                                              text: 'Public Key:  ',
+                                              color: "#FFFFFF",
+                                              fontSize: 18,
+                                            ),
+                                            SizedBox(height: 50),
+                                            Expanded(
+                                              child: MyText(
+                                                text: '${_currentAcc.pubKey}',
+                                                color: "#FFFFFF",
+                                                fontSize: 18,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Builder(
+                                      builder: (context) => GestureDetector(
+                                        onTap: () {
+                                          copyToClipBoard(
+                                              _currentAcc.address, context);
+                                        },
+                                        child: Row(
+                                          children: [
+                                            MyText(
+                                              text: 'Address:  ',
+                                              color: "#FFFFFF",
+                                              fontSize: 18,
+                                            ),
+                                            Expanded(
+                                              child: MyText(
+                                                text: '${_currentAcc.address}',
+                                                color: "#FFFFFF",
+                                                fontSize: 18,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                //child: SvgPicture.asset('assets/male_avatar.svg'),
                               ),
-                              MyText(
-                                text: 'Public Key: ${_currentAcc.pubKey}',
-                                color: "#FFFFFF",
-                                fontSize: 18,
-                                overflow: TextOverflow.fade,
+                              SizedBox(height: 40),
+                              GestureDetector(
+                                onTap: () {
+                                  AccountC().showBackup(
+                                    context,
+                                    _pinController,
+                                    _pinNode,
+                                    onChanged,
+                                    onSubmit,
+                                    submitBackUpKey,
+                                  );
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(right: 16),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  height: 70,
+                                  child: MyText(
+                                    text: 'Backup Key',
+                                    color: "#FFFFFF",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  //child: SvgPicture.asset('assets/male_avatar.svg'),
+                                ),
                               ),
-                              SizedBox(
-                                height: 16,
+                              SizedBox(height: 20),
+                              GestureDetector(
+                                onTap: () {
+                                  AccountC().showChangePin(
+                                    context,
+                                    _oldPinController,
+                                    _newPinController,
+                                    _oldNode,
+                                    _newNode,
+                                    onChanged,
+                                    onSubmit,
+                                    submitChangePin,
+                                  );
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(right: 16),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  height: 70,
+                                  child: MyText(
+                                    text: 'Change Pin',
+                                    color: "#FFFFFF",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  //child: SvgPicture.asset('assets/male_avatar.svg'),
+                                ),
                               ),
-                              MyText(
-                                text: 'Address: ${_currentAcc.address}',
-                                color: "#FFFFFF",
-                                fontSize: 18,
-                                overflow: TextOverflow.fade,
+                              SizedBox(height: 20),
+                              GestureDetector(
+                                onTap: deleteAccout,
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  margin: EdgeInsets.only(right: 16),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  height: 70,
+                                  child: MyText(
+                                    text: 'Delete Account',
+                                    color: "#FF0000",
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  //child: SvgPicture.asset('assets/male_avatar.svg'),
+                                ),
                               ),
                             ],
                           ),
-                          //child: SvgPicture.asset('assets/male_avatar.svg'),
                         ),
-                        SizedBox(height: 40),
-                        GestureDetector(
-                          onTap: () {
-                            changePasswordDialog();
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(right: 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            height: 70,
-                            child: MyText(
-                              text: 'Change Password',
-                              color: "#FFFFFF",
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            //child: SvgPicture.asset('assets/male_avatar.svg'),
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        GestureDetector(
-                          onTap: deleteAccout,
-                          child: Container(
-                            alignment: Alignment.center,
-                            margin: EdgeInsets.only(right: 16),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            height: 70,
-                            child: MyText(
-                              text: 'Delete Account',
-                              color: "#FF0000",
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            //child: SvgPicture.asset('assets/male_avatar.svg'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ],
-        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
       ),
     );
   }

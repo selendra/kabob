@@ -1,10 +1,11 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:http/http.dart' as http;
+import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
   final String _walletKey;
@@ -29,6 +30,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   PostRequest _postRequest = PostRequest();
 
   Backend _backend = Backend();
+  AssetInfoC c = AssetInfoC();
 
   bool disable = false;
   bool _loading = false;
@@ -36,6 +38,9 @@ class SubmitTrxState extends State<SubmitTrx> {
   @override
   void initState() {
     _scanPayM.asset = "SEL";
+    print(c.transferFrom);
+    // _scanPayM.portfolio.add("KPI");
+
     AppServices.noInternetConnection(_scanPayM.globalKey);
     _scanPayM.controlReceiverAddress.text = widget._walletKey;
     _scanPayM.portfolio = widget._listPortfolio;
@@ -166,11 +171,67 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   void resetAssetsDropDown(String data) {
+    print("My asset $data");
     /* Reset Asset */
     setState(() {
       _scanPayM.asset = data;
     });
     enableButton();
+  }
+
+  Future<void> transfer(String to, String pass, String value) async {
+    final pairs = await KeyringPrivateStore()
+        .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', '$pass');
+    if (pairs['seed'] == null) {
+      await dialog(context, Text('Incorrect Password'), Text('Transfer'));
+    } else {
+      final res =
+          await http.post('http://localhost:3000/:service/contract/transfer',
+              headers: <String, String>{
+                "content-type": "application/json",
+              },
+              body: jsonEncode(<String, dynamic>{
+                "pair": pairs['seed'],
+                "to": to,
+                "value": '5',
+              }));
+      //  print(res);
+
+      var resJson = json.decode(res.body);
+      print(resJson['result']);
+      if (resJson['result'] != null) {
+        await dialog(context, Text('Your transaction was successful'),
+            Text('Transaction Success'),
+            action: FlatButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Home.route, ModalRoute.withName('/'));
+                },
+                child: Text('Okay')));
+      }
+    }
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  Future<void> transferFrom() async {
+    final pairs = await KeyringPrivateStore()
+        .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', '123456');
+
+    final res =
+        await http.post('http://localhost:3000/:service/contract/transferfrom',
+            headers: <String, String>{
+              "content-type": "application/json",
+            },
+            body: jsonEncode(<String, dynamic>{
+              "sender": pairs['seed'],
+              "to": '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
+              "value": 20,
+            }));
+
+    print(res);
   }
 
   Future<String> sendTx(String target, String amount, String pin) async {
@@ -252,55 +313,22 @@ class SubmitTrxState extends State<SubmitTrx> {
           _loading = true;
         });
         //print(pin);
-        double amount = int.parse(_scanPayM.controlAmount.text) * pow(10, 18);
 
-        if (amount != null) {
+        if (_scanPayM.asset == 'SEL') {
+          int amount = int.parse(_scanPayM.controlAmount.text) * pow(10, 18);
+
           sendTx(_scanPayM.controlReceiverAddress.text, amount.toString(), pin);
         } else {
-          print('amount is null');
+          transfer(_scanPayM.controlReceiverAddress.text, pin,
+              _scanPayM.controlAmount.text);
         }
-
-        // print(_scanPayM.controlAmount.text);
-        // print(_scanPayM.controlReceiverAddress.text);
-
       } else {
-        print(pin);
+        print('amount is null');
       }
+
+      // print(_scanPayM.controlAmount.text);
+      // print(_scanPayM.controlReceiverAddress.text);
     });
-
-    // dialogLoading(context);
-
-    // try {
-
-    //   _backend.response = await _postRequest.sendPayment(_scanPayM);
-
-    //   // Close Loading
-    //   Navigator.pop(context);
-
-    //   if (_backend.response.statusCode == 200) {
-
-    //     _backend.mapData = json.decode(_backend.response.body);
-
-    //     print(_backend.mapData);
-
-    //     if (!_backend.mapData.containsKey('error')) {
-    //       await enableAnimation();
-    //       // await dialog(context, textAlignCenter(text: _response["message"]), Icon(Icons.done_outline, color: getHexaColor(AppColors.blueColor)));
-    //     } else {
-    //       await dialog(context, textAlignCenter(text: _backend.mapData["error"]['message']), warningTitleDialog());
-    //     }
-    //   } else {
-    //     await dialog(context, textAlignCenter(text: 'Something goes wrong'), warningTitleDialog());
-    //   }
-    // } on SocketException catch (e) {
-    //   await dialog(context, Text("${e.message}"), Text("Message"));
-    //   snackBar(_scanPayM.globalKey, e.message.toString());
-    // } catch (e) {
-    //   await dialog(context, Text(e.message.toString()), Text("Message"));
-    // }
-    // await Future.delayed(Duration(milliseconds: 50), () {
-    //   removeAllFocus();
-    // });
   }
 
   void unFocusAllField() {
@@ -312,15 +340,11 @@ class SubmitTrxState extends State<SubmitTrx> {
   PopupMenuItem item(Map<String, dynamic> list) {
     /* Display Drop Down List */
     return PopupMenuItem(
-        value: list.containsKey("asset_code") /* Check Asset Code Key */
-            ? list["asset_code"]
-            : "XLM",
+        value: list["asset_code"],
         child: Align(
           alignment: Alignment.center,
           child: Text(
-            list.containsKey("asset_code") /* Check Asset Code Key */
-                ? list["asset_code"]
-                : "XLM",
+            list["asset_code"],
           ),
         ));
   }
@@ -337,18 +361,19 @@ class SubmitTrxState extends State<SubmitTrx> {
                 child: Stack(
                   children: <Widget>[
                     SubmitTrxBody(
-                        enableInput: widget.enableInput,
-                        dialog: dialogBox,
-                        scanPayM: _scanPayM,
-                        validateWallet: validateWallet,
-                        validateAmount: validateAmount,
-                        validateMemo: validateMemo,
-                        onChanged: onChanged,
-                        onSubmit: onSubmit,
-                        validateInput: validateInput,
-                        clickSend: clickSend,
-                        resetAssetsDropDown: resetAssetsDropDown,
-                        item: item),
+                      enableInput: widget.enableInput,
+                      dialog: dialogBox,
+                      scanPayM: _scanPayM,
+                      validateWallet: validateWallet,
+                      validateAmount: validateAmount,
+                      validateMemo: validateMemo,
+                      onChanged: onChanged,
+                      onSubmit: onSubmit,
+                      validateInput: validateInput,
+                      clickSend: clickSend,
+                      resetAssetsDropDown: resetAssetsDropDown,
+                      item: item,
+                    ),
                     // _scanPayM.isPay == false
                     //     ? Container()
                     //     :  BackdropFilter(

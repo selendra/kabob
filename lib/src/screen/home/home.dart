@@ -1,5 +1,6 @@
 // import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:polkawallet_sdk/api/types/balanceData.dart';
+import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
@@ -48,6 +49,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   String accAddress;
   String mBalance = '0';
   String _msgChannel;
+  String _kpiBalance = '0';
 
   BalanceData _balance;
 
@@ -72,26 +74,62 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
       _homeM.userData['first_name'] = accName;
       _homeM.userData['wallet'] = accAddress;
-      _subscribeBalance();
     });
     print("Hello name ${ls[0].name}");
   }
 
-  Future<void> _subscribeBalance() async {
-    print('subscribe');
-    final channel = await widget.sdk.api.account
-        .subscribeBalance(widget.keyring.current.address, (res) {
-      setState(() {
-        _balance = res;
-        mBalance = int.parse(_balance.freeBalance).toString();
-        print(mBalance);
-      });
-    });
+  // Future<void> _subscribeBalance() async {
+  //   print('subscribe');
+  //   final channel = await widget.sdk.api.account
+  //       .subscribeBalance(widget.keyring.current.address, (res) {
+  //     print(res);
+  //     setState(() {
+  //       _balance = res;
+  //       mBalance = int.parse(_balance.freeBalance).toString();
+  //       print(mBalance);
+  //     });
+  //   });
 
-    setState(() {
-      _msgChannel = channel;
-      print('$channel');
+  //   print('mbalance: $mBalance');
+
+  //   setState(() {
+  //     _msgChannel = channel;
+  //     print('$channel');
+  //   });
+  // }
+
+  Future<void> _balanceOf(String from, String who) async {
+    await GetRequest().balanceOf(from, who).then((value) {
+      print(value);
+      if (value != null) {
+        print(value);
+        setState(() {
+          _kpiBalance = value;
+        });
+      }
     });
+  }
+
+  Future<void> connectNode() async {
+    print('connectNode');
+    final node = NetworkParams();
+
+    node.name = 'Indranet hosted By Selendra';
+    node.endpoint = 'wss://rpc-testnet.selendra.org';
+    node.ss58 = 0;
+    final res = await widget.sdk.api.connectNode(widget.keyring, [node]);
+
+    print('resConnectNode $res');
+
+    if (res != null) {
+      print(res);
+      // _subscribeBalance();
+
+      // _importFromMnemonic();
+
+    } else {
+      print('rese null');
+    }
   }
 
   String action = "no_action";
@@ -114,6 +152,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.userData = {};
       setChartData();
       getCurrentAccount();
+      // _balanceOf(widget.keyring.keyPairs[0].address,
+      //     widget.keyring.keyPairs[0].address);
+
       /* User Profile */
       // getUserData();
       // fetchPortfolio();
@@ -129,9 +170,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    if (widget.msgChannel != null) {
-      widget.sdk.api.unsubscribeMessage(widget.msgChannel);
-    }
+    // if (widget.msgChannel != null) {
+    //   widget.sdk.api.unsubscribeMessage(widget.msgChannel);
+    // }
     super.dispose();
   }
 
@@ -393,8 +434,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   void toReceiveToken() async {
     /* Navigate Receive Token */
-    await Navigator.of(context)
-        .push(RouteAnimation(enterPage: ReceiveWallet(homeM: _homeM)));
+    await Navigator.of(context).push(RouteAnimation(
+        enterPage: ReceiveWallet(
+      sdk: widget.sdk,
+      keyring: widget.keyring,
+    )));
     if (Platform.isAndroid)
       await AndroidPlatform.resetBrightness();
     else
@@ -403,6 +447,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   void openMyDrawer() {
     _homeM.globalKey.currentState.openDrawer();
+  }
+
+  void refresh() {
+    _balanceOf(
+        widget.keyring.keyPairs[0].address, widget.keyring.keyPairs[0].address);
   }
 
   @override
@@ -427,15 +476,14 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             homeM: _homeM,
             accName: accName,
             accAddress: accAddress,
-            accBalance: widget.mBalance ?? mBalance,
+            accBalance: widget.mBalance,
             apiStatus: widget.apiConnected,
             pieColorList: pieColorList,
             dataMap: dataMap,
             kpiBalance: widget.kpiBalance,
             sdk: widget.sdk,
             keyring: widget.keyring,
-
-            // getWallet: createPin,
+            refresh: refresh,
           )),
       floatingActionButton: SizedBox(
           width: 64,
