@@ -246,39 +246,31 @@ class SubmitTrxState extends State<SubmitTrx> {
     final txInfo = TxInfoData('balances', 'transfer', sender);
     try {
       final hash = await widget.sdk.api.tx.signAndSend(
-        txInfo,
-        [
-          // params.to
-          // _testAddressGav,
-          target,
-          // params.amount
-          Fmt.tokenInt(amount.trim(), 18).toString(),
-        ],
-        pin,
-        onStatusChange: (status) async {
-          print(status);
-          if (status == 'Broadcast') {
-          } else if (status == 'Ready') {
-            setState(() {
-              _loading = false;
-            });
-            await dialog(context, Text('Your transaction was successful'),
-                Text('Transaction Success'),
-                action: FlatButton(
-                    onPressed: () {
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, Home.route, ModalRoute.withName('/'));
-                    },
-                    child: Text('Okay')));
-          }
-        },
-      );
+          txInfo,
+          [
+            // params.to
+            // _testAddressGav,
+            target,
+            // params.amount
+            Fmt.tokenInt(amount.trim(), 18).toString(),
+          ],
+          pin, onStatusChange: (status) async {
+        print(status);
+      });
 
       //print('tx status: $_status');
       print('hash: $hash');
-      setState(() {
-        mhash = hash[0];
-      });
+
+      if (hash != null) {
+        await dialog(context, Text('Your transaction was successful'),
+            Text('Transaction Success'),
+            action: FlatButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Home.route, ModalRoute.withName('/'));
+                },
+                child: Text('Okay')));
+      }
     } catch (e) {
       print(e.toString());
       setState(() {

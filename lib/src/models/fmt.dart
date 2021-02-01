@@ -28,6 +28,17 @@ class Fmt {
         length: length);
   }
 
+  static String token(
+    BigInt value,
+    int decimals, {
+    int length = 4,
+  }) {
+    if (value == null) {
+      return '~';
+    }
+    return doubleFormat(bigIntToDouble(value, decimals), length: length);
+  }
+
   static BigInt balanceInt(String raw) {
     if (raw == null || raw.length == 0) {
       return BigInt.zero;
@@ -54,17 +65,6 @@ class Fmt {
       print('Fmt.tokenInt() error: ${err.toString()}');
     }
     return BigInt.from(v * pow(10, decimals));
-  }
-
-  static String token(
-    BigInt value,
-    int decimals, {
-    int length = 4,
-  }) {
-    if (value == null) {
-      return '~';
-    }
-    return doubleFormat(bigIntToDouble(value, decimals), length: length);
   }
 
   static double bigIntToDouble(BigInt value, int decimals) {
