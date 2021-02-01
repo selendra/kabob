@@ -1,18 +1,16 @@
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:polkawallet_sdk/api/types/balanceData.dart';
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
+import 'package:polkawallet_sdk/plugin/index.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
-import 'package:polkawallet_sdk/service/webViewRunner.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/screen/home/contact_book/contact_book.dart';
+import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
-import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
@@ -50,8 +48,7 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   CreateAccModel _createAccModel = CreateAccModel();
 
-  // final Keyring keyring = Keyring();
-  // final WalletSDK sdk = WalletSDK();
+  PolkawalletPlugin _network;
   BalanceData _balance;
   bool _sdkReady = false;
   bool _apiConnected = false;
@@ -71,14 +68,13 @@ class AppState extends State<App> {
     await FlutterWebviewPlugin().reload();
 
     await _createAccModel.keyring.init();
-
     await _createAccModel.sdk.init(_createAccModel.keyring);
 
     _sdkReady = true;
 
     if (_sdkReady) {
-      await _balanceOf(_createAccModel.keyring.keyPairs[0].address,
-          _createAccModel.keyring.keyPairs[0].address);
+      // await _balanceOf(_createAccModel.keyring.keyPairs[0].address,
+      //     _createAccModel.keyring.keyPairs[0].address);
       connectNode();
 
       // getDecrypt();
@@ -138,6 +134,8 @@ class AppState extends State<App> {
     node.ss58 = 0;
     final res = await _createAccModel.sdk.api
         .connectNode(_createAccModel.keyring, [node]);
+
+    print(res.name);
 
     print('resConnectNode $res');
     setState(() {});
@@ -206,7 +204,7 @@ class AppState extends State<App> {
         .subscribeBalance(_createAccModel.keyring.current.address, (res) {
       setState(() {
         _balance = res;
-        mBalance = BigInt.parse(_balance.freeBalance).toString();
+        mBalance = Fmt.balance(_balance.freeBalance, 18);
         //print(mBalance);
       });
     });
