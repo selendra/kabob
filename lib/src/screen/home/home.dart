@@ -69,6 +69,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   Future<void> getCurrentAccount() async {
     final List<KeyPairData> ls = widget.keyring.keyPairs;
+
     setState(() {
       accName = ls[0].name;
       accAddress = ls[0].address;
@@ -287,9 +288,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               ],
             ),
             warningTitleDialog());
-        // setState(() {
-        //   _portfolioM.list = null; /* Set Portfolio Equal Null To Close Loading Process */
-        // });
       }
     }
   }
