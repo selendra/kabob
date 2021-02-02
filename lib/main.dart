@@ -132,6 +132,8 @@ class AppState extends State<App> {
     node.name = 'Indranet hosted By Selendra';
     node.endpoint = 'wss://rpc-testnet.selendra.org';
     node.ss58 = 0;
+    print(node.endpoint);
+
     final res = await _createAccModel.sdk.api
         .connectNode(_createAccModel.keyring, [node]);
 
@@ -140,6 +142,7 @@ class AppState extends State<App> {
     print('resConnectNode $res');
     setState(() {});
     if (res != null) {
+      print('res null');
       setState(() {
         _apiConnected = true;
 

@@ -1,4 +1,5 @@
-import 'dart:math';
+import 'dart:ui';
+
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:intl/intl.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
@@ -7,6 +8,7 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallet_apps/src/models/fmt.dart';
+import 'package:wallet_apps/src/models/tx_history.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
@@ -30,6 +32,9 @@ class SubmitTrxState extends State<SubmitTrx> {
   FlareControls flareController = FlareControls();
 
   PostRequest _postRequest = PostRequest();
+  TxHistory _txHistoryModel = TxHistory();
+
+  FlareControls _flareController = FlareControls();
 
   Backend _backend = Backend();
   AssetInfoC c = AssetInfoC();
@@ -44,6 +49,7 @@ class SubmitTrxState extends State<SubmitTrx> {
     // _scanPayM.portfolio.add("KPI");
 
     AppServices.noInternetConnection(_scanPayM.globalKey);
+
     _scanPayM.controlReceiverAddress.text = widget._walletKey;
     _scanPayM.portfolio = widget._listPortfolio;
     super.initState();
@@ -144,7 +150,8 @@ class SubmitTrxState extends State<SubmitTrx> {
     });
     flareController.play('Checkmark');
     Timer(Duration(milliseconds: 2500), () {
-      Navigator.pop(context, _backend.mapData);
+      Navigator.pushNamedAndRemoveUntil(
+          context, Home.route, ModalRoute.withName('/'));
     });
   }
 
@@ -238,6 +245,7 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   Future<String> sendTx(String target, String amount, String pin) async {
     print('sendtx');
+    dialogLoading(context);
     String mhash;
     final sender = TxSenderData(
       widget.keyring.current.address,
@@ -260,16 +268,26 @@ class SubmitTrxState extends State<SubmitTrx> {
 
       //print('tx status: $_status');
       print('hash: $hash');
+      Navigator.pop(context);
 
       if (hash != null) {
-        await dialog(context, Text('Your transaction was successful'),
-            Text('Transaction Success'),
-            action: FlatButton(
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Home.route, ModalRoute.withName('/'));
-                },
-                child: Text('Okay')));
+        saveTxHistory(TxHistory(
+          date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
+          destination: target,
+          sender: widget.keyring.current.address,
+          fee: '0.0001',
+          amount: amount.trim(),
+        ));
+
+        await enableAnimation();
+        //   await dialog(context, Text('Your transaction was successful'),
+        //       Text('Transaction Success'),
+        //       action: FlatButton(
+        //           onPressed: () {
+        //             Navigator.pushNamedAndRemoveUntil(
+        //                 context, Home.route, ModalRoute.withName('/'));
+        //           },
+        //           child: Text('Okay')));
       }
     } catch (e) {
       print(e.toString());
@@ -298,8 +316,6 @@ class SubmitTrxState extends State<SubmitTrx> {
       if (pin != null &&
           _scanPayM.controlAmount.text != null &&
           _scanPayM.controlReceiverAddress.text != null) {
-        //print(pin);
-
         if (_scanPayM.asset == 'SEL') {
           sendTx(_scanPayM.controlReceiverAddress.text,
               _scanPayM.controlAmount.text, pin);
@@ -310,10 +326,11 @@ class SubmitTrxState extends State<SubmitTrx> {
       } else {
         print('amount is null');
       }
-
-      // print(_scanPayM.controlAmount.text);
-      // print(_scanPayM.controlReceiverAddress.text);
     });
+  }
+
+  void saveTxHistory(TxHistory txHistory) async {
+    await StorageServices.addTxHistory(txHistory, 'txhistory');
   }
 
   void unFocusAllField() {
@@ -359,24 +376,24 @@ class SubmitTrxState extends State<SubmitTrx> {
                       resetAssetsDropDown: resetAssetsDropDown,
                       item: item,
                     ),
-                    // _scanPayM.isPay == false
-                    //     ? Container()
-                    //     :  BackdropFilter(
-                    // Fill Blur Background
-                    // filter: ImageFilter.blur(
-                    //   sigmaX: 5.0,
-                    //   sigmaY: 5.0,
-                    // ),
-                    // child: Column(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: <Widget>[
-                    //     Expanded(
-                    //         child: CustomAnimation.flareAnimation(
-                    //             flareController,
-                    //             "assets/animation/check.flr",
-                    //             "Checkmark"))
-                    //   ],
-                    // )),
+                    _scanPayM.isPay == false
+                        ? Container()
+                        : BackdropFilter(
+                            // Fill Blur Background
+                            filter: ImageFilter.blur(
+                              sigmaX: 5.0,
+                              sigmaY: 5.0,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                    child: CustomAnimation.flareAnimation(
+                                        flareController,
+                                        "assets/animation/check.flr",
+                                        "Checkmark"))
+                              ],
+                            )),
                   ],
                 ),
               ));

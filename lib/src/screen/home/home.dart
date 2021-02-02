@@ -287,9 +287,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               ],
             ),
             warningTitleDialog());
-        // setState(() {
-        //   _portfolioM.list = null; /* Set Portfolio Equal Null To Close Loading Process */
-        // });
       }
     }
   }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'dart:ui' as ui;
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/tx_history.dart';
 
 /* -----------------------------------Variable--------------------------------------------------- */
 /* Size */
@@ -228,17 +229,122 @@ Future dialog(BuildContext context, var text, var title,
   return result;
 }
 
-// Future<void> balanceOfDialog(BuildContext context) async {
-//   return showDialog(
-//     context: context,
-//     barrierDismissible: false,
-//     builder: (context) {
-//       return AlertDialog(
-//         Tit
-//       );
-//     },
-//   );
-// }
+Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Center(
+            child: MyText(
+          text: 'Transaction Detail',
+          fontWeight: FontWeight.bold,
+        )),
+        content: Container(
+          height: MediaQuery.of(context).size.height / 3,
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  MyText(
+                    text: 'Date: ',
+                    fontSize: 14.0,
+                  ),
+                  Expanded(
+                      child: MyText(
+                    text: '${txHistory.date}',
+                    textAlign: TextAlign.start,
+                    fontSize: 14.0,
+                    overflow: TextOverflow.ellipsis,
+                  )),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  MyText(
+                    text: 'Destination: ',
+                    fontSize: 14.0,
+                  ),
+                  Expanded(
+                      child: MyText(
+                    text: '${txHistory.destination}',
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    fontSize: 14.0,
+                  )),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  MyText(
+                    text: 'Sender: ',
+                    fontSize: 14.0,
+                  ),
+                  Expanded(
+                      child: MyText(
+                    text: '${txHistory.sender}',
+                    textAlign: TextAlign.start,
+                    fontSize: 14.0,
+                    overflow: TextOverflow.ellipsis,
+                  )),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  MyText(
+                    text: 'Fee: ',
+                    fontSize: 14.0,
+                  ),
+                  Expanded(
+                      child: MyText(
+                    text: '${txHistory.fee}',
+                    textAlign: TextAlign.start,
+                    fontSize: 14.0,
+                    overflow: TextOverflow.ellipsis,
+                  )),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  MyText(
+                    text: 'Amount: ',
+                    fontSize: 14.0,
+                  ),
+                  Expanded(
+                      child: MyText(
+                    text: '${txHistory.amount}',
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.bold,
+                  )),
+                ],
+              ),
+
+              // MyText(
+              //   text: 'Destination ${txHistory.date}',
+              // ),
+              // MyText(
+              //   text: 'Sender ${txHistory.date}',
+              // ),
+              // MyText(
+              //   text: 'Fee ${txHistory.date}',
+              // ),
+              // MyText(
+              //   text: 'Amount ${txHistory.date}',
+              // ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
 
 Widget textMessage({String text: "Message", fontSize: 20.0}) {
   return FittedBox(
@@ -333,7 +439,6 @@ void dialogLoading(BuildContext context, {String content}) {
           onWillPop: () => Future(() => false),
           child: progress(content: content),
         );
-        ;
       });
 }
 
