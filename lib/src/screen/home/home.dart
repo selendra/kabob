@@ -6,17 +6,20 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/models/fmt.dart';
 
 class Home extends StatefulWidget {
-  final WalletSDK sdk;
-  final Keyring keyring;
-  final bool apiConnected;
-  final String mBalance;
-  final String msgChannel;
-  final String kpiBalance;
+  // final WalletSDK sdk;
+  // final Keyring keyring;
+  // final bool apiConnected;
+  // final String mBalance;
+  // final String msgChannel;
+  // final String kpiBalance;
 
-  Home(this.sdk, this.keyring, this.apiConnected, this.mBalance,
-      this.msgChannel, this.kpiBalance);
+  final CreateAccModel sdkModel;
+
+  Home(this.sdkModel);
   static const route = '/home';
   State<StatefulWidget> createState() {
     return HomeState();
@@ -67,7 +70,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   };
 
   Future<void> getCurrentAccount() async {
-    final List<KeyPairData> ls = widget.keyring.keyPairs;
+    final List<KeyPairData> ls = widget.sdkModel.keyring.keyPairs;
     setState(() {
       accName = ls[0].name;
       accAddress = ls[0].address;
@@ -78,25 +81,24 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     print("Hello name ${ls[0].name}");
   }
 
-  // Future<void> _subscribeBalance() async {
-  //   print('subscribe');
-  //   final channel = await widget.sdk.api.account
-  //       .subscribeBalance(widget.keyring.current.address, (res) {
-  //     print(res);
-  //     setState(() {
-  //       _balance = res;
-  //       mBalance = int.parse(_balance.freeBalance).toString();
-  //       print(mBalance);
-  //     });
-  //   });
+  Future<void> _subscribeBalance() async {
+    print('subscribe');
+    final channel = await widget.sdkModel.sdk.api.account
+        .subscribeBalance(widget.sdkModel.keyring.current.address, (res) {
+      print(res);
+      setState(() {
+        _balance = res;
+        mBalance = Fmt.balance(_balance.freeBalance, 18);
+      });
+    });
 
-  //   print('mbalance: $mBalance');
+    print('mbalance: $mBalance');
 
-  //   setState(() {
-  //     _msgChannel = channel;
-  //     print('$channel');
-  //   });
-  // }
+    setState(() {
+      _msgChannel = channel;
+      print('$channel');
+    });
+  }
 
   Future<void> _balanceOf(String from, String who) async {
     await GetRequest().balanceOf(from, who).then((value) {
@@ -117,7 +119,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     node.name = 'Indranet hosted By Selendra';
     node.endpoint = 'wss://rpc-testnet.selendra.org';
     node.ss58 = 0;
-    final res = await widget.sdk.api.connectNode(widget.keyring, [node]);
+    final res = await widget.sdkModel.sdk.api.connectNode(widget.sdkModel.keyring, [node]);
 
     print('resConnectNode $res');
 
@@ -137,7 +139,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   initState() {
     /* Initialize State */
-    print("My name ${widget.keyring.current.name}");
+    // print("My name ${widget.keyring.current.name}");
     _homeM.portfolioList = null;
     _portfolioM.list = [];
     if (mounted) {
@@ -152,6 +154,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.userData = {};
       setChartData();
       getCurrentAccount();
+      //_subscribeBalance();
       // _balanceOf(widget.keyring.keyPairs[0].address,
       //     widget.keyring.keyPairs[0].address);
 
@@ -170,9 +173,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    // if (widget.msgChannel != null) {
-    //   widget.sdk.api.unsubscribeMessage(widget.msgChannel);
-    // }
     super.dispose();
   }
 
@@ -436,8 +436,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     /* Navigate Receive Token */
     await Navigator.of(context).push(RouteAnimation(
         enterPage: ReceiveWallet(
-      sdk: widget.sdk,
-      keyring: widget.keyring,
+      sdk: widget.sdkModel.sdk,
+      keyring: widget.sdkModel.keyring,
     )));
     if (Platform.isAndroid)
       await AndroidPlatform.resetBrightness();
@@ -451,7 +451,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   void refresh() {
     _balanceOf(
-        widget.keyring.keyPairs[0].address, widget.keyring.keyPairs[0].address);
+        widget.sdkModel.keyring.keyPairs[0].address, widget.sdkModel.keyring.keyPairs[0].address);
   }
 
   @override
@@ -476,13 +476,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             homeM: _homeM,
             accName: accName,
             accAddress: accAddress,
-            accBalance: widget.mBalance,
-            apiStatus: widget.apiConnected,
+            accBalance: widget.sdkModel.mBalance,
+            apiStatus: widget.sdkModel.apiConnected,
             pieColorList: pieColorList,
             dataMap: dataMap,
-            kpiBalance: widget.kpiBalance,
-            sdk: widget.sdk,
-            keyring: widget.keyring,
+            kpiBalance: widget.sdkModel.kpiBalance,
+            sdk: widget.sdkModel.sdk,
+            keyring: widget.sdkModel.keyring,
             refresh: refresh,
           )),
       floatingActionButton: SizedBox(
@@ -493,7 +493,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             child: SvgPicture.asset('assets/sld_qr.svg', width: 30, height: 30),
             onPressed: () async {
               await TrxOptionMethod.scanQR(context, _homeM.portfolioList,
-                  resetState, widget.sdk, widget.keyring);
+                  resetState, widget.sdkModel.sdk, widget.sdkModel.keyring);
             },
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -507,8 +507,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         toReceiveToken: toReceiveToken,
         opacityController: opacityController,
         openDrawer: openMyDrawer,
-        sdk: widget.sdk,
-        keyring: widget.keyring,
+        sdkModel: widget.sdkModel
       ),
     );
   }

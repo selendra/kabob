@@ -15,13 +15,17 @@ class StorageServices{
   static Future<SharedPreferences> addMoreData(dynamic _data, String _path) async {
     List<Map<String, dynamic>> ls = [];
     _preferences = await SharedPreferences.getInstance();
+    print(_preferences.containsKey(_path));
     if(_preferences.containsKey(_path)){
       var _dataString = _preferences.getString(_path);
+      print("Get string $_dataString");
       ls = List<Map<String, dynamic>>.from(jsonDecode(_dataString));
       ls.add(_data);
     } else {
       ls.add(_data);
     }
+
+    print("Contact adding $ls");
 
     _decode = jsonEncode(ls);
     _preferences.setString(_path, _decode);
@@ -37,7 +41,9 @@ class StorageServices{
 
   static Future<dynamic>fetchData(String _path) async {
     _preferences = await SharedPreferences.getInstance();
+    
     var _data = _preferences.getString(_path);
+    print("Data $_data");
     if ( _data == null ) return null;
     else {
       return json.decode(_data);

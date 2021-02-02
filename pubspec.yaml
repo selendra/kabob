@@ -78,7 +78,7 @@ dependencies:
   # pull_to_refresh:  
   autocomplete_textfield:
   date_format:
-  flutter_launcher_icons:
+  flutter_launcher_icons: ^0.8.0
   device_preview:
   store_redirect:
   # fluttercontactpicker: ^3.1.0
@@ -115,7 +115,7 @@ dev_dependencies:
     sdk: flutter
 
 flutter_icons:
-  image_path: "assets/images/sld_icon.png"
+  image_path: "assets/sld_stroke.png"
   ios: true
   android: true
   

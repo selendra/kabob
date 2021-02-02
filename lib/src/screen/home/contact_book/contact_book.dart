@@ -5,11 +5,9 @@ import 'package:wallet_apps/src/screen/home/contact_book/contact_book_body.dart'
 
 class ContactBook extends StatefulWidget {
 
-  // final CreateAccModel accModel;
-  
-  // final List contactList;
+  final CreateAccModel sdkModel;
 
-  // ContactBook(this.accModel, this.contactList);
+  ContactBook(this.sdkModel);
 
   static const String route = '/contactList';
 
@@ -21,31 +19,34 @@ class _ContactBookState extends State<ContactBook> {
 
   ContactBookModel _contactBookModel = ContactBookModel();
 
-  void getContact() async {
-    _contactBookModel.contactBookList.clear();
-    var value = await StorageServices.fetchData('contactList');
+  Future<void> getContact() async {
+    try {
+      _contactBookModel.contactBookList = [];
+      var value = await StorageServices.fetchData('contactList');
 
-    print(value);
-    if(value == null) {
-      _contactBookModel.contactBookList = null;
-      print("My contact");
-    }
-    else {
-      print("Ke contact");
-      for(var i in value){
-        _contactBookModel.contactBookList.add(
-          ContactBookModel.initList(
-            contactNum: i['phone'], 
-            username: i['username'], 
-            address: i['address'], 
-            memo: i['memo'],
-          ),
-        );
+      print("Get from storage $value");
+      if(value == null) {
+        _contactBookModel.contactBookList = null;
+        print("My contact");
+      }
+      else {
+        print("Ke contact");
+        for(var i in value){
+          _contactBookModel.contactBookList.add(
+            ContactBookModel.initList(
+              contactNum: i['phone'], 
+              username: i['username'], 
+              address: i['address'], 
+              memo: i['memo'],
+            ),
+          );
 
-      } 
+        } 
+      }
+      setState(() {});
+    } catch (e) {
+      await dialog(context, Text("Cannot add contact"), Text("Message"));
     }
-    print(_contactBookModel.contactBookList);
-    setState(() {});
   }
 
   @override
@@ -62,6 +63,7 @@ class _ContactBookState extends State<ContactBook> {
         height: MediaQuery.of(context).size.height,
         child: ContactBookBody(
           model: _contactBookModel,
+          sdkModel: widget.sdkModel,
           getContact: getContact
         )
       )

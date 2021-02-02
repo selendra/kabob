@@ -3,6 +3,7 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/contact_book.dart';
 
 final fontSizePort = 17.0;
@@ -334,8 +335,7 @@ class MyBottomAppBar extends StatelessWidget {
   final Function fillAddress;
   final Function contactPiker;
   final Function openDrawer;
-  final WalletSDK sdk;
-  final Keyring keyring;
+  final CreateAccModel sdkModel;
 
   MyBottomAppBar({
     this.homeM,
@@ -348,8 +348,7 @@ class MyBottomAppBar extends StatelessWidget {
     this.fillAddress,
     this.contactPiker,
     this.openDrawer,
-    this.sdk,
-    this.keyring,
+    this.sdkModel,
   });
 
   Widget build(BuildContext context) {
@@ -371,8 +370,8 @@ class MyBottomAppBar extends StatelessWidget {
                     context: context,
                     portfolioList: homeM.portfolioList,
                     resetHomeData: resetDbdState,
-                    sdk: sdk,
-                    keyring: keyring,
+                    sdk: sdkModel.sdk,
+                    keyring: sdkModel.keyring,
                   );
                 },
               )),
@@ -390,7 +389,7 @@ class MyBottomAppBar extends StatelessWidget {
                 onPressed: () async {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ContactBook())
+                    MaterialPageRoute(builder: (context) => ContactBook(sdkModel))
                   );
                 },
               )),

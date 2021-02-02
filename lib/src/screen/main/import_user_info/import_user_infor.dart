@@ -1,4 +1,6 @@
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
+import 'package:polkawallet_sdk/polkawallet_sdk.dart';
+import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
@@ -33,7 +35,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   @override
   void initState() {
-    print(widget.importAccModel.mnemonicList);
+    // print(widget.importAccModel.mnemonicList);
     AppServices.noInternetConnection(_userInfoM.globalKey);
     /* If Registering Account */
     // if (widget.passwords != null) getToken();
@@ -51,10 +53,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<void> _importFromMnemonic() async {
-
     print(" firstName ${_userInfoM.controlFirstName.text}");
     print(" Password ${_userInfoM.confirmPasswordCon.text}");
-    
+
     try {
       final json = await widget.importAccModel.sdk.api.keyring.importAccount(
         widget.importAccModel.keyring,
@@ -79,22 +80,23 @@ class ImportUserInfoState extends State<ImportUserInfo> {
             action: FlatButton(
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
-                    context, 
-                    Home.route,
-                    ModalRoute.withName('/')
-                  );
+                      context, Home.route, ModalRoute.withName('/'));
                 },
                 child: Text('Continue')));
       }
       print(acc.address);
       print(acc.name);
     } catch (e) {
-       await dialog(context, Text("Invalid mnemonic"),
-            Text('Message'),);
+      print(e.toString());
+      await dialog(
+        context,
+        Text("Invalid mnemonic"),
+        Text('Message'),
+      );
       Navigator.pop(context);
     }
 
-    // Close Dialog Loading
+    //Close Dialog Loading
     Navigator.pop(context);
   }
 
@@ -209,7 +211,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     dialogLoading(context);
 
     await _importFromMnemonic();
-
   }
 
   PopupMenuItem item(Map<String, dynamic> list) {
@@ -225,21 +226,19 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     return Scaffold(
       key: _userInfoM.globalKey,
       body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: ImportUserInfoBody(
-          modelUserInfo: _userInfoM,
-          onSubmit: onSubmit,
-          onChanged: onChanged,
-          changeGender: changeGender,
-          validateFirstName: validateFirstName,
-          validatepassword: validatePassword,
-          validateConfirmPassword: validateConfirmPassword,
-          submitProfile: submitProfile,
-          popScreen: popScreen,
-          switchBio: switchBiometric,
-          item: item
-        )
-      ),
+          height: MediaQuery.of(context).size.height,
+          child: ImportUserInfoBody(
+              modelUserInfo: _userInfoM,
+              onSubmit: onSubmit,
+              onChanged: onChanged,
+              changeGender: changeGender,
+              validateFirstName: validateFirstName,
+              validatepassword: validatePassword,
+              validateConfirmPassword: validateConfirmPassword,
+              submitProfile: submitProfile,
+              popScreen: popScreen,
+              switchBio: switchBiometric,
+              item: item)),
     );
   }
 }

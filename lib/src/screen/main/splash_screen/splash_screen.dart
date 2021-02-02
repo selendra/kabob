@@ -29,10 +29,8 @@ class MySplashScreenState extends State<MySplashScreen> {
 
   @override
   initState() {
-    AppServices.clearStorage();
     // checkBiometric();
     // checkExpiredToken();
-    print("Splash screen");
     getCurrentAccount();
     super.initState();
   }
