@@ -430,7 +430,7 @@ Widget progress({String content}) {
   );
 }
 
-void dialogLoading(BuildContext context, {String content}) {
+Future<void> dialogLoading(BuildContext context, {String content}) {
   showDialog(
       barrierDismissible: false,
       context: context,
@@ -440,6 +440,8 @@ void dialogLoading(BuildContext context, {String content}) {
           child: progress(content: content),
         );
       });
+
+  return null;
 }
 
 Widget logoSize(
