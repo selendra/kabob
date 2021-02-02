@@ -4,6 +4,7 @@ import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/plugin/index.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
+import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
@@ -137,19 +138,26 @@ class AppState extends State<App> {
     final res = await _createAccModel.sdk.api
         .connectNode(_createAccModel.keyring, [node]);
 
-    print('resConnectNode $res');
     setState(() {});
+
     if (res != null) {
-      print('res null');
+      print(res.ss58);
       setState(() {
         _apiConnected = true;
 
         _subscribeBalance();
       });
-    } else {
-      print('res null');
     }
   }
+
+  // Future<void> getCurrentAccount() async {
+  //   final List<KeyPairData> ls = _createAccModel.keyring.keyPairs;
+  //   final Map resMap =
+  //       await _createAccModel.sdk.api.account.encodeAddress([ls[0].pubKey]);
+
+  //   print(resMap['${ls[0].pubKey}']);
+  //   ls[0].name;
+  // }
 
   Future<void> _balanceOf(String from, String who) async {
     try {

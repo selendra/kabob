@@ -47,8 +47,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   // FlareControls _flareControls = FlareControls();
 
   String accName = '';
-  String accAddress;
-  String mBalance = '0';
+  String accAddress = '';
+  String mBalance = '';
   String _msgChannel;
   String _kpiBalance = '0';
 

@@ -50,51 +50,26 @@ class FillPinState extends State<FillPin> {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Container(
-          //   padding: EdgeInsets.only(right: 16, bottom: 20),
-          //   child: TextField(
-          //     decoration: InputDecoration(hintText: 'Pin'),
-          //     controller: pinController,
-          //   ),
-
           Container(
-            padding: const EdgeInsets.only(right: 16, bottom: 20),
-            child: TextField(
-              decoration: InputDecoration(hintText: 'Pin'),
-              controller: pinController,
-              onSubmitted: (value) {
+            padding: EdgeInsets.only(right: 13, bottom: 20),
+            child: PinPut(
+              obscureText: '⚪',
+              focusNode: _pinNode,
+              controller: _pinPutController,
+              fieldsCount: 4,
+              eachFieldMargin: EdgeInsets.only(left: 13),
+              selectedFieldDecoration: _pinPutDecoration.copyWith(
+                  color: Colors.grey.withOpacity(0.5),
+                  border: Border.all(color: Colors.grey, width: 1)),
+              submittedFieldDecoration: _pinPutDecoration,
+              followingFieldDecoration: _pinPutDecoration,
+              eachFieldConstraints: boxConstraint,
+              textStyle: TextStyle(fontSize: 18, color: Colors.white),
+              onSubmit: (value) {
                 Navigator.pop(context, value);
               },
             ),
           ),
-          // Container(
-          //   padding: EdgeInsets.only(right: 16, bottom: 20),
-          //   child: PinPut(
-          //     obscureText: '⚪',
-          //     focusNode: _pinNode,
-          //     controller: _pinPutController,
-          //     fieldsCount: 4,
-          //     eachFieldMargin: EdgeInsets.only(left: 16),
-
-          //     selectedFieldDecoration: _pinPutDecoration.copyWith(
-          //       color: Colors.grey.withOpacity(0.5),
-          //       border: Border.all(color: Colors.grey, width: 1)
-          //     ),
-
-          //     submittedFieldDecoration: _pinPutDecoration,
-          //     followingFieldDecoration: _pinPutDecoration,
-
-          //     eachFieldConstraints: boxConstraint,
-          //     textStyle: TextStyle(
-          //       fontSize: 18,
-          //       color: Colors.white
-          //     ),
-          //     onSubmit: (value){
-          //       Navigator.pop(context, value);
-          //     },
-          //   ),
-          // ),
-
           Align(
             alignment: Alignment.centerRight,
             child: GestureDetector(
@@ -106,6 +81,33 @@ class FillPinState extends State<FillPin> {
           )
         ],
       ),
+
+      // content: Column(
+      //   mainAxisSize: MainAxisSize.min,
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: [
+      //     Container(
+      //       padding: const EdgeInsets.only(right: 16, bottom: 20),
+      //       child: TextField(
+      //         decoration: InputDecoration(hintText: 'Pin'),
+      //         controller: pinController,
+      //         onSubmitted: (value) {
+      //           Navigator.pop(context, value);
+      //         },
+      //       ),
+      //     ),
+
+      // Align(
+      //   alignment: Alignment.centerRight,
+      //   child: GestureDetector(
+      //     child: MyText(text: "Close"),
+      //     onTap: () {
+      //       Navigator.pop(context);
+      //     },
+      //   ),
+      // )
+      //     ],
+      //   ),
     );
   }
 }
