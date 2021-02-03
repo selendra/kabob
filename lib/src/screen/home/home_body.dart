@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
@@ -311,26 +313,6 @@ class HomeBody extends StatelessWidget {
             ),
           ],
         ),
-
-        !apiStatus ? 
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.black.withOpacity(0.5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-
-                CircularProgressIndicator(),
-
-                MyText(text: "\nConnecting to Remote Node...\n", textAlign: TextAlign.center, color: "#FFFFFF", fontWeight: FontWeight.bold,),
-
-                MyText(text: "Please wait ! this might take a bit longer", textAlign: TextAlign.center, color: "#FFFFFF"),
-              ],
-            )
-          )
-          : Container()
       ],
     );
   }

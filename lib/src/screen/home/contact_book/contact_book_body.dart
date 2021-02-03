@@ -137,6 +137,7 @@ class ContactBookBody extends StatelessWidget {
 
                                 },
                                 child: Card(
+                                  color: hexaCodeToColor(AppColors.cardColor),
                                   margin: EdgeInsets.only(bottom: 16.0),
                                   child: Padding(
                                     padding: EdgeInsets.all(8),

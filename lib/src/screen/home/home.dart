@@ -1,4 +1,6 @@
 // import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'dart:ui';
+
 import 'package:polkawallet_sdk/api/types/balanceData.dart';
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
@@ -461,27 +463,62 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
         child: Menu(_homeM.userData, _packageInfo, menuCallBack),
       ),
-      body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: HomeBody(
-            bloc: bloc,
-            chartKey: chartKey,
-            portfolioData: _homeM.portfolioList,
-            portfolioM: _portfolioM,
-            portfolioRateM: _portfolioRate,
-            getWallet: createPin,
-            homeM: _homeM,
-            accName: accName,
-            accAddress: accAddress,
-            accBalance: widget.sdkModel.mBalance,
-            apiStatus: widget.sdkModel.apiConnected,
-            pieColorList: pieColorList,
-            dataMap: dataMap,
-            kpiBalance: widget.sdkModel.kpiBalance,
-            sdk: widget.sdkModel.sdk,
-            keyring: widget.sdkModel.keyring,
-            refresh: refresh,
-          )),
+      body: Stack(
+        children: [
+          BodyScaffold(
+            height: MediaQuery.of(context).size.height,
+            child: HomeBody(
+              bloc: bloc,
+              chartKey: chartKey,
+              portfolioData: _homeM.portfolioList,
+              portfolioM: _portfolioM,
+              portfolioRateM: _portfolioRate,
+              getWallet: createPin,
+              homeM: _homeM,
+              accName: accName,
+              accAddress: accAddress,
+              accBalance: widget.sdkModel.mBalance,
+              apiStatus: widget.sdkModel.apiConnected,
+              pieColorList: pieColorList,
+              dataMap: dataMap,
+              kpiBalance: widget.sdkModel.kpiBalance,
+              sdk: widget.sdkModel.sdk,
+              keyring: widget.sdkModel.keyring,
+              refresh: refresh,
+            )
+          ),
+
+          !widget.sdkModel.apiConnected ? Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.black.withOpacity(0.8),
+          )
+          : Container(),
+
+          !widget.sdkModel.apiConnected ? Center(
+            child: Container(
+              color: hexaCodeToColor(AppColors.bgdColor),
+              padding: EdgeInsets.all(40),
+              margin: EdgeInsets.only(left: 20, right: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  CircularProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation(
+                      hexaCodeToColor(AppColors.secondary))),
+
+                  MyText(text: "\nConnecting to Remote Node...\n", textAlign: TextAlign.center, color: "#FFFFFF", fontWeight: FontWeight.bold,),
+
+                  MyText(text: "Please wait ! this might take a bit longer", textAlign: TextAlign.center, color: "#FFFFFF"),
+                ],
+              ),
+            )
+          )
+          : Container(),
+        ],
+      ),
       floatingActionButton: SizedBox(
           width: 64,
           height: 64,
@@ -495,7 +532,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 },
               ),
 
-              !widget.sdkModel.apiConnected ? Container(color: Colors.black.withOpacity(0.8)) : Container()
+              !widget.sdkModel.apiConnected ? Container(
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.black.withOpacity(0.8),
+              )
+              : Container()
             ],
           )
       ),
