@@ -94,11 +94,12 @@ class TrxOptionMethod {
   }
 
   static void navigateFillAddress(
-      BuildContext context,
-      List<dynamic> portfolioList,
-      Function resetDbdState,
-      WalletSDK sdk,
-      Keyring keyring) async {
+    BuildContext context,
+    List<dynamic> portfolioList,
+    Function resetDbdState,
+    WalletSDK sdk,
+    Keyring keyring,
+  ) async {
     var response = await Navigator.push(
         context,
         MaterialPageRoute(
@@ -115,12 +116,18 @@ class TrxOptionMethod {
     var _response = await Navigator.push(
         context,
         transitionRoute(QrScanner(
-          portList: portfolioList,
-          sdk: sdk,
-          keyring: keyring,
+          // portList: portfolioList,
+          // sdk: sdk,
+          // keyring: keyring,
         )));
-    if (_response != null) {
-      resetDbdState(null, "portfolio");
-    }
+    // if (_response != null) {
+    //   resetDbdState(null, "portfolio");
+    // }
+    print("Scan qr reponse $_response");
+    await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SubmitTrx(_response, false,
+                    portfolioList, sdk, keyring)));
   }
 }

@@ -1,15 +1,11 @@
-import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
-import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 
 class MySplashScreen extends StatefulWidget {
-  
   CreateAccModel accModel;
-  
+
   MySplashScreen(this.accModel);
 
   static const route = '/';
@@ -30,16 +26,14 @@ class MySplashScreenState extends State<MySplashScreen> {
 
   @override
   initState() {
-    AppServices.clearStorage();
     // checkBiometric();
     // checkExpiredToken();
-    print("Splash screen");
     getCurrentAccount();
     super.initState();
   }
 
   void getCurrentAccount() async {
-    await Future.delayed(Duration(seconds: 3), (){
+    await Future.delayed(Duration(seconds: 4), () {
       print("My Keyring 22" + widget.accModel.keyring.keyPairs.toString());
       final List<KeyPairData> ls = widget.accModel.keyring.keyPairs.toList();
 
@@ -47,7 +41,7 @@ class MySplashScreenState extends State<MySplashScreen> {
         Navigator.pushReplacement(
             context, RouteAnimation(enterPage: Welcome()));
         // Navigator.push(
-        //   context, 
+        //   context,
         //   MaterialPageRoute(builder: (context) => MyUserInfo(widget.accModel)) //onfirmMnemonic(widget.accModel))
         // );
       } else {
@@ -186,8 +180,8 @@ class MySplashScreenState extends State<MySplashScreen> {
         body: Align(
             alignment: Alignment.center,
             child: Container(
-                width: 200.0,
-                height: 200.0,
+                width: 150.0,
+                height: 150.0,
                 child: SvgPicture.asset('assets/sld_logo.svg')
                 // CustomAnimation.flareAnimation(_flareControls, "assets/animation/splash_screen.flr", "splash_screen"),
                 )));

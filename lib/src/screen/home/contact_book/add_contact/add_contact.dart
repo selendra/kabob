@@ -18,7 +18,7 @@ class AddContact extends StatefulWidget {
 class _AddContactState extends State<AddContact> {
   ContactBookModel _addContactModel = ContactBookModel();
 
-  void submitContact() async {
+  Future<void> submitContact() async {
     try {
       // Show Loading
       dialogLoading(context);
@@ -33,10 +33,9 @@ class _AddContactState extends State<AddContact> {
 
       await StorageServices.addMoreData(contactData, 'contactList');
 
-      await StorageServices.fetchData('contactList');
-
       // Close Dialog Loading
       Navigator.pop(context);
+      print("Close Dialog");
 
       await dialog(
           context,
@@ -52,6 +51,43 @@ class _AddContactState extends State<AddContact> {
     }
   }
 
+  void onChanged(String value) {
+    _addContactModel.formKey.currentState.validate();
+    allValidator();
+  }
+
+  void onSubmit() async {
+    if (_addContactModel.contactNumberNode.hasFocus) {
+      FocusScope.of(context).requestFocus(_addContactModel.userNameNode);
+    } else if (_addContactModel.userNameNode.hasFocus) {
+      FocusScope.of(context).requestFocus(_addContactModel.addressNode);
+    } else if (_addContactModel.addressNode.hasFocus) {
+      FocusScope.of(context).requestFocus(_addContactModel.memoNode);
+    } else {
+      if (_addContactModel.enable) await submitContact();
+    }
+  }
+
+  void allValidator() {
+    if (_addContactModel.contactNumber.text.isNotEmpty &&
+        _addContactModel.userName.text.isNotEmpty &&
+        _addContactModel.address.text.isNotEmpty) {
+      setState(() {
+        _addContactModel.enable = true;
+      });
+    } else if (_addContactModel.enable)
+      setState(() {
+        _addContactModel.enable = false;
+      });
+  }
+
+  String validateAddress(String value) {
+    _addContactModel.addressValidator = instanceValidate.validateAsset(value);
+    if (_addContactModel.addressValidator != null)
+      return _addContactModel.addressValidator + ' address';
+    return _addContactModel.addressValidator;
+  }
+
   @override
   initState() {
     _addContactModel.contactNumber.text = widget.contact.phoneNumber.number;
@@ -65,6 +101,10 @@ class _AddContactState extends State<AddContact> {
         body: BodyScaffold(
             height: MediaQuery.of(context).size.height,
             child: AddContactBody(
-                model: _addContactModel, submitContact: submitContact)));
+                model: _addContactModel,
+                validateAddress: validateAddress,
+                onChanged: onChanged,
+                onSubmit: onSubmit,
+                submitContact: submitContact)));
   }
 }

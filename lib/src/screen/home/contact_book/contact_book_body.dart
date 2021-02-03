@@ -5,11 +5,22 @@ import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact.dart';
 
 class ContactBookBody extends StatelessWidget {
+  final CreateAccModel sdkModel;
+
   final ContactBookModel model;
 
   final Function getContact;
 
-  ContactBookBody({this.model, this.getContact});
+  final Function deleteContact;
+
+  final Function editContact;
+
+  ContactBookBody(
+      {this.model,
+      this.getContact,
+      this.sdkModel,
+      this.deleteContact,
+      this.editContact});
 
   @override
   Widget build(BuildContext context) {
@@ -26,31 +37,28 @@ class ContactBookBody extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: FlatButton(
                     padding: EdgeInsets.only(right: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.add, color: Colors.white),
-                        MyText(text: 'Add', color: "#FFFFFF"),
-                      ],
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 25,
                     ),
                     onPressed: () async {
-                      await FlutterContactPicker.hasPermission()
-                          .then((value) async {
-                        if (value) {
-                          var result =
-                              await FlutterContactPicker.pickPhoneContact();
+                      dynamic response;
+                      dynamic result;
+                      bool value =
+                          await FlutterContactPicker.requestPermission();
 
-                          dynamic response = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    AddContact(contact: result),
-                              ));
+                      if (value) {
+                        result = await FlutterContactPicker.pickPhoneContact();
 
-                          print("My response $response");
-                          if (response == true) getContact();
-                        }
-                      });
+                        response = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddContact(contact: result),
+                            ));
+                        if (response == true) await getContact();
+                      }
+
                       // try{
 
                       //   final PhoneContact _contact = await FlutterContactPicker.pickPhoneContact().then((value) );
@@ -82,60 +90,131 @@ class ContactBookBody extends StatelessWidget {
                         child: ListView.builder(
                             itemCount: model.contactBookList.length,
                             itemBuilder: (context, int index) {
-                              return Card(
-                                  margin: EdgeInsets.only(bottom: 16.0),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          alignment: Alignment.centerLeft,
-                                          margin: EdgeInsets.only(right: 16),
-                                          width: 70,
-                                          height: 70,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: SvgPicture.asset(
-                                              'assets/male_avatar.svg'),
-                                        ),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                              return GestureDetector(
+                                  onTap: () async {
+                                    final options = await dialog(
+                                        context,
+                                        Text(
+                                            "You can edit, delete, and send to this wallet"),
+                                        Text("Options"),
+                                        action: Row(
                                           children: [
-                                            MyText(
-                                              text: model.contactBookList[index]
-                                                  .userName.text,
-                                              color: "#FFFFFF",
-                                              fontSize: 20,
+                                            FlatButton(
+                                              child: Text("delete"),
+                                              onPressed: () {
+                                                Navigator.pop(
+                                                    context, 'delete');
+                                              },
                                             ),
-                                            MyText(
-                                              text: 'SEL',
-                                              color: AppColors.secondary_text,
-                                              fontSize: 30,
-                                              textAlign: TextAlign.start,
-                                              fontWeight: FontWeight.bold,
+                                            FlatButton(
+                                              child: Text("Edit"),
+                                              onPressed: () {
+                                                Navigator.pop(context, 'edit');
+                                              },
+                                            ),
+                                            FlatButton(
+                                              child: Text("Send"),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            SubmitTrx(
+                                                                model
+                                                                    .contactBookList[
+                                                                        index]
+                                                                    .address
+                                                                    .text,
+                                                                false,
+                                                                [],
+                                                                sdkModel.sdk,
+                                                                sdkModel
+                                                                    .keyring)));
+                                              },
                                             ),
                                           ],
-                                        ),
-                                        // Expanded(child: Container()),
-                                        // Align(
-                                        //   alignment: Alignment.bottomRight,
-                                        //   child: Container(
-                                        //     width: 150,
-                                        //     child: MyText(
-                                        //       text: accBalance,
-                                        //       fontSize: 30,
-                                        //       color: AppColors.secondary_text,
-                                        //       fontWeight: FontWeight.bold,
-                                        //       overflow: TextOverflow.ellipsis,
-                                        //     ),
-                                        //   ),
-                                        // )
-                                      ],
+                                        ));
+
+                                    if (options == 'delete') {
+                                      await dialog(
+                                          context,
+                                          Text(
+                                              "Do you really want to deleteContact this contact"),
+                                          Text("Message"),
+                                          action: FlatButton(
+                                            child: Text("Yes"),
+                                            onPressed: () async {
+                                              print("deleted");
+                                              await deleteContact(index);
+                                              Navigator.pop(context);
+                                            },
+                                          ));
+                                    } else if (options == 'edit') {
+                                      await editContact(index);
+                                    }
+                                  },
+                                  child: Card(
+                                    margin: EdgeInsets.only(bottom: 16.0),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(8),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            margin: EdgeInsets.only(right: 16),
+                                            width: 70,
+                                            height: 70,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: SvgPicture.asset(
+                                                'assets/male_avatar.svg'),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              MyText(
+                                                text: model
+                                                    .contactBookList[index]
+                                                    .userName
+                                                    .text,
+                                                color: "#FFFFFF",
+                                                fontSize: 20,
+                                              ),
+                                              MyText(
+                                                  text: model
+                                                      .contactBookList[index]
+                                                      .address
+                                                      .text,
+                                                  color:
+                                                      AppColors.secondary_text,
+                                                  textAlign: TextAlign.start,
+                                                  fontWeight: FontWeight.bold,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  width: 300),
+                                            ],
+                                          ),
+                                          // Expanded(child: Container()),
+                                          // Align(
+                                          //   alignment: Alignment.bottomRight,
+                                          //   child: Container(
+                                          //     width: 150,
+                                          //     child: MyText(
+                                          //       text: accBalance,
+                                          //       fontSize: 30,
+                                          //       color: AppColors.secondary_text,
+                                          //       fontWeight: FontWeight.bold,
+                                          //       overflow: TextOverflow.ellipsis,
+                                          //     ),
+                                          //   ),
+                                          // )
+                                        ],
+                                      ),
                                     ),
                                   ));
                             })))

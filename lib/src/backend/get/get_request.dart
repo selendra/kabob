@@ -28,6 +28,16 @@ class GetRequest {
     return response;
   }
 
+  Future<String> allowance(String owner, String spender) async {
+    final res = await _http.get(
+        'http://localhost:3000/:service/contract/allowance/$owner/$spender');
+    var resJson = json.decode(res.body);
+    print(resJson);
+    // ModelAsset().assetBalance = resJson['balanceOf'];
+    String response = resJson['allowance'];
+    return response;
+  }
+
   Future<String> totalSupply(String from) async {
     final res = await _http
         .get('http://localhost:3000/:service/contract/totalsupply$from');

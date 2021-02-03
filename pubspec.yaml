@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.4.1+1
+version: 1.5.1+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -78,7 +78,7 @@ dependencies:
   # pull_to_refresh:  
   autocomplete_textfield:
   date_format:
-  flutter_launcher_icons:
+  flutter_launcher_icons: ^0.8.0
   device_preview:
   store_redirect:
   # fluttercontactpicker: ^3.1.0
@@ -97,6 +97,7 @@ dependencies:
   #for secure wallet function
   polkawallet_sdk: ^0.0.8
   animations: ^1.1.2
+  
 
   #Contact
   contacts_service: ^0.4.6 
@@ -109,14 +110,16 @@ dependencies:
 
   circular_check_box: ^1.0.4
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter_icons:
-  image_path: "assets/images/sld_icon.png"
+  image_path: "assets/sld_stroke.png"
   ios: true
   android: true
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
