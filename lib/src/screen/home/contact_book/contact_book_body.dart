@@ -12,7 +12,11 @@ class ContactBookBody extends StatelessWidget {
 
   final Function getContact;
 
-  ContactBookBody({this.model, this.getContact, this.sdkModel});
+  final Function deleteContact;
+
+  final Function editContact;
+
+  ContactBookBody({this.model, this.getContact, this.sdkModel, this.deleteContact, this.editContact});
 
   @override
   Widget build(BuildContext context) {
@@ -31,24 +35,22 @@ class ContactBookBody extends StatelessWidget {
                     padding: EdgeInsets.only(right: 16),
                     child: Icon(Icons.add, color: Colors.white, size: 25,),
                     onPressed: () async {
-                      print("Hello world");
                       dynamic response;
-                      await FlutterContactPicker.requestPermission()
-                          .then((value) async {
-                        if (value) {
-                          var result = await FlutterContactPicker.pickPhoneContact();
+                      dynamic result;
+                      bool value = await FlutterContactPicker.requestPermission();
 
-                          response = await Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => AddContact(contact: result),
-                            )
-                          );
+                      if (value) {
+                        result = await FlutterContactPicker.pickPhoneContact();
 
-                          print("Close screen $response");
-                        }
-                      });
-                      if (response == true) await getContact();
+                        response = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddContact(contact: result),
+                          )
+                        );
+                        if (response == true) await getContact();
+                      }
+                      
 
                       // try{
 
@@ -81,14 +83,61 @@ class ContactBookBody extends StatelessWidget {
                         child: ListView.builder(
                             itemCount: model.contactBookList.length,
                             itemBuilder: (context, int index) {
-                              return Card(
-                                margin: EdgeInsets.only(bottom: 16.0),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    Navigator.push(
-                                      context, 
-                                      MaterialPageRoute(builder: (context) => SubmitTrx(model.contactBookList[index].address.text, false, [], sdkModel.sdk, sdkModel.keyring)));
-                                  },
+                              return GestureDetector(
+                                onTap: () async {
+                                  final options = await dialog(
+                                    context,
+                                    Text("You can edit, delete, and send to this wallet"),
+                                    Text("Options"),
+                                    action: Row(
+                                      children: [
+                                        FlatButton(
+                                          child: Text("delete"),
+                                          onPressed: (){
+                                            Navigator.pop(context, 'delete');
+                                          },
+                                        ),
+
+                                        FlatButton(
+                                          child: Text("Edit"),
+                                          onPressed: (){
+                                            Navigator.pop(context, 'edit');
+                                          },
+                                        ),
+
+                                        FlatButton(
+                                          child: Text("Send"),
+                                          onPressed: (){
+                                            Navigator.push(
+                                            context, 
+                                            MaterialPageRoute(builder: (context) => SubmitTrx(model.contactBookList[index].address.text, false, [], sdkModel.sdk, sdkModel.keyring)));
+                                          },
+                                        ),
+                                      ],
+                                    )
+                                  );
+
+                                  if(options == 'delete'){
+                                    await dialog(
+                                      context,
+                                      Text("Do you really want to deleteContact this contact"),
+                                      Text("Message"),
+                                      action: FlatButton(
+                                        child: Text("Yes"),
+                                        onPressed: () async{ 
+                                          print("deleted");
+                                          await deleteContact(index);
+                                          Navigator.pop(context);
+                                        },
+                                      )
+                                    );
+                                  } else if (options == 'edit') {
+                                    await editContact(index);
+                                  }
+
+                                },
+                                child: Card(
+                                  margin: EdgeInsets.only(bottom: 16.0),
                                   child: Padding(
                                     padding: EdgeInsets.all(8),
                                     child: Row(

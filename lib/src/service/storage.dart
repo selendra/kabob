@@ -1,7 +1,7 @@
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/tx_history.dart';
 
-class StorageServices{
-
+class StorageServices {
   static String _decode;
   static SharedPreferences _preferences;
 
@@ -12,7 +12,8 @@ class StorageServices{
     return _preferences;
   }
 
-  static Future<SharedPreferences> addMoreData(dynamic _data, String _path) async {
+  static Future<SharedPreferences> addMoreData(
+      dynamic _data, String _path) async {
     List<Map<String, dynamic>> ls = [];
     _preferences = await SharedPreferences.getInstance();
     print(_preferences.containsKey(_path));
@@ -32,6 +33,52 @@ class StorageServices{
     return _preferences;
   }
 
+  static Future<SharedPreferences> addTxHistory(
+      TxHistory txHistory, String key) async {
+    List<TxHistory> txHistoryList = [];
+    _preferences = await SharedPreferences.getInstance();
+
+    await StorageServices.fetchData('txhistory').then((value) {
+      print('My value $value');
+      if (value != null) {
+        for (var i in value) {
+          print(i);
+          txHistoryList.add(TxHistory(
+            date: i['date'],
+            destination: i['destination'],
+            sender: i['sender'],
+            amount: i['amount'],
+            fee: i['fee'],
+          ));
+        }
+        txHistoryList.add(txHistory);
+      } else {
+        txHistoryList.add(txHistory);
+      }
+
+      //var responseJson = json.decode(value);
+      //print(responseJson);
+    });
+    print('finalList: ${txHistoryList.length}');
+    await _preferences.setString(key, jsonEncode(txHistoryList));
+    await _preferences.setString('test', 'test');
+
+    // if (_preferences.containsKey(key)) {
+    //   var data = _preferences.getString(key);
+    //   txHistoryList = List<TxHistory>.from(jsonDecode(data));
+    //   print('data: $data');
+    //   txHistoryList.add(txHistory);
+    //   print('added');
+    // } else {
+    //   txHistoryList.add(txHistory);
+    //   print('added');
+    // }
+
+//    await setData(jsonEncode(txHistoryList), 'txhistory');
+
+    return _preferences;
+  }
+
   static Future<SharedPreferences> setUserID(String _data, String _path) async {
     _preferences = await SharedPreferences.getInstance();
     _decode = jsonEncode(_data);
@@ -39,7 +86,7 @@ class StorageServices{
     return _preferences;
   }
 
-  static Future<dynamic>fetchData(String _path) async {
+  static Future<dynamic> fetchData(String _path) async {
     _preferences = await SharedPreferences.getInstance();
     
     var _data = _preferences.getString(_path);

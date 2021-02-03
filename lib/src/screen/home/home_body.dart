@@ -1,5 +1,3 @@
-import 'package:polkawallet_sdk/api/types/networkParams.dart';
-import 'package:polkawallet_sdk/plugin/index.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
@@ -64,19 +62,13 @@ class HomeBody extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                // RaisedButton(
-                //   onPressed: () {
-                //     refresh();
-                //   },
-                //   child: Text('refresh'),
-                // ),
                 GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, Account.route);
                   },
                   child: Container(
                     width: double.infinity,
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         left: 20, right: 20, top: 25, bottom: 25),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
@@ -122,19 +114,21 @@ class HomeBody extends StatelessWidget {
                               ],
                             ),
                             Expanded(child: Container()),
-                            Align(
-                              alignment: Alignment.bottomRight,
-                              child: Container(
-                                width: 150,
-                                child: MyText(
-                                  text: accBalance,
-                                  fontSize: 30,
-                                  color: AppColors.secondary_text,
-                                  fontWeight: FontWeight.bold,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            )
+                            !apiStatus
+                                ? Container()
+                                : Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: Container(
+                                      width: 150,
+                                      child: MyText(
+                                        text: accBalance,
+                                        fontSize: 30,
+                                        color: AppColors.secondary_text,
+                                        fontWeight: FontWeight.bold,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  )
                           ],
                         ),
                         GestureDetector(

@@ -17,7 +17,7 @@ class AddContactBody extends StatelessWidget {
       children: [
 
         MyAppBar(
-          title: "Contact List",
+          title: "Add Contact",
           onPressed: () {
             print("Dae");
             Navigator.pop(context);
@@ -85,18 +85,22 @@ class AddContactBody extends StatelessWidget {
                       padding: EdgeInsets.only(left: 20, right: 36),
                       icon: SvgPicture.asset('assets/sld_qr.svg'),
                       onPressed: () async {
-                        var _response = await Navigator.push(
-                          context,
-                          transitionRoute(QrScanner(
-                            // portList: portfolioList,
-                            // sdk: sdk,
-                            // keyring: keyring,
-                          ))
-                        );
-                        
-                        if (_response != null) {
-                          model.address.text = _response;
-                          onChanged(_response);
+                        try {
+                          var _response = await Navigator.push(
+                            context,
+                            transitionRoute(QrScanner(
+                              // portList: portfolioList,
+                              // sdk: sdk,
+                              // keyring: keyring,
+                            ))
+                          );
+                          
+                          if (_response != null) {
+                            model.address.text = _response;
+                            onChanged(_response);
+                          }
+                        } catch (e) {
+                          print("Error from QR scanner $e");
                         }
                       },
                     )
