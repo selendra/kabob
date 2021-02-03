@@ -99,18 +99,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
-  Future<void> _balanceOf(String from, String who) async {
-    await GetRequest().balanceOf(from, who).then((value) {
-      print(value);
-      if (value != null) {
-        print(value);
-        setState(() {
-          _kpiBalance = value;
-        });
-      }
-    });
-  }
-
   Future<void> connectNode() async {
     print('connectNode');
     final node = NetworkParams();
@@ -154,8 +142,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       setChartData();
       getCurrentAccount();
       //_subscribeBalance();
-      // _balanceOf(widget.keyring.keyPairs[0].address,
-      //     widget.keyring.keyPairs[0].address);
 
       /* User Profile */
       // getUserData();
@@ -445,10 +431,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     _homeM.globalKey.currentState.openDrawer();
   }
 
-  void refresh() {
-    _balanceOf(
-        widget.keyring.keyPairs[0].address, widget.keyring.keyPairs[0].address);
-  }
+  // void refresh() {
+  //   _balanceOf(
+  //       widget.keyring.keyPairs[0].address, widget.keyring.keyPairs[0].address);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -479,7 +465,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             kpiBalance: widget.kpiBalance,
             sdk: widget.sdk,
             keyring: widget.keyring,
-            refresh: refresh,
+            //refresh: refresh,
           )),
       floatingActionButton: SizedBox(
           width: 64,

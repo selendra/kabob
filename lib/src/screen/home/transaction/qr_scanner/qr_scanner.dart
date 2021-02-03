@@ -31,7 +31,7 @@ class QrScannerState extends State<QrScanner> {
                 builder: (context) => SubmitTrx(scanData.code, false,
                     widget.portList, widget.sdk, widget.keyring)));
 
-        Navigator.pop(context, _backend.mapData);
+        //Navigator.pop(context, _backend.mapData);
       });
     });
   }

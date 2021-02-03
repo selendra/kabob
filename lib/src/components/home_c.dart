@@ -2,7 +2,6 @@ import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/contact_book.dart';
 
 final fontSizePort = 17.0;

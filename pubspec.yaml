@@ -95,7 +95,9 @@ dependencies:
   permission_handler: ^5.0.1+1
 
   #for secure wallet function
-  polkawallet_sdk: ^0.0.8
+  # polkawallet_sdk: ^0.0.8
+  polkawallet_sdk:
+    path: ../
   animations: ^1.1.2
   
 

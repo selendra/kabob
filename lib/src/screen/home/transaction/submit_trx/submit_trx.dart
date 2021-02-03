@@ -46,7 +46,6 @@ class SubmitTrxState extends State<SubmitTrx> {
   void initState() {
     _scanPayM.asset = "SEL";
     print(c.transferFrom);
-    // _scanPayM.portfolio.add("KPI");
 
     AppServices.noInternetConnection(_scanPayM.globalKey);
 
@@ -188,43 +187,6 @@ class SubmitTrxState extends State<SubmitTrx> {
     enableButton();
   }
 
-  Future<void> transfer(String to, String pass, String value) async {
-    final pairs = await KeyringPrivateStore()
-        .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', '$pass');
-    if (pairs['seed'] == null) {
-      await dialog(context, Text('Incorrect Password'), Text('Transfer'));
-    } else {
-      final res =
-          await http.post('http://localhost:3000/:service/contract/transfer',
-              headers: <String, String>{
-                "content-type": "application/json",
-              },
-              body: jsonEncode(<String, dynamic>{
-                "pair": pairs['seed'],
-                "to": to,
-                "value": '5',
-              }));
-      //  print(res);
-
-      var resJson = json.decode(res.body);
-      print(resJson['result']);
-      if (resJson['result'] != null) {
-        await dialog(context, Text('Your transaction was successful'),
-            Text('Transaction Success'),
-            action: FlatButton(
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Home.route, ModalRoute.withName('/'));
-                },
-                child: Text('Okay')));
-      }
-    }
-
-    setState(() {
-      _loading = false;
-    });
-  }
-
   Future<void> transferFrom() async {
     final pairs = await KeyringPrivateStore()
         .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', '123456');
@@ -241,6 +203,22 @@ class SubmitTrxState extends State<SubmitTrx> {
             }));
 
     print(res);
+  }
+
+  Future<void> transfer(String to, String pass, String value) async {
+    dialogLoading(context);
+    try {
+      final res = await widget.sdk.api.keyring
+          .contractTransfer(widget.keyring.keyPairs[0].pubKey, to, value, pass);
+
+      if (res['hash'] != null) {
+        Navigator.pop(context);
+        await enableAnimation();
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      await dialog(context, Text(e.toString()), Text('Opps!!'));
+    }
   }
 
   Future<String> sendTx(String target, String amount, String pin) async {
@@ -280,25 +258,13 @@ class SubmitTrxState extends State<SubmitTrx> {
         ));
 
         await enableAnimation();
-        //   await dialog(context, Text('Your transaction was successful'),
-        //       Text('Transaction Success'),
-        //       action: FlatButton(
-        //           onPressed: () {
-        //             Navigator.pushNamedAndRemoveUntil(
-        //                 context, Home.route, ModalRoute.withName('/'));
-        //           },
-        //           child: Text('Okay')));
       }
     } catch (e) {
       print(e.toString());
-      setState(() {
-        _loading = false;
-      });
+      Navigator.pop(context);
       await dialog(context, Text("${e.toString()}"), Text("Opps"));
     }
-    setState(() {
-      _loading = false;
-    });
+
     return mhash;
   }
 

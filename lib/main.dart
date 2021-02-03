@@ -1,10 +1,8 @@
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:polkawallet_sdk/api/types/balanceData.dart';
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
-import 'package:polkawallet_sdk/plugin/index.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
-import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
@@ -49,7 +47,6 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   CreateAccModel _createAccModel = CreateAccModel();
 
-  PolkawalletPlugin _network;
   BalanceData _balance;
   bool _sdkReady = false;
   bool _apiConnected = false;
@@ -80,21 +77,7 @@ class AppState extends State<App> {
 
       // getDecrypt();
     }
-    // try {
-    // } on SocketException catch (e){
-    //   print("Init api sochet error $e");
-    // } catch (e) {
-    //   print("Init api error $e");
-    // }
   }
-
-  // void getDecrypt() async {
-  //   final seed = await KeyringPrivateStore().getDecryptedSeed(
-  //     '0xa2d1d33cc490d34ccc6938f8b30430428da815a85bf5927adc85d9e27cbbfc1a',
-  //     '123456',
-  //   );
-  //   print('raw seed' + seed.toString());
-  // }
 
   Future<void> _initContract() async {
     try {
@@ -111,20 +94,15 @@ class AppState extends State<App> {
     }
   }
 
-  // Future<void> transfer() async {
-  //   final String pairs = jsonEncode(keyring.store.list);
-  //   final res =
-  //       await http.post('http://localhost:3000/:service/contract/transfer',
-  //           headers: <String, String>{
-  //             "content-type": "application/json",
-  //           },
-  //           body: jsonEncode(<String, dynamic>{
-  //             "pair": pairs,
-  //             "to": '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
-  //             "value": 1,
-  //           }));
-  //   print(res);
-  // }
+  Future<void> callContract() async {
+    await _createAccModel.sdk.api.callContract().then((value) {});
+    //transfer();
+    //transferFrom();
+    // allowance();
+    // approve();
+    _balanceOf(_createAccModel.keyring.keyPairs[0].address,
+        _createAccModel.keyring.keyPairs[0].address);
+  }
 
   Future<void> connectNode() async {
     print('connectNode');
@@ -146,6 +124,57 @@ class AppState extends State<App> {
         _apiConnected = true;
 
         _subscribeBalance();
+        callContract();
+      });
+    }
+  }
+
+  void transfer() async {
+    final res = await _createAccModel.sdk.api.keyring.contractTransfer(
+        _createAccModel.keyring.keyPairs[0].pubKey,
+        '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
+        '1',
+        '123');
+
+    print(res);
+  }
+
+  void transferFrom() async {
+    print(_createAccModel.keyring.keyPairs[0].address);
+    print(_createAccModel.keyring.keyPairs[0].pubKey);
+
+    final res = await _createAccModel.sdk.api.keyring.contractTransferFrom(
+        _createAccModel.keyring.keyPairs[0].address,
+        _createAccModel.keyring.keyPairs[0].pubKey,
+        '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
+        '1',
+        '1234');
+
+    print(res);
+  }
+
+  void allowance() async {
+    final res = await _createAccModel.sdk.api.allowance(
+        _createAccModel.keyring.keyPairs[0].address,
+        '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF');
+    print('$res allownace');
+  }
+
+  void approve() async {
+    final res = await _createAccModel.sdk.api.keyring.approve(
+        _createAccModel.keyring.keyPairs[0].pubKey,
+        '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
+        '2',
+        '1234');
+
+    print('$res allownace');
+  }
+
+  Future<void> _balanceOf(String from, String who) async {
+    final res = await _createAccModel.sdk.api.balanceOf(from, who);
+    if (res != null) {
+      setState(() {
+        kpiBalance = BigInt.parse(res['output']).toString();
       });
     }
   }
@@ -158,22 +187,6 @@ class AppState extends State<App> {
   //   print(resMap['${ls[0].pubKey}']);
   //   ls[0].name;
   // }
-
-  Future<void> _balanceOf(String from, String who) async {
-    try {
-      await GetRequest().balanceOf(from, who).then((value) {
-        print(value);
-        if (value != null) {
-          print(value);
-          setState(() {
-            kpiBalance = value;
-          });
-        }
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
 
   // Future<void> _importFromMnemonic() async {
   //   try {
@@ -214,7 +227,6 @@ class AppState extends State<App> {
       setState(() {
         _balance = res;
         mBalance = Fmt.balance(_balance.freeBalance, 18);
-        //print(mBalance);
       });
     });
 

@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/src/components/component.dart';
 import 'package:http/http.dart' as http;
+import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/models/model_asset_info.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 import '../../../../index.dart';
@@ -27,6 +30,9 @@ class _AssetInfoState extends State<AssetInfo> {
   AssetInfoC _c = AssetInfoC();
   ModelAssetInfo _modelAssetInfo = ModelAssetInfo();
 
+  FlareControls _flareController = FlareControls();
+  ModelScanPay _scanPayM = ModelScanPay();
+
   FocusNode _ownerNode = FocusNode();
   FocusNode _spenderNode = FocusNode();
   FocusNode _passNode = FocusNode();
@@ -47,7 +53,7 @@ class _AssetInfoState extends State<AssetInfo> {
         _recieverController.text != null &&
         _pinController.text != null) {
       approve(_recieverController.text, _pinController.text,
-          int.parse(_amountController.text));
+          _amountController.text);
     }
   }
 
@@ -56,7 +62,7 @@ class _AssetInfoState extends State<AssetInfo> {
         _recieverController.text != null &&
         _pinController.text != null) {
       transferFrom(_recieverController.text, _fromController.text,
-          _pinController.text, int.parse(_amountController.text));
+          _pinController.text, _amountController.text);
     }
   }
 
@@ -66,29 +72,26 @@ class _AssetInfoState extends State<AssetInfo> {
     }
   }
 
-  Future<void> approve(String recieverAddress, String pass, int amount) async {
-    Navigator.pop(context);
+  Future enableAnimation() async {
     setState(() {
-      _loading = true;
+      _scanPayM.isPay = true;
     });
-    final pairs = await KeyringPrivateStore()
-        .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
-    if (pairs['seed'] != null) {
-      final res =
-          await http.post('http://localhost:3000/:service/contract/approve',
-              headers: <String, String>{
-                "content-type": "application/json",
-              },
-              body: jsonEncode(<String, dynamic>{
-                "sender": pairs['seed'],
-                "to": recieverAddress,
-                "value": amount,
-              }));
+    _flareController.play('Checkmark');
+    Timer(Duration(milliseconds: 2500), () {
+      Navigator.pushNamedAndRemoveUntil(
+          context, Home.route, ModalRoute.withName('/'));
+    });
+  }
 
-      var resJson = jsonDecode(res.body);
-      if (resJson == null) {
-        await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
-      } else {
+  Future<void> approve(
+      String recieverAddress, String pass, String amount) async {
+    Navigator.pop(context);
+    try {
+      final res = await widget.sdk.api.keyring.approve(
+          widget.keyring.keyPairs[0].pubKey, recieverAddress, amount, pass);
+
+      print(res['hash']);
+      if (res['hash'] != null) {
         await dialog(
             context,
             MyText(
@@ -97,144 +100,179 @@ class _AssetInfoState extends State<AssetInfo> {
             ),
             Text('Approve'));
       }
-    } else {
-      await dialog(
-          context,
-          MyText(
-            text: 'Incorrect Pin',
-            textAlign: TextAlign.center,
-          ),
-          Text('Approve'));
+    } catch (e) {
+      print(e.toString());
+      await dialog(context, Text(e.toString()), Text('Opps!!'));
     }
 
     _amountController.text = '';
     _recieverController.text = '';
     _pinController.text = '';
 
-    setState(() {
-      _loading = false;
-    });
+    // Navigator.pop(context);
+    // setState(() {
+    //   _loading = true;
+    // });
+    // final pairs = await KeyringPrivateStore()
+    //     .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
+    // if (pairs['seed'] != null) {
+    //   final res =
+    //       await http.post('http://localhost:3000/:service/contract/approve',
+    //           headers: <String, String>{
+    //             "content-type": "application/json",
+    //           },
+    //           body: jsonEncode(<String, dynamic>{
+    //             "sender": pairs['seed'],
+    //             "to": recieverAddress,
+    //             "value": amount,
+    //           }));
+
+    //   var resJson = jsonDecode(res.body);
+    //   if (resJson == null) {
+    //     await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
+    //   } else {
+
+    //   }
+    // } else {
+    //   await dialog(
+    //       context,
+    //       MyText(
+    //         text: 'Incorrect Pin',
+    //         textAlign: TextAlign.center,
+    //       ),
+    //       Text('Approve'));
+    // }
+
+    // _amountController.text = '';
+    // _recieverController.text = '';
+    // _pinController.text = '';
+
+    // setState(() {
+    //   _loading = false;
+    // });
   }
 
   Future<void> transferFrom(
-      String recieverAddress, String from, String pass, int amount) async {
+      String recieverAddress, String from, String pin, String amount) async {
     Navigator.pop(context);
-    setState(() {
-      _loading = true;
-    });
-    final pairs = await KeyringPrivateStore()
-        .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
-    if (pairs['seed'] == null) {
-      await dialog(
-          context,
-          MyText(
-            text: 'Incorrect Pin',
-            textAlign: TextAlign.center,
-          ),
-          Text('Approve'));
-    } else {
-      final res = await http.post(
-          'http://localhost:3000/:service/contract/transferfrom',
-          headers: <String, String>{
-            "content-type": "application/json",
-          },
-          body: jsonEncode(<String, dynamic>{
-            "sender": pairs['seed'],
-            "from": from,
-            "to": recieverAddress,
-            "value": amount,
-          }));
-
-      var resJson = jsonDecode(res.body);
-
-      if (resJson == null) {
-        await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
-      } else {
-        await dialog(
-            context, Text('Transfer From Successfully'), Text('Transfer From'));
+    dialogLoading(context);
+    try {
+      final res = await widget.sdk.api.keyring.contractTransferFrom(
+        from,
+        widget.keyring.keyPairs[0].pubKey,
+        recieverAddress,
+        amount,
+        pin,
+      );
+      if (res['hash'] != null) {
+        Navigator.pop(context);
+        await enableAnimation();
       }
+    } catch (e) {
+      Navigator.pop(context);
+      await dialog(context, Text(e.toString()), Text('Opps!!'));
     }
-
+    _fromController.text = '';
     _amountController.text = '';
     _recieverController.text = '';
     _pinController.text = '';
 
-    setState(() {
-      _loading = false;
-    });
+    // setState(() {
+    //   _loading = true;
+    // });
+    // final pairs = await KeyringPrivateStore()
+    //     .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
+    // if (pairs['seed'] == null) {
+    //   await dialog(
+    //       context,
+    //       MyText(
+    //         text: 'Incorrect Pin',
+    //         textAlign: TextAlign.center,
+    //       ),
+    //       Text('Approve'));
+    // } else {
+    //   final res = await http.post(
+    //       'http://localhost:3000/:service/contract/transferfrom',
+    //       headers: <String, String>{
+    //         "content-type": "application/json",
+    //       },
+    //       body: jsonEncode(<String, dynamic>{
+    //         "sender": pairs['seed'],
+    //         "from": from,
+    //         "to": recieverAddress,
+    //         "value": amount,
+    //       }));
+
+    //   var resJson = jsonDecode(res.body);
+
+    //   if (resJson == null) {
+    //     await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
+    //   } else {
+    //     await dialog(
+    //         context, Text('Transfer From Successfully'), Text('Transfer From'));
+    //   }
+    // }
+
+    // _amountController.text = '';
+    // _recieverController.text = '';
+    // _pinController.text = '';
+
+    // setState(() {
+    //   _loading = false;
+    // });
   }
 
   Future<void> allowance(String owner, String spender) async {
     Navigator.pop(context);
-    setState(() {
-      _loading = true;
-    });
-    final allowance = await GetRequest().allowance(owner, spender);
-    print(allowance);
-    if (allowance == null) {
-      await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
-    } else {
-      await dialog(
-          context,
-          MyText(
-            text: '$allowance',
-            textAlign: TextAlign.center,
-          ),
-          Text('Allowance'));
+    try {
+      final res = await widget.sdk.api.allowance(owner, spender);
+      if (res != null) {
+        await dialog(context, Text('Allowance: ${BigInt.parse(res['output'])}'),
+            Text('Allowance'));
+      }
+    } catch (e) {
+      print(e.toString());
     }
-
-    setState(() {
-      _loading = false;
-    });
     _ownerController.text = '';
     _spenderController.text = '';
   }
 
   Future<void> totalSupply() async {
     try {
-      await GetRequest()
-          .totalSupply(widget.keyring.keyPairs[0].address)
-          .then((value) async {
-        if (value != null) {
-          setState(() {
-            _kpiSupply = value;
-          });
-        }
-      });
+      final res = await widget.sdk.api.totalSupply(
+        widget.keyring.keyPairs[0].address,
+      );
+      print(res.toString());
+      print(res['output']);
+      if (res != null) {
+        setState(() {
+          _kpiSupply = BigInt.parse(res['output']).toString();
+        });
+        print(_kpiSupply);
+      }
     } catch (e) {
       print(e.toString());
+      await dialog(context, Text(e.toString()), Text('Opps!!'));
     }
   }
 
   Future<void> _balanceOf(String from, String who) async {
     Navigator.pop(context);
-    setState(() {
-      _loading = true;
-    });
-    await GetRequest().balanceOf(from, who).then((value) async {
-      print(value);
-      if (value != null) {
-        print(value);
+    try {
+      final res = await widget.sdk.api.balanceOf(from, who);
+      if (res != null) {
         await dialog(
             context,
             MyText(
-              text: 'Account Balance: $value',
-              textAlign: TextAlign.center,
-            ),
-            Text('Balance Of'));
-      } else {
-        await dialog(
-            context,
-            MyText(
-              text: 'Invalid Address',
+              text: 'Account Balance: ${BigInt.parse(res['output'])}',
               textAlign: TextAlign.center,
             ),
             Text('Balance Of'));
       }
-    });
-    setState(() {
-      _loading = false;
-    });
+    } catch (e) {
+      print(e.toString());
+      await dialog(context, Text(e.toString()), Text('Opps!!'));
+    }
   }
 
   Future<Null> _refresh() async {
@@ -658,6 +696,24 @@ class _AssetInfoState extends State<AssetInfo> {
                         ),
                       ),
                     ),
+                    _scanPayM.isPay == false
+                        ? Container()
+                        : BackdropFilter(
+                            // Fill Blur Background
+                            filter: ImageFilter.blur(
+                              sigmaX: 5.0,
+                              sigmaY: 5.0,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Expanded(
+                                    child: CustomAnimation.flareAnimation(
+                                        _flareController,
+                                        "assets/animation/check.flr",
+                                        "Checkmark"))
+                              ],
+                            )),
                   ],
                 ),
         ),
