@@ -485,17 +485,24 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       floatingActionButton: SizedBox(
           width: 64,
           height: 64,
-          child: FloatingActionButton(
-            backgroundColor: hexaCodeToColor(AppColors.secondary),
-            child: SvgPicture.asset('assets/sld_qr.svg', width: 30, height: 30),
-            onPressed: () async {
-              await TrxOptionMethod.scanQR(context, _homeM.portfolioList,
-                  resetState, widget.sdkModel.sdk, widget.sdkModel.keyring);
-            },
-          )),
+          child: Stack(
+            children: [
+              FloatingActionButton(
+                backgroundColor:  hexaCodeToColor(AppColors.secondary),
+                child: SvgPicture.asset('assets/sld_qr.svg', width: 30, height: 30),
+                onPressed: !widget.sdkModel.apiConnected ? null : () async {
+                  await TrxOptionMethod.scanQR(context, _homeM.portfolioList, resetState, widget.sdkModel.sdk, widget.sdkModel.keyring);
+                },
+              ),
+
+              !widget.sdkModel.apiConnected ? Container(color: Colors.black.withOpacity(0.8)) : Container()
+            ],
+          )
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(
         /* Bottom Navigation Bar */
+        apiStatus: widget.sdkModel.apiConnected,
         homeM: _homeM,
         portfolioM: _portfolioM,
         postRequest: _postRequest,

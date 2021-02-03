@@ -48,259 +48,289 @@ class HomeBody extends StatelessWidget {
   });
 
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        MyHomeAppBar(
-          title: "KAABOP",
-          action: () {
-            MyBottomSheet().notification(context: context);
-          },
-        ),
+        Column(
 
-        // TOKEN
-        Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
+          children: [
+
+            MyHomeAppBar(
+              title: "KAABOP",
+              action: () {
+                MyBottomSheet().notification(context: context);
+              },
+            ),
+            // TOKEN
+            Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pushNamed(context, Account.route);
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(
-                        left: 20, right: 20, top: 25, bottom: 25),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: hexaCodeToColor(AppColors.cardColor),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              alignment: Alignment.centerLeft,
-                              margin: EdgeInsets.only(right: 16),
-                              width: 70,
-                              height: 70,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: SvgPicture.asset('assets/male_avatar.svg'),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                MyText(
-                                  text: accName,
-                                  color: "#FFFFFF",
-                                  fontSize: 20,
-                                ),
-                                Container(
-                                  width: 100,
-                                  child: MyText(
-                                    text: !apiStatus
-                                        ? "Connecting to Remote Node"
-                                        : "Indracore",
-                                    color: AppColors.secondary_text,
-                                    fontSize: 18,
-                                    textAlign: TextAlign.start,
-                                    fontWeight: FontWeight.bold,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Expanded(child: Container()),
-                            !apiStatus
-                                ? Container()
-                                : Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Container(
-                                      width: 150,
-                                      child: MyText(
-                                        text: accBalance,
-                                        fontSize: 30,
-                                        color: AppColors.secondary_text,
-                                        fontWeight: FontWeight.bold,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  )
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Clipboard.setData(ClipboardData(text: accAddress))
-                                .then((value) => {
-                                      Scaffold.of(context).showSnackBar(
-                                          SnackBar(
-                                              content:
-                                                  Text('Copied to Clipboard')))
-                                    });
-                          },
-                          child: MyText(
-                            top: 16,
-                            width: 200,
-                            text: accAddress ?? "address",
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                // Portfolio
                 Container(
-                  margin: EdgeInsets.only(top: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
                     children: [
-                      Container(
-                        width: 5,
-                        height: 40,
-                        decoration: BoxDecoration(
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, Account.route);
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(
+                              left: 20, right: 20, top: 25, bottom: 25),
+                          decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: hexaCodeToColor(AppColors.secondary)),
-                      ),
-                      MyText(
-                        text: 'Portfolio',
-                        fontSize: 27,
-                        color: "#FFFFFF",
-                        left: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ],
-                  ),
-                ),
-
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      RouteAnimation(
-                        enterPage: Portfolio(
-                          listData: portfolioM.list,
-                          listChart: homeM.circularChart,
-                        ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 16, top: 16),
-                    padding: EdgeInsets.only(left: 25, top: 25, bottom: 25),
-                    width: double.infinity,
-                    height: 200,
-                    decoration: BoxDecoration(
-                        color: hexaCodeToColor(AppColors.cardColor),
-                        borderRadius: BorderRadius.circular(8)),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Expanded(
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: SizedBox(
-                              width: 150,
-                              height: 150,
-                              child: PieChart(
-                                ringStrokeWidth: 15,
-                                dataMap: dataMap,
-                                chartType: ChartType.ring,
-                                colorList: pieColorList,
-                                centerText: "10%",
-                                legendOptions: LegendOptions(
-                                  showLegends: false,
-                                ),
-                                chartValuesOptions: ChartValuesOptions(
-                                  showChartValues: false,
-                                  showChartValueBackground: false,
-                                  chartValueStyle: TextStyle(
-                                    color: hexaCodeToColor("#FFFFFF"),
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            color: hexaCodeToColor(AppColors.cardColor),
                           ),
-                        ),
-                        Expanded(
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              MyPieChartRow(
-                                color: pieColorList[0],
-                                centerText: "KPI",
-                                endText: "25%",
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    alignment: Alignment.centerLeft,
+                                    margin: EdgeInsets.only(right: 16),
+                                    width: 70,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: SvgPicture.asset('assets/male_avatar.svg'),
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      MyText(
+                                        text: accName,
+                                        color: "#FFFFFF",
+                                        fontSize: 20,
+                                      ),
+                                      Container(
+                                        width: 100,
+                                        child: MyText(
+                                          text: !apiStatus
+                                              ? "Connecting to Remote Node"
+                                              : "Indracore",
+                                          color: AppColors.secondary_text,
+                                          fontSize: 18,
+                                          textAlign: TextAlign.start,
+                                          fontWeight: FontWeight.bold,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Expanded(child: Container()),
+                                  !apiStatus
+                                      ? Container()
+                                      : Align(
+                                          alignment: Alignment.bottomRight,
+                                          child: Container(
+                                            width: 150,
+                                            child: MyText(
+                                              text: accBalance,
+                                              fontSize: 30,
+                                              color: AppColors.secondary_text,
+                                              fontWeight: FontWeight.bold,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        )
+                                ],
                               ),
-                              MyPieChartRow(
-                                color: pieColorList[1],
-                                centerText: "SEL",
-                                endText: "50%",
-                              ),
-                              MyPieChartRow(
-                                color: pieColorList[2],
-                                centerText: "POK",
-                                endText: "25%",
-                              ),
-                              MyPieChartRow(
-                                color: pieColorList[3],
-                                centerText: "Emp",
-                                endText: "0%",
+                              GestureDetector(
+                                onTap: () {
+                                  Clipboard.setData(ClipboardData(text: accAddress))
+                                      .then((value) => {
+                                            Scaffold.of(context).showSnackBar(
+                                                SnackBar(
+                                                    content:
+                                                        Text('Copied to Clipboard')))
+                                          });
+                                },
+                                child: MyText(
+                                  top: 16,
+                                  width: 200,
+                                  text: accAddress ?? "address",
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
+                      ),
 
-                // Asset
-                Container(
-                    margin: EdgeInsets.only(top: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 5,
-                          height: 40,
+                      // Portfolio
+                      Container(
+                        margin: EdgeInsets.only(top: 16),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 5,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: hexaCodeToColor(AppColors.secondary)),
+                            ),
+                            MyText(
+                              text: 'Portfolio',
+                              fontSize: 27,
+                              color: "#FFFFFF",
+                              left: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            RouteAnimation(
+                              enterPage: Portfolio(
+                                listData: portfolioM.list,
+                                listChart: homeM.circularChart,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 16, top: 16),
+                          padding: EdgeInsets.only(left: 25, top: 25, bottom: 25),
+                          width: double.infinity,
+                          height: 200,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: hexaCodeToColor(AppColors.secondary)),
+                              color: hexaCodeToColor(AppColors.cardColor),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Expanded(
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: SizedBox(
+                                    width: 150,
+                                    height: 150,
+                                    child: PieChart(
+                                      ringStrokeWidth: 15,
+                                      dataMap: dataMap,
+                                      chartType: ChartType.ring,
+                                      colorList: pieColorList,
+                                      centerText: "10%",
+                                      legendOptions: LegendOptions(
+                                        showLegends: false,
+                                      ),
+                                      chartValuesOptions: ChartValuesOptions(
+                                        showChartValues: false,
+                                        showChartValueBackground: false,
+                                        chartValueStyle: TextStyle(
+                                          color: hexaCodeToColor("#FFFFFF"),
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    MyPieChartRow(
+                                      color: pieColorList[0],
+                                      centerText: "KPI",
+                                      endText: "25%",
+                                    ),
+                                    MyPieChartRow(
+                                      color: pieColorList[1],
+                                      centerText: "SEL",
+                                      endText: "50%",
+                                    ),
+                                    MyPieChartRow(
+                                      color: pieColorList[2],
+                                      centerText: "POK",
+                                      endText: "25%",
+                                    ),
+                                    MyPieChartRow(
+                                      color: pieColorList[3],
+                                      centerText: "Emp",
+                                      endText: "0%",
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        MyText(
-                          text: 'Assets',
-                          fontSize: 27,
-                          color: "#FFFFFF",
-                          left: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        Expanded(child: Container()),
-                      ],
-                    ))
-              ],
-            )),
+                      ),
 
-        GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                RouteAnimation(
-                  enterPage: AssetInfo(
-                    kpiBalance: kpiBalance,
-                    sdk: sdk,
-                    keyring: keyring,
-                  ),
+                      // Asset
+                      Container(
+                          margin: EdgeInsets.only(top: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 5,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: hexaCodeToColor(AppColors.secondary)),
+                              ),
+                              MyText(
+                                text: 'Assets',
+                                fontSize: 27,
+                                color: "#FFFFFF",
+                                left: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              Expanded(child: Container()),
+                            ],
+                          ))
+                    ],
+                  )
                 ),
-              );
-            },
-            child: buildRowList(
-                portfolioM.list, portfolioRateM.totalRate, kpiBalance)),
+
+                GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        RouteAnimation(
+                          enterPage: AssetInfo(
+                            kpiBalance: kpiBalance,
+                            sdk: sdk,
+                            keyring: keyring,
+                          ),
+                        ),
+                      );
+                    },
+                    child: buildRowList(
+                        portfolioM.list, portfolioRateM.totalRate, kpiBalance)),
+              ],
+            ),
+          ],
+        ),
+
+        !apiStatus ? 
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.black.withOpacity(0.5),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+
+                CircularProgressIndicator(),
+
+                MyText(text: "\nConnecting to Remote Node...\n", textAlign: TextAlign.center, color: "#FFFFFF", fontWeight: FontWeight.bold,),
+
+                MyText(text: "Please wait ! this might take a bit longer", textAlign: TextAlign.center, color: "#FFFFFF"),
+              ],
+            )
+          )
+          : Container()
       ],
     );
   }

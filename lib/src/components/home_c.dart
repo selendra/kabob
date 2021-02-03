@@ -325,6 +325,8 @@ Widget rowDecorationStyle({Widget child, double mTop: 0, double mBottom = 16}) {
 }
 
 class MyBottomAppBar extends StatelessWidget {
+
+  final bool apiStatus;
   final HomeModel homeM;
   final PortfolioM portfolioM;
   final PostRequest postRequest;
@@ -338,6 +340,7 @@ class MyBottomAppBar extends StatelessWidget {
   final CreateAccModel sdkModel;
 
   MyBottomAppBar({
+    this.apiStatus,
     this.homeM,
     this.portfolioM,
     this.postRequest,
@@ -355,50 +358,58 @@ class MyBottomAppBar extends StatelessWidget {
     return Container(
       color: Colors.transparent,
       child: BottomAppBar(
+        color: hexaCodeToColor(AppColors.cardColor),
         shape: CircularNotchedRectangle(),
         notchMargin: 8.0,
         child: Container(
           height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                  child: MyIconButton(
-                icon: 'telegram.svg',
-                onPressed: () async {
-                  MyBottomSheet().trxOptions(
-                    context: context,
-                    portfolioList: homeM.portfolioList,
-                    resetHomeData: resetDbdState,
-                    sdk: sdkModel.sdk,
-                    keyring: sdkModel.keyring,
-                  );
-                },
-              )),
-              Expanded(
-                  child: MyIconButton(
-                icon: 'qr_code.svg',
-                onPressed: () async {
-                  toReceiveToken();
-                },
-              )),
-              Expanded(child: Container()),
-              Expanded(
-                  child: MyIconButton(
-                icon: 'contact_list.svg',
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ContactBook(sdkModel))
-                  );
-                },
-              )),
-              Expanded(
-                child: MyIconButton(
-                  icon: 'menu.svg',
-                  onPressed: openDrawer,
-                ),
-              )
+          child: Stack(
+            children: [
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                      child: MyIconButton(
+                    icon: 'telegram.svg',
+                    onPressed: !apiStatus ? null : () async {
+                      MyBottomSheet().trxOptions(
+                        context: context,
+                        portfolioList: homeM.portfolioList,
+                        resetHomeData: resetDbdState,
+                        sdk: sdkModel.sdk,
+                        keyring: sdkModel.keyring,
+                      );
+                    },
+                  )),
+                  Expanded(
+                      child: MyIconButton(
+                    icon: 'qr_code.svg',
+                    onPressed: !apiStatus ? null : () async {
+                      toReceiveToken();
+                    },
+                  )),
+                  Expanded(child: Container()),
+                  Expanded(
+                      child: MyIconButton(
+                    icon: 'contact_list.svg',
+                    onPressed: !apiStatus ? null : () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ContactBook(sdkModel))
+                      );
+                    },
+                  )),
+                  Expanded(
+                    child: MyIconButton(
+                      icon: 'menu.svg',
+                      onPressed: !apiStatus ? null : openDrawer,
+                    ),
+                  )
+                ],
+              ),
+
+              !apiStatus ? Container(color: Colors.black.withOpacity(0.8)) : Container()
             ],
           ),
         ),
