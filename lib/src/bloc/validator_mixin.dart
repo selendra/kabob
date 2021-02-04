@@ -22,7 +22,12 @@ class ValidateMixin {
 
   /* ----------User Sign Up Next Step---------- */
   String validatePassword(String value) {
-    if (value.isEmpty) return 'Please fill password';
+
+    print("Validate $value");
+
+    if (value == 'not match'){
+      return 'Confirm password does not match';
+    } else if (value.isEmpty) return 'Please fill password';
     else if (value.length < 5) return 'Password less than 5 digit';
     return null;
   }

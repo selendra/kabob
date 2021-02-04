@@ -20,7 +20,20 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
 
   bool enable = false;
 
-  List _wordsLeft = [];
+  List _wordsLeft = [
+    // 'child',
+    // 'capital',
+    // 'fashion',
+    // 'three',
+    // 'mushroom',
+    // 'aim',
+    // 'cash',
+    // 'expire',
+    // 'quantum',
+    // 'steel',
+    // 'recycle',
+    // 'shrug'
+  ];
 
   Widget _buildWordsButtons() {
     if (_wordsLeft.length > 0) {
@@ -103,8 +116,6 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
 
   @override
   initState() {
-    print("My mnemonic list ${widget.accModel.mnemonicList}");
-    print("My mnemonic STring ${widget.accModel.mnemonic}");
     for (var i in widget.accModel.mnemonicList) {
       _wordsLeft.add(i); // Use For Sort Mnemonic
       _mnemonic.add(i); // Use For Compare
@@ -167,8 +178,15 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                     width: double.infinity,
                     margin: EdgeInsets.only(bottom: 16),
                     color: hexaCodeToColor(AppColors.cardColor),
+                    padding: EdgeInsets.all(16),
                     alignment: Alignment.centerLeft,
-                    child: MyText(text: _wordsSelected.join(' '))),
+                    child: MyText(
+                      color: AppColors.secondary_text,
+                      fontSize: 18,
+                      textAlign: TextAlign.left,
+                      text: _wordsSelected.join(' '),
+                      fontWeight: FontWeight.bold,
+                    )),
               ],
             ),
           ),
@@ -182,10 +200,6 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
             action: enable == false
                 ? null
                 : () async {
-                    await dialog(
-                        context,
-                        Text('We are not allow you to screen shot mnemonic'),
-                        Text("Message"));
                     Navigator.push(
                         context,
                         MaterialPageRoute(

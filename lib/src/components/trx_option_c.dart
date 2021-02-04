@@ -130,10 +130,12 @@ class TrxOptionMethod {
     //   resetDbdState(null, "portfolio");
     // }
     print("Scan qr reponse $_response");
-    await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SubmitTrx(
-                _response, false, portfolioList, sdk, keyring, sdkModel)));
+    if (_response) {
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  SubmitTrx(_response, false, portfolioList, sdk, keyring, sdkModel)));
+    }
   }
 }

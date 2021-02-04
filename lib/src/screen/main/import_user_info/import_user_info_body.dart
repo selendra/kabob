@@ -78,6 +78,7 @@ class ImportUserInfoBody extends StatelessWidget{
                   controller: modelUserInfo.confirmPasswordCon, 
                   focusNode: modelUserInfo.confirmPasswordNode, 
                   validateField: validateConfirmPassword, 
+                  inputAction: TextInputAction.done,
                   textColor: "#FFFFFF",
                   onChanged: onChanged, 
                   onSubmit: onSubmit

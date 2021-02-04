@@ -373,7 +373,7 @@ class MyBottomAppBar extends StatelessWidget {
                     onPressed: !apiStatus
                         ? null
                         : () async {
-                            MyBottomSheet().trxOptions(
+                            await MyBottomSheet().trxOptions(
                               context: context,
                               portfolioList: homeM.portfolioList,
                               resetHomeData: resetDbdState,

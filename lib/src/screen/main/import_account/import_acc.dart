@@ -5,6 +5,7 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/m_import_acc.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart';
+import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
 class ImportAcc extends StatefulWidget {
   final CreateAccModel importAccModel;
@@ -147,7 +148,15 @@ class ImportAccState extends State<ImportAcc> {
     });
   }
 
-  void onSubmit() {}
+  void onSubmit() async => await submit();
+
+  Future<void> submit() async {
+    await Navigator.pushNamed(
+      context,
+      ImportUserInfo.route
+    );
+    clearInput();
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -159,7 +168,9 @@ class ImportAccState extends State<ImportAcc> {
               onChanged: onChanged,
               onSubmit: onSubmit,
               clearInput: clearInput,
-              enable: enable),
+              enable: enable,
+              submit: submit,
+            ),
         ) //welcomeBody(context, navigatePage),
         );
   }

@@ -115,21 +115,24 @@ class ContactBookBody extends StatelessWidget {
                                             FlatButton(
                                               child: Text("Send"),
                                               onPressed: () {
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //         builder: (context) =>
-                                                //             SubmitTrx(
-                                                //                 model
-                                                //                     .contactBookList[
-                                                //                         index]
-                                                //                     .address
-                                                //                     .text,
-                                                //                 false,
-                                                //                 [],
-                                                //                 sdkModel.sdk,
-                                                //                 sdkModel
-                                                //                     .keyring)));
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            SubmitTrx(
+                                                                model
+                                                                    .contactBookList[
+                                                                        index]
+                                                                    .address
+                                                                    .text,
+                                                                false,
+                                                                [],
+                                                                sdkModel.sdk,
+                                                                sdkModel
+                                                                    .keyring,
+                                                                sdkModel)
+                                                              )
+                                                            );
                                               },
                                             ),
                                           ],
@@ -154,6 +157,7 @@ class ContactBookBody extends StatelessWidget {
                                     }
                                   },
                                   child: Card(
+                                    color: hexaCodeToColor(AppColors.cardColor),
                                     margin: EdgeInsets.only(bottom: 16.0),
                                     child: Padding(
                                       padding: EdgeInsets.all(8),

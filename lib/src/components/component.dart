@@ -290,6 +290,7 @@ class BodyScaffold extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
         child: Container(
       width: MediaQuery.of(context).size.width,
       height: height,

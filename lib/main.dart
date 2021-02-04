@@ -98,7 +98,7 @@ class AppState extends State<App> {
   }
 
   Future<void> _subscribeBalance() async {
-    if (_createAccModel.keyring.keyPairs[0] != null) {
+    if (_createAccModel.keyring.keyPairs.isNotEmpty) {
       print('subscribe');
       final channel = await _createAccModel.sdk.api.account
           .subscribeBalance(_createAccModel.keyring.current.address, (res) {

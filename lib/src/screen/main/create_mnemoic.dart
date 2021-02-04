@@ -46,7 +46,7 @@ class CreateMnemonic extends StatelessWidget {
                 // Display Mnemonic
                 Card(
                   child: MyText(
-                    text: accModel.mnemonic,
+                    text: accModel.mnemonic ?? '',
                     textAlign: TextAlign.left,
                     fontSize: 25,
                     color: AppColors.secondary_text,
