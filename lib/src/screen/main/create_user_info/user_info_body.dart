@@ -62,7 +62,7 @@ class MyUserInfoBody extends StatelessWidget{
                 MyInputField(
                   pBottom: 16.0,
                   labelText: "Password",
-                  textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
+                  textInputFormatter: [LengthLimitingTextInputFormatter(4)],
                   controller: modelUserInfo.passwordCon, 
                   focusNode: modelUserInfo.passwordNode, 
                   validateField: validateMidName, 
@@ -74,7 +74,7 @@ class MyUserInfoBody extends StatelessWidget{
                 MyInputField(
                   pBottom: 16.0,
                   labelText: "Confirm Password",
-                  textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
+                  textInputFormatter: [LengthLimitingTextInputFormatter(4)],
                   controller: modelUserInfo.confirmPasswordCon, 
                   focusNode: modelUserInfo.confirmPasswordNode, 
                   validateField: validateMidName, 
