@@ -373,7 +373,7 @@ class MyBottomAppBar extends StatelessWidget {
                       child: MyIconButton(
                     icon: 'telegram.svg',
                     onPressed: !apiStatus ? null : () async {
-                      MyBottomSheet().trxOptions(
+                      await MyBottomSheet().trxOptions(
                         context: context,
                         portfolioList: homeM.portfolioList,
                         resetHomeData: resetDbdState,

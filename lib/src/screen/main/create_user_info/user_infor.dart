@@ -80,38 +80,39 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   /* Change Select Gender */
   void changeGender(String gender) async {
-    _userInfoM.genderLabel = gender;
-    setState(() {
-      if (gender == "Male")
-        _userInfoM.gender = "M";
-      else
-        _userInfoM.gender = "F";
-    });
-    await Future.delayed(Duration(milliseconds: 100), () {
-      setState(() {
-        /* Unfocus All Field */
-        if (_userInfoM.gender != null)
-          enableButton(); /* Enable Button If User Set Gender */
-        _userInfoM.nodeFirstName.unfocus();
-        _userInfoM.nodeMidName.unfocus();
-        _userInfoM.nodeLastName.unfocus();
-      });
-    });
+    // _userInfoM.genderLabel = gender;
+    // setState(() {
+    //   if (gender == "Male")
+    //     _userInfoM.gender = "M";
+    //   else
+    //     _userInfoM.gender = "F";
+    // });
+    // await Future.delayed(Duration(milliseconds: 100), () {
+    //   setState(() {
+    //     /* Unfocus All Field */
+    //     if (_userInfoM.gender != null)
+    //       enableButton(bool); /* Enable Button If User Set Gender */
+    //     _userInfoM.nodeFirstName.unfocus();
+    //     _userInfoM.nodeMidName.unfocus();
+    //     _userInfoM.nodeLastName.unfocus();
+    //   });
+    // });
   }
 
-  void onSubmit() {
+  void onSubmit() async {
     if (_userInfoM.userNameNode.hasFocus) {
       FocusScope.of(context).requestFocus(_userInfoM.passwordNode);
     } else if (_userInfoM.nodeMidName.hasFocus) {
       FocusScope.of(context).requestFocus(_userInfoM.confirmPasswordNode);
     } else {
       FocusScope.of(context).unfocus();
-      if (_userInfoM.enable) submitAcc();
+      if (_userInfoM.enable) await submitAcc();
     }
   }
 
   void onChanged(String value) {
     _userInfoM.formStateAddUserInfo.currentState.validate();
+    validateAll();
   }
 
   String validateFirstName(String value) {
@@ -137,18 +138,42 @@ class MyUserInfoState extends State<MyUserInfo> {
   }
 
   String validateConfirmPassword(String value) {
+
+    print("My value $value");
     if (_userInfoM.nodeLastName.hasFocus) {
+
+    print("Focuse $value");
       _userInfoM.responseLastname = instanceValidate.validatePassword(value);
-      if (_userInfoM.responseLastname == null)
-        return null;
-      else
-        _userInfoM.responseLastname += "confirm password";
+
+      if (value != 'not match') {
+
+        if (_userInfoM.responseLastname == null)
+          return null;
+        else
+          _userInfoM.responseLastname += "confirm password";
+        validateAll();
+      }
     }
     return _userInfoM.responseLastname;
   }
 
+  void validateAll(){
+    if (
+      _userInfoM.userNameCon.text.isNotEmpty &&
+      _userInfoM.passwordCon.text.isNotEmpty &&
+      _userInfoM.confirmPasswordCon.text.isNotEmpty
+    ) {
+      if (_userInfoM.passwordCon.text == _userInfoM.confirmPasswordCon.text) {
+        setState((){ enableButton(true);});
+      } else {
+        setState((){ enableButton(false);});
+        validateConfirmPassword('not match');
+      }
+    } else if (_userInfoM.enable) setState((){ enableButton(false);});
+  }
+
   // Submit Profile User
-  void submitAcc() async {
+  Future<void> submitAcc() async {
     
     // Show Loading Process
     dialogLoading(context);
@@ -171,14 +196,14 @@ class MyUserInfoState extends State<MyUserInfo> {
 
         await StorageServices.setData(_userInfoM.confirmPasswordCon.text, 'pass');
 
+        await StorageServices.removeKey('contactList');
+
         // Close Loading Process
         Navigator.pop(context);
+        Navigator.pushNamedAndRemoveUntil(context, Home.route, ModalRoute.withName('/'));
+        }
 
-        await Future.delayed(Duration(seconds: 2), () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, Home.route, ModalRoute.withName('/'));
-        });
-      });
+      );
     } catch (e){
       await dialog(context, Text(e.toString()), Text("Message"));
     }
@@ -192,7 +217,7 @@ class MyUserInfoState extends State<MyUserInfo> {
     );
   }
 
-  void enableButton() => _userInfoM.enable = true;
+  void enableButton(bool value) => _userInfoM.enable = value;
 
   Widget build(BuildContext context) {
     return Scaffold(

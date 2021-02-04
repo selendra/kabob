@@ -8,6 +8,7 @@ import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
+import 'package:wallet_apps/src/models/m_import_acc.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
@@ -220,7 +221,7 @@ class AppState extends State<App> {
             title: 'Kaabop',
             theme: AppStyle.myTheme(),
             routes: {
-              // '/': (_) => ContactBook(),
+              // '/': (_) => ConfirmMnemonic(_createAccModel),
               MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
               ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),

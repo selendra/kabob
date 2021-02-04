@@ -137,23 +137,21 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   /* Change Select Gender */
   void changeGender(String gender) async {
-    _userInfoM.genderLabel = gender;
-    setState(() {
-      if (gender == "Male")
-        _userInfoM.gender = "M";
-      else
-        _userInfoM.gender = "F";
-    });
-    await Future.delayed(Duration(milliseconds: 100), () {
-      setState(() {
-        /* Unfocus All Field */
-        if (_userInfoM.gender != null)
-          enableButton(); /* Enable Button If User Set Gender */
-        _userInfoM.nodeFirstName.unfocus();
-        _userInfoM.nodeMidName.unfocus();
-        _userInfoM.nodeLastName.unfocus();
-      });
-    });
+    // _userInfoM.genderLabel = gender;
+    // setState(() {
+    //   if (gender == "Male")
+    //     _userInfoM.gender = "M";
+    //   else
+    //     _userInfoM.gender = "F";
+    // });
+    // await Future.delayed(Duration(milliseconds: 100), () {
+    //   setState(() {
+    //     /* Unfocus All Field */
+    //     if (_userInfoM.gender != null)
+    //       enableButton(true); /* Enable Button If User Set Gender */
+    //     FocusScope.of(context).unfocus();
+    //   });
+    // });
   }
 
   void onSubmit() async {
@@ -163,13 +161,14 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       FocusScope.of(context).requestFocus(_userInfoM.confirmPasswordNode);
     } else {
       FocusScope.of(context).unfocus();
-      enableButton();
-      if (_userInfoM.enable) submitProfile();
+      validateAll();
+      if (_userInfoM.enable) await submitProfile();
     }
   }
 
   void onChanged(String value) {
     _userInfoM.formStateAddUserInfo.currentState.validate();
+    validateAll();
   }
 
   String validateFirstName(String value) {
@@ -195,18 +194,42 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   String validateConfirmPassword(String value) {
+
+    print("My value $value");
     if (_userInfoM.nodeLastName.hasFocus) {
+
+    print("Focuse $value");
       _userInfoM.responseLastname = instanceValidate.validatePassword(value);
-      if (_userInfoM.responseLastname == null)
-        return null;
-      else
-        _userInfoM.responseLastname += "confirm password";
+
+      if (value != 'not match') {
+
+        if (_userInfoM.responseLastname == null)
+          return null;
+        else
+          _userInfoM.responseLastname += "confirm password";
+        validateAll();
+      }
     }
     return _userInfoM.responseLastname;
   }
 
+  void validateAll(){
+    if (
+      _userInfoM.userNameCon.text.isNotEmpty &&
+      _userInfoM.passwordCon.text.isNotEmpty &&
+      _userInfoM.confirmPasswordCon.text.isNotEmpty
+    ) {
+      if (_userInfoM.passwordCon.text == _userInfoM.confirmPasswordCon.text) {
+        setState((){ enableButton(true);});
+      } else {
+        setState((){ enableButton(false);});
+        validateConfirmPassword('not match');
+      }
+    } else if (_userInfoM.enable) setState((){ enableButton(false);});
+  }
+
   // Submit Profile User
-  void submitProfile() async {
+  Future<void> submitProfile() async {
     // Show Loading Process
     dialogLoading(context);
 
@@ -220,7 +243,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     );
   }
 
-  void enableButton() => _userInfoM.enable = true;
+  void enableButton(bool value) => _userInfoM.enable = value;
 
   Widget build(BuildContext context) {
     return Scaffold(

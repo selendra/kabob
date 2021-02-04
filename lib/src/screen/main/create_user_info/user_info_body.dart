@@ -80,6 +80,7 @@ class MyUserInfoBody extends StatelessWidget{
                   validateField: validateMidName, 
                   textColor: "#FFFFFF",
                   onChanged: onChanged, 
+                  inputAction: TextInputAction.done,
                   onSubmit: onSubmit
                 ),
 
@@ -113,7 +114,7 @@ class MyUserInfoBody extends StatelessWidget{
           textButton: "Submit",
           edgeMargin: EdgeInsets.only(top: 29, left: 66, right: 66),
           hasShadow: modelUserInfo.enable,
-          action: submitProfile//modelUserInfo.enable == false ? null : submitProfile
+          action: modelUserInfo.enable == false ? null : submitProfile
         )
       ],
     );

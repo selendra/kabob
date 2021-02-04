@@ -497,9 +497,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
           !widget.sdkModel.apiConnected ? Center(
             child: Container(
-              color: hexaCodeToColor(AppColors.bgdColor),
-              padding: EdgeInsets.all(40),
-              margin: EdgeInsets.only(left: 20, right: 16),
+              color: Colors.white,
+              padding: EdgeInsets.only(top: 40, bottom: 40, left: 30, right: 30),
+              margin: EdgeInsets.only(left: 30, right: 30),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -509,9 +509,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   valueColor: AlwaysStoppedAnimation(
                       hexaCodeToColor(AppColors.secondary))),
 
-                  MyText(text: "\nConnecting to Remote Node...\n", textAlign: TextAlign.center, color: "#FFFFFF", fontWeight: FontWeight.bold,),
+                  MyText(text: "\nConnecting to Remote Node...\n", textAlign: TextAlign.center, fontWeight: FontWeight.bold, color: "#000000"),
 
-                  MyText(text: "Please wait ! this might take a bit longer", textAlign: TextAlign.center, color: "#FFFFFF"),
+                  MyText(text: "Please wait ! this might take a bit longer", textAlign: TextAlign.center, color: "#000000"),
                 ],
               ),
             )
@@ -522,24 +522,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       floatingActionButton: SizedBox(
           width: 64,
           height: 64,
-          child: Stack(
-            children: [
-              FloatingActionButton(
-                backgroundColor:  hexaCodeToColor(AppColors.secondary),
-                child: SvgPicture.asset('assets/sld_qr.svg', width: 30, height: 30),
+          child: FloatingActionButton(
+                backgroundColor: hexaCodeToColor(AppColors.secondary).withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
+                child: SvgPicture.asset('assets/sld_qr.svg', width: 30, height: 30, color: !widget.sdkModel.apiConnected ? Colors.white.withOpacity(0.2) : Colors.white),
                 onPressed: !widget.sdkModel.apiConnected ? null : () async {
                   await TrxOptionMethod.scanQR(context, _homeM.portfolioList, resetState, widget.sdkModel.sdk, widget.sdkModel.keyring);
                 },
-              ),
-
-              !widget.sdkModel.apiConnected ? Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                color: Colors.black.withOpacity(0.8),
               )
-              : Container()
-            ],
-          )
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(

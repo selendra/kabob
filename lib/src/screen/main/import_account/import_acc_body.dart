@@ -4,23 +4,25 @@ import 'package:wallet_apps/src/screen/main/contents_backup.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
 class ImportAccBody extends StatelessWidget {
+  final bool enable;
   final ImportAccModel importAccModel;
   final Function onChanged;
   final Function onSubmit;
   final Function clearInput;
-  final bool enable;
+  final Function submit;
 
   ImportAccBody({
     this.importAccModel,
     this.onChanged,
     this.onSubmit,
     this.clearInput,
-    this.enable
+    this.enable,
+    this.submit
   });
 
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BodyScaffold(
+      body: BodyScaffold(
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: [
@@ -91,6 +93,7 @@ class ImportAccBody extends StatelessWidget {
                         textColor: "#FFFFFF",
                         maxLine: null,
                         onChanged: onChanged,
+                        inputAction: TextInputAction.done,
                         onSubmit: onSubmit))
 
                 // Card(
@@ -113,11 +116,7 @@ class ImportAccBody extends StatelessWidget {
             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
             textButton: 'Next',
             action: enable == false ? null : () async {
-              await Navigator.pushNamed(
-                context,
-                ImportUserInfo.route
-              );
-              clearInput();
+              submit();
             }
           )
         ],
