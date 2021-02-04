@@ -1,11 +1,8 @@
-import 'package:polkawallet_sdk/polkawallet_sdk.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 
-class ConfirmMnemonic extends StatefulWidget{
-
+class ConfirmMnemonic extends StatefulWidget {
   final CreateAccModel accModel;
 
   ConfirmMnemonic(this.accModel);
@@ -17,27 +14,24 @@ class ConfirmMnemonic extends StatefulWidget{
 }
 
 class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
-
   List<String> _wordsSelected = [];
 
-  List _mnemonic=[];
+  List _mnemonic = [];
 
   bool enable = false;
 
   List _wordsLeft = [];
 
   Widget _buildWordsButtons() {
-
     if (_wordsLeft.length > 0) {
       _wordsLeft.sort();
     }
 
     List<Widget> rows = <Widget>[];
-    
+
     for (var r = 0; r * 3 < _wordsLeft.length; r++) {
       if (_wordsLeft.length > r * 3) {
-        rows.add(
-          Row(
+        rows.add(Row(
           children: _wordsLeft
               .getRange(
                   r * 3,
@@ -45,8 +39,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                       ? (r + 1) * 3
                       : _wordsLeft.length)
               .map(
-                (i) => 
-                Container(
+                (i) => Container(
                   alignment: Alignment.center,
                   color: hexaCodeToColor(AppColors.cardColor),
                   padding: EdgeInsets.only(left: 4, right: 4, bottom: 4),
@@ -80,24 +73,24 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
     );
   }
 
-  void setMnemonic(){
+  void setMnemonic() {
     _wordsLeft.clear();
-    for(var i in widget.accModel.mnemonicList){
+    for (var i in widget.accModel.mnemonicList) {
       _wordsLeft.add(i); // Use For Sort Mnemonic
     }
     _wordsLeft.sort();
     setState(() {
-      enable =false;
+      enable = false;
     });
   }
-  
-  void validationMnemonic(){
+
+  void validationMnemonic() {
     int i = 0;
-    while (i < _mnemonic.length){
+    while (i < _mnemonic.length) {
       if (_mnemonic[i] != _wordsSelected[i]) break;
       i++;
     }
-    if (i == _mnemonic.length){
+    if (i == _mnemonic.length) {
       setState(() {
         enable = true;
       });
@@ -107,39 +100,36 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
       });
     }
   }
-  
+
   @override
-  initState(){
+  initState() {
     print("My mnemonic list ${widget.accModel.mnemonicList}");
     print("My mnemonic STring ${widget.accModel.mnemonic}");
-    for(var i in widget.accModel.mnemonicList){
+    for (var i in widget.accModel.mnemonicList) {
       _wordsLeft.add(i); // Use For Sort Mnemonic
       _mnemonic.add(i); // Use For Compare
     }
     super.initState();
   }
 
-  Widget build(BuildContext context){
-
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: [
-
-            MyAppBar(
-              color: hexaCodeToColor(AppColors.cardColor),
-              title: 'Create Account',
-              onPressed: (){
-                Navigator.pop(context);
-              },
-            ),
-            
-            Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                children: [
-                  Align(
+        body: BodyScaffold(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        children: [
+          MyAppBar(
+            color: hexaCodeToColor(AppColors.cardColor),
+            title: 'Create Account',
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Align(
                     alignment: Alignment.centerLeft,
                     child: MyText(
                       text: 'Confirm the mnemonic',
@@ -147,72 +137,63 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                       fontWeight: FontWeight.bold,
                       color: "#FFFFFF",
                       bottom: 12,
-                    )
-                  ),
-                  
-                  MyText(
-                    textAlign: TextAlign.left,
-                    text: 'Please click on the mnemonic in the correct order to confirm',
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: "#FFFFFF",
-                    bottom: 12,
-                  ),
+                    )),
 
-                  InkWell(
-                    onTap: (){
+                MyText(
+                  textAlign: TextAlign.left,
+                  text:
+                      'Please click on the mnemonic in the correct order to confirm',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: "#FFFFFF",
+                  bottom: 12,
+                ),
+
+                InkWell(
+                    onTap: () {
                       _wordsSelected = [];
                       setMnemonic();
                     },
                     child: Align(
-                      alignment: Alignment.centerRight,
-                      child: MyText(
-                        text: 'Reset',
-                        bottom: 16,
-                        color: AppColors.secondary_text
-                      )
-                    )
-                  ),
+                        alignment: Alignment.centerRight,
+                        child: MyText(
+                            text: 'Reset',
+                            bottom: 16,
+                            color: AppColors.secondary_text))),
 
-                  // Field of Mnemonic
-                  Container(
+                // Field of Mnemonic
+                Container(
                     height: 80,
                     width: double.infinity,
                     margin: EdgeInsets.only(bottom: 16),
                     color: hexaCodeToColor(AppColors.cardColor),
                     alignment: Alignment.centerLeft,
-                    child: MyText(
-                      text: _wordsSelected.join(' ') 
-                    )
-                  ),
-                  
-                ],
-              ),
+                    child: MyText(text: _wordsSelected.join(' '))),
+              ],
             ),
-            
-            _buildWordsButtons(),
-
-            Expanded(
-              child: Container(),
-            ),
-
-            MyFlatButton(
-              edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-              textButton: 'Next',
-              action: enable == false ? null : () async {
-                await dialog(context, Text('We are not allow you to screen shot mnemonic'), Text("Message"));
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MyUserInfo(widget.accModel)
-                  )
-                );
-              },
-            )
-            
-          ],
-        ),
-      )
-    );
+          ),
+          _buildWordsButtons(),
+          Expanded(
+            child: Container(),
+          ),
+          MyFlatButton(
+            edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
+            textButton: 'Next',
+            action: enable == false
+                ? null
+                : () async {
+                    await dialog(
+                        context,
+                        Text('We are not allow you to screen shot mnemonic'),
+                        Text("Message"));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => MyUserInfo(widget.accModel)));
+                  },
+          )
+        ],
+      ),
+    ));
   }
 }

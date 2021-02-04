@@ -75,6 +75,7 @@ class _AssetInfoState extends State<AssetInfo> {
   }
 
   Future enableAnimation() async {
+    Navigator.pop(context);
     setState(() {
       _scanPayM.isPay = true;
     });
@@ -94,13 +95,7 @@ class _AssetInfoState extends State<AssetInfo> {
 
       print(res['hash']);
       if (res['hash'] != null) {
-        await dialog(
-            context,
-            MyText(
-              text: 'Approve Successfully!',
-              textAlign: TextAlign.center,
-            ),
-            Text('Approve'));
+        await enableAnimation();
       }
     } catch (e) {
       print(e.toString());
@@ -125,7 +120,6 @@ class _AssetInfoState extends State<AssetInfo> {
         pin,
       );
       if (res['hash'] != null) {
-        Navigator.pop(context);
         await enableAnimation();
       }
     } catch (e) {

@@ -1,10 +1,10 @@
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
 
 class MyUserInfo extends StatefulWidget {
-
   CreateAccModel accModel;
 
   MyUserInfo(this.accModel);
@@ -16,7 +16,6 @@ class MyUserInfo extends StatefulWidget {
 }
 
 class MyUserInfoState extends State<MyUserInfo> {
-  
   ModelUserInfo _userInfoM = ModelUserInfo();
 
   PostRequest _postRequest = PostRequest();
@@ -41,6 +40,31 @@ class MyUserInfoState extends State<MyUserInfo> {
     _userInfoM.confirmPasswordCon.clear();
     _userInfoM.enable = false;
     super.dispose();
+  }
+
+  Future<void> _subscribeBalance() async {
+    print('subscribe');
+    final channel = await widget.accModel.sdk.api.account
+        .subscribeBalance(widget.accModel.keyring.current.address, (res) {
+      setState(() {
+        widget.accModel.balance = res;
+        widget.accModel.mBalance =
+            Fmt.balance(widget.accModel.balance.freeBalance, 18);
+      });
+    });
+    setState(() {
+      widget.accModel.msgChannel = channel;
+      print('Channel $channel');
+    });
+  }
+
+  Future<void> _balanceOf(String from, String who) async {
+    final res = await widget.accModel.sdk.api.balanceOf(from, who);
+    if (res != null) {
+      setState(() {
+        widget.accModel.kpiBalance = BigInt.parse(res['output']).toString();
+      });
+    }
   }
 
   void switchBiometric(bool value) async {
@@ -149,7 +173,6 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   // Submit Profile User
   void submitAcc() async {
-    
     // Show Loading Process
     dialogLoading(context);
 
@@ -162,27 +185,32 @@ class MyUserInfoState extends State<MyUserInfo> {
         password: _userInfoM.confirmPasswordCon.text,
       );
 
-      widget.accModel.sdk.api.keyring.addAccount(
-        widget.accModel.keyring, 
-        keyType: KeyType.mnemonic, 
-        acc: json, 
-        password: _userInfoM.confirmPasswordCon.text
-      ).then((value) async {
-
-        await StorageServices.setData(_userInfoM.confirmPasswordCon.text, 'pass');
+      widget.accModel.sdk.api.keyring
+          .addAccount(widget.accModel.keyring,
+              keyType: KeyType.mnemonic,
+              acc: json,
+              password: _userInfoM.confirmPasswordCon.text)
+          .then((value) async {
+        await StorageServices.setData(
+            _userInfoM.confirmPasswordCon.text, 'pass');
 
         // Close Loading Process
         Navigator.pop(context);
+
+        _subscribeBalance();
+        if (widget.accModel.keyring.keyPairs.length != 0) {
+          _balanceOf(widget.accModel.keyring.keyPairs[0].address,
+              widget.accModel.keyring.keyPairs[0].address);
+        }
 
         await Future.delayed(Duration(seconds: 2), () {
           Navigator.pushNamedAndRemoveUntil(
               context, Home.route, ModalRoute.withName('/'));
         });
       });
-    } catch (e){
+    } catch (e) {
       await dialog(context, Text(e.toString()), Text("Message"));
     }
-
   }
 
   PopupMenuItem item(Map<String, dynamic> list) {

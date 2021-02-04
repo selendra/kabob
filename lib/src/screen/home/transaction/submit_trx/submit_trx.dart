@@ -138,6 +138,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future enableAnimation() async {
+    Navigator.pop(context);
     setState(() {
       _scanPayM.isPay = true;
       disable = true;
@@ -201,7 +202,6 @@ class SubmitTrxState extends State<SubmitTrx> {
           amount: value.trim(),
         ));
 
-        Navigator.pop(context);
         await enableAnimation();
       }
     } catch (e) {
@@ -235,7 +235,6 @@ class SubmitTrxState extends State<SubmitTrx> {
 
       //print('tx status: $_status');
       print('hash: $hash');
-      Navigator.pop(context);
 
       if (hash != null) {
         saveTxHistory(TxHistory(
