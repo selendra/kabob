@@ -112,7 +112,7 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   void onChanged(String value) {
     _userInfoM.formStateAddUserInfo.currentState.validate();
-    validateAll();
+    validateAll(); 
   }
 
   String validateFirstName(String value) {
