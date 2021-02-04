@@ -58,31 +58,112 @@ class MyUserInfoBody extends StatelessWidget{
                   onChanged: onChanged, 
                   onSubmit: onSubmit
                 ),
-                
-                MyInputField(
-                  pBottom: 16.0,
-                  labelText: "Password",
-                  textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
-                  controller: modelUserInfo.passwordCon, 
-                  focusNode: modelUserInfo.passwordNode, 
-                  validateField: validateMidName, 
-                  textColor: "#FFFFFF",
-                  onChanged: onChanged, 
-                  onSubmit: onSubmit
-                ),
 
-                MyInputField(
-                  pBottom: 16.0,
-                  labelText: "Confirm Password",
-                  textInputFormatter: [LengthLimitingTextInputFormatter(TextField.noMaxLength)],
-                  controller: modelUserInfo.confirmPasswordCon, 
-                  focusNode: modelUserInfo.confirmPasswordNode, 
-                  validateField: validateMidName, 
-                  textColor: "#FFFFFF",
-                  onChanged: onChanged, 
-                  inputAction: TextInputAction.done,
-                  onSubmit: onSubmit
-                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  child: TextFormField(
+                    key: this.key,
+                    enabled: true,
+                    focusNode: modelUserInfo.passwordNode, 
+                    validator: validateMidName,
+                    keyboardType: TextInputType.text,
+                    obscureText: true,
+                    controller: modelUserInfo.passwordCon,
+                    textInputAction: TextInputAction.next,
+                    style: TextStyle(color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      labelStyle: TextStyle(
+                          fontSize: 18.0,
+                          color: modelUserInfo.passwordNode.hasFocus || modelUserInfo.passwordCon.text != ""
+                              ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.textColor)),
+                      prefixStyle: TextStyle(
+                          color: hexaCodeToColor(AppColors.textColor), fontSize: 18.0),
+                      /* Prefix Text */
+                      filled: true,
+                      fillColor: hexaCodeToColor(AppColors.cardColor),
+                      enabledBorder: myTextInputBorder(modelUserInfo.passwordCon.text != ""
+                          ? hexaCodeToColor("#FFFFFF").withOpacity(0.3)
+                          : Colors.transparent),
+                      /* Enable Border But Not Show Error */
+                      border: errorOutline(),
+                      /* Show Error And Red Border */
+                      focusedBorder:
+                          myTextInputBorder(hexaCodeToColor("#FFFFFF").withOpacity(0.3)),
+                      /* Default Focuse Border Color*/
+                      focusColor: hexaCodeToColor("#ffffff"),
+                      /* Border Color When Focusing */
+                      contentPadding: EdgeInsets.fromLTRB(
+                          21, 23, 21, 23), // Default padding =
+                    ),
+                    inputFormatters: [LengthLimitingTextInputFormatter(4)],
+                    /* Limit Length Of Text Input */
+                    onChanged: onChanged,
+                    onFieldSubmitted: (value) {
+                      onSubmit();
+                    },
+                  )),
+
+                  Container(
+                  padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  child: TextFormField(
+                    key: this.key,
+                    enabled: true,
+                    controller: modelUserInfo.confirmPasswordCon, 
+                    focusNode: modelUserInfo.confirmPasswordNode, 
+                    validator: validateLastName, 
+                    keyboardType: TextInputType.text,
+                    obscureText: true,
+                    textInputAction: TextInputAction.next,
+                    style: TextStyle(color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
+                    maxLines: 1,
+                    decoration: InputDecoration(
+                      labelText: "Confirm Password",
+                      labelStyle: TextStyle(
+                          fontSize: 18.0,
+                          color: modelUserInfo.passwordNode.hasFocus || modelUserInfo.passwordCon.text != ""
+                              ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.textColor)),
+                      prefixStyle: TextStyle(
+                          color: hexaCodeToColor(AppColors.textColor), fontSize: 18.0),
+                      /* Prefix Text */
+                      filled: true,
+                      fillColor: hexaCodeToColor(AppColors.cardColor),
+                      enabledBorder: myTextInputBorder(modelUserInfo.passwordCon.text != ""
+                          ? hexaCodeToColor("#FFFFFF").withOpacity(0.3)
+                          : Colors.transparent),
+                      /* Enable Border But Not Show Error */
+                      border: errorOutline(),
+                      /* Show Error And Red Border */
+                      focusedBorder:
+                          myTextInputBorder(hexaCodeToColor("#FFFFFF").withOpacity(0.3)),
+                      /* Default Focuse Border Color*/
+                      focusColor: hexaCodeToColor("#ffffff"),
+                      /* Border Color When Focusing */
+                      contentPadding: EdgeInsets.fromLTRB(
+                          21, 23, 21, 23), // Default padding =
+                    ),
+                    inputFormatters: [LengthLimitingTextInputFormatter(4)],
+                    /* Limit Length Of Text Input */
+                    onChanged: onChanged,
+                    onFieldSubmitted: (value) {
+                      onSubmit();
+                    },
+                  )),
+
+                // MyInputField(
+                //   pBottom: 16.0,
+                //   labelText: "Confirm Password",
+                //   controller: modelUserInfo.confirmPasswordCon, 
+                //   focusNode: modelUserInfo.confirmPasswordNode, 
+                //   validateField: validateMidName, 
+                //   textColor: "#FFFFFF",
+                //   onChanged: onChanged, 
+                //   inputAction: TextInputAction.done,
+                //   onSubmit: onSubmit
+                // ),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,

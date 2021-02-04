@@ -84,7 +84,7 @@ class MyInputField extends StatelessWidget {
                 21, 23, 21, 23), // Default padding = -10.0 px
             suffixIcon: icon,
           ),
-          inputFormatters: textInputFormatter,
+          inputFormatters: [LengthLimitingTextInputFormatter(4)],
           /* Limit Length Of Text Input */
           onChanged: onChanged,
           onFieldSubmitted: (value) {

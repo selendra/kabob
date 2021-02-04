@@ -74,12 +74,13 @@ class CreateMnemonic extends StatelessWidget {
                   action: FlatButton(
                     child: Text('Next'),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ConfirmMnemonic(accModel))
-                      );
+                      Navigator.pop(context);
                     },
                   ));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ConfirmMnemonic(accModel))
+                  );
             },
           )
         ],
