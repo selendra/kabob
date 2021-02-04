@@ -1,12 +1,11 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/src/components/component.dart';
-import 'package:http/http.dart' as http;
-import 'package:wallet_apps/src/models/fmt.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/model_asset_info.dart';
+import 'package:wallet_apps/src/models/tx_history.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 import '../../../../index.dart';
 
@@ -14,7 +13,9 @@ class AssetInfo extends StatefulWidget {
   final String kpiBalance;
   final WalletSDK sdk;
   final Keyring keyring;
-  AssetInfo({@required this.kpiBalance, this.sdk, this.keyring});
+  final CreateAccModel sdkModel;
+
+  AssetInfo({@required this.kpiBalance, this.sdk, this.keyring, this.sdkModel});
   @override
   _AssetInfoState createState() => _AssetInfoState();
 }
@@ -41,6 +42,7 @@ class _AssetInfoState extends State<AssetInfo> {
   String _kpiSupply = '0';
   String _kpiBalance = '0';
   bool _loading = false;
+  TxHistory _txHistoryModel = TxHistory();
 
   void submitAllowance() {
     if (_ownerController.text != null && _spenderController.text != null) {
@@ -108,48 +110,6 @@ class _AssetInfoState extends State<AssetInfo> {
     _amountController.text = '';
     _recieverController.text = '';
     _pinController.text = '';
-
-    // Navigator.pop(context);
-    // setState(() {
-    //   _loading = true;
-    // });
-    // final pairs = await KeyringPrivateStore()
-    //     .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
-    // if (pairs['seed'] != null) {
-    //   final res =
-    //       await http.post('http://localhost:3000/:service/contract/approve',
-    //           headers: <String, String>{
-    //             "content-type": "application/json",
-    //           },
-    //           body: jsonEncode(<String, dynamic>{
-    //             "sender": pairs['seed'],
-    //             "to": recieverAddress,
-    //             "value": amount,
-    //           }));
-
-    //   var resJson = jsonDecode(res.body);
-    //   if (resJson == null) {
-    //     await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
-    //   } else {
-
-    //   }
-    // } else {
-    //   await dialog(
-    //       context,
-    //       MyText(
-    //         text: 'Incorrect Pin',
-    //         textAlign: TextAlign.center,
-    //       ),
-    //       Text('Approve'));
-    // }
-
-    // _amountController.text = '';
-    // _recieverController.text = '';
-    // _pinController.text = '';
-
-    // setState(() {
-    //   _loading = false;
-    // });
   }
 
   Future<void> transferFrom(
@@ -176,50 +136,6 @@ class _AssetInfoState extends State<AssetInfo> {
     _amountController.text = '';
     _recieverController.text = '';
     _pinController.text = '';
-
-    // setState(() {
-    //   _loading = true;
-    // });
-    // final pairs = await KeyringPrivateStore()
-    //     .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
-    // if (pairs['seed'] == null) {
-    //   await dialog(
-    //       context,
-    //       MyText(
-    //         text: 'Incorrect Pin',
-    //         textAlign: TextAlign.center,
-    //       ),
-    //       Text('Approve'));
-    // } else {
-    //   final res = await http.post(
-    //       'http://localhost:3000/:service/contract/transferfrom',
-    //       headers: <String, String>{
-    //         "content-type": "application/json",
-    //       },
-    //       body: jsonEncode(<String, dynamic>{
-    //         "sender": pairs['seed'],
-    //         "from": from,
-    //         "to": recieverAddress,
-    //         "value": amount,
-    //       }));
-
-    //   var resJson = jsonDecode(res.body);
-
-    //   if (resJson == null) {
-    //     await dialog(context, Text('Something went wrong!'), Text('Opps!!'));
-    //   } else {
-    //     await dialog(
-    //         context, Text('Transfer From Successfully'), Text('Transfer From'));
-    //   }
-    // }
-
-    // _amountController.text = '';
-    // _recieverController.text = '';
-    // _pinController.text = '';
-
-    // setState(() {
-    //   _loading = false;
-    // });
   }
 
   Future<void> allowance(String owner, String spender) async {
@@ -235,25 +151,6 @@ class _AssetInfoState extends State<AssetInfo> {
     }
     _ownerController.text = '';
     _spenderController.text = '';
-  }
-
-  Future<void> totalSupply() async {
-    try {
-      final res = await widget.sdk.api.totalSupply(
-        widget.keyring.keyPairs[0].address,
-      );
-      print(res.toString());
-      print(res['output']);
-      if (res != null) {
-        setState(() {
-          _kpiSupply = BigInt.parse(res['output']).toString();
-        });
-        print(_kpiSupply);
-      }
-    } catch (e) {
-      print(e.toString());
-      await dialog(context, Text(e.toString()), Text('Opps!!'));
-    }
   }
 
   Future<void> _balanceOf(String from, String who) async {
@@ -273,6 +170,39 @@ class _AssetInfoState extends State<AssetInfo> {
       print(e.toString());
       await dialog(context, Text(e.toString()), Text('Opps!!'));
     }
+  }
+
+  Future<List<TxHistory>> readTxHistory() async {
+    await StorageServices.fetchData('txhistory').then((value) {
+      print('My value $value');
+      if (value != null) {
+        for (var i in value) {
+          if ((i['symbol'] == 'SEL')) {
+            _txHistoryModel.tx.add(TxHistory(
+              date: i['date'],
+              symbol: i['symbol'],
+              destination: i['destination'],
+              sender: i['sender'],
+              amount: i['amount'],
+              org: i['fee'],
+            ));
+          } else {
+            _txHistoryModel.txKpi.add(TxHistory(
+              date: i['date'],
+              symbol: i['symbol'],
+              destination: i['destination'],
+              sender: i['sender'],
+              amount: i['amount'],
+              org: i['fee'],
+            ));
+          }
+        }
+      }
+      //var responseJson = json.decode(value);
+      //print(responseJson);
+    });
+    setState(() {});
+    return _txHistoryModel.tx;
   }
 
   Future<Null> _refresh() async {
@@ -306,6 +236,10 @@ class _AssetInfoState extends State<AssetInfo> {
     return value;
   }
 
+  void showDetailDialog(TxHistory txHistory) async {
+    await txDetailDialog(context, txHistory);
+  }
+
   // String validateAmount(String value) {
   //   if (_scanPayM.nodeAmount.hasFocus) {
   //     _scanPayM.responseAmount = instanceValidate.validateSendToken(value);
@@ -319,7 +253,7 @@ class _AssetInfoState extends State<AssetInfo> {
   @override
   void initState() {
     _kpiBalance = widget.kpiBalance;
-    totalSupply();
+    readTxHistory();
     super.initState();
   }
 
@@ -395,7 +329,8 @@ class _AssetInfoState extends State<AssetInfo> {
                                   Align(
                                     alignment: Alignment.topRight,
                                     child: MyText(
-                                      text: "Total Supply: $_kpiSupply",
+                                      text:
+                                          "Total Supply: ${widget.sdkModel.kpiSupply}",
                                       color: AppColors.secondary_text,
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,
@@ -629,72 +564,91 @@ class _AssetInfoState extends State<AssetInfo> {
                       ),
                     ),
                     SizedBox(height: 16),
-                    Container(
-                      padding: EdgeInsets.only(left: 16, bottom: 8),
-                      alignment: Alignment.centerLeft,
-                      child: MyText(
-                        text: 'Yesterday',
-                        fontSize: 15,
-                      ),
-                    ),
+                    // Container(
+                    //   padding: EdgeInsets.only(left: 16, bottom: 8),
+                    //   alignment: Alignment.centerLeft,
+                    //   child: MyText(
+                    //     text: 'Yesterday',
+                    //     fontSize: 15,
+                    //   ),
+                    // ),
                     Expanded(
-                      child: ListView.builder(
-                        itemCount: 6,
-                        itemBuilder: (context, index) => rowDecorationStyle(
-                          child: Row(
-                            children: <Widget>[
-                              MyCircularImage(
-                                padding: EdgeInsets.all(6),
-                                margin: EdgeInsets.only(right: 20),
-                                decoration: BoxDecoration(
-                                    color: hexaCodeToColor(AppColors.secondary),
-                                    borderRadius: BorderRadius.circular(40)),
-                                imagePath: 'assets/sld_logo.svg',
-                                width: 50,
-                                height: 50,
-                                colorImage: Colors.white,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 16),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MyText(
-                                        text: "KPI",
-                                        color: "#FFFFFF",
-                                        fontSize: 18,
+                      child: _txHistoryModel.txKpi.isEmpty
+                          ? Container()
+                          : ListView.builder(
+                              itemCount: _txHistoryModel.txKpi.length,
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: () {
+                                  showDetailDialog(
+                                      _txHistoryModel.txKpi[index]);
+                                },
+                                child: rowDecorationStyle(
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        width: 50,
+                                        height: 50,
+                                        padding: EdgeInsets.all(6),
+                                        margin: EdgeInsets.only(right: 20),
+                                        decoration: BoxDecoration(
+                                            color: hexaCodeToColor(
+                                                AppColors.secondary),
+                                            borderRadius:
+                                                BorderRadius.circular(40)),
+                                        child: Image.asset(
+                                            'assets/koompi_white_logo.png'),
                                       ),
-                                      MyText(text: "Koompi", fontSize: 15),
+                                      Expanded(
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(right: 16),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              MyText(
+                                                text: _txHistoryModel
+                                                    .txKpi[index].symbol,
+                                                color: "#FFFFFF",
+                                                fontSize: 18,
+                                              ),
+                                              MyText(
+                                                  text: _txHistoryModel
+                                                      .txKpi[index].org,
+                                                  fontSize: 15),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          margin: EdgeInsets.only(right: 16),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              MyText(
+                                                  width: double.infinity,
+                                                  text: _txHistoryModel
+                                                      .txKpi[index].amount,
+                                                  color: "#FFFFFF",
+                                                  fontSize: 18,
+                                                  textAlign: TextAlign.right,
+                                                  overflow:
+                                                      TextOverflow.ellipsis),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.only(right: 16),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MyText(
-                                          width: double.infinity,
-                                          text: "0",
-                                          color: "#FFFFFF",
-                                          fontSize: 18,
-                                          textAlign: TextAlign.right,
-                                          overflow: TextOverflow.ellipsis),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                            ),
                     ),
                     _scanPayM.isPay == false
                         ? Container()

@@ -6,7 +6,7 @@ import 'package:polkawallet_sdk/api/types/txInfoData.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:http/http.dart' as http;
+import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
@@ -17,9 +17,10 @@ class SubmitTrx extends StatefulWidget {
   final bool enableInput;
   final WalletSDK sdk;
   final Keyring keyring;
+  final CreateAccModel sdkModel;
 
   SubmitTrx(this._walletKey, this.enableInput, this._listPortfolio, this.sdk,
-      this.keyring);
+      this.keyring, this.sdkModel);
   @override
   State<StatefulWidget> createState() {
     return SubmitTrxState();
@@ -31,12 +32,6 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   FlareControls flareController = FlareControls();
 
-  PostRequest _postRequest = PostRequest();
-  TxHistory _txHistoryModel = TxHistory();
-
-  FlareControls _flareController = FlareControls();
-
-  Backend _backend = Backend();
   AssetInfoC c = AssetInfoC();
 
   bool disable = false;
@@ -55,7 +50,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   void fetchIDs() async {
-    await Provider.fetchUserIds();
+    await ProviderBloc.fetchUserIds();
     setState(() {});
   }
 
@@ -187,24 +182,6 @@ class SubmitTrxState extends State<SubmitTrx> {
     enableButton();
   }
 
-  Future<void> transferFrom() async {
-    final pairs = await KeyringPrivateStore()
-        .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', '123456');
-
-    final res =
-        await http.post('http://localhost:3000/:service/contract/transferfrom',
-            headers: <String, String>{
-              "content-type": "application/json",
-            },
-            body: jsonEncode(<String, dynamic>{
-              "sender": pairs['seed'],
-              "to": '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
-              "value": 20,
-            }));
-
-    print(res);
-  }
-
   Future<void> transfer(String to, String pass, String value) async {
     dialogLoading(context);
     try {
@@ -212,6 +189,18 @@ class SubmitTrxState extends State<SubmitTrx> {
           .contractTransfer(widget.keyring.keyPairs[0].pubKey, to, value, pass);
 
       if (res['hash'] != null) {
+        assetbalanceOf(widget.keyring.keyPairs[0].address,
+            widget.keyring.keyPairs[0].address);
+
+        saveTxHistory(TxHistory(
+          date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
+          symbol: 'KPI',
+          destination: to,
+          sender: widget.keyring.current.address,
+          org: 'Koompi',
+          amount: value.trim(),
+        ));
+
         Navigator.pop(context);
         await enableAnimation();
       }
@@ -251,9 +240,10 @@ class SubmitTrxState extends State<SubmitTrx> {
       if (hash != null) {
         saveTxHistory(TxHistory(
           date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
+          symbol: 'SEL',
           destination: target,
           sender: widget.keyring.current.address,
-          fee: '0.0001',
+          org: 'selendra',
           amount: amount.trim(),
         ));
 
@@ -266,6 +256,16 @@ class SubmitTrxState extends State<SubmitTrx> {
     }
 
     return mhash;
+  }
+
+  Future<void> assetbalanceOf(String from, String who) async {
+    final res = await widget.sdk.api.balanceOf(from, who);
+    if (res != null) {
+      setState(() {
+        widget.sdkModel.kpiBalance = BigInt.parse(res['output']).toString();
+        print(widget.sdkModel.kpiBalance);
+      });
+    }
   }
 
   void clickSend() async {

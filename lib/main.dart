@@ -1,5 +1,4 @@
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:polkawallet_sdk/api/types/balanceData.dart';
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
@@ -7,11 +6,14 @@ import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
+import 'package:wallet_apps/src/provider/contract_provider.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   // Avoid Error, " accessed before the binding was initialized "
@@ -47,17 +49,10 @@ class App extends StatefulWidget {
 class AppState extends State<App> {
   CreateAccModel _createAccModel = CreateAccModel();
 
-  BalanceData _balance;
-  bool _sdkReady = false;
-  bool _apiConnected = false;
-  String mBalance = '0';
-  String kpiBalance = '0';
-  String _msgChannel;
-
   @override
   void initState() {
-    _createAccModel.keyring = Keyring();
     _createAccModel.sdk = WalletSDK();
+    _createAccModel.keyring = Keyring();
     _initApi();
     super.initState();
   }
@@ -68,40 +63,11 @@ class AppState extends State<App> {
     await _createAccModel.keyring.init();
     await _createAccModel.sdk.init(_createAccModel.keyring);
 
-    _sdkReady = true;
+    _createAccModel.sdkReady = true;
 
-    if (_sdkReady) {
-      // await _balanceOf(_createAccModel.keyring.keyPairs[0].address,
-      //     _createAccModel.keyring.keyPairs[0].address);
+    if (_createAccModel.sdkReady) {
       connectNode();
-
-      // getDecrypt();
     }
-  }
-
-  Future<void> _initContract() async {
-    try {
-      await GetRequest().initContract().then((value) {
-        print(value);
-        print(_createAccModel.keyring.keyPairs[0].toJson());
-        print('address: ${_createAccModel.keyring.keyPairs[0].address}');
-        print('pubKey: ${_createAccModel.keyring.keyPairs[0].pubKey}');
-        _balanceOf(_createAccModel.keyring.keyPairs[0].address,
-            _createAccModel.keyring.keyPairs[0].address);
-      });
-    } catch (e) {
-      print("My exception $e");
-    }
-  }
-
-  Future<void> callContract() async {
-    await _createAccModel.sdk.api.callContract().then((value) {});
-    //transfer();
-    //transferFrom();
-    // allowance();
-    // approve();
-    _balanceOf(_createAccModel.keyring.keyPairs[0].address,
-        _createAccModel.keyring.keyPairs[0].address);
   }
 
   Future<void> connectNode() async {
@@ -116,124 +82,81 @@ class AppState extends State<App> {
     final res = await _createAccModel.sdk.api
         .connectNode(_createAccModel.keyring, [node]);
 
+    print('resConnectNode $res');
     setState(() {});
-
     if (res != null) {
-      print(res.ss58);
+      print('res null');
       setState(() {
-        _apiConnected = true;
+        _createAccModel.apiConnected = true;
 
         _subscribeBalance();
         callContract();
       });
+    } else {
+      print('res null');
     }
   }
 
-  void transfer() async {
-    final res = await _createAccModel.sdk.api.keyring.contractTransfer(
-        _createAccModel.keyring.keyPairs[0].pubKey,
-        '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
-        '1',
-        '123');
-
-    print(res);
+  Future<void> _subscribeBalance() async {
+    if (_createAccModel.keyring.keyPairs[0] != null) {
+      print('subscribe');
+      final channel = await _createAccModel.sdk.api.account
+          .subscribeBalance(_createAccModel.keyring.current.address, (res) {
+        setState(() {
+          _createAccModel.balance = res;
+          _createAccModel.mBalance =
+              Fmt.balance(_createAccModel.balance.freeBalance, 18);
+          //print(mBalance);
+        });
+      });
+      setState(() {
+        _createAccModel.msgChannel = channel;
+        print('Channel $channel');
+      });
+    }
   }
 
-  void transferFrom() async {
-    print(_createAccModel.keyring.keyPairs[0].address);
-    print(_createAccModel.keyring.keyPairs[0].pubKey);
+  Future<void> callContract() async {
+    await _createAccModel.sdk.api.callContract();
 
-    final res = await _createAccModel.sdk.api.keyring.contractTransferFrom(
+    if (_createAccModel.keyring.keyPairs.isNotEmpty) {
+      _balanceOf(_createAccModel.keyring.keyPairs[0].address,
+          _createAccModel.keyring.keyPairs[0].address);
+      _totalSupply();
+    }
+  }
+
+  Future<void> _totalSupply() async {
+    try {
+      final res = await _createAccModel.sdk.api.totalSupply(
         _createAccModel.keyring.keyPairs[0].address,
-        _createAccModel.keyring.keyPairs[0].pubKey,
-        '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
-        '1',
-        '1234');
-
-    print(res);
-  }
-
-  void allowance() async {
-    final res = await _createAccModel.sdk.api.allowance(
-        _createAccModel.keyring.keyPairs[0].address,
-        '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF');
-    print('$res allownace');
-  }
-
-  void approve() async {
-    final res = await _createAccModel.sdk.api.keyring.approve(
-        _createAccModel.keyring.keyPairs[0].pubKey,
-        '5GuhfoxCt4BDns8wC44JPazpwijfxk2jFSdU8SqUa3YvnEVF',
-        '2',
-        '1234');
-
-    print('$res allownace');
+      );
+      print(res.toString());
+      print(res['output']);
+      if (res != null) {
+        setState(() {
+          _createAccModel.kpiSupply = BigInt.parse(res['output']).toString();
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+      await dialog(context, Text(e.toString()), Text('Opps!!'));
+    }
   }
 
   Future<void> _balanceOf(String from, String who) async {
     final res = await _createAccModel.sdk.api.balanceOf(from, who);
     if (res != null) {
       setState(() {
-        kpiBalance = BigInt.parse(res['output']).toString();
+        _createAccModel.kpiBalance = BigInt.parse(res['output']).toString();
       });
     }
   }
 
-  // Future<void> getCurrentAccount() async {
-  //   final List<KeyPairData> ls = _createAccModel.keyring.keyPairs;
-  //   final Map resMap =
-  //       await _createAccModel.sdk.api.account.encodeAddress([ls[0].pubKey]);
-
-  //   print(resMap['${ls[0].pubKey}']);
-  //   ls[0].name;
-  // }
-
-  // Future<void> _importFromMnemonic() async {
-  //   try {
-  //     final json = await sdk.api.keyring.importAccount(
-  //       keyring,
-  //       keyType: KeyType.mnemonic,
-  //       key:
-  //           'wing know chapter eight shed lens mandate lake twenty useless bless glory',
-  //       name: 'Chay',
-  //       password: '123456',
-  //     );
-  //     final acc = await sdk.api.keyring.addAccount(
-  //       keyring,
-  //       keyType: KeyType.mnemonic,
-  //       acc: json,
-  //       password: '123456',
-  //     );
-  //     // if (acc != null) {
-  //     //   await dialog(context, Text("You haved imported successfully"),
-  //     //       Text('Congratulation'),
-  //     //       action: FlatButton(
-  //     //           onPressed: () {
-  //     //             Navigator.pushReplacementNamed(context, Home.route);
-  //     //           },
-  //     //           child: Text('Continue')));
-  //     // }
-  //     print(acc.address);
-  //     print(acc.name);
-  //   } catch (e) {
-  //     print("Hello error $e");
-  //   }
-  // }
-
-  Future<void> _subscribeBalance() async {
-    print('subscribe');
-    final channel = await _createAccModel.sdk.api.account
-        .subscribeBalance(_createAccModel.keyring.current.address, (res) {
-      setState(() {
-        _balance = res;
-        mBalance = Fmt.balance(_balance.freeBalance, 18);
-      });
-    });
-
-    setState(() {
-      _msgChannel = channel;
-      print('Channel $channel');
-    });
+  void unsubsribeBalance(String _msgChannel) {
+    if (_msgChannel != null) {
+      _createAccModel.sdk.api.unsubscribeMessage(_msgChannel);
+    }
   }
 
   @override
@@ -242,27 +165,25 @@ class AppState extends State<App> {
       return OrientationBuilder(
         builder: (context, orientation) {
           SizeConfig().init(constraints, orientation);
-          return Provider(
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider<WalletProvider>(
+                create: (_) => WalletProvider(),
+              ),
+              ChangeNotifierProvider<ContractProvider>(
+                create: (_) => ContractProvider(),
+              ),
+            ],
             child: MaterialApp(
               initialRoute: '/',
               title: 'Kaabop',
               theme: AppStyle.myTheme(),
               routes: {
-                // '/': (_) => ContactBook(),
-                MySplashScreen.route: (_) => MySplashScreen(
-                      _createAccModel,
-                    ),
+                MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
                 ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
                 ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
                 ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
-                // ContactBook.route: (_) => ContactBook(_createAccModel),
-                Home.route: (_) => Home(
-                    _createAccModel.sdk,
-                    _createAccModel.keyring,
-                    _apiConnected,
-                    mBalance,
-                    _msgChannel,
-                    kpiBalance),
+                Home.route: (_) => Home(_createAccModel),
                 ImportAcc.route: (_) => ImportAcc(_createAccModel),
                 Account.route: (_) =>
                     Account(_createAccModel.sdk, _createAccModel.keyring),

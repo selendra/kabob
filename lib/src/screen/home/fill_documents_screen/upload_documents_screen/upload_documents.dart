@@ -2,7 +2,6 @@ import './upload_documents_body.dart';
 import 'package:wallet_apps/index.dart';
 
 class UploadDocuments extends StatefulWidget {
-
   final ModelDocument _modelDocuments;
 
   UploadDocuments(this._modelDocuments);
@@ -14,31 +13,26 @@ class UploadDocuments extends StatefulWidget {
 }
 
 class UploadDocumentsState extends State<UploadDocuments> {
-
   GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   @override
-  initState(){
+  initState() {
     AppServices.noInternetConnection(_globalKey);
     super.initState();
   }
 
-  Bloc _bloc = Bloc();
+  //Bloc _bloc = Bloc();
 
-  void popScreen() {
+  void popScreen() {}
 
-  }
-
-  void navigatePage() {
-
-  }
+  void navigatePage() {}
 
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _globalKey,
-      body: scaffoldBGDecoration(
-        child: documentsBodyWidget(context, _bloc, widget._modelDocuments, popScreen, navigatePage)
-      ) 
-    );
+        key: _globalKey,
+        body: scaffoldBGDecoration(
+            child:
+                Container() //documentsBodyWidget( context, widget._modelDocuments, popScreen, navigatePage)
+            ));
   }
 }

@@ -16,13 +16,17 @@ class StorageServices {
       dynamic _data, String _path) async {
     List<Map<String, dynamic>> ls = [];
     _preferences = await SharedPreferences.getInstance();
+    print(_preferences.containsKey(_path));
     if (_preferences.containsKey(_path)) {
       var _dataString = _preferences.getString(_path);
+      print("Get string $_dataString");
       ls = List<Map<String, dynamic>>.from(jsonDecode(_dataString));
       ls.add(_data);
     } else {
       ls.add(_data);
     }
+
+    print("Contact adding $ls");
 
     _decode = jsonEncode(ls);
     _preferences.setString(_path, _decode);
@@ -33,6 +37,7 @@ class StorageServices {
       TxHistory txHistory, String key) async {
     List<TxHistory> txHistoryList = [];
     _preferences = await SharedPreferences.getInstance();
+    print(txHistory.symbol);
 
     await StorageServices.fetchData('txhistory').then((value) {
       print('My value $value');
@@ -41,23 +46,32 @@ class StorageServices {
           print(i);
           txHistoryList.add(TxHistory(
             date: i['date'],
+            symbol: i['symbol'],
             destination: i['destination'],
             sender: i['sender'],
             amount: i['amount'],
-            fee: i['fee'],
+            org: i['fee'],
           ));
         }
         txHistoryList.add(txHistory);
+        print('1 ${txHistory.symbol}');
       } else {
         txHistoryList.add(txHistory);
+        print('2 ${txHistory.symbol}');
       }
-
-      //var responseJson = json.decode(value);
-      //print(responseJson);
     });
-    print('finalList: ${txHistoryList.length}');
+
+    print('3 ${txHistoryList[0].symbol}');
+
+    for (var i in txHistoryList) {
+      print(i.symbol);
+    }
+
     await _preferences.setString(key, jsonEncode(txHistoryList));
-    await _preferences.setString('test', 'test');
+
+    // print('finalList: ${txHistoryList.length}');
+    // await _preferences.setString(key, jsonEncode(txHistoryList));
+    // await _preferences.setString('test', 'test');
 
     // if (_preferences.containsKey(key)) {
     //   var data = _preferences.getString(key);
@@ -84,7 +98,9 @@ class StorageServices {
 
   static Future<dynamic> fetchData(String _path) async {
     _preferences = await SharedPreferences.getInstance();
+
     var _data = _preferences.getString(_path);
+    print("Data $_data");
     if (_data == null)
       return null;
     else {

@@ -12,7 +12,7 @@ class PostRequest {
 // secretKey
 
   Future<dynamic> inviteFriend(String phoneNumber) async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({"phone": phoneNumber});
     if (_backend.token != null) {
       _backend.response = await _http.post("${_sldApi.api}/invite-phonenumber",
@@ -69,7 +69,7 @@ class PostRequest {
 
   /* Post User Information */
   Future<_http.Response> uploadProfile(ModelUserInfo _model) async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({
       "first_name": _model.controlFirstName.text,
       "mid_name": _model.controlMidName.text,
@@ -88,7 +88,7 @@ class PostRequest {
 
   /* Post Get Wallet */
   Future<_http.Response> retreiveWallet(String _pins) async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({"pin": _pins});
     if (_backend.token != null) {
       _backend.response = await _http.post("${_sldApi.api}/getwallet",
@@ -102,7 +102,7 @@ class PostRequest {
 
   Future<Map<String, dynamic>> addAsset(ModelAsset _model) async {
     /* Add New Asset */
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({
       "asset_code": _model.controllerAssetCode.text,
       "asset_issuer": _model.controllerIssuer.text
@@ -119,7 +119,7 @@ class PostRequest {
 
   Future<_http.Response> sendPayment(ModelScanPay _model) async {
     /* QR Code Send Request */
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({
       "pin": _model.pin,
       "asset_code": _model.asset,
@@ -139,7 +139,7 @@ class PostRequest {
 
   Future<Map<String, dynamic>> addMerchant(dynamic _model) async {
     /* Add New Merchant */
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({
       "asset-code": _model.controlAssetCode.text,
       "destination": _model.controlDestination.text,
@@ -166,7 +166,7 @@ class PostRequest {
       "image_uri": _modelScanInvoice.imageUri['uri'],
       "approval_code": _modelScanInvoice.controlApproveCode.text
     });
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.post("${_sldApi.api}/addreceipt",
           headers: _backend.conceteHeader(
@@ -189,7 +189,7 @@ class PostRequest {
 
   // Add Phone To Exist Email
   Future<_http.Response> addPhone(String phone) async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({"phone": "+855$phone"});
     _backend.response = await _http.post("${_sldApi.api}/add-phonenumber",
         headers: _backend.conceteHeader(
@@ -235,7 +235,7 @@ class PostRequest {
   }
 
   Future<Map<String, dynamic>> changePIN(ModelChangePin _model) async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({
       "current_pin": _model.controllerOldPin.text,
       "new_pin": _model.controllerConfirmPin.text,
@@ -252,7 +252,7 @@ class PostRequest {
 
   Future<Map<String, dynamic>> changePassword(
       ModelChangePassword _model) async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({
       "current_password": _model.controlOldPassword.text,
       "new_password": _model.controlConfirmPassword.text,
@@ -268,7 +268,7 @@ class PostRequest {
   }
 
   Future<Map<String, dynamic>> getReward(String hashs) async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({"hashs": hashs});
     if (_backend.token != null) {
       _backend.response = await _http.post("${_sldApi.api}/get-rewards",
@@ -282,7 +282,7 @@ class PostRequest {
 
   /* Post To Get Wallet Form Contact */
   Future<Map<String, dynamic>> getWalletFromContact(String contact) async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     _backend.bodyEncode = json.encode({"phone": contact});
     if (_backend.token != null) {
       _backend.response = await _http.post('${_sldApi.api}/wallet-lookup',
@@ -310,7 +310,7 @@ class PostRequest {
   Future<_http.StreamedResponse> upLoadImage(
       File _image, String endpoint) async {
     /* Upload image to server by use multi part form*/
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     /* Compress image file */
     List<int> compressImage = await FlutterImageCompress.compressWithFile(
       _image.path,

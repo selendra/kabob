@@ -50,7 +50,7 @@ class GetRequest {
 
   Future<_http.Response> getUserProfile() async {
     /* Get User Profile */
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.get("${_sldApi.api}/userprofile",
           headers: _backend.conceteHeader(
@@ -62,7 +62,7 @@ class GetRequest {
 
   Future<_http.Response> checkExpiredToken() async {
     /* Expired Token In Welcome Screen */
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.get("${_sldApi.api}/userprofile",
           headers: _backend.conceteHeader(
@@ -74,7 +74,7 @@ class GetRequest {
 
   /* User History */
   Future<_http.Response> trxHistory() async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.get("${_sldApi.api}/trx-history",
           headers: _backend.conceteHeader(
@@ -86,7 +86,7 @@ class GetRequest {
 
   Future<_http.Response> getPortfolio() async {
     /* User Porfolio */
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     // print("My token ${_backend.token}");
     if (_backend.token != null) {
       _backend.response = await _http.get("${_sldApi.api}/portforlio",
@@ -98,7 +98,7 @@ class GetRequest {
   }
 
   Future getAllBranches() async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.get("${_sldApi.api}/get-all-branches",
           headers: _backend.conceteHeader(
@@ -109,7 +109,7 @@ class GetRequest {
   }
 
   Future<dynamic> getReceipt() async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.get("${_sldApi.api}/get-receipt",
           headers: _backend.conceteHeader(
@@ -122,7 +122,7 @@ class GetRequest {
 
   /* List Branches */
   Future<List<dynamic>> listBranches() async {
-    _backend.token = await Provider.fetchToken();
+    _backend.token = await ProviderBloc.fetchToken();
     if (_backend.token != null) {
       _backend.response = await _http.get('${_sldApi.api}/listBranches',
           headers: {

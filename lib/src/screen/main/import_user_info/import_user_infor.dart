@@ -1,20 +1,13 @@
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
-import 'package:polkawallet_sdk/polkawallet_sdk.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
+import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
-  // final String mnemonic;
-  // final Function importFromMnemonic;
-
   final CreateAccModel importAccModel;
 
   static const route = '/importUserInfo';
-
-  // ImportUserInfo(this.mnemonic, this.importFromMnemonic);
 
   ImportUserInfo(this.importAccModel);
 
@@ -39,6 +32,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     AppServices.noInternetConnection(_userInfoM.globalKey);
     /* If Registering Account */
     // if (widget.passwords != null) getToken();
+
     super.initState();
   }
 
@@ -50,6 +44,32 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     _userInfoM.confirmPasswordCon.clear();
     _userInfoM.enable = false;
     super.dispose();
+  }
+
+  Future<void> _subscribeBalance() async {
+    print('subscribe');
+    final channel = await widget.importAccModel.sdk.api.account
+        .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
+      setState(() {
+        widget.importAccModel.balance = res;
+        widget.importAccModel.mBalance =
+            Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
+      });
+    });
+    setState(() {
+      widget.importAccModel.msgChannel = channel;
+      print('Channel $channel');
+    });
+  }
+
+  Future<void> _balanceOf(String from, String who) async {
+    final res = await widget.importAccModel.sdk.api.balanceOf(from, who);
+    if (res != null) {
+      setState(() {
+        widget.importAccModel.kpiBalance =
+            BigInt.parse(res['output']).toString();
+      });
+    }
   }
 
   Future<void> _importFromMnemonic() async {
@@ -75,6 +95,11 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
       print("My account name ${acc.name}");
       if (acc != null) {
+        _subscribeBalance();
+        if (widget.importAccModel.keyring.keyPairs.length != 0) {
+          _balanceOf(widget.importAccModel.keyring.keyPairs[0].address,
+              widget.importAccModel.keyring.keyPairs[0].address);
+        }
         await dialog(context, Text("You haved imported successfully"),
             Text('Congratulation'),
             action: FlatButton(
@@ -84,8 +109,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
                 },
                 child: Text('Continue')));
       }
-      print(acc.address);
-      print(acc.name);
     } catch (e) {
       print(e.toString());
       await dialog(

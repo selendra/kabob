@@ -1,32 +1,36 @@
 class TxHistory {
   String date;
+  String symbol;
   String destination;
   String sender;
   String amount;
-  String fee;
+  String org;
 
   TxHistory({
     this.date,
+    this.symbol,
     this.destination,
     this.sender,
     this.amount,
-    this.fee,
+    this.org,
   });
 
   List<TxHistory> tx = [];
-
+  List<TxHistory> txKpi = [];
   TxHistory.fromJson(Map<String, dynamic> json)
       : date = json['date'],
+        symbol = json['symbol'],
         destination = json['destination'],
         sender = json['sender'],
         amount = json['amount'],
-        fee = json['fee'];
+        org = json['fee'];
 
   Map<String, dynamic> toJson() => {
         'date': date,
+        'symbol': symbol,
         'destination': destination,
         'sender': sender,
         'amount': amount,
-        'fee': fee,
+        'fee': org,
       };
 }

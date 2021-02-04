@@ -1,6 +1,7 @@
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class MyBottomSheet {
   dynamic response;
@@ -11,6 +12,7 @@ class MyBottomSheet {
     Function resetHomeData,
     WalletSDK sdk,
     Keyring keyring,
+    CreateAccModel sdkModel,
   }) {
     return showModalBottomSheet(
         context: context,
@@ -40,7 +42,7 @@ class MyBottomSheet {
                         action: () async {
                           try {
                             await TrxOptionMethod.scanQR(context, portfolioList,
-                                resetHomeData, sdk, keyring);
+                                resetHomeData, sdk, keyring, sdkModel);
                           } catch (e) {
                             print(e.message);
                           }
@@ -58,6 +60,7 @@ class MyBottomSheet {
                                 resetHomeData,
                                 sdk,
                                 keyring,
+                                sdkModel,
                               );
                             })),
                     Expanded(

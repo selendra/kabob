@@ -1,7 +1,6 @@
 import 'package:wallet_apps/index.dart';
 
 class TakeSelfie extends StatefulWidget {
-
   final ModelDocument _modelDocuments;
 
   TakeSelfie(this._modelDocuments);
@@ -13,20 +12,16 @@ class TakeSelfie extends StatefulWidget {
 }
 
 class TakeSelfieState extends State<TakeSelfie> {
+  //Bloc _bloc = Bloc();
 
-  Bloc _bloc = Bloc();
+  void popScreen() {}
 
-  void popScreen () {
-
-  }
-
-  void navigatePage() {
-    
-  }
+  void navigatePage() {}
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: selfieBodyWidget(context, _bloc, widget._modelDocuments, popScreen, navigatePage),
-    );
+        body:
+            Container() //selfieBodyWidget(context, _bloc, widget._modelDocuments, popScreen, navigatePage),
+        );
   }
 }

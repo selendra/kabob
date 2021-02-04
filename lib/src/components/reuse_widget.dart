@@ -201,7 +201,7 @@ BoxDecoration signOutColor() {
 
 /* Dialog of response from server */
 Future dialog(BuildContext context, var text, var title,
-    {FlatButton action, Color bgColor}) async {
+    {Widget action, Color bgColor}) async {
   var result = await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -220,7 +220,7 @@ Future dialog(BuildContext context, var text, var title,
           actions: <Widget>[
             FlatButton(
               child: Text('Close'),
-              onPressed: () => Navigator.of(context).pop(text),
+              onPressed: () => Navigator.pop(context),
             ),
             action
           ],
@@ -297,12 +297,12 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   MyText(
-                    text: 'Fee: ',
+                    text: 'Organization: ',
                     fontSize: 14.0,
                   ),
                   Expanded(
                       child: MyText(
-                    text: '${txHistory.fee}',
+                    text: '${txHistory.org}',
                     textAlign: TextAlign.start,
                     fontSize: 14.0,
                     overflow: TextOverflow.ellipsis,

@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class MyBottomSheetItem extends StatelessWidget {
   final String subTitle;
@@ -42,7 +43,8 @@ class TrxOptionMethod {
     if (await Permission.contacts.request().isGranted) {
       String number = '';
       var response;
-      final PhoneContact _contact =await FlutterContactPicker.pickPhoneContact();
+      final PhoneContact _contact =
+          await FlutterContactPicker.pickPhoneContact();
       // final Contact _contact = await ContactsService.openDeviceContactPicker();
       //Get Contact And Asign To Number Variable
 
@@ -99,29 +101,39 @@ class TrxOptionMethod {
     Function resetDbdState,
     WalletSDK sdk,
     Keyring keyring,
+    CreateAccModel sdkModel,
   ) async {
     var response = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
-                SubmitTrx("", true, portfolioList, sdk, keyring)));
+                SubmitTrx("", true, portfolioList, sdk, keyring, sdkModel)));
     if (response['status_code'] == 200) {
       resetDbdState(null, "portfolio");
     }
   }
 
   /* Scan QR Code */
-  static Future scanQR(BuildContext context, List<dynamic> portfolioList,
-      Function resetDbdState, WalletSDK sdk, Keyring keyring) async {
-    var _response = await Navigator.push(
-        context,
-        transitionRoute(QrScanner(
-          portList: portfolioList,
-          sdk: sdk,
-          keyring: keyring,
+  static Future scanQR(
+      BuildContext context,
+      List<dynamic> portfolioList,
+      Function resetDbdState,
+      WalletSDK sdk,
+      Keyring keyring,
+      CreateAccModel sdkModel) async {
+    var _response = await Navigator.push(context, transitionRoute(QrScanner(
+        // portList: portfolioList,
+        // sdk: sdk,
+        // keyring: keyring,
         )));
-    if (_response != null) {
-      resetDbdState(null, "portfolio");
-    }
+    // if (_response != null) {
+    //   resetDbdState(null, "portfolio");
+    // }
+    print("Scan qr reponse $_response");
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SubmitTrx(
+                _response, false, portfolioList, sdk, keyring, sdkModel)));
   }
 }

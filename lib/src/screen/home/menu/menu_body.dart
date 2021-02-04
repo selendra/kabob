@@ -52,10 +52,13 @@ class MenuBody extends StatelessWidget {
         index: 0,
         subIndex: 0,
         onTap: () {
+          Navigator.pop(context, '');
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => TrxHistory(userInfo['wallet'])));
+              context, MaterialPageRoute(builder: (context) => TrxActivity()));
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) => TrxHistory(userInfo['wallet'])));
         },
       ),
 
@@ -65,8 +68,8 @@ class MenuBody extends StatelessWidget {
         onTap: () {
           // callBack(_result);
           Navigator.pop(context, '');
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => TrxActivity()));
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => TrxActivity()));
         },
       ),
 
@@ -87,33 +90,33 @@ class MenuBody extends StatelessWidget {
         subIndex: 1,
         onTap: () {
           Navigator.pop(context, '');
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddAsset()));
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => AddAsset()));
         },
       ),
 
       // Security
       MenuSubTitle(index: 2),
 
-      MyListTile(
-        index: 2,
-        subIndex: 0,
-        onTap: () {
-          Navigator.pop(context, '');
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => ChangePin()));
-        },
-      ),
+      // MyListTile(
+      //   index: 2,
+      //   subIndex: 0,
+      //   onTap: () {
+      //     Navigator.pop(context, '');
+      //     Navigator.push(
+      //         context, MaterialPageRoute(builder: (context) => ChangePin()));
+      //   },
+      // ),
 
-      MyListTile(
-        index: 2,
-        subIndex: 1,
-        onTap: () {
-          Navigator.pop(context, '');
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ChangePassword()));
-        },
-      ),
+      // MyListTile(
+      //   index: 2,
+      //   subIndex: 1,
+      //   onTap: () {
+      //     Navigator.pop(context, '');
+      //     Navigator.push(context,
+      //         MaterialPageRoute(builder: (context) => ChangePassword()));
+      //   },
+      // ),
 
       MyListTile(
         enable: false,

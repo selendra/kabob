@@ -191,6 +191,8 @@ class MenuState extends State<Menu> {
   }
 
   void switchBiometric(bool value) async {
+    print(value);
+    print(_menuModel.switchBio);
     _localAuth = LocalAuthentication();
     await _localAuth.canCheckBiometrics.then((value) async {
       if (value == false) {

@@ -1,7 +1,9 @@
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class MySplashScreen extends StatefulWidget {
   CreateAccModel accModel;
@@ -28,23 +30,19 @@ class MySplashScreenState extends State<MySplashScreen> {
   initState() {
     // checkBiometric();
     // checkExpiredToken();
-    print("Splash screen");
     getCurrentAccount();
+
     super.initState();
   }
 
   void getCurrentAccount() async {
     await Future.delayed(Duration(seconds: 4), () {
-      print("My Keyring 22" + widget.accModel.keyring.keyPairs.toString());
-      final List<KeyPairData> ls = widget.accModel.keyring.keyPairs.toList();
+      //print("My Keyring 22" + widget.accModel.keyring.keyPairs.toString());
+      final List<KeyPairData> ls = WalletProvider().keyring.keyPairs.toList();
 
       if (ls.isEmpty) {
         Navigator.pushReplacement(
             context, RouteAnimation(enterPage: Welcome()));
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => MyUserInfo(widget.accModel)) //onfirmMnemonic(widget.accModel))
-        // );
       } else {
         Navigator.pushReplacementNamed(context, Home.route);
       }

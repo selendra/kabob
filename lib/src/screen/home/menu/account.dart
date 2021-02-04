@@ -61,6 +61,7 @@ class _AccountState extends State<Account> {
         _currentAcc,
       );
       Navigator.pop(context);
+      AppServices.clearStorage();
       Navigator.pushAndRemoveUntil(context,
           RouteAnimation(enterPage: Welcome()), ModalRoute.withName('/'));
     } catch (e) {

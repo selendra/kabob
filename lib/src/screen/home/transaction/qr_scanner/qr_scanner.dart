@@ -4,11 +4,11 @@ import 'package:wallet_apps/index.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class QrScanner extends StatefulWidget {
-  final List portList;
-  final WalletSDK sdk;
-  final Keyring keyring;
+  // final List portList;
+  // final WalletSDK sdk;
+  // final Keyring keyring;
 
-  QrScanner({this.portList, this.sdk, this.keyring});
+  // QrScanner({this.portList, this.sdk, this.keyring});
 
   @override
   State<StatefulWidget> createState() {
@@ -19,20 +19,21 @@ class QrScanner extends StatefulWidget {
 class QrScannerState extends State<QrScanner> {
   final GlobalKey qrKey = GlobalKey();
 
-  Backend _backend = Backend();
+  String code;
 
   void _onQrViewCreated(QRViewController controller) {
     controller.scannedDataStream.listen((scanData) async {
-      controller.pauseCamera();
-      await Future.delayed(Duration(seconds: 2), () async {
-        _backend.mapData = await Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => SubmitTrx(scanData.code, false,
-                    widget.portList, widget.sdk, widget.keyring)));
+      await controller.pauseCamera();
+      // code = scanData.code;
+      Navigator.pop(context, scanData.code);
+      // await Future.delayed(Duration(seconds: 2), () async {
+      //   // _backend.mapData = await Navigator.push(
+      //   //     context,
+      //   //     MaterialPageRoute(
+      //   //         builder: (context) => SubmitTrx(scanData.code, false,
+      //   //             widget.portList, widget.sdk, widget.keyring)));
 
-        //Navigator.pop(context, _backend.mapData);
-      });
+      // });
     });
   }
 
@@ -44,7 +45,7 @@ class QrScannerState extends State<QrScanner> {
       child: Column(
         children: [
           MyAppBar(
-            title: "Transaction",
+            title: "Scanning",
             onPressed: () {
               Navigator.pop(context);
             },

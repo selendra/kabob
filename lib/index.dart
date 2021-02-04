@@ -50,7 +50,7 @@ export 'package:wallet_apps/src/service/services.dart';
 export 'package:wallet_apps/theme/string.dart';
 export 'package:wallet_apps/src/utils/app_utils.dart';
 export 'package:wallet_apps/theme/color.dart';
-export 'package:wallet_apps/src/bloc/bloc.dart';
+//export 'package:wallet_apps/src/bloc/bloc.dart';
 export 'package:wallet_apps/src/bloc/bloc_provider.dart';
 export 'package:wallet_apps/src/bloc/validator_mixin.dart';
 export 'package:wallet_apps/src/config/app_config.dart';
@@ -83,7 +83,7 @@ export 'package:wallet_apps/src/service/storage.dart';
 
 // Main Screeen
 export 'package:wallet_apps/src/screen/main/welcome/welcome.dart';
-export  'package:wallet_apps/src/screen/main/welcome/welcome_body.dart';
+export 'package:wallet_apps/src/screen/main/welcome/welcome_body.dart';
 
 // Finger Print
 
@@ -260,4 +260,3 @@ export 'package:wallet_apps/src/models/sms_code_model.dart';
 
 /* ---------------------Util------------------------ */
 export 'package:wallet_apps/src/utils/instance_trx_order.dart';
-

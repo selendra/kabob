@@ -58,21 +58,29 @@ class TrxActivityState extends State<TrxActivity> {
   }
 
   Future<List<TxHistory>> readTxHistory() async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
-    String data = _pref.getString('test');
-    print('my Data: $data');
     await StorageServices.fetchData('txhistory').then((value) {
       print('My value $value');
       if (value != null) {
         for (var i in value) {
-          print(i);
-          _txHistoryModel.tx.add(TxHistory(
-            date: i['date'],
-            destination: i['destination'],
-            sender: i['sender'],
-            amount: i['amount'],
-            fee: i['fee'],
-          ));
+          if ((i['symbol'] == 'SEL')) {
+            _txHistoryModel.tx.add(TxHistory(
+              date: i['date'],
+              symbol: i['symbol'],
+              destination: i['destination'],
+              sender: i['sender'],
+              amount: i['amount'],
+              org: i['fee'],
+            ));
+          } else {
+            _txHistoryModel.txKpi.add(TxHistory(
+              date: i['date'],
+              symbol: i['symbol'],
+              destination: i['destination'],
+              sender: i['sender'],
+              amount: i['amount'],
+              org: i['fee'],
+            ));
+          }
         }
       }
       //var responseJson = json.decode(value);
@@ -102,7 +110,6 @@ class TrxActivityState extends State<TrxActivity> {
       isProgress = true;
     });
     fetchHistoryUser();
-    // _refreshController.refreshCompleted();
   }
 
   final List<Tab> myTabs = <Tab>[
@@ -143,10 +150,14 @@ class TrxActivityState extends State<TrxActivity> {
                                 padding: EdgeInsets.all(6),
                                 margin: EdgeInsets.only(right: 20),
                                 decoration: BoxDecoration(
-                                    color: hexaCodeToColor(AppColors.secondary),
-                                    borderRadius: BorderRadius.circular(40)),
-                                child:
-                                    Image.asset('assets/koompi_white_logo.png'),
+                                  color: hexaCodeToColor(AppColors.secondary),
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: MyLogo(
+                                  width: 50,
+                                  height: 50,
+                                  logoPath: "assets/sld_logo.svg",
+                                ),
                               ),
                               Container(
                                 margin: const EdgeInsets.only(right: 16),
@@ -155,11 +166,13 @@ class TrxActivityState extends State<TrxActivity> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     MyText(
-                                      text: 'SEL',
+                                      text: _txHistoryModel.tx[index].symbol,
                                       color: "#FFFFFF",
                                       fontSize: 18,
                                     ),
-                                    MyText(text: 'selendra', fontSize: 15),
+                                    MyText(
+                                        text: _txHistoryModel.tx[index].org,
+                                        fontSize: 15),
                                   ],
                                 ),
                               ),
@@ -192,7 +205,83 @@ class TrxActivityState extends State<TrxActivity> {
                     ),
             ),
             Container(
-              color: Colors.yellow,
+              height: MediaQuery.of(context).size.height,
+              child: _txHistoryModel.txKpi == null
+                  ? Container()
+                  : ListView.builder(
+                      itemCount: _txHistoryModel.txKpi.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            showDetailDialog(_txHistoryModel.txKpi[index]);
+                          },
+                          child: rowDecorationStyle(
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 50,
+                                  height: 50,
+                                  padding: EdgeInsets.all(6),
+                                  margin: EdgeInsets.only(right: 20),
+                                  decoration: BoxDecoration(
+                                      color:
+                                          hexaCodeToColor(AppColors.secondary),
+                                      borderRadius: BorderRadius.circular(40)),
+                                  child: Image.asset(
+                                      'assets/koompi_white_logo.png'),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(right: 16),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      MyText(
+                                        text:
+                                            _txHistoryModel.txKpi[index].symbol,
+                                        color: "#FFFFFF",
+                                        fontSize: 18,
+                                      ),
+                                      MyText(
+                                          text:
+                                              _txHistoryModel.txKpi[index].org,
+                                          fontSize: 15),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        MyText(
+                                          text:
+                                              _txHistoryModel.txKpi[index].date,
+                                          fontSize: 12,
+                                        ),
+                                        SizedBox(height: 5.0),
+                                        MyText(
+                                          text:
+                                              '-${_txHistoryModel.txKpi[index].amount}',
+                                          color: AppColors.secondary_text,
+                                          fontSize: 18,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
             ),
           ],
         ),
