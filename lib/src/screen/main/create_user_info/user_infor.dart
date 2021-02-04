@@ -136,6 +136,10 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   void onChanged(String value) {
     _userInfoM.formStateAddUserInfo.currentState.validate();
+<<<<<<< HEAD
+=======
+    validateAll(); 
+>>>>>>> daveat
   }
 
   String validateFirstName(String value) {
