@@ -6,6 +6,8 @@ import account from "./service/account";
 import staking from "./service/staking";
 import gov from "./service/gov";
 import { genLinks } from "./utils/config/config";
+import { Abi, ContractPromise } from '@polkadot/api-contract';
+import metadata from "./metadata.json";
 
 // send message to JSChannel: PolkaWallet
 function send(path: string, data: any) {
@@ -42,6 +44,94 @@ async function connect(nodes: string[]) {
   });
 }
 
+async function callContract(api: ApiPromise) {
+  return new Promise(async (resolve, reject) => {
+    const ERC20 = '5CyvZsXQAUNKYH6f38vCku9bXkWVAxaAwksFYRDpGJYcx4Vv';
+    const abiJSONobj = (<any>metadata);
+    const abi = new Abi(abiJSONobj);
+    const res = new ContractPromise(api, abi, ERC20);
+    (<any>window).apiContract = res;
+    resolve(res.address);
+    send("log", `${res.address} contract connected success`);
+  });
+
+}
+
+async function totalSupply(apiContract: ContractPromise, from: string) {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      const result = await apiContract.query.totalSupply(from, 0, -1);
+
+      resolve(result);
+      send('log', result.output.toString);
+
+      return result.output.toString;
+      // resolve(result);
+    } catch (err) {
+      resolve({ err: err.message });
+    }
+  });
+}
+// const result = await this.polkadotApiService.apiContract.query.balanceOf(from, 0, -1, who);
+
+async function balanceOf(apiContract: ContractPromise, from: string, who: string) {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      const result = await apiContract.query.balanceOf(from, 0, -1, who);
+
+      resolve(result);
+      send('log', result.output.toString);
+
+      return result.output.toString;
+      // resolve(result);
+    } catch (err) {
+      resolve({ err: err.message });
+    }
+  });
+}
+
+//const result = await this.polkadotApiService.apiContract.query.allowance(owner, 0, -1, owner, spender);
+
+async function allowance(apiContract: ContractPromise, owner: string, spender: string) {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      const result = await apiContract.query.allowance(owner, 0, -1, owner, spender);
+
+      resolve(result);
+
+      return result.output.toString;
+      // resolve(result);
+    } catch (err) {
+      resolve({ err: err.message });
+    }
+  });
+}
+
+
+
+
+
+
+
+
+
+
+// async function totalSupply(apiContract: ContractPromise, from: string) {
+//   return new Promise(async (resolve, reject) => {
+//     try {
+//       const result = await apiContract.query.totalSupply(from, 0, -1);
+
+//       send('log', result.output.toString);
+//       resolve(result);
+//     } catch (e) {
+//       send('error', e.message);
+//     }
+//   });
+// }
+
 const test = async () => {
   // const props = await api.rpc.system.properties();
   // send("log", props);
@@ -50,6 +140,10 @@ const test = async () => {
 const settings = {
   test,
   connect,
+  callContract,
+  totalSupply,
+  balanceOf,
+  allowance,
   subscribeMessage,
   getNetworkConst,
   getNetworkProperties,

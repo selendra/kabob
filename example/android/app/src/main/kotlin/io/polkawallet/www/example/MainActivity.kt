@@ -1,6 +1,0 @@
-package io.polkawallet.www.example
-
-import io.flutter.embedding.android.FlutterActivity
-
-class MainActivity: FlutterActivity() {
-}

@@ -245,4 +245,37 @@ class ApiKeyring {
     }
     return VerifyResult.fromJson(Map<String, dynamic>.of(res));
   }
+
+  Future<dynamic> contractTransfer(
+      String senderPubKey, String to, String value, String password) async {
+    final res =
+        await service.contractTranfer(senderPubKey, to, value, password);
+    if (res['error'] != null) {
+      throw Exception(res['error']);
+    }
+    return res;
+  }
+
+  Future<dynamic> contractTransferFrom(String from, String senderPubKey,
+      String to, String value, String password) async {
+    print('contract transfer');
+
+    final res = await service.contractTranferFrom(
+        from, senderPubKey, to, value, password);
+    if (res['error'] != null) {
+      throw Exception(res['error']);
+    }
+    return res;
+  }
+
+  Future<dynamic> approve(
+      String senderPubKey, String to, String value, String password) async {
+    final res = await service.approve(senderPubKey, to, value, password);
+
+    if (res['error'] != null) {
+      throw Exception(res['error']);
+    }
+
+    return res;
+  }
 }

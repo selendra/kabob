@@ -120,6 +120,44 @@ class ServiceKeyring {
     return res;
   }
 
+  Future<Map> contractTranfer(
+      String senderPubKey, String to, String value, String password) async {
+    print('contract transfer js');
+    final res = await serviceRoot.webView.evalJavascript(
+        'keyring.contractTransfer(apiContract,"$senderPubKey","$to","$value", "$password")');
+
+    if (res != null) {
+      return res;
+    }
+    return null;
+  }
+
+  Future<Map> contractTranferFrom(String from, String senderPubKey, String to,
+      String value, String password) async {
+    print('contract transfer js');
+
+    print('from js $from');
+    print('sender js$senderPubKey');
+    final res = await serviceRoot.webView.evalJavascript(
+        'keyring.contractTransferFrom(apiContract,"$from","$senderPubKey","$to","$value", "$password")');
+
+    if (res != null) {
+      return res;
+    }
+    return null;
+  }
+
+  Future<Map> approve(
+      String senderPubKey, String to, String value, String password) async {
+    final res = await serviceRoot.webView.evalJavascript(
+        'keyring.approve(apiContract,"$senderPubKey","$to","$value", "$password")');
+
+    if (res != null) {
+      return res;
+    }
+    return null;
+  }
+
   Future<Map> signatureVerify(String message, signature, address) async {
     final res = await serviceRoot.webView.evalJavascript(
       'keyring.verifySignature("$message", "$signature", "$address")',

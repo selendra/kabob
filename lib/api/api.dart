@@ -60,12 +60,33 @@ class PolkawalletApi {
       Keyring keyringStorage, List<NetworkParams> nodes) async {
     _connectedNode = null;
     final NetworkParams res = await service.webView.connectNode(nodes);
+    print('api');
     if (res != null) {
       _connectedNode = res;
 
       // update indices of keyPairs after connect
       keyring.updateIndicesMap(keyringStorage);
     }
+    return res;
+  }
+
+  Future<void> callContract() async {
+    await service.webView.callContract();
+    print('call Contract');
+  }
+
+  Future<dynamic> totalSupply(String from) async {
+    final res = await service.webView.totalSupply(from);
+    return res;
+  }
+
+  Future<dynamic> balanceOf(String from, String who) async {
+    final res = await service.webView.balanceOf(who, from);
+    return res;
+  }
+
+  Future<dynamic> allowance(String owner, String spender) async {
+    final res = await service.webView.allowance(owner, spender);
     return res;
   }
 

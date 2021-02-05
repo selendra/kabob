@@ -3,7 +3,6 @@ import { hexToU8a, u8aToHex, isHex, stringToHex } from "@polkadot/util";
 import BN from "bn.js";
 import { parseQrCode, getSigner, makeTx, getSubmittable } from "../utils/QrSigner";
 import gov from "./gov";
-
 import { Keyring } from "@polkadot/keyring";
 import { KeypairType } from "@polkadot/util-crypto/types";
 import { KeyringPair, KeyringPair$Json } from "@polkadot/keyring/types";
@@ -11,6 +10,7 @@ import { ApiPromise, SubmittableResult } from "@polkadot/api";
 import { SubmittableExtrinsic } from "@polkadot/api/types";
 import { ITuple } from "@polkadot/types/types";
 import { DispatchError } from "@polkadot/types/interfaces";
+import { ContractPromise } from "@polkadot/api-contract";
 let keyring = new Keyring({ ss58Format: 0, type: "sr25519" });
 
 /**
@@ -180,7 +180,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
     } else {
       tx = api.tx[txInfo.module][txInfo.call](...paramList);
     }
-    let unsub = () => {};
+    let unsub = () => { };
     const onStatusChange = (result: SubmittableResult) => {
       if (result.status.isInBlock || result.status.isFinalized) {
         const { success, error } = _extractEvents(api, result);
@@ -227,6 +227,79 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
       .catch((err) => {
         resolve({ error: err.message });
       });
+  });
+}
+
+async function contractTransfer(apiContract: ContractPromise, senderPubKey: string, to: string, value: string, password: string) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const keyPair = keyring.getPair(hexToU8a(senderPubKey));
+      try {
+        keyPair.decodePkcs8(password);
+      } catch (err) {
+        resolve({ error: "password check failed" });
+      }
+
+      await apiContract.tx.transfer(0, -1, to, value).signAndSend(keyPair, ({ events = [], status }) => {
+        if (status.isInBlock) {
+
+        } else if (status.isFinalized) {
+
+          resolve({ hash: status.asFinalized });
+        }
+      });
+    } catch (err) {
+      resolve({ err: err.message });
+    }
+  });
+}
+
+async function contractTransferFrom(apiContract: ContractPromise, from: string, senderPubKey: string, to: string, value: string, password: string) {
+  return new Promise(async (resolve, reject) => {
+    try {
+
+      const keyPair = keyring.getPair(hexToU8a(senderPubKey));
+      try {
+        keyPair.decodePkcs8(password);
+      } catch (err) {
+        resolve({ error: "password check failed" });
+      }
+      await apiContract.tx.transferFrom(0, -1, from, to, value).signAndSend(keyPair, ({ events = [], status }) => {
+        if (status.isInBlock) {
+
+        } else if (status.isFinalized) {
+
+          resolve({ hash: status.asFinalized });
+        }
+      });
+    } catch (err) {
+      resolve({ err: err.message });
+    }
+  });
+}
+
+//const result = await this.polkadotApiService.apiContract.tx.approve(0, -1, sender['to'], sender['value']).signAndSend(pair);
+
+async function approve(apiContract: ContractPromise, senderPubKey: string, to: string, value: string, password: string) {
+  return new Promise(async (resolve, reject) => {
+    try {
+
+      const keyPair = keyring.getPair(hexToU8a(senderPubKey));
+      try {
+        keyPair.decodePkcs8(password);
+      } catch (err) {
+        resolve({ error: "password check failed" });
+      }
+      await apiContract.tx.approve(0, -1, to, value).signAndSend(keyPair, ({ events = [], status }) => {
+        if (status.isInBlock) {
+
+        } else if (status.isFinalized) {
+          resolve({ hash: status.asFinalized });
+        }
+      });
+    } catch (err) {
+      resolve({ err: err.message });
+    }
   });
 }
 
@@ -320,7 +393,7 @@ function addSignatureAndSend(api: ApiPromise, address: string, signed: string) {
     if (!!tx.addSignature) {
       tx.addSignature(address, `0x${signed}`, payload);
 
-      let unsub = () => {};
+      let unsub = () => { };
       const onStatusChange = (result: SubmittableResult) => {
         if (result.status.isInBlock || result.status.isFinalized) {
           const { success, error } = _extractEvents(api, result);
@@ -403,6 +476,9 @@ export default {
   recover,
   txFeeEstimate,
   sendTx,
+  contractTransfer,
+  contractTransferFrom,
+  approve,
   checkPassword,
   changePassword,
   checkDerivePath,

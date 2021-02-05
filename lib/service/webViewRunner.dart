@@ -146,6 +146,32 @@ class WebViewRunner {
     return null;
   }
 
+  Future<void> callContract() async {
+    await evalJavascript('settings.callContract(api)');
+    print('exec js');
+  }
+
+  Future<dynamic> totalSupply(String from) async {
+    final res =
+        await evalJavascript('settings.totalSupply(apiContract,"$from")');
+    print('exec js');
+    return res;
+  }
+
+  Future<dynamic> balanceOf(String who, String from) async {
+    final res =
+        await evalJavascript('settings.balanceOf(apiContract,"$from","$who")');
+
+    return res;
+  }
+
+  Future<dynamic> allowance(String owner, String spender) async {
+    final res = await evalJavascript(
+        'settings.allowance(apiContract,"$owner","$spender")');
+
+    return res;
+  }
+
   Future<void> subscribeMessage(
     String code,
     String channel,
