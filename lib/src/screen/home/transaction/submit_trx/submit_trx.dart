@@ -195,10 +195,10 @@ class SubmitTrxState extends State<SubmitTrx> {
 
         saveTxHistory(TxHistory(
           date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
-          symbol: 'KPI',
+          symbol: 'KMPI',
           destination: to,
           sender: widget.keyring.current.address,
-          org: 'Koompi',
+          org: 'KOOMPI',
           amount: value.trim(),
         ));
 
@@ -242,7 +242,7 @@ class SubmitTrxState extends State<SubmitTrx> {
           symbol: 'SEL',
           destination: target,
           sender: widget.keyring.current.address,
-          org: 'selendra',
+          org: 'Selendra',
           amount: amount.trim(),
         ));
 

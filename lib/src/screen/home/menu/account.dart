@@ -23,12 +23,22 @@ class _AccountState extends State<Account> {
   TextEditingController _oldPinController = TextEditingController();
   TextEditingController _newPinController = TextEditingController();
 
+  GlobalKey<FormState> _changePinKey = GlobalKey<FormState>();
+  GlobalKey<FormState> _backupKey = GlobalKey<FormState>();
+
   FocusNode _pinNode = FocusNode();
   FocusNode _oldNode = FocusNode();
   FocusNode _newNode = FocusNode();
   bool _loading = false;
 
   String onChanged(String value) {
+    _changePinKey.currentState.validate();
+    _backupKey.currentState.validate();
+    return value;
+  }
+
+  String onChangedBackup(String value) {
+    _backupKey.currentState.validate();
     return value;
   }
 
@@ -220,23 +230,6 @@ class _AccountState extends State<Account> {
                                         Expanded(child: Container()),
                                       ],
                                     ),
-                                    // GestureDetector(
-                                    //   onTap: () {
-                                    //     Clipboard.setData(ClipboardData(text: ''))
-                                    //         .then((value) => {
-                                    //               Scaffold.of(context).showSnackBar(
-                                    //                   SnackBar(
-                                    //                       content: Text(
-                                    //                           'Copied to Clipboard')))
-                                    //             });
-                                    //   },
-                                    //   child: MyText(
-                                    //     top: 16,
-                                    //     width: 200,
-                                    //     text: "address",
-                                    //     overflow: TextOverflow.ellipsis,
-                                    //   ),
-                                    // ),
                                   ],
                                 ),
                               ),
@@ -310,9 +303,10 @@ class _AccountState extends State<Account> {
                                 onTap: () {
                                   AccountC().showBackup(
                                     context,
+                                    _backupKey,
                                     _pinController,
                                     _pinNode,
-                                    onChanged,
+                                    onChangedBackup,
                                     onSubmit,
                                     submitBackUpKey,
                                   );
@@ -338,6 +332,7 @@ class _AccountState extends State<Account> {
                                 onTap: () {
                                   AccountC().showChangePin(
                                     context,
+                                    _changePinKey,
                                     _oldPinController,
                                     _newPinController,
                                     _oldNode,

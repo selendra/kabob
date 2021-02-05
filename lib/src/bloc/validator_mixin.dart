@@ -32,6 +32,17 @@ class ValidateMixin {
     return null;
   }
 
+  String validatePin(String value) {
+
+    print("Validate $value");
+
+    if (value == 'not match'){
+      return 'Confirm password does not match';
+    } else if (value.isEmpty) return 'Please fill password';
+    else if (value.length < 4) return 'Password less than 4 digit';
+    return null;
+  }
+
   String validateSms(String value) {
     return null;
   }

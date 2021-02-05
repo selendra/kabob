@@ -44,18 +44,13 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   Future<void> _subscribeBalance() async {
     print('subscribe');
-    final channel = await widget.accModel.sdk.api.account
-        .subscribeBalance(widget.accModel.keyring.current.address, (res) {
-      setState(() {
-        widget.accModel.balance = res;
-        widget.accModel.mBalance =
-            Fmt.balance(widget.accModel.balance.freeBalance, 18);
-      });
+    final channel = await widget.accModel.sdk.api.account.subscribeBalance(widget.accModel.keyring.current.address, (res) {
+          
+      widget.accModel.balance = res;
+      widget.accModel.mBalance = Fmt.balance(widget.accModel.balance.freeBalance, 18);
     });
-    setState(() {
-      widget.accModel.msgChannel = channel;
-      print('Channel $channel');
-    });
+    
+    widget.accModel.msgChannel = channel;
   }
 
   Future<void> _balanceOf(String from, String who) async {
@@ -104,29 +99,29 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   /* Change Select Gender */
   void changeGender(String gender) async {
-    _userInfoM.genderLabel = gender;
-    setState(() {
-      if (gender == "Male")
-        _userInfoM.gender = "M";
-      else
-        _userInfoM.gender = "F";
-    });
-    await Future.delayed(Duration(milliseconds: 100), () {
-      setState(() {
-        /* Unfocus All Field */
-        if (_userInfoM.gender != null)
-          enableButton(); /* Enable Button If User Set Gender */
-        _userInfoM.nodeFirstName.unfocus();
-        _userInfoM.nodeMidName.unfocus();
-        _userInfoM.nodeLastName.unfocus();
-      });
-    });
+    // _userInfoM.genderLabel = gender;
+    // setState(() {
+    //   if (gender == "Male")
+    //     _userInfoM.gender = "M";
+    //   else
+    //     _userInfoM.gender = "F";
+    // });
+    // await Future.delayed(Duration(milliseconds: 100), () {
+    //   setState(() {
+    //     /* Unfocus All Field */
+    //     if (_userInfoM.gender != null)
+    //       enableButton(); /* Enable Button If User Set Gender */
+    //     _userInfoM.nodeFirstName.unfocus();
+    //     _userInfoM.nodeMidName.unfocus();
+    //     _userInfoM.nodeLastName.unfocus();
+    //   });
+    // });
   }
 
   void onSubmit() {
     if (_userInfoM.userNameNode.hasFocus) {
       FocusScope.of(context).requestFocus(_userInfoM.passwordNode);
-    } else if (_userInfoM.nodeMidName.hasFocus) {
+    } else if (_userInfoM.passwordNode.hasFocus) {
       FocusScope.of(context).requestFocus(_userInfoM.confirmPasswordNode);
     } else {
       FocusScope.of(context).unfocus();
@@ -136,10 +131,7 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   void onChanged(String value) {
     _userInfoM.formStateAddUserInfo.currentState.validate();
-<<<<<<< HEAD
-=======
     validateAll(); 
->>>>>>> daveat
   }
 
   String validateFirstName(String value) {
@@ -154,8 +146,8 @@ class MyUserInfoState extends State<MyUserInfo> {
   }
 
   String validatePassword(String value) {
-    if (_userInfoM.nodeMidName.hasFocus) {
-      _userInfoM.responseMidname = instanceValidate.validatePassword(value);
+    if (_userInfoM.passwordNode.hasFocus) {
+      _userInfoM.responseMidname = instanceValidate.validatePin(value);
       if (_userInfoM.responseMidname == null)
         return null;
       else
@@ -165,14 +157,29 @@ class MyUserInfoState extends State<MyUserInfo> {
   }
 
   String validateConfirmPassword(String value) {
-    if (_userInfoM.nodeLastName.hasFocus) {
-      _userInfoM.responseLastname = instanceValidate.validatePassword(value);
+    if (_userInfoM.confirmPasswordNode.hasFocus) {
+      _userInfoM.responseLastname = instanceValidate.validatePin(value);
       if (_userInfoM.responseLastname == null)
         return null;
       else
         _userInfoM.responseLastname += "confirm password";
     }
     return _userInfoM.responseLastname;
+  }
+
+  void validateAll(){
+    if (
+      _userInfoM.userNameCon.text.isNotEmpty &&
+      _userInfoM.passwordCon.text.isNotEmpty &&
+      _userInfoM.confirmPasswordCon.text.isNotEmpty
+    ) {
+      if (_userInfoM.passwordCon.text == _userInfoM.confirmPasswordCon.text) {
+        setState((){ enableButton(true);});
+      } else {
+        setState((){ enableButton(false);});
+        validateConfirmPassword('not match');
+      }
+    } else if (_userInfoM.enable) setState((){ enableButton(false);});
   }
 
   // Submit Profile User
@@ -198,19 +205,26 @@ class MyUserInfoState extends State<MyUserInfo> {
         await StorageServices.setData(
             _userInfoM.confirmPasswordCon.text, 'pass');
 
-        // Close Loading Process
-        Navigator.pop(context);
+        await _subscribeBalance();
 
-        _subscribeBalance();
         if (widget.accModel.keyring.keyPairs.length != 0) {
           _balanceOf(widget.accModel.keyring.keyPairs[0].address,
               widget.accModel.keyring.keyPairs[0].address);
         }
+        
+        // Close Loading Process
+        Navigator.pop(context);
 
-        await Future.delayed(Duration(seconds: 2), () {
-          Navigator.pushNamedAndRemoveUntil(
-              context, Home.route, ModalRoute.withName('/'));
-        });
+        await dialog(context, Text("You haved create account successfully"),
+        Text('Congratulation'),
+        action: FlatButton(
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context, Home.route, ModalRoute.withName('/'));
+          },
+          child: Text('Continue')
+        )
+      );
       });
     } catch (e) {
       await dialog(context, Text(e.toString()), Text("Message"));
@@ -224,7 +238,7 @@ class MyUserInfoState extends State<MyUserInfo> {
     );
   }
 
-  void enableButton() => _userInfoM.enable = true;
+  void enableButton(bool value) => _userInfoM.enable = value;
 
   Widget build(BuildContext context) {
     return Scaffold(

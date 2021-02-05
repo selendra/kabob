@@ -180,8 +180,8 @@ class AppState extends State<App> {
               title: 'Kaabop',
               theme: AppStyle.myTheme(),
               routes: {
-                '/': (_) => MyUserInfo(_createAccModel),
-                // MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
+                // '/': (_) => ImportUserInfo(_createAccModel),
+                MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
                 ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
                 ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
                 ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),

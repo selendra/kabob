@@ -130,7 +130,7 @@ class TrxOptionMethod {
     //   resetDbdState(null, "portfolio");
     // }
     print("Scan qr reponse $_response");
-    if (_response) {
+    if (_response != null) {
       await Navigator.push(
           context,
           MaterialPageRoute(

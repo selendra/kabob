@@ -180,7 +180,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   void onSubmit() async {
     if (_userInfoM.userNameNode.hasFocus) {
       FocusScope.of(context).requestFocus(_userInfoM.passwordNode);
-    } else if (_userInfoM.nodeMidName.hasFocus) {
+    } else if (_userInfoM.passwordNode.hasFocus) {
       FocusScope.of(context).requestFocus(_userInfoM.confirmPasswordNode);
     } else {
       FocusScope.of(context).unfocus();
@@ -206,8 +206,8 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   String validatePassword(String value) {
-    if (_userInfoM.nodeMidName.hasFocus) {
-      _userInfoM.responseMidname = instanceValidate.validatePassword(value);
+    if (_userInfoM.passwordNode.hasFocus) {
+      _userInfoM.responseMidname = instanceValidate.validatePin(value);
       if (_userInfoM.responseMidname == null)
         return null;
       else
@@ -217,21 +217,14 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   String validateConfirmPassword(String value) {
+    if (_userInfoM.confirmPasswordNode.hasFocus) {
+      _userInfoM.responseLastname = instanceValidate.validatePin(value);
 
-    print("My value $value");
-    if (_userInfoM.nodeLastName.hasFocus) {
-
-    print("Focuse $value");
-      _userInfoM.responseLastname = instanceValidate.validatePassword(value);
-
-      if (value != 'not match') {
-
-        if (_userInfoM.responseLastname == null)
-          return null;
-        else
-          _userInfoM.responseLastname += "confirm password";
-        validateAll();
+      if (_userInfoM.responseLastname == null){
+        return null;
       }
+      else
+        _userInfoM.responseLastname += "confirm password";
     }
     return _userInfoM.responseLastname;
   }
@@ -244,9 +237,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     ) {
       if (_userInfoM.passwordCon.text == _userInfoM.confirmPasswordCon.text) {
         setState((){ enableButton(true);});
-      } else {
-        setState((){ enableButton(false);});
-        validateConfirmPassword('not match');
       }
     } else if (_userInfoM.enable) setState((){ enableButton(false);});
   }

@@ -60,7 +60,7 @@ class MyUserInfoBody extends StatelessWidget{
                 ),
 
                 Container(
-                  padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  padding: EdgeInsets.fromLTRB(16, 5, 16, 0),
                   child: TextFormField(
                     key: this.key,
                     enabled: true,
@@ -106,7 +106,7 @@ class MyUserInfoBody extends StatelessWidget{
                     },
                   )),
 
-                  Container(
+                Container(
                   padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
                   child: TextFormField(
                     key: this.key,

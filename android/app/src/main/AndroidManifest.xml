@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
-        android:label="KAABOP"
+        android:label="KABOB"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

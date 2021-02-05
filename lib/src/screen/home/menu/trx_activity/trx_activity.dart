@@ -114,7 +114,7 @@ class TrxActivityState extends State<TrxActivity> {
 
   final List<Tab> myTabs = <Tab>[
     Tab(text: 'SEL'),
-    Tab(text: 'KPI'),
+    Tab(text: 'KMPI'),
   ];
 
   void popScreen() => Navigator.pop(context);

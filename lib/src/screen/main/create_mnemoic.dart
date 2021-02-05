@@ -1,13 +1,21 @@
-import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 
-class CreateMnemonic extends StatelessWidget {
-
+class CreateMnemonic extends StatefulWidget {
   final CreateAccModel accModel;
-  
+
   CreateMnemonic({this.accModel});
+
+  @override
+  _CreateMnemonicState createState() => _CreateMnemonicState();
+}
+
+class _CreateMnemonicState extends State<CreateMnemonic> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,19 +52,23 @@ class CreateMnemonic extends StatelessWidget {
                 ),
 
                 // Display Mnemonic
-                Card(
-                  child: MyText(
-                    text: accModel.mnemonic ?? '',
-                    textAlign: TextAlign.left,
-                    fontSize: 25,
-                    color: AppColors.secondary_text,
-                    fontWeight: FontWeight.bold,
-                    pLeft: 16,
-                    right: 16,
-                    top: 16,
-                    bottom: 16
-                  )
-                )
+                widget.accModel.mnemonic == null
+                    ? CircularProgressIndicator(
+                        backgroundColor: Colors.transparent,
+                        valueColor: AlwaysStoppedAnimation(
+                            hexaCodeToColor(AppColors.secondary)),
+                      )
+                    : Card(
+                        child: MyText(
+                            text: widget.accModel.mnemonic ?? '',
+                            textAlign: TextAlign.left,
+                            fontSize: 25,
+                            color: AppColors.secondary_text,
+                            fontWeight: FontWeight.bold,
+                            pLeft: 16,
+                            right: 16,
+                            top: 16,
+                            bottom: 16))
               ],
             ),
           ),
@@ -69,18 +81,21 @@ class CreateMnemonic extends StatelessWidget {
             action: () async {
               await dialog(
                   context,
-                  Text('Sorry! we are not allow you to screen shot mnemonic, please write down your mnemonic on paper before you go next !'),
-                  Text("Please note", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                      'Sorry! we are not allow you to screen shot mnemonic, please write down your mnemonic on paper before you go next !'),
+                  Text("Please note",
+                      style: TextStyle(fontWeight: FontWeight.bold)),
                   action: FlatButton(
                     child: Text('Next'),
                     onPressed: () {
+                      //_enableScreenshot();
                       Navigator.pop(context);
                     },
                   ));
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ConfirmMnemonic(accModel))
-                  );
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ConfirmMnemonic(widget.accModel)));
             },
           )
         ],

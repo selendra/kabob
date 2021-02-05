@@ -5,8 +5,8 @@ class ModelAsset {
   bool enable = false;
 
   String assetBalance = '0';
-  static const String assetSymbol = 'KPI';
-  static const String assetOrganization = 'Koompi';
+  static const String assetSymbol = 'KMPI';
+  static const String assetOrganization = 'KOOMPI';
 
   String responseAssetCode;
   String responseIssuer;

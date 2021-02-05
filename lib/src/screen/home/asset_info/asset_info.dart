@@ -306,11 +306,13 @@ class _AssetInfoState extends State<AssetInfo> {
                                     fontSize: 20,
                                   ),
                                   SizedBox(height: 5),
-                                  MyText(
-                                    text: _kpiBalance + " KPI",
-                                    color: AppColors.secondary_text,
-                                    fontSize: 40,
-                                    fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: MyText(
+                                      text: _kpiBalance,
+                                      color: AppColors.secondary_text,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -566,84 +568,96 @@ class _AssetInfoState extends State<AssetInfo> {
                     //     fontSize: 15,
                     //   ),
                     // ),
-                    Expanded(
-                      child: _txHistoryModel.txKpi.isEmpty
-                          ? Container()
-                          : ListView.builder(
-                              itemCount: _txHistoryModel.txKpi.length,
-                              itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  showDetailDialog(
-                                      _txHistoryModel.txKpi[index]);
-                                },
-                                child: rowDecorationStyle(
-                                  child: Row(
-                                    children: <Widget>[
-                                      Container(
-                                        width: 50,
-                                        height: 50,
-                                        padding: EdgeInsets.all(6),
-                                        margin: EdgeInsets.only(right: 20),
-                                        decoration: BoxDecoration(
-                                            color: hexaCodeToColor(
-                                                AppColors.secondary),
-                                            borderRadius:
-                                                BorderRadius.circular(40)),
-                                        child: Image.asset(
-                                            'assets/koompi_white_logo.png'),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(right: 16),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              MyText(
-                                                text: _txHistoryModel
-                                                    .txKpi[index].symbol,
-                                                color: "#FFFFFF",
-                                                fontSize: 18,
+                    _txHistoryModel.txKpi.isEmpty
+                        ? SvgPicture.asset(
+                            'assets/no_data.svg',
+                            width: 200,
+                            height: 200,
+                          )
+                        : Expanded(
+                            child: _txHistoryModel.txKpi.isEmpty
+                                ? Container()
+                                : ListView.builder(
+                                    itemCount: _txHistoryModel.txKpi.length,
+                                    itemBuilder: (context, index) =>
+                                        GestureDetector(
+                                      onTap: () {
+                                        showDetailDialog(
+                                            _txHistoryModel.txKpi[index]);
+                                      },
+                                      child: rowDecorationStyle(
+                                        child: Row(
+                                          children: <Widget>[
+                                            Container(
+                                              width: 50,
+                                              height: 50,
+                                              padding: EdgeInsets.all(6),
+                                              margin:
+                                                  EdgeInsets.only(right: 20),
+                                              decoration: BoxDecoration(
+                                                  color: hexaCodeToColor(
+                                                      AppColors.secondary),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          40)),
+                                              child: Image.asset(
+                                                  'assets/koompi_white_logo.png'),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                    right: 16),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    MyText(
+                                                      text: _txHistoryModel
+                                                          .txKpi[index].symbol,
+                                                      color: "#FFFFFF",
+                                                      fontSize: 18,
+                                                    ),
+                                                    MyText(
+                                                        text: _txHistoryModel
+                                                            .txKpi[index].org,
+                                                        fontSize: 15),
+                                                  ],
+                                                ),
                                               ),
-                                              MyText(
-                                                  text: _txHistoryModel
-                                                      .txKpi[index].org,
-                                                  fontSize: 15),
-                                            ],
-                                          ),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                margin:
+                                                    EdgeInsets.only(right: 16),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    MyText(
+                                                        width: double.infinity,
+                                                        text: _txHistoryModel
+                                                            .txKpi[index]
+                                                            .amount,
+                                                        color: "#FFFFFF",
+                                                        fontSize: 18,
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                        overflow: TextOverflow
+                                                            .ellipsis),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      Expanded(
-                                        child: Container(
-                                          margin: EdgeInsets.only(right: 16),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              MyText(
-                                                  width: double.infinity,
-                                                  text: _txHistoryModel
-                                                      .txKpi[index].amount,
-                                                  color: "#FFFFFF",
-                                                  fontSize: 18,
-                                                  textAlign: TextAlign.right,
-                                                  overflow:
-                                                      TextOverflow.ellipsis),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
-                    ),
+                          ),
                     _scanPayM.isPay == false
                         ? Container()
                         : BackdropFilter(
