@@ -1,4 +1,3 @@
-import 'package:flutter_aes_ecb_pkcs5/flutter_aes_ecb_pkcs5.dart';
 import 'package:mobx/mobx.dart';
 import 'package:wallet_apps/src/app.dart';
 // // import 'package:polka_wallet/page/profile/settings/ss58PrefixListPage.dart';

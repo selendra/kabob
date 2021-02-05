@@ -1,16 +1,26 @@
-#flutter specific
+
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.DS_Store
+android/key.properties
+.dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.DS_Store
-.dart_tool/
-.packages
-.pub/
-build/
+.flutter-plugins-dependencies~origin_dev
+.flutter-plugins~origin_dev
+.packages~origin_dev
 android/app/google-services.json
-.idea/
-android/key.properties
+.flutter_01.sksl.json
+.packages
+.pub-cache/
+.pub/
 pubspec.lock
-doc/api/
+/build/
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
 
 #ios specific
 ios/.generated/
