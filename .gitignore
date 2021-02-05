@@ -1,5 +1,6 @@
 #flutter specific
 .flutter-plugins
+.flutter-plugins-dependencies
 .DS_Store
 .dart_tool/
 .packages
@@ -21,6 +22,7 @@ ios/Runner.xcworkspace/contents.xcworkspacedata
 #android specific
 android/app/google-services.json
 android/key.properties
+android/.gradle/5.6.2/executionHistory/executionHistory.bin
 
 # User-specific
 .idea/**/workspace.xml
