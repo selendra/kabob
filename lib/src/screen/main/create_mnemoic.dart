@@ -1,3 +1,4 @@
+import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
@@ -14,7 +15,16 @@ class CreateMnemonic extends StatefulWidget {
 class _CreateMnemonicState extends State<CreateMnemonic> {
   @override
   void initState() {
+    disableScreenShot();
     super.initState();
+  }
+
+  void disableScreenShot() async {
+    await FlutterScreenshotSwitcher.disableScreenshots();
+  }
+
+  void enableScreenShot() async {
+    await FlutterScreenshotSwitcher.enableScreenshots();
   }
 
   Widget build(BuildContext context) {
@@ -27,6 +37,7 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
             color: hexaCodeToColor(AppColors.cardColor),
             title: 'Create Account',
             onPressed: () {
+              enableScreenShot();
               Navigator.pop(context);
             },
           ),
@@ -88,7 +99,6 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                   action: FlatButton(
                     child: Text('Next'),
                     onPressed: () {
-                      //_enableScreenshot();
                       Navigator.pop(context);
                     },
                   ));

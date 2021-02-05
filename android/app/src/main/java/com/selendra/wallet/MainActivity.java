@@ -26,7 +26,7 @@ public class MainActivity extends FlutterFragmentActivity {
 
   GeneratedPluginRegistrant.registerWith(flutterEngine);
 
-  getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+  //getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
   
   new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL).setMethodCallHandler(
       (call, result) -> {

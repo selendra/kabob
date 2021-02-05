@@ -1,3 +1,4 @@
+import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';

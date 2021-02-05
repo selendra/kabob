@@ -21,6 +21,7 @@ public final class GeneratedPluginRegistrant {
       com.smallbuer.flutter_aes_ecb_pkcs5.FlutterAesEcbPkcs5Plugin.registerWith(shimPluginRegistry.registrarFor("com.smallbuer.flutter_aes_ecb_pkcs5.FlutterAesEcbPkcs5Plugin"));
     flutterEngine.getPlugins().add(new com.example.flutterimagecompress.FlutterImageCompressPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin());
+      be.appmire.flutter_screenshot_switcher.FlutterScreenshotSwitcherPlugin.registerWith(shimPluginRegistry.registrarFor("be.appmire.flutter_screenshot_switcher.FlutterScreenshotSwitcherPlugin"));
       com.example.flutter_sms.FlutterSmsPlugin.registerWith(shimPluginRegistry.registrarFor("com.example.flutter_sms.FlutterSmsPlugin"));
       io.jojodev.flutter.flutteruseragent.FlutterUserAgentPlugin.registerWith(shimPluginRegistry.registrarFor("io.jojodev.flutter.flutteruseragent.FlutterUserAgentPlugin"));
       com.flutter_webview_plugin.FlutterWebviewPlugin.registerWith(shimPluginRegistry.registrarFor("com.flutter_webview_plugin.FlutterWebviewPlugin"));

@@ -1,3 +1,4 @@
+import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
@@ -32,6 +33,10 @@ class MyUserInfoState extends State<MyUserInfo> {
     super.initState();
   }
 
+  void enableScreenshot() async {
+    await FlutterScreenshotSwitcher.enableScreenshots();
+  }
+
   @override
   void dispose() {
     /* Clear Everything When Pop Screen */
@@ -44,12 +49,13 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   Future<void> _subscribeBalance() async {
     print('subscribe');
-    final channel = await widget.accModel.sdk.api.account.subscribeBalance(widget.accModel.keyring.current.address, (res) {
-          
+    final channel = await widget.accModel.sdk.api.account
+        .subscribeBalance(widget.accModel.keyring.current.address, (res) {
       widget.accModel.balance = res;
-      widget.accModel.mBalance = Fmt.balance(widget.accModel.balance.freeBalance, 18);
+      widget.accModel.mBalance =
+          Fmt.balance(widget.accModel.balance.freeBalance, 18);
     });
-    
+
     widget.accModel.msgChannel = channel;
   }
 
@@ -131,7 +137,7 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   void onChanged(String value) {
     _userInfoM.formStateAddUserInfo.currentState.validate();
-    validateAll(); 
+    validateAll();
   }
 
   String validateFirstName(String value) {
@@ -167,19 +173,24 @@ class MyUserInfoState extends State<MyUserInfo> {
     return _userInfoM.responseLastname;
   }
 
-  void validateAll(){
-    if (
-      _userInfoM.userNameCon.text.isNotEmpty &&
-      _userInfoM.passwordCon.text.isNotEmpty &&
-      _userInfoM.confirmPasswordCon.text.isNotEmpty
-    ) {
+  void validateAll() {
+    if (_userInfoM.userNameCon.text.isNotEmpty &&
+        _userInfoM.passwordCon.text.isNotEmpty &&
+        _userInfoM.confirmPasswordCon.text.isNotEmpty) {
       if (_userInfoM.passwordCon.text == _userInfoM.confirmPasswordCon.text) {
-        setState((){ enableButton(true);});
+        setState(() {
+          enableButton(true);
+        });
       } else {
-        setState((){ enableButton(false);});
+        setState(() {
+          enableButton(false);
+        });
         validateConfirmPassword('not match');
       }
-    } else if (_userInfoM.enable) setState((){ enableButton(false);});
+    } else if (_userInfoM.enable)
+      setState(() {
+        enableButton(false);
+      });
   }
 
   // Submit Profile User
@@ -211,20 +222,18 @@ class MyUserInfoState extends State<MyUserInfo> {
           _balanceOf(widget.accModel.keyring.keyPairs[0].address,
               widget.accModel.keyring.keyPairs[0].address);
         }
-        
+
         // Close Loading Process
         Navigator.pop(context);
-
+        enableScreenshot();
         await dialog(context, Text("You haved create account successfully"),
-        Text('Congratulation'),
-        action: FlatButton(
-          onPressed: () {
-            Navigator.pushNamedAndRemoveUntil(
-                context, Home.route, ModalRoute.withName('/'));
-          },
-          child: Text('Continue')
-        )
-      );
+            Text('Congratulation'),
+            action: FlatButton(
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Home.route, ModalRoute.withName('/'));
+                },
+                child: Text('Continue')));
       });
     } catch (e) {
       await dialog(context, Text(e.toString()), Text("Message"));

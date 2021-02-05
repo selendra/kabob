@@ -34,6 +34,12 @@
 @import flutter_image_compress;
 #endif
 
+#if __has_include(<flutter_screenshot_switcher/FlutterScreenshotSwitcherPlugin.h>)
+#import <flutter_screenshot_switcher/FlutterScreenshotSwitcherPlugin.h>
+#else
+@import flutter_screenshot_switcher;
+#endif
+
 #if __has_include(<flutter_sms/FlutterSmsPlugin.h>)
 #import <flutter_sms/FlutterSmsPlugin.h>
 #else
@@ -156,6 +162,7 @@
   [ContactsServicePlugin registerWithRegistrar:[registry registrarForPlugin:@"ContactsServicePlugin"]];
   [FlutterAesEcbPkcs5Plugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterAesEcbPkcs5Plugin"]];
   [FlutterImageCompressPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterImageCompressPlugin"]];
+  [FlutterScreenshotSwitcherPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterScreenshotSwitcherPlugin"]];
   [FlutterSmsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterSmsPlugin"]];
   [FlutterUserAgentPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterUserAgentPlugin"]];
   [FlutterWebviewPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterWebviewPlugin"]];

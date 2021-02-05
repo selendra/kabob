@@ -11,10 +11,10 @@ import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
-import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 import 'package:provider/provider.dart';
+
 
 void main() async {
   // Avoid Error, " accessed before the binding was initialized "
@@ -55,8 +55,11 @@ class AppState extends State<App> {
     _createAccModel.sdk = WalletSDK();
     _createAccModel.keyring = Keyring();
     _initApi();
+   
     super.initState();
   }
+
+ 
 
   Future<void> _initApi() async {
     await FlutterWebviewPlugin().reload();
