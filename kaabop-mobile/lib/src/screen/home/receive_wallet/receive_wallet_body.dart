@@ -42,6 +42,7 @@ class ReceiveWalletBody extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      
                       Container(
                         margin: EdgeInsets.only(
                           bottom: 45.0,
