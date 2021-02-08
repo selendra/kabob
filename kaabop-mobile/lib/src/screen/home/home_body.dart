@@ -31,6 +31,7 @@ class HomeBody extends StatelessWidget {
   final Keyring keyring;
   final Function refresh;
   final CreateAccModel sdkModel;
+  final Function balanceOf;
 
   HomeBody({
     // this.bloc,
@@ -51,6 +52,7 @@ class HomeBody extends StatelessWidget {
     this.keyring,
     this.refresh,
     this.sdkModel,
+    this.balanceOf,
   });
 
   Widget build(BuildContext context) {
@@ -309,6 +311,7 @@ class HomeBody extends StatelessWidget {
                       )),
                   GestureDetector(
                     onTap: () {
+                      balanceOf();
                       Navigator.push(
                         context,
                         RouteAnimation(

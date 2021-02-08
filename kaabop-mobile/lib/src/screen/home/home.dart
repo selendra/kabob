@@ -83,23 +83,34 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     print("Hello name ${ls[0].name}");
   }
 
-  Future<void> _subscribeBalance() async {
-    print('subscribe');
-    final channel = await widget.sdkModel.sdk.api.account
-        .subscribeBalance(widget.sdkModel.keyring.current.address, (res) {
-      print(res);
+  // Future<void> _subscribeBalance() async {
+  //   print('subscribe');
+  //   final channel = await widget.sdkModel.sdk.api.account
+  //       .subscribeBalance(widget.sdkModel.keyring.current.address, (res) {
+  //     print(res);
+  //     setState(() {
+  //       _balance = res;
+  //       mBalance = Fmt.balance(_balance.freeBalance, 18);
+  //     });
+  //   });
+
+  //   print('mbalance: $mBalance');
+
+  //   setState(() {
+  //     _msgChannel = channel;
+  //     print('$channel');
+  //   });
+  // }
+  Future<void> _balanceOf() async {
+    final res = await widget.sdkModel.sdk.api.balanceOf(
+        widget.sdkModel.keyring.keyPairs[0].address,
+        widget.sdkModel.keyring.keyPairs[0].address);
+    print('balance OF');
+    if (res != null) {
       setState(() {
-        _balance = res;
-        mBalance = Fmt.balance(_balance.freeBalance, 18);
+        widget.sdkModel.kpiBalance = BigInt.parse(res['output']).toString();
       });
-    });
-
-    print('mbalance: $mBalance');
-
-    setState(() {
-      _msgChannel = channel;
-      print('$channel');
-    });
+    }
   }
 
   Future<void> connectNode() async {
@@ -472,6 +483,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 sdk: widget.sdkModel.sdk,
                 keyring: widget.sdkModel.keyring,
                 sdkModel: widget.sdkModel,
+                balanceOf: _balanceOf,
                 // refresh: refresh,
               )),
           !widget.sdkModel.apiConnected
