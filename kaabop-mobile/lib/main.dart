@@ -59,9 +59,9 @@ class AppState extends State<App> {
   }
 
   Future<void> _initApi() async {
-    await FlutterWebviewPlugin().reload();
 
     await _createAccModel.keyring.init();
+    await FlutterWebviewPlugin().reload();
     await _createAccModel.sdk.init(_createAccModel.keyring);
 
     _createAccModel.sdkReady = true;

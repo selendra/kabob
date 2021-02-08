@@ -362,60 +362,53 @@ class MyBottomAppBar extends StatelessWidget {
         notchMargin: 8.0,
         child: Container(
           height: 60,
-          child: Stack(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                      child: MyIconButton(
-                    icon: 'telegram.svg',
-                    onPressed: !apiStatus
-                        ? null
-                        : () async {
-                            await MyBottomSheet().trxOptions(
-                              context: context,
-                              portfolioList: homeM.portfolioList,
-                              resetHomeData: resetDbdState,
-                              sdk: sdkModel.sdk,
-                              keyring: sdkModel.keyring,
-                            );
-                          },
-                  )),
-                  Expanded(
-                      child: MyIconButton(
-                    icon: 'qr_code.svg',
-                    onPressed: !apiStatus
-                        ? null
-                        : () async {
-                            toReceiveToken();
-                          },
-                  )),
-                  Expanded(child: Container()),
-                  Expanded(
-                      child: MyIconButton(
-                    icon: 'contact_list.svg',
-                    onPressed: !apiStatus
-                        ? null
-                        : () async {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ContactBook(sdkModel)));
-                          },
-                  )),
-                  Expanded(
-                    child: MyIconButton(
-                      icon: 'menu.svg',
-                      onPressed: !apiStatus ? null : openDrawer,
-                    ),
-                  )
-                ],
-              ),
-              !apiStatus
-                  ? Container(color: Colors.black.withOpacity(0.8))
-                  : Container()
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                  child: MyIconButton(
+                icon: 'telegram.svg',
+                onPressed: !apiStatus
+                    ? null
+                    : () async {
+                        await MyBottomSheet().trxOptions(
+                          context: context,
+                          portfolioList: homeM.portfolioList,
+                          resetHomeData: resetDbdState,
+                          sdk: sdkModel.sdk,
+                          keyring: sdkModel.keyring,
+                        );
+                      },
+              )),
+              Expanded(
+                  child: MyIconButton(
+                icon: 'qr_code.svg',
+                onPressed: !apiStatus
+                    ? null
+                    : () async {
+                        toReceiveToken();
+                      },
+              )),
+              Expanded(child: Container()),
+              Expanded(
+                  child: MyIconButton(
+                icon: 'contact_list.svg',
+                onPressed: !apiStatus
+                    ? null
+                    : () async {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ContactBook(sdkModel)));
+                      },
+              )),
+              Expanded(
+                child: MyIconButton(
+                  icon: 'menu.svg',
+                  onPressed: !apiStatus ? null : openDrawer,
+                ),
+              )
             ],
           ),
         ),

@@ -55,6 +55,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   String mBalance = '';
   String _msgChannel;
   String _kpiBalance = '0';
+  String status = '';
 
   BalanceData _balance;
 
@@ -114,7 +115,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     print('resConnectNode $res');
 
+
     if (res != null) {
+      // Close Dialog Connect Node
+      Navigator.pop(context);
       print(res);
       // _subscribeBalance();
 
@@ -129,6 +133,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   initState() {
+    
     /* Initialize State */
     // print("My name ${widget.keyring.current.name}");
     _homeM.portfolioList = null;
@@ -157,7 +162,60 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
 
+    startNode();
+
     super.initState();
+  }
+
+  void startNode() async {
+    print("Status ${widget.sdkModel.apiConnected}");
+
+    await Future.delayed(Duration(seconds: 1), (){
+      
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          
+          return disableNativePopBackButton(
+            AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              title: Column(
+                children: [
+                  CircularProgressIndicator(
+                    backgroundColor: Colors.transparent,
+                    valueColor: AlwaysStoppedAnimation(
+                      hexaCodeToColor(AppColors.secondary)
+                    )
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: MyText(text: "\nConnecting to Remote Node...", color: "#000000"),
+                  )
+                ],
+              ),
+              content: Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: MyText(text: "Please wait ! this might take a bit longer", color: "#000000"),
+              ),
+            )
+          );
+        }
+      );
+    });
+
+    print("Status 1 ${widget.sdkModel.apiConnected}");
+  }
+
+  void handleConnectNode() async {
+    print("My connection status ${widget.sdkModel.apiConnected}");
+    if (widget.sdkModel.apiConnected){
+      await Future.delayed(Duration(milliseconds: 300), (){
+        status = null;
+      });
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -443,6 +501,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     //final bloc = Bloc();
+    print("My status $status");
+    if (status != null) handleConnectNode();
 
     return Scaffold(
       key: _homeM.globalKey,
@@ -450,66 +510,50 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
         child: Menu(_homeM.userData, _packageInfo, menuCallBack),
       ),
-      body: Stack(
-        children: [
-          BodyScaffold(
-              height: MediaQuery.of(context).size.height,
-              child: HomeBody(
-                // bloc: bloc,
-                chartKey: chartKey,
-                portfolioData: _homeM.portfolioList,
-                portfolioM: _portfolioM,
-                portfolioRateM: _portfolioRate,
-                getWallet: createPin,
-                homeM: _homeM,
-                accName: accName,
-                accAddress: accAddress,
-                accBalance: widget.sdkModel.mBalance,
-                apiStatus: widget.sdkModel.apiConnected,
-                pieColorList: pieColorList,
-                dataMap: dataMap,
-                kpiBalance: widget.sdkModel.kpiBalance,
-                sdk: widget.sdkModel.sdk,
-                keyring: widget.sdkModel.keyring,
-                sdkModel: widget.sdkModel,
-                // refresh: refresh,
-              )),
-          !widget.sdkModel.apiConnected
-              ? Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.black.withOpacity(0.8),
-                )
-              : Container(),
-          !widget.sdkModel.apiConnected
-              ? Center(
-                  child: Container(
-                  color: Colors.white,
-                  padding:
-                      EdgeInsets.only(top: 40, bottom: 40, left: 30, right: 30),
-                  margin: EdgeInsets.only(left: 30, right: 30),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CircularProgressIndicator(
-                          backgroundColor: Colors.transparent,
-                          valueColor: AlwaysStoppedAnimation(
-                              hexaCodeToColor(AppColors.secondary))),
-                      MyText(
-                          text: "\nConnecting to Remote Node...\n",
-                          textAlign: TextAlign.center,
-                          fontWeight: FontWeight.bold,
-                          color: "#000000"),
-                      MyText(
-                          text: "Please wait ! this might take a bit longer",
-                          textAlign: TextAlign.center,
-                          color: "#000000"),
-                    ],
-                  ),
-                ))
-              : Container(),
+      appBar: AppBar(
+        title: MyText(text: "KABOB", color: "#FFFFFF",),
+        leading: Padding(
+          padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+          child: Align(
+            alignment: Alignment.center,
+            child: SvgPicture.asset('assets/sld_logo.svg')
+          )
+        ),
+        actions: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              iconSize: 30,
+              icon: Icon(LineAwesomeIcons.bell),
+              onPressed: () async {
+                await MyBottomSheet().notification(context: context);
+              },
+            )
+          )
         ],
       ),
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: HomeBody(
+          // bloc: bloc,
+          chartKey: chartKey,
+          portfolioData: _homeM.portfolioList,
+          portfolioM: _portfolioM,
+          portfolioRateM: _portfolioRate,
+          getWallet: createPin,
+          homeM: _homeM,
+          accName: accName,
+          accAddress: accAddress,
+          accBalance: widget.sdkModel.mBalance,
+          apiStatus: widget.sdkModel.apiConnected,
+          pieColorList: pieColorList,
+          dataMap: dataMap,
+          kpiBalance: widget.sdkModel.kpiBalance,
+          sdk: widget.sdkModel.sdk,
+          keyring: widget.sdkModel.keyring,
+          sdkModel: widget.sdkModel,
+          // refresh: refresh,
+        )),
       floatingActionButton: SizedBox(
           width: 64,
           height: 64,
@@ -522,9 +566,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 color: !widget.sdkModel.apiConnected
                     ? Colors.white.withOpacity(0.2)
                     : Colors.white),
-            onPressed: !widget.sdkModel.apiConnected
-                ? null
-                : () async {
+            onPressed: () async {
                     await TrxOptionMethod.scanQR(
                         context,
                         _homeM.portfolioList,

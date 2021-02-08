@@ -59,12 +59,6 @@ class HomeBody extends StatelessWidget {
         SingleChildScrollView(
           child: Column(
             children: [
-              MyHomeAppBar(
-                title: "KABOB",
-                action: () {
-                  MyBottomSheet().notification(context: context);
-                },
-              ),
               // TOKEN
               Column(
                 children: [
