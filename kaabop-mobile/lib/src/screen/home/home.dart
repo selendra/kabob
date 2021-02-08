@@ -476,6 +476,18 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     await fetchPortfolio();
   }
 
+  Future<void> _balanceOf() async {
+    final res = await widget.sdkModel.sdk.api.balanceOf(
+        widget.sdkModel.keyring.keyPairs[0].address,
+        widget.sdkModel.keyring.keyPairs[0].address);
+    print('balance OF');
+    if (res != null) {
+      setState(() {
+        widget.sdkModel.kpiBalance = BigInt.parse(res['output']).toString();
+      });
+    }
+  }
+
   void toReceiveToken() async {
     /* Navigate Receive Token */
     await Navigator.of(context).push(RouteAnimation(
@@ -501,7 +513,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     //final bloc = Bloc();
-    print("My status $status");
     if (status != null) handleConnectNode();
 
     return Scaffold(
@@ -552,6 +563,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           sdk: widget.sdkModel.sdk,
           keyring: widget.sdkModel.keyring,
           sdkModel: widget.sdkModel,
+          balanceOf: _balanceOf,
           // refresh: refresh,
         )),
       floatingActionButton: SizedBox(
