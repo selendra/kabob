@@ -248,7 +248,6 @@ Widget portFolioItemRow(
             borderRadius: BorderRadius.circular(40)),
         child: Image.asset('assets/koompi_white_logo.png'),
       ),
-
       Expanded(
         child: Container(
           margin: const EdgeInsets.only(right: 16),
@@ -266,19 +265,6 @@ Widget portFolioItemRow(
           ),
         ),
       ),
-
-      // Container(
-      //   width: 80,
-      //   margin: EdgeInsets.only(right: 20),
-      //   alignment: Alignment.center,
-      //   child: SizedBox(
-      //     height: 25,
-      //     child: LineChart(
-      //       portfolioChart
-      //     ),
-      //   ),
-      // ),
-
       Expanded(
           child: Container(
         margin: EdgeInsets.only(right: 16),
@@ -293,13 +279,6 @@ Widget portFolioItemRow(
                 fontSize: 18,
                 textAlign: TextAlign.right,
                 overflow: TextOverflow.ellipsis),
-            // MyText(
-            //   width: double.infinity,
-            //   text: "+",//"${!rate.isNegative ? '+' : ''}$rate",
-            //   textAlign: TextAlign.right,
-            //   color: AppColors.secondary_text,//!rate.isNegative ? AppColors.secondary_text : "#ff1900",
-            //   fontSize: 15
-            // ),
           ],
         ),
       ))

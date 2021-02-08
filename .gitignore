@@ -23,6 +23,7 @@
 # Flutter/Dart/Pub related
 **/doc/api/
 **/ios/Flutter/.last_build_id
+<<<<<<< HEAD
 android/key.properties
 .dart_tool/
 .flutter-plugins
@@ -31,6 +32,11 @@ android/key.properties
 .flutter-plugins~origin_dev
 .packages~origin_dev
 .flutter_01.sksl.json
+=======
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+>>>>>>> dev
 .packages
 .pub-cache/
 .pub/
@@ -45,7 +51,15 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
+<<<<<<< HEAD
 # Android Studio will place build artifacts here
 /android/app/debug
 /android/app/profile
 /android/app/release
+=======
+# Exceptions to above rules.
+!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+js_api/node_modules/
+js_as_extension/node_modules/
+>>>>>>> dev

@@ -305,6 +305,7 @@ class HomeBody extends StatelessWidget {
                       )),
                   GestureDetector(
                     onTap: () {
+                      balanceOf();
                       Navigator.push(
                         context,
                         RouteAnimation(
