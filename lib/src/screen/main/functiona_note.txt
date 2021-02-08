@@ -1,4 +1,0 @@
-TimeOut handler have only 
-- login screen
-- splash screen
-- finger print screen
