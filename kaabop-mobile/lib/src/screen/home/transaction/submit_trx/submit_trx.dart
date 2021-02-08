@@ -249,9 +249,9 @@ class SubmitTrxState extends State<SubmitTrx> {
         await enableAnimation();
       }
     } catch (e) {
-      print(e.toString());
+      print(e.message);
       Navigator.pop(context);
-      await dialog(context, Text("${e.toString()}"), Text("Opps"));
+      await dialog(context, Text(e.message), Text("Opps"));
     }
 
     return mhash;

@@ -3,29 +3,45 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 
-class ContentsBackup extends StatelessWidget {
-  final double bpSize = 16.0;
-
+class ContentsBackup extends StatefulWidget {
   CreateAccModel createAccM;
 
   ContentsBackup(CreateAccModel createAccModel) {
     this.createAccM = createAccModel;
-    _generateMnemonic(createAccModel.sdk);
   }
 
   static const route = '/contentsBackup';
+
+  @override
+  _ContentsBackupState createState() => _ContentsBackupState();
+}
+
+class _ContentsBackupState extends State<ContentsBackup> {
+  final double bpSize = 16.0;
 
   Future<void> _generateMnemonic(WalletSDK sdk) async {
     // setState(() {
     //   _submitting = true;
     // });
-    createAccM.mnemonic = await sdk.api.keyring.generateMnemonic();
-    createAccM.mnemonicList = createAccM.mnemonic.split(' ');
-    print("My mnemonic ${createAccM.mnemonicList}");
+    widget.createAccM.mnemonic = '';
+    widget.createAccM.mnemonicList = [];
+    
+    widget.createAccM.mnemonic = await sdk.api.keyring.generateMnemonic();
+    widget.createAccM.mnemonicList = widget.createAccM.mnemonic.split(' ');
+    setState(() {
+      
+    });
+    print("My mnemonic ${widget.createAccM.mnemonicList}");
     // widget.showResult(context, 'generateMnemonic', seed);
     // setState(() {
     //   _submitting = false;
     // }
+  }
+
+  @override
+  initState(){
+    _generateMnemonic(widget.createAccM.sdk);
+    super.initState();
   }
 
   Widget build(BuildContext context) {
@@ -111,7 +127,7 @@ class ContentsBackup extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          CreateMnemonic(accModel: createAccM)));
+                          CreateMnemonic(accModel: widget.createAccM)));
             },
           )
         ],

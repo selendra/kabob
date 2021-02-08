@@ -56,8 +56,7 @@ class ReceiveWalletBody extends StatelessWidget {
                               padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  color: Colors.white
-                                  //color: hexaCodeToColor(AppColors.cardColor),
+                                  color: hexaCodeToColor(AppColors.cardColor),
                                   ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,

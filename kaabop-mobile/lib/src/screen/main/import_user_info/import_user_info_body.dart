@@ -85,7 +85,7 @@ class ImportUserInfoBody extends StatelessWidget{
                 //   onSubmit: onSubmit
                 // ),
                 Container(
-                  padding: EdgeInsets.fromLTRB(16, 5, 16, 0),
+                  padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
                   child: TextFormField(
                     key: this.key,
                     enabled: true,

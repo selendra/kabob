@@ -57,6 +57,22 @@ async function callContract(api: ApiPromise) {
 
 }
 
+async function contractSymbol(apiContract: ContractPromise, from: string) {
+  return new Promise(async (resolve, reject) => {
+    try {
+
+      const result = await apiContract.query.symbol(from, 0, -1);
+      resolve(result.output);
+      send("log", `${result.output} contract connected success`);
+      return result.output.toString();
+
+
+    } catch (e) {
+      resolve({ err: e.message });
+    }
+  });
+}
+
 async function totalSupply(apiContract: ContractPromise, from: string) {
   return new Promise(async (resolve, reject) => {
 
@@ -66,7 +82,7 @@ async function totalSupply(apiContract: ContractPromise, from: string) {
       resolve(result);
       send('log', result.output.toString);
 
-      return result.output.toString;
+      return result.output.toString();
       // resolve(result);
     } catch (err) {
       resolve({ err: err.message });
@@ -111,14 +127,6 @@ async function allowance(apiContract: ContractPromise, owner: string, spender: s
 }
 
 
-
-
-
-
-
-
-
-
 // async function totalSupply(apiContract: ContractPromise, from: string) {
 //   return new Promise(async (resolve, reject) => {
 //     try {
@@ -141,6 +149,7 @@ const settings = {
   test,
   connect,
   callContract,
+  contractSymbol,
   totalSupply,
   balanceOf,
   allowance,

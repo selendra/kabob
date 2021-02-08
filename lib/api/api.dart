@@ -75,6 +75,11 @@ class PolkawalletApi {
     print('call Contract');
   }
 
+  Future<String> contractSymbol(String from) async{
+    final res = await service.webView.contractSymbol(from);
+    return res;
+  }
+
   Future<dynamic> totalSupply(String from) async {
     final res = await service.webView.totalSupply(from);
     return res;
