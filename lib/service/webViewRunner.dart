@@ -147,8 +147,13 @@ class WebViewRunner {
   }
 
   Future<void> callContract() async {
-    await evalJavascript('settings.callContract(api)');
-    print('exec js');
+    final res = await evalJavascript('settings.callContract(api)');
+    return res;
+  }
+
+  Future<String> contractSymbol (String from) async{
+    final res = await evalJavascript('settings.contractSymbol(apiContract,"$from")');
+    return res;
   }
 
   Future<dynamic> totalSupply(String from) async {

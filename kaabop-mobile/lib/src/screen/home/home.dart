@@ -84,51 +84,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     print("Hello name ${ls[0].name}");
   }
 
-  Future<void> _subscribeBalance() async {
-    print('subscribe');
-    final channel = await widget.sdkModel.sdk.api.account
-        .subscribeBalance(widget.sdkModel.keyring.current.address, (res) {
-      print(res);
-      setState(() {
-        _balance = res;
-        mBalance = Fmt.balance(_balance.freeBalance, 18);
-      });
-    });
-
-    print('mbalance: $mBalance');
-
-    setState(() {
-      _msgChannel = channel;
-      print('$channel');
-    });
-  }
-
-  Future<void> connectNode() async {
-    print('connectNode');
-    final node = NetworkParams();
-
-    node.name = 'Indranet hosted By Selendra';
-    node.endpoint = 'wss://rpc-testnet.selendra.org';
-    node.ss58 = 0;
-    final res = await widget.sdkModel.sdk.api
-        .connectNode(widget.sdkModel.keyring, [node]);
-
-    print('resConnectNode $res');
-
-
-    if (res != null) {
-      // Close Dialog Connect Node
-      Navigator.pop(context);
-      print(res);
-      // _subscribeBalance();
-
-      // _importFromMnemonic();
-
-    } else {
-      print('rese null');
-    }
-  }
-
   String action = "no_action";
 
   @override
@@ -162,16 +117,21 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
 
-    startNode();
+    if(widget.sdkModel.apiConnected) {
+      status = null;
+    }
+
+    if (!widget.sdkModel.apiConnected){
+      startNode();
+    }
 
     super.initState();
   }
 
   void startNode() async {
     print("Status ${widget.sdkModel.apiConnected}");
-
-    await Future.delayed(Duration(seconds: 1), (){
-      
+    
+    await Future.delayed(Duration(seconds: 1), (){ 
       showDialog(
         barrierDismissible: false,
         context: context,
@@ -191,7 +151,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   ),
                   Align(
                     alignment: Alignment.center,
-                    child: MyText(text: "\nConnecting to Remote Node...", color: "#000000"),
+                    child: MyText(text: "\nConnecting to Remote Node...", color: "#000000", fontWeight: FontWeight.bold),
                   )
                 ],
               ),
@@ -522,6 +482,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: Menu(_homeM.userData, _packageInfo, menuCallBack),
       ),
       appBar: AppBar(
+        backgroundColor: hexaCodeToColor(AppColors.bgdColor),
         title: MyText(text: "KABOB", color: "#FFFFFF",),
         leading: Padding(
           padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),

@@ -54,6 +54,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         widget.importAccModel.balance = res;
         widget.importAccModel.mBalance =
             Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
+        print(widget.importAccModel.mBalance);
       });
     });
     setState(() {
@@ -68,6 +69,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       setState(() {
         widget.importAccModel.kpiBalance =
             BigInt.parse(res['output']).toString();
+        print(widget.importAccModel.kpiBalance);
       });
     }
   }
@@ -104,6 +106,10 @@ class ImportUserInfoState extends State<ImportUserInfo> {
             Text('Congratulation'),
             action: FlatButton(
                 onPressed: () {
+
+                  //Close Dialog Loading
+                  Navigator.pop(context);
+                  
                   Navigator.pushNamedAndRemoveUntil(
                       context, Home.route, ModalRoute.withName('/'));
                 },
@@ -118,9 +124,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       );
       Navigator.pop(context);
     }
-
-    //Close Dialog Loading
-    Navigator.pop(context);
   }
 
   void switchBiometric(bool value) async {
@@ -220,25 +223,27 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     if (_userInfoM.confirmPasswordNode.hasFocus) {
       _userInfoM.responseLastname = instanceValidate.validatePin(value);
 
-      if (_userInfoM.responseLastname == null){
+      if (_userInfoM.responseLastname == null) {
         return null;
-      }
-      else
+      } else
         _userInfoM.responseLastname += "confirm password";
     }
     return _userInfoM.responseLastname;
   }
 
-  void validateAll(){
-    if (
-      _userInfoM.userNameCon.text.isNotEmpty &&
-      _userInfoM.passwordCon.text.isNotEmpty &&
-      _userInfoM.confirmPasswordCon.text.isNotEmpty
-    ) {
+  void validateAll() {
+    if (_userInfoM.userNameCon.text.isNotEmpty &&
+        _userInfoM.passwordCon.text.isNotEmpty &&
+        _userInfoM.confirmPasswordCon.text.isNotEmpty) {
       if (_userInfoM.passwordCon.text == _userInfoM.confirmPasswordCon.text) {
-        setState((){ enableButton(true);});
+        setState(() {
+          enableButton(true);
+        });
       }
-    } else if (_userInfoM.enable) setState((){ enableButton(false);});
+    } else if (_userInfoM.enable)
+      setState(() {
+        enableButton(false);
+      });
   }
 
   // Submit Profile User

@@ -121,6 +121,17 @@ class AppState extends State<App> {
       _balanceOf(_createAccModel.keyring.keyPairs[0].address,
           _createAccModel.keyring.keyPairs[0].address);
       _totalSupply();
+      _contractSymbol();
+    }
+  }
+
+  Future<void> _contractSymbol() async {
+    try {
+      final res = await _createAccModel.sdk.api
+          .contractSymbol(_createAccModel.keyring.keyPairs[0].address);
+      print(res);
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -165,10 +176,9 @@ class AppState extends State<App> {
           SizeConfig().init(constraints, orientation);
           return MaterialApp(
             initialRoute: '/',
-            title: 'Kaabop',
+            title: 'KABOB',
             theme: AppStyle.myTheme(),
             routes: {
-              // '/': (_) => ImportUserInfo(_createAccModel),
               MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
               ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),

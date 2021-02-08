@@ -505,15 +505,17 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
           decoration: BoxDecoration(
               border: Border.all(
                   width: 2, color: hexaCodeToColor(AppColors.secondary_text)),
-              borderRadius: BorderRadius.circular(6)),
-          width: 200.0,
-          height: 200.0,
+              borderRadius: BorderRadius.circular(6),
+              color: Colors.white
+          ),
+          width: 300.0,
+          height: 300.0,
           child: QrImage(
-            backgroundColor: Colors.white.withOpacity(0.8),
+            backgroundColor: Colors.white,
             foregroundColor: Colors.black,
             embeddedImage: AssetImage('${AppConfig.logoQrEmbedded}'),
             embeddedImageStyle: QrEmbeddedImageStyle(
-              size: Size(40, 40),
+              size: Size(60, 60),
             ),
             // version: QrVersions.auto,
             data: wallet,

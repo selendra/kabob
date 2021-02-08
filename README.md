@@ -1,6 +1,9 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # kaabop-mobile
 =======
+=======
+>>>>>>> chay
 # sdk
 polkawallet SDK for integrating substrate-based blockchain as a plugin.
 
@@ -190,4 +193,7 @@ See the `kusama/polkadot` or `acala` or `laminar` examples:
  - [kusama/polkadot](https://github.com/polkawallet-io/polkawallet_plugin_kusama)
  - [acala](https://github.com/polkawallet-io/polkawallet_plugin_acala)
  - [laminar](https://github.com/polkawallet-io/polkawallet_plugin_laminar)
+<<<<<<< HEAD
 >>>>>>> dev
+=======
+>>>>>>> chay

@@ -17,24 +17,13 @@ class ConfirmMnemonic extends StatefulWidget {
 class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
   List<String> _wordsSelected = [];
 
-  List _mnemonic = [];
+  List _mnemonic;
 
   bool enable = false;
 
-  List _wordsLeft = [
-    // 'child',
-    // 'capital',
-    // 'fashion',
-    // 'three',
-    // 'mushroom',
-    // 'aim',
-    // 'cash',
-    // 'expire',
-    // 'quantum',
-    // 'steel',
-    // 'recycle',
-    // 'shrug'
-  ];
+  List _wordsLeft = [];
+
+  
 
   Widget _buildWordsButtons() {
     if (_wordsLeft.length > 0) {
@@ -117,6 +106,9 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
 
   @override
   initState() {
+    _mnemonic = List();
+    _wordsLeft = List();
+    _wordsSelected = List<String> ();
     for (var i in widget.accModel.mnemonicList) {
       _wordsLeft.add(i); // Use For Sort Mnemonic
       _mnemonic.add(i); // Use For Compare
@@ -199,14 +191,14 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
             textButton: 'Next',
             action: enable == false
-                ? null
-                : () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyUserInfo(widget.accModel)));
-                  },
-          )
+              ? null
+              : () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MyUserInfo(widget.accModel)));
+                },
+        )
         ],
       ),
     ));
