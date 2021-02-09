@@ -63,7 +63,7 @@ class MyUserInfoState extends State<MyUserInfo> {
     final res = await widget.accModel.sdk.api.balanceOf(from, who);
     if (res != null) {
       setState(() {
-        widget.accModel.kpiBalance = BigInt.parse(res['output']).toString();
+        widget.accModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
       });
     }
   }

@@ -67,9 +67,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     final res = await widget.importAccModel.sdk.api.balanceOf(from, who);
     if (res != null) {
       setState(() {
-        widget.importAccModel.kpiBalance =
+        widget.importAccModel.contractModel.pBalance =
             BigInt.parse(res['output']).toString();
-        print(widget.importAccModel.kpiBalance);
+        print(widget.importAccModel.contractModel.pBalance);
       });
     }
   }

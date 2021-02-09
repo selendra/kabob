@@ -4,6 +4,7 @@ import 'package:polkawallet_sdk/polkawallet_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
@@ -56,7 +57,6 @@ class AppState extends State<App> {
   }
 
   Future<void> _initApi() async {
-
     await _createAccModel.keyring.init();
     await FlutterWebviewPlugin().reload();
     await _createAccModel.sdk.init(_createAccModel.keyring);
@@ -86,9 +86,8 @@ class AppState extends State<App> {
       print('res null');
       setState(() {
         _createAccModel.apiConnected = true;
-
         _subscribeBalance();
-        callContract();
+        initContract();
       });
     } else {
       print('res null');
@@ -114,53 +113,94 @@ class AppState extends State<App> {
     }
   }
 
-  Future<void> callContract() async {
+  Future<void> initContract() async {
     await _createAccModel.sdk.api.callContract();
-
-    if (_createAccModel.keyring.keyPairs.isNotEmpty) {
-      _balanceOf(_createAccModel.keyring.keyPairs[0].address,
-          _createAccModel.keyring.keyPairs[0].address);
-      _totalSupply();
-      _contractSymbol();
-    }
+    await _contractSymbol();
+    await _getHashBySymbol();
+    await _balanceOfByPartition();
   }
 
   Future<void> _contractSymbol() async {
     try {
       final res = await _createAccModel.sdk.api
           .contractSymbol(_createAccModel.keyring.keyPairs[0].address);
-      print(res);
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
-  Future<void> _totalSupply() async {
-    try {
-      final res = await _createAccModel.sdk.api.totalSupply(
-        _createAccModel.keyring.keyPairs[0].address,
-      );
-      print(res.toString());
-      print(res['output']);
       if (res != null) {
         setState(() {
-          _createAccModel.kpiSupply = BigInt.parse(res['output']).toString();
+          _createAccModel.contractModel.pTokenSymbol = res[0];
         });
       }
     } catch (e) {
       print(e.toString());
-      await dialog(context, Text(e.toString()), Text('Opps!!'));
     }
   }
 
-  Future<void> _balanceOf(String from, String who) async {
-    final res = await _createAccModel.sdk.api.balanceOf(from, who);
-    if (res != null) {
-      setState(() {
-        _createAccModel.kpiBalance = BigInt.parse(res['output']).toString();
-      });
+  Future<void> _getHashBySymbol() async {
+    print('my symbol${_createAccModel.contractModel.pTokenSymbol}');
+    try {
+      final res = await _createAccModel.sdk.api.getHashBySymbol(
+        _createAccModel.keyring.keyPairs[0].address,
+        _createAccModel.contractModel.pTokenSymbol,
+      );
+
+      if (res != null) {
+        setState(() {
+          _createAccModel.contractModel.pHash = res[0];
+        });
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
+
+  Future<void> _balanceOfByPartition() async {
+    try {
+      final res = await _createAccModel.sdk.api.balanceOfByPartition(
+        _createAccModel.keyring.keyPairs[0].address,
+        _createAccModel.keyring.keyPairs[0].address,
+        _createAccModel.contractModel.pHash,
+      );
+
+      setState(() {
+        _createAccModel.contractModel.pBalance =
+            BigInt.parse(res['output']).toString();
+      });
+
+      print('balanceOfByPartition $res');
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  // Future<void> _totalSupply() async {
+  //   try {
+  //     final res = await _createAccModel.sdk.api.totalSupply(
+  //       _createAccModel.keyring.keyPairs[0].address,
+  //     );
+  //     print(res.toString());
+  //     print(res['output'][0]);
+  //     if (res != null) {
+  //       setState(() {
+  //         _createAccModel.kpiSupply = BigInt.parse(res['output']).toString();
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print(e.toString());
+  //     await dialog(context, Text(e.toString()), Text('Opps!!'));
+  //   }
+  // }
+
+  // Future<void> _balanceOf() async {
+  //   final res = await _createAccModel.sdk.api.balanceOf(
+  //     _createAccModel.keyring.keyPairs[0].address,
+  //     _createAccModel.keyring.keyPairs[0].address,
+  //   );
+  //   if (res != null) {
+  //     setState(() {
+  //       _createAccModel.contractModel.pBalance =
+  //           BigInt.parse(res['output']).toString();
+  //     });
+  //   }
+  // }
 
   void unsubsribeBalance(String _msgChannel) {
     if (_msgChannel != null) {

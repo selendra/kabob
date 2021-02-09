@@ -1,15 +1,10 @@
 // import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'dart:ui';
-
 import 'package:polkawallet_sdk/api/types/balanceData.dart';
-import 'package:polkawallet_sdk/api/types/networkParams.dart';
-import 'package:polkawallet_sdk/polkawallet_sdk.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/models/fmt.dart';
 
 class Home extends StatefulWidget {
   // final WalletSDK sdk;
@@ -88,7 +83,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   initState() {
-    
     /* Initialize State */
     // print("My name ${widget.keyring.current.name}");
     _homeM.portfolioList = null;
@@ -117,11 +111,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
 
-    if(widget.sdkModel.apiConnected) {
+    if (widget.sdkModel.apiConnected) {
       status = null;
     }
 
-    if (!widget.sdkModel.apiConnected){
+    if (!widget.sdkModel.apiConnected) {
       startNode();
     }
 
@@ -130,39 +124,39 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   void startNode() async {
     print("Status ${widget.sdkModel.apiConnected}");
-    
-    await Future.delayed(Duration(seconds: 1), (){ 
+
+    await Future.delayed(Duration(seconds: 1), () {
       showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          
-          return disableNativePopBackButton(
-            AlertDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return disableNativePopBackButton(AlertDialog(
               backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
               title: Column(
                 children: [
                   CircularProgressIndicator(
-                    backgroundColor: Colors.transparent,
-                    valueColor: AlwaysStoppedAnimation(
-                      hexaCodeToColor(AppColors.secondary)
-                    )
-                  ),
+                      backgroundColor: Colors.transparent,
+                      valueColor: AlwaysStoppedAnimation(
+                          hexaCodeToColor(AppColors.secondary))),
                   Align(
                     alignment: Alignment.center,
-                    child: MyText(text: "\nConnecting to Remote Node...", color: "#000000", fontWeight: FontWeight.bold),
+                    child: MyText(
+                        text: "\nConnecting to Remote Node...",
+                        color: "#000000",
+                        fontWeight: FontWeight.bold),
                   )
                 ],
               ),
               content: Padding(
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: MyText(text: "Please wait ! this might take a bit longer", color: "#000000"),
+                child: MyText(
+                    text: "Please wait ! this might take a bit longer",
+                    color: "#000000"),
               ),
-            )
-          );
-        }
-      );
+            ));
+          });
     });
 
     print("Status 1 ${widget.sdkModel.apiConnected}");
@@ -170,8 +164,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   void handleConnectNode() async {
     print("My connection status ${widget.sdkModel.apiConnected}");
-    if (widget.sdkModel.apiConnected){
-      await Future.delayed(Duration(milliseconds: 300), (){
+    if (widget.sdkModel.apiConnected) {
+      await Future.delayed(Duration(milliseconds: 300), () {
         status = null;
       });
       Navigator.pop(context);
@@ -443,7 +437,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     print('balance OF');
     if (res != null) {
       setState(() {
-        widget.sdkModel.kpiBalance = BigInt.parse(res['output']).toString();
+        widget.sdkModel.contractModel.pBalance =
+            BigInt.parse(res['output']).toString();
       });
     }
   }
@@ -483,14 +478,15 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       ),
       appBar: AppBar(
         backgroundColor: hexaCodeToColor(AppColors.bgdColor),
-        title: MyText(text: "KABOB", color: "#FFFFFF",),
-        leading: Padding(
-          padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-          child: Align(
-            alignment: Alignment.center,
-            child: SvgPicture.asset('assets/sld_logo.svg')
-          )
+        title: MyText(
+          text: "KABOB",
+          color: "#FFFFFF",
         ),
+        leading: Padding(
+            padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+            child: Align(
+                alignment: Alignment.center,
+                child: SvgPicture.asset('assets/sld_logo.svg'))),
         actions: [
           Align(
             alignment: Alignment.centerRight,
@@ -500,33 +496,32 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               onPressed: () async {
                 await MyBottomSheet().notification(context: context);
               },
-            )
-          )
+            ),
+          ),
         ],
       ),
       body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: HomeBody(
-          // bloc: bloc,
-          chartKey: chartKey,
-          portfolioData: _homeM.portfolioList,
-          portfolioM: _portfolioM,
-          portfolioRateM: _portfolioRate,
-          getWallet: createPin,
-          homeM: _homeM,
-          accName: accName,
-          accAddress: accAddress,
-          accBalance: widget.sdkModel.mBalance,
-          apiStatus: widget.sdkModel.apiConnected,
-          pieColorList: pieColorList,
-          dataMap: dataMap,
-          kpiBalance: widget.sdkModel.kpiBalance,
-          sdk: widget.sdkModel.sdk,
-          keyring: widget.sdkModel.keyring,
-          sdkModel: widget.sdkModel,
-          balanceOf: _balanceOf,
-          // refresh: refresh,
-        )),
+          height: MediaQuery.of(context).size.height,
+          child: HomeBody(
+            chartKey: chartKey,
+            portfolioData: _homeM.portfolioList,
+            portfolioM: _portfolioM,
+            portfolioRateM: _portfolioRate,
+            getWallet: createPin,
+            homeM: _homeM,
+            accName: accName,
+            accAddress: accAddress,
+            accBalance: widget.sdkModel.mBalance,
+            apiStatus: widget.sdkModel.apiConnected,
+            pieColorList: pieColorList,
+            dataMap: dataMap,
+            kpiBalance: widget.sdkModel.contractModel.pBalance,
+            sdk: widget.sdkModel.sdk,
+            keyring: widget.sdkModel.keyring,
+            sdkModel: widget.sdkModel,
+            balanceOf: _balanceOf,
+            // refresh: refresh,
+          )),
       floatingActionButton: SizedBox(
           width: 64,
           height: 64,
@@ -540,14 +535,14 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     ? Colors.white.withOpacity(0.2)
                     : Colors.white),
             onPressed: () async {
-                    await TrxOptionMethod.scanQR(
-                        context,
-                        _homeM.portfolioList,
-                        resetState,
-                        widget.sdkModel.sdk,
-                        widget.sdkModel.keyring,
-                        widget.sdkModel);
-                  },
+              await TrxOptionMethod.scanQR(
+                  context,
+                  _homeM.portfolioList,
+                  resetState,
+                  widget.sdkModel.sdk,
+                  widget.sdkModel.keyring,
+                  widget.sdkModel);
+            },
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(

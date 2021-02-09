@@ -75,7 +75,7 @@ class PolkawalletApi {
     print('call Contract');
   }
 
-  Future<String> contractSymbol(String from) async{
+  Future<List> contractSymbol(String from) async {
     final res = await service.webView.contractSymbol(from);
     return res;
   }
@@ -87,6 +87,23 @@ class PolkawalletApi {
 
   Future<dynamic> balanceOf(String from, String who) async {
     final res = await service.webView.balanceOf(who, from);
+    return res;
+  }
+
+  Future<dynamic> balanceOfByPartition(
+      String from, String who, String hash) async {
+    final res = await service.webView.balanceOfByPartition(from, who, hash);
+    return res;
+  }
+
+  Future<dynamic> getPartitionHash(String from) async {
+    final res = await service.webView.getPartitionHash(from);
+
+    return res;
+  }
+
+  Future<String> getHashBySymbol(String from,String symbol) async{
+    final res = await service.webView.getHashBySymbol(from, symbol);
     return res;
   }
 

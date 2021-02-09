@@ -247,9 +247,9 @@ class ApiKeyring {
   }
 
   Future<dynamic> contractTransfer(
-      String senderPubKey, String to, String value, String password) async {
+      String senderPubKey, String to, String value, String password,String hash) async {
     final res =
-        await service.contractTranfer(senderPubKey, to, value, password);
+        await service.contractTranfer(senderPubKey, to, value, password,hash);
     if (res['error'] != null) {
       throw Exception(res['error']);
     }

@@ -560,14 +560,6 @@ class _AssetInfoState extends State<AssetInfo> {
                       ),
                     ),
                     SizedBox(height: 16),
-                    // Container(
-                    //   padding: EdgeInsets.only(left: 16, bottom: 8),
-                    //   alignment: Alignment.centerLeft,
-                    //   child: MyText(
-                    //     text: 'Yesterday',
-                    //     fontSize: 15,
-                    //   ),
-                    // ),
                     _txHistoryModel.txKpi.isEmpty
                         ? SvgPicture.asset(
                             'assets/no_data.svg',

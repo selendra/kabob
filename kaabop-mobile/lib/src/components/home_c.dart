@@ -220,20 +220,21 @@ class AddAssetRowButton extends StatelessWidget {
 }
 
 /* Build Portfolio If Have List Of Portfolio */
-Widget buildRowList(List<dynamic> portfolioData, int rate, String kpiBalance) {
+Widget buildRowList(
+    List<dynamic> portfolioData, int rate, CreateAccModel sdkModel) {
   return ListView.builder(
     padding: EdgeInsets.all(0),
     shrinkWrap: true,
     itemCount: 1,
     physics: BouncingScrollPhysics(),
     itemBuilder: (BuildContext context, int index) {
-      return portFolioItemRow(portfolioData, index, rate, kpiBalance);
+      return portFolioItemRow(portfolioData, index, rate, sdkModel);
     },
   );
 }
 
 Widget portFolioItemRow(
-    List<dynamic> portfolioData, int index, int rate, String kpiBalance) {
+    List<dynamic> portfolioData, int index, int rate, CreateAccModel sdkModel) {
   print(rate.isEven);
   return rowDecorationStyle(
       child: Row(
@@ -256,32 +257,34 @@ Widget portFolioItemRow(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               MyText(
-                text: ModelAsset.assetSymbol,
+                text: sdkModel.contractModel.pTokenSymbol,
                 color: "#FFFFFF",
                 fontSize: 18,
               ),
-              MyText(text: ModelAsset.assetOrganization, fontSize: 15),
+              //  / MyText(text: ModelAsset.assetOrganization, fontSize: 15),
             ],
           ),
         ),
       ),
       Expanded(
-          child: Container(
-        margin: EdgeInsets.only(right: 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            MyText(
-                width: double.infinity,
-                text: kpiBalance, //portfolioData[0]["data"]['balance'],
-                color: "#FFFFFF",
-                fontSize: 18,
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis),
-          ],
+        child: Container(
+          margin: EdgeInsets.only(right: 16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              MyText(
+                  width: double.infinity,
+                  text: sdkModel.contractModel
+                      .pBalance, //portfolioData[0]["data"]['balance'],
+                  color: "#FFFFFF",
+                  fontSize: 18,
+                  textAlign: TextAlign.right,
+                  overflow: TextOverflow.ellipsis),
+            ],
+          ),
         ),
-      ))
+      ),
     ],
   ));
 }
@@ -378,8 +381,7 @@ class MyBottomAppBar extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    ContactBook(sdkModel)));
+                                builder: (context) => ContactBook(sdkModel)));
                       },
               )),
               Expanded(

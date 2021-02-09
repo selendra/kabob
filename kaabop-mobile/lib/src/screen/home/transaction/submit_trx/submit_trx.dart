@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:intl/intl.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
@@ -184,10 +183,17 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future<void> transfer(String to, String pass, String value) async {
+    String hash =
+        '0x6bc6587597acb08c96db1d83307e967dc1d7c9674d025122a417d01a53848112';
     dialogLoading(context);
     try {
-      final res = await widget.sdk.api.keyring
-          .contractTransfer(widget.keyring.keyPairs[0].pubKey, to, value, pass);
+      final res = await widget.sdk.api.keyring.contractTransfer(
+        widget.keyring.keyPairs[0].pubKey,
+        to,
+        value,
+        pass,
+        widget.sdkModel.contractModel.pHash,
+      );
 
       if (res['hash'] != null) {
         assetbalanceOf(widget.keyring.keyPairs[0].address,
@@ -261,8 +267,9 @@ class SubmitTrxState extends State<SubmitTrx> {
     final res = await widget.sdk.api.balanceOf(from, who);
     if (res != null) {
       setState(() {
-        widget.sdkModel.kpiBalance = BigInt.parse(res['output']).toString();
-        print(widget.sdkModel.kpiBalance);
+        widget.sdkModel.contractModel.pBalance =
+            BigInt.parse(res['output']).toString();
+        print(widget.sdkModel.contractModel.pBalance);
       });
     }
   }
@@ -318,49 +325,52 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        key: _scanPayM.globalKey,
-        body: _loading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : BodyScaffold(
-                height: MediaQuery.of(context).size.height,
-                child: Stack(
-                  children: <Widget>[
-                    SubmitTrxBody(
-                      enableInput: widget.enableInput,
-                      dialog: dialogBox,
-                      scanPayM: _scanPayM,
-                      validateWallet: validateWallet,
-                      validateAmount: validateAmount,
-                      validateMemo: validateMemo,
-                      onChanged: onChanged,
-                      onSubmit: onSubmit,
-                      validateInput: validateInput,
-                      clickSend: clickSend,
-                      resetAssetsDropDown: resetAssetsDropDown,
-                      item: item,
-                    ),
-                    _scanPayM.isPay == false
-                        ? Container()
-                        : BackdropFilter(
-                            // Fill Blur Background
-                            filter: ImageFilter.blur(
-                              sigmaX: 5.0,
-                              sigmaY: 5.0,
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                    child: CustomAnimation.flareAnimation(
-                                        flareController,
-                                        "assets/animation/check.flr",
-                                        "Checkmark"))
-                              ],
-                            )),
-                  ],
-                ),
-              ));
+      key: _scanPayM.globalKey,
+      body: _loading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : BodyScaffold(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                children: <Widget>[
+                  SubmitTrxBody(
+                    enableInput: widget.enableInput,
+                    dialog: dialogBox,
+                    scanPayM: _scanPayM,
+                    validateWallet: validateWallet,
+                    validateAmount: validateAmount,
+                    validateMemo: validateMemo,
+                    onChanged: onChanged,
+                    onSubmit: onSubmit,
+                    validateInput: validateInput,
+                    clickSend: clickSend,
+                    resetAssetsDropDown: resetAssetsDropDown,
+                    item: item,
+                  ),
+                  _scanPayM.isPay == false
+                      ? Container()
+                      : BackdropFilter(
+                          // Fill Blur Background
+                          filter: ImageFilter.blur(
+                            sigmaX: 5.0,
+                            sigmaY: 5.0,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Expanded(
+                                child: CustomAnimation.flareAnimation(
+                                    flareController,
+                                    "assets/animation/check.flr",
+                                    "Checkmark"),
+                              ),
+                            ],
+                          ),
+                        ),
+                ],
+              ),
+            ),
+    );
   }
 }

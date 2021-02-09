@@ -230,7 +230,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
   });
 }
 
-async function contractTransfer(apiContract: ContractPromise, senderPubKey: string, to: string, value: string, password: string) {
+async function contractTransfer(apiContract: ContractPromise, senderPubKey: string, to: string, value: string, password: string,hash:string) {
   return new Promise(async (resolve, reject) => {
     try {
       const keyPair = keyring.getPair(hexToU8a(senderPubKey));
@@ -240,7 +240,7 @@ async function contractTransfer(apiContract: ContractPromise, senderPubKey: stri
         resolve({ error: "password check failed" });
       }
 
-      await apiContract.tx.transfer(0, -1, to, value).signAndSend(keyPair, ({ events = [], status }) => {
+      await apiContract.tx.transfer(0, -1, to,hash, value).signAndSend(keyPair, ({ events = [], status }) => {
         if (status.isInBlock) {
 
         } else if (status.isFinalized) {

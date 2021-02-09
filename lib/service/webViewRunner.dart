@@ -151,8 +151,10 @@ class WebViewRunner {
     return res;
   }
 
-  Future<String> contractSymbol (String from) async{
-    final res = await evalJavascript('settings.contractSymbol(apiContract,"$from")');
+  Future<List> contractSymbol(String from) async {
+    final res =
+        await evalJavascript('settings.contractSymbol(apiContract,"$from")');
+    print('contract res $res');
     return res;
   }
 
@@ -167,6 +169,25 @@ class WebViewRunner {
     final res =
         await evalJavascript('settings.balanceOf(apiContract,"$from","$who")');
 
+    return res;
+  }
+
+  Future<dynamic> balanceOfByPartition(
+      String from, String who, String hash) async {
+    final res = await evalJavascript(
+        'settings.balanceOfByPartition(apiContract,"$from","$who","$hash")');
+    print(res);
+    return res;
+  }
+
+  Future<dynamic> getPartitionHash(String from) async {
+    final res =
+        await evalJavascript('settings.getPartitionHash(apiContract,"$from")');
+    return res;
+  }
+
+  Future<String> getHashBySymbol(String from,String symbol) async{
+    final res = await evalJavascript('settings.getHashBySymbol(apiContract,"$from","$symbol")');
     return res;
   }
 

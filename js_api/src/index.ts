@@ -46,10 +46,11 @@ async function connect(nodes: string[]) {
 
 async function callContract(api: ApiPromise) {
   return new Promise(async (resolve, reject) => {
-    const ERC20 = '5CyvZsXQAUNKYH6f38vCku9bXkWVAxaAwksFYRDpGJYcx4Vv';
+    //const ERC20 = '5CyvZsXQAUNKYH6f38vCku9bXkWVAxaAwksFYRDpGJYcx4Vv';
+    const ERC1400 = '5DyX3Fwjqo9MKRtg77ukLEYfeC9mfeJPq7MNTgcu7r5oc7P9';
     const abiJSONobj = (<any>metadata);
     const abi = new Abi(abiJSONobj);
-    const res = new ContractPromise(api, abi, ERC20);
+    const res = new ContractPromise(api, abi, ERC1400);
     (<any>window).apiContract = res;
     resolve(res.address);
     send("log", `${res.address} contract connected success`);
@@ -108,6 +109,59 @@ async function balanceOf(apiContract: ContractPromise, from: string, who: string
   });
 }
 
+
+async function balanceOfByPartition(apiContract: ContractPromise, from: string, who: string, hash: string) {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      const result = await apiContract.query.balanceOfByPartition(from, 0, -1, who, hash); //.query.balanceOfByPartition(from, 0, -1, who);
+
+      resolve(result);
+      send('log', result.output.toString);
+
+      return result.output.toString;
+      // resolve(result);
+    } catch (err) {
+      resolve({ err: err.message });
+    }
+  });
+}
+
+
+async function getPartitionHash(apiContract: ContractPromise, from: string) {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      const result = await apiContract.query.listOfPartition(from, 0, -1);
+
+      resolve(result);
+      send('log', result.output.toString);
+
+      return result.output.toString;
+      // resolve(result);
+    } catch (err) {
+      resolve({ err: err.message });
+    }
+  });
+}
+
+async function getHashBySymbol(apiContract:ContractPromise,from:string,symbol:string) {
+  return new Promise(async (resolve, reject) => {
+
+    try {
+      const result = await apiContract.query.getHashBySymbol(from,0,-1,symbol);
+
+      resolve(result.output);
+      send('log', result.output.toString);
+
+      return result.output.toString;
+      // resolve(result);
+    } catch (err) {
+      resolve({ err: err.message });
+    }
+  });
+}
+
 //const result = await this.polkadotApiService.apiContract.query.allowance(owner, 0, -1, owner, spender);
 
 async function allowance(apiContract: ContractPromise, owner: string, spender: string) {
@@ -152,6 +206,9 @@ const settings = {
   contractSymbol,
   totalSupply,
   balanceOf,
+  balanceOfByPartition,
+  getPartitionHash,
+  getHashBySymbol,
   allowance,
   subscribeMessage,
   getNetworkConst,
