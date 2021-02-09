@@ -299,12 +299,12 @@ class PostRequest {
   /* OCR Image */
   Future ocrImage(String imageuri) async {
     // "_https://i.ibb.co/r69pMmx/ocr.png"
-    Map<String, dynamic> bodys = {
-      "imguri": imageuri,
-      "amount": "Grand Total(\$)",
-      "trxdate": "Bill Date"
-    };
-    final response = await _http.post(_sldApi.urlOCR, body: bodys);
+    // Map<String, dynamic> bodys = {
+    //   "imguri": imageuri,
+    //   "amount": "Grand Total(\$)",
+    //   "trxdate": "Bill Date"
+    // };
+   // final response = await _http.post(_sldApi.urlOCR, body: bodys);
   }
 
   Future<_http.StreamedResponse> upLoadImage(

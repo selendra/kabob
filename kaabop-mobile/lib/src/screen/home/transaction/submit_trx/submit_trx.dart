@@ -183,8 +183,8 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future<void> transfer(String to, String pass, String value) async {
-    String hash =
-        '0x6bc6587597acb08c96db1d83307e967dc1d7c9674d025122a417d01a53848112';
+    // String hash =
+    //     '0x6bc6587597acb08c96db1d83307e967dc1d7c9674d025122a417d01a53848112';
     dialogLoading(context);
     try {
       final res = await widget.sdk.api.keyring.contractTransfer(

@@ -184,18 +184,18 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   // Initialize Fabs Animation
-  void fabsAnimation() {
-    if (mounted) {
-      _homeM.animationController = AnimationController(
-        duration: Duration(milliseconds: 250),
-        vsync: this,
-      );
-      _homeM.degOneTranslationAnimation =
-          Tween(begin: 0.0, end: 1.0).animate(_homeM.animationController);
-      setState(() {});
-      _homeM.animationController.addListener(() {});
-    }
-  }
+  // void fabsAnimation() {
+  //   if (mounted) {
+  //     _homeM.animationController = AnimationController(
+  //       duration: Duration(milliseconds: 250),
+  //       vsync: this,
+  //     );
+  //     _homeM.degOneTranslationAnimation =
+  //         Tween(begin: 0.0, end: 1.0).animate(_homeM.animationController);
+  //     setState(() {});
+  //     _homeM.animationController.addListener(() {});
+  //   }
+  // }
 
   void opacityController(bool visible) {
     if (mounted) {
@@ -348,41 +348,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         await StorageServices.removeKey("getWallet");
       }
     }
-  }
-
-  /* ------------------------Fetch Local Data Method------------------------ */
-
-  // Refech Data User And Portfolio
-  _pullUpRefresh() async {
-    _portfolioM.list = [];
-    fetchPortfolio();
-    getUserData();
-    // _homeM.refreshController.refreshCompleted();
-  }
-
-  Future<dynamic> cropImageCamera(BuildContext context) async {
-    File image = await camera();
-    dialogLoading(context);
-    if (image != null) {
-      await Future.delayed(
-          Duration(milliseconds: 300),
-          () => Navigator.pop(
-              context)); /* Wait 300 Millisecond And Close Loading Process */
-      File cropImage = await ImageCropper.cropImage(
-          // maxHeight: 4096,
-          // maxWidth: 1024,
-          sourcePath: image.path,
-          androidUiSettings: AndroidUiSettings(
-            backgroundColor: Colors.black,
-            // lockAspectRatio: false
-          ));
-      return cropImage;
-    }
-    await Future.delayed(
-        Duration(milliseconds: 100),
-        () => Navigator.pop(
-            context)); /* Wait 300 Millisecond And Close Loading Process */
-    return null;
   }
 
   void scanReceipt() async {
