@@ -28,12 +28,7 @@ void main() async {
     if (kReleaseMode) exit(1);
   };
 
-  runApp(App()
-      // DevicePreview(
-      //   enabled: true,
-      //   builder: (context) => App(),
-      // )
-      );
+  runApp(App());
 }
 
 class App extends StatefulWidget {
@@ -79,7 +74,6 @@ class AppState extends State<App> {
     final res = await _createAccModel.sdk.api
         .connectNode(_createAccModel.keyring, [node]);
 
-    print('resConnectNode $res');
     setState(() {});
     if (res != null) {
       print('res null');
@@ -167,43 +161,6 @@ class AppState extends State<App> {
       print('balanceOfByPartition $res');
     } catch (e) {
       print(e.toString());
-    }
-  }
-
-  // Future<void> _totalSupply() async {
-  //   try {
-  //     final res = await _createAccModel.sdk.api.totalSupply(
-  //       _createAccModel.keyring.keyPairs[0].address,
-  //     );
-  //     print(res.toString());
-  //     print(res['output'][0]);
-  //     if (res != null) {
-  //       setState(() {
-  //         _createAccModel.kpiSupply = BigInt.parse(res['output']).toString();
-  //       });
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //     await dialog(context, Text(e.toString()), Text('Opps!!'));
-  //   }
-  // }
-
-  // Future<void> _balanceOf() async {
-  //   final res = await _createAccModel.sdk.api.balanceOf(
-  //     _createAccModel.keyring.keyPairs[0].address,
-  //     _createAccModel.keyring.keyPairs[0].address,
-  //   );
-  //   if (res != null) {
-  //     setState(() {
-  //       _createAccModel.contractModel.pBalance =
-  //           BigInt.parse(res['output']).toString();
-  //     });
-  //   }
-  // }
-
-  void unsubsribeBalance(String _msgChannel) {
-    if (_msgChannel != null) {
-      _createAccModel.sdk.api.unsubscribeMessage(_msgChannel);
     }
   }
 

@@ -1,23 +1,15 @@
-// import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'dart:ui';
-import 'package:polkawallet_sdk/api/types/balanceData.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class Home extends StatefulWidget {
-  // final WalletSDK sdk;
-  // final Keyring keyring;
-  // final bool apiConnected;
-  // final String mBalance;
-  // final String msgChannel;
-  // final String kpiBalance;
-
   final CreateAccModel sdkModel;
-
   Home(this.sdkModel);
+
   static const route = '/home';
+
   State<StatefulWidget> createState() {
     return HomeState();
   }
@@ -33,26 +25,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   PostRequest _postRequest = PostRequest();
 
-  GetRequest _getRequest = GetRequest();
-
-  Backend _backend = Backend();
-
-  PackageInfo _packageInfo;
-
   PortfolioM _portfolioM = PortfolioM();
 
   PortfolioRateModel _portfolioRate = PortfolioRateModel();
 
-  // FlareControls _flareControls = FlareControls();
-
-  String accName = '';
-  String accAddress = '';
   String mBalance = '';
-  String _msgChannel;
-  String _kpiBalance = '0';
   String status = '';
-
-  BalanceData _balance;
 
   List<Color> pieColorList = [
     hexaCodeToColor("#08B952"),
@@ -70,13 +48,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   Future<void> getCurrentAccount() async {
     final List<KeyPairData> ls = widget.sdkModel.keyring.keyPairs;
     setState(() {
-      accName = ls[0].name;
-      accAddress = ls[0].address;
+      widget.sdkModel.userModel.username = ls[0].name;
+      widget.sdkModel.userModel.address = ls[0].address;
 
-      _homeM.userData['first_name'] = accName;
-      _homeM.userData['wallet'] = accAddress;
+      _homeM.userData['first_name'] = ls[0].name;
+      _homeM.userData['wallet'] = ls[0].address;
     });
-    print("Hello name ${ls[0].name}");
   }
 
   String action = "no_action";
@@ -95,18 +72,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         CircularSegmentEntry(
             _homeM.emptyChartData, hexaCodeToColor(AppColors.cardColor))
       ];
-      // AppServices.noInternetConnection(_homeM.globalKey);
       _homeM.userData = {};
       setChartData();
       getCurrentAccount();
-      //_subscribeBalance();
-
-      /* User Profile */
-      // getUserData();
-      // fetchPortfolio();
-      // triggerDeviceInfo();
-      // if (Platform.isAndroid) appPermission();
-      // fabsAnimation();
     }
 
     menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
@@ -183,20 +151,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
-  // Initialize Fabs Animation
-  // void fabsAnimation() {
-  //   if (mounted) {
-  //     _homeM.animationController = AnimationController(
-  //       duration: Duration(milliseconds: 250),
-  //       vsync: this,
-  //     );
-  //     _homeM.degOneTranslationAnimation =
-  //         Tween(begin: 0.0, end: 1.0).animate(_homeM.animationController);
-  //     setState(() {});
-  //     _homeM.animationController.addListener(() {});
-  //   }
-  // }
-
   void opacityController(bool visible) {
     if (mounted) {
       setState(() {
@@ -209,191 +163,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     }
   }
 
-  Future<void> appPermission() async {
-    await AndroidPlatform.checkPermission().then((value) async {
-      if (value == false) {
-        await Component.messagePermission(
-            context: context,
-            content: "We suggest you to enable permission on apps",
-            method: () async {
-              await AndroidPlatform.writePermission();
-              Navigator.pop(context);
-            });
-      }
-    });
-  }
-
-  /* ---------------------------Rest Api--------------------------- */
-  Future<void> getUserData() async {
-    /* Fetch User Data From Memory */
-    if (mounted) {
-      await _getRequest.getUserProfile().then((data) {
-        print("User data ${data.body}");
-        setState(() {
-          if (data == null)
-            _homeM.userData = {};
-          else
-            _homeM.userData = json.decode(data.body);
-        });
-      });
-    }
-  }
-
-  void triggerDeviceInfo() async {
-    if (mounted) {
-      _packageInfo = await PackageInfo.fromPlatform();
-      setState(() {});
-    }
-  }
-
-  /* Fetch Portofolio */
-  Future<void> fetchPortfolio() async {
-    if (mounted) {
-      await Future.delayed(Duration(milliseconds: 10), () {
-        setState(() {
-          _homeM.portfolioList = [];
-          _portfolioM.list = [];
-        });
-      });
-
-      try {
-        /* Get Response Data */
-
-        _backend.response = await _getRequest.getPortfolio();
-
-        _backend.mapData = json.decode(_backend.response.body);
-
-        setState(() {
-          _portfolioM.list.add(_backend.mapData);
-        });
-
-        if (!_backend.mapData.containsKey('error')) {
-          _portfolioRate.currentData = await _portfolioRate.getCurrentData();
-
-          _portfolioRate.totalRate = await _portfolioRate.valueRate(
-              _backend.mapData['data'], _portfolioRate.currentData);
-
-          StorageServices.setData(_portfolioM.list,
-              'portfolio'); /* Set Portfolio To Local Storage */
-          resetDataPieChart(_portfolioM.list);
-        }
-      } catch (e) {
-        print("My error $e");
-        await dialog(
-            context,
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: textAlignCenter(text: "${e.message}")),
-              ],
-            ),
-            warningTitleDialog());
-      }
-    }
-  }
-
-  /* ------------------------Method------------------------ */
-
-  void resetDataPieChart(List<dynamic> portfolio) {
-    if (portfolio.length != 0) {
-      _homeM.total = 0.0;
-
-      _homeM.circularChart.clear(); // Clear Pie Data
-
-      print(
-          json.decode(portfolio[0]['data']['balance']).toDouble().runtimeType);
-
-      for (int i = 0; i < portfolio.length; i++) {
-        // Add Totalportfolio
-        _homeM.total +=
-            (json.decode(portfolio[i]['data']['balance'])).toDouble();
-
-        _homeM.circularChart.add(//Add More Data Follow Portfolio
-            CircularSegmentEntry(
-                (json.decode(portfolio[i]['data']['balance'])).toDouble(),
-                hexaCodeToColor(AppColors.secondary)));
-      }
-      _homeM.emptyChartData -= _homeM.total;
-      _homeM.circularChart.add(// Add Remain Empty Data
-          CircularSegmentEntry(
-              _homeM.emptyChartData, hexaCodeToColor(AppColors.cardColor)));
-
-      _homeM.emptyChartData = 100.0; // Reset Remain Pie Data
-    }
-  }
-
-  void menuCallBack(Map<String, dynamic> result) async {
-    if (result != null) {
-      _backend.mapData = await StorageServices.fetchData("getWallet");
-
-      if (result.isNotEmpty) {
-        // Log Out
-        if (result.containsKey('log_out')) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => Welcome()),
-          );
-        } else if (result['dialog_name'] == "addAssetScreen") {
-          await fetchPortfolio();
-        } else if (result['dialog_name'] == 'edit_profile') {
-          await getUserData();
-        }
-      }
-
-      // If Get Wallet
-      if (_backend.mapData != null) {
-        await fetchPortfolio();
-        await StorageServices.removeKey("getWallet");
-      }
-    }
-  }
-
-  void scanReceipt() async {
-    /* Receipt Scan Pay Process */
-    try {
-      var _barcode = await BarcodeScanner.scan();
-      dialogLoading(context); /* Enable Loading Process */
-      await _postRequest.getReward(_barcode.rawContent).then((onValue) async {
-        if (onValue.containsKey('message'))
-          await dialog(
-              context,
-              Text(onValue['message']),
-              Icon(Icons.done_outline,
-                  color: hexaCodeToColor(
-                    AppColors.lightBlueSky,
-                  )));
-        else
-          await dialog(
-              context, Text(onValue['error']['message']), warningTitleDialog());
-        // Disable Loading Process
-        Navigator.pop(context);
-        if (onValue.containsKey('message')) fetchPortfolio();
-      });
-    } catch (e) {
-      await Future.delayed(Duration(milliseconds: 300), () {});
-      AppServices.openSnackBar(_homeM.globalKey, e.message);
-    }
-  }
-
-  Future<void> createPin() async {
-    /* Set PIN Dialog */
-    _homeM.result = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => Pin()));
-
-    if (_homeM.result != null) {
-      await fetchPortfolio();
-      await getUserData();
-      snackBar(_homeM.globalKey,
-          "Successfully copy!Please keep your private key to safe place");
-    }
-  }
-
-  void resetState(String barcodeValue, String executeName) async {
-    /* Request Portfolio After Trx QR Success */
-    await fetchPortfolio();
-  }
+  void resetState(String barcodeValue, String executeName) async {}
 
   Future<void> _balanceOf() async {
     final res = await widget.sdkModel.sdk.api.balanceOf(
@@ -425,67 +195,26 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     _homeM.globalKey.currentState.openDrawer();
   }
 
-  // void refresh() {
-  //   _balanceOf(
-  //       widget.keyring.keyPairs[0].address, widget.keyring.keyPairs[0].address);
-  // }
-
   @override
   Widget build(BuildContext context) {
-    //final bloc = Bloc();
     if (status != null) handleConnectNode();
-
     return Scaffold(
       key: _homeM.globalKey,
       drawer: Theme(
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-        child: Menu(_homeM.userData, _packageInfo, menuCallBack),
+        child: Menu(_homeM.userData),
       ),
-      appBar: AppBar(
-        backgroundColor: hexaCodeToColor(AppColors.bgdColor),
-        title: MyText(
-          text: "KABOB",
-          color: "#FFFFFF",
-        ),
-        leading: Padding(
-            padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-            child: Align(
-                alignment: Alignment.center,
-                child: SvgPicture.asset('assets/sld_logo.svg'))),
-        actions: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              iconSize: 30,
-              icon: Icon(LineAwesomeIcons.bell),
-              onPressed: () async {
-                await MyBottomSheet().notification(context: context);
-              },
-            ),
-          ),
-        ],
-      ),
+      appBar: homeAppBar(context),
       body: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: HomeBody(
-            chartKey: chartKey,
-            portfolioData: _homeM.portfolioList,
             portfolioM: _portfolioM,
             portfolioRateM: _portfolioRate,
-            getWallet: createPin,
             homeM: _homeM,
-            accName: accName,
-            accAddress: accAddress,
-            accBalance: widget.sdkModel.mBalance,
-            apiStatus: widget.sdkModel.apiConnected,
             pieColorList: pieColorList,
             dataMap: dataMap,
-            kpiBalance: widget.sdkModel.contractModel.pBalance,
-            sdk: widget.sdkModel.sdk,
-            keyring: widget.sdkModel.keyring,
             sdkModel: widget.sdkModel,
             balanceOf: _balanceOf,
-            // refresh: refresh,
           )),
       floatingActionButton: SizedBox(
           width: 64,
@@ -501,12 +230,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     : Colors.white),
             onPressed: () async {
               await TrxOptionMethod.scanQR(
-                  context,
-                  _homeM.portfolioList,
-                  resetState,
-                  widget.sdkModel.sdk,
-                  widget.sdkModel.keyring,
-                  widget.sdkModel);
+                  context, _homeM.portfolioList, resetState, widget.sdkModel);
             },
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

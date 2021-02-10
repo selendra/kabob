@@ -15,7 +15,7 @@ class AssetInfo extends StatefulWidget {
   final Keyring keyring;
   final CreateAccModel sdkModel;
 
-  AssetInfo({@required this.kpiBalance, this.sdk, this.keyring, this.sdkModel});
+  AssetInfo({this.kpiBalance, this.sdk, this.keyring, this.sdkModel});
   @override
   _AssetInfoState createState() => _AssetInfoState();
 }
@@ -308,7 +308,8 @@ class _AssetInfoState extends State<AssetInfo> {
                                   SizedBox(height: 5),
                                   Expanded(
                                     child: MyText(
-                                      text: _kpiBalance,
+                                      text: widget
+                                          .sdkModel.contractModel.pBalance,
                                       color: AppColors.secondary_text,
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold,
@@ -326,7 +327,7 @@ class _AssetInfoState extends State<AssetInfo> {
                                     alignment: Alignment.topRight,
                                     child: MyText(
                                       text:
-                                          "Total Supply: ${widget.sdkModel.kpiSupply}",
+                                          "Total Supply: ${widget.sdkModel.contractModel.pBalance}",
                                       color: AppColors.secondary_text,
                                       fontSize: 12,
                                       fontWeight: FontWeight.bold,

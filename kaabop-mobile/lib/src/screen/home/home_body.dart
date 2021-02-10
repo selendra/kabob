@@ -1,54 +1,26 @@
-import 'package:polkawallet_sdk/polkawallet_sdk.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/portfolio_c.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
-
 import 'asset_info/asset_info.dart';
 
 class HomeBody extends StatelessWidget {
-  //final Bloc bloc;
-  final GlobalKey<AnimatedCircularChartState> chartKey;
-  final List<dynamic> portfolioData;
   final HomeModel homeM;
   final PortfolioM portfolioM;
   final PortfolioRateModel portfolioRateM;
-  final Function getWallet;
-  final String accName;
-  final String accAddress;
-  final String accBalance;
-  final bool apiStatus;
   final List<Color> pieColorList;
   final Map<String, double> dataMap;
-  final String kpiBalance;
-  final WalletSDK sdk;
-  final Keyring keyring;
-  final Function refresh;
   final CreateAccModel sdkModel;
   final Function balanceOf;
 
   HomeBody(
-      {
-      // this.bloc,
-      this.chartKey,
-      this.portfolioData,
-      this.homeM,
+      {this.homeM,
       this.portfolioM,
       this.portfolioRateM,
-      this.getWallet,
-      this.accName,
-      this.accAddress,
-      this.accBalance,
-      this.apiStatus,
       this.pieColorList,
       this.dataMap,
-      this.kpiBalance,
-      this.sdk,
-      this.keyring,
-      this.refresh,
       this.sdkModel,
       this.balanceOf});
 
@@ -100,14 +72,14 @@ class HomeBody extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   MyText(
-                                    text: accName,
+                                    text: sdkModel.userModel.username,
                                     color: "#FFFFFF",
                                     fontSize: 20,
                                   ),
                                   Container(
                                     width: 100,
                                     child: MyText(
-                                      text: !apiStatus
+                                      text: !sdkModel.apiConnected
                                           ? "Connecting to Remote Node"
                                           : "Indracore",
                                       color: AppColors.secondary_text,
@@ -120,14 +92,14 @@ class HomeBody extends StatelessWidget {
                                 ],
                               ),
                               Expanded(child: Container()),
-                              !apiStatus
+                              !sdkModel.apiConnected
                                   ? Container()
                                   : Align(
                                       alignment: Alignment.bottomRight,
                                       child: Container(
                                         width: 150,
                                         child: MyText(
-                                          text: accBalance,
+                                          text: sdkModel.mBalance,
                                           fontSize: 30,
                                           color: AppColors.secondary_text,
                                           fontWeight: FontWeight.bold,
@@ -139,7 +111,8 @@ class HomeBody extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Clipboard.setData(ClipboardData(text: accAddress))
+                              Clipboard.setData(ClipboardData(
+                                      text: sdkModel.userModel.address))
                                   .then((value) => {
                                         Scaffold.of(context).showSnackBar(
                                             SnackBar(
@@ -150,7 +123,7 @@ class HomeBody extends StatelessWidget {
                             child: MyText(
                               top: 16,
                               width: 200,
-                              text: accAddress ?? "address",
+                              text: sdkModel.userModel.address ?? "address",
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -268,27 +241,27 @@ class HomeBody extends StatelessWidget {
 
                   // Asset
                   Container(
-                      margin: EdgeInsets.only(top: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: 5,
-                            height: 40,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: hexaCodeToColor(AppColors.secondary)),
-                          ),
-                          MyText(
-                            text: 'Assets',
-                            fontSize: 27,
-                            color: "#FFFFFF",
-                            left: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          Expanded(child: Container()),
-                        ],
-                      ))
+                    margin: EdgeInsets.only(top: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 5,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: hexaCodeToColor(AppColors.secondary)),
+                        ),
+                        MyText(
+                          text: 'Assets',
+                          fontSize: 27,
+                          color: "#FFFFFF",
+                          left: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        Expanded(child: Container()),
+                      ],
+                    ))
                 ],
               ),
             ),
@@ -300,9 +273,8 @@ class HomeBody extends StatelessWidget {
                         context,
                         RouteAnimation(
                           enterPage: AssetInfo(
-                            kpiBalance: kpiBalance,
-                            sdk: sdk,
-                            keyring: keyring,
+                            sdk: sdkModel.sdk,
+                            keyring: sdkModel.keyring,
                             sdkModel: sdkModel,
                           ),
                         ),

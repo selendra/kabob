@@ -119,6 +119,33 @@ final portfolioChart = LineChartData(
   ],
 );
 
+Widget homeAppBar(BuildContext context) {
+  return AppBar(
+    backgroundColor: hexaCodeToColor(AppColors.bgdColor),
+    title: MyText(
+      text: "KABOB",
+      color: "#FFFFFF",
+    ),
+    leading: Padding(
+        padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
+        child: Align(
+            alignment: Alignment.center,
+            child: SvgPicture.asset('assets/sld_logo.svg'))),
+    actions: [
+      Align(
+        alignment: Alignment.centerRight,
+        child: IconButton(
+          iconSize: 30,
+          icon: Icon(LineAwesomeIcons.bell),
+          onPressed: () async {
+            await MyBottomSheet().notification(context: context);
+          },
+        ),
+      ),
+    ],
+  );
+}
+
 Widget cardToken(
   /* Card Token Display */
   String title,

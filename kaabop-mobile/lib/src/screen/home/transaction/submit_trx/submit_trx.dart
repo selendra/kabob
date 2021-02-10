@@ -14,12 +14,11 @@ class SubmitTrx extends StatefulWidget {
   final String _walletKey;
   final List<dynamic> _listPortfolio;
   final bool enableInput;
-  final WalletSDK sdk;
-  final Keyring keyring;
+
   final CreateAccModel sdkModel;
 
-  SubmitTrx(this._walletKey, this.enableInput, this._listPortfolio, this.sdk,
-      this.keyring, this.sdkModel);
+  SubmitTrx(
+      this._walletKey, this.enableInput, this._listPortfolio, this.sdkModel);
   @override
   State<StatefulWidget> createState() {
     return SubmitTrxState();
@@ -187,8 +186,8 @@ class SubmitTrxState extends State<SubmitTrx> {
     //     '0x6bc6587597acb08c96db1d83307e967dc1d7c9674d025122a417d01a53848112';
     dialogLoading(context);
     try {
-      final res = await widget.sdk.api.keyring.contractTransfer(
-        widget.keyring.keyPairs[0].pubKey,
+      final res = await widget.sdkModel.sdk.api.keyring.contractTransfer(
+        widget.sdkModel.keyring.keyPairs[0].pubKey,
         to,
         value,
         pass,
@@ -196,14 +195,14 @@ class SubmitTrxState extends State<SubmitTrx> {
       );
 
       if (res['hash'] != null) {
-        assetbalanceOf(widget.keyring.keyPairs[0].address,
-            widget.keyring.keyPairs[0].address);
+        assetbalanceOf(widget.sdkModel.keyring.keyPairs[0].address,
+            widget.sdkModel.keyring.keyPairs[0].address);
 
         saveTxHistory(TxHistory(
           date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
           symbol: 'KMPI',
           destination: to,
-          sender: widget.keyring.current.address,
+          sender: widget.sdkModel.keyring.current.address,
           org: 'KOOMPI',
           amount: value.trim(),
         ));
@@ -221,12 +220,12 @@ class SubmitTrxState extends State<SubmitTrx> {
     dialogLoading(context);
     String mhash;
     final sender = TxSenderData(
-      widget.keyring.current.address,
-      widget.keyring.current.pubKey,
+      widget.sdkModel.keyring.current.address,
+      widget.sdkModel.keyring.current.pubKey,
     );
     final txInfo = TxInfoData('balances', 'transfer', sender);
     try {
-      final hash = await widget.sdk.api.tx.signAndSend(
+      final hash = await widget.sdkModel.sdk.api.tx.signAndSend(
           txInfo,
           [
             // params.to
@@ -247,7 +246,7 @@ class SubmitTrxState extends State<SubmitTrx> {
           date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
           symbol: 'SEL',
           destination: target,
-          sender: widget.keyring.current.address,
+          sender: widget.sdkModel.keyring.current.address,
           org: 'Selendra',
           amount: amount.trim(),
         ));
@@ -264,7 +263,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future<void> assetbalanceOf(String from, String who) async {
-    final res = await widget.sdk.api.balanceOf(from, who);
+    final res = await widget.sdkModel.sdk.api.balanceOf(from, who);
     if (res != null) {
       setState(() {
         widget.sdkModel.contractModel.pBalance =

@@ -127,12 +127,7 @@ class ContactBookBody extends StatelessWidget {
                                                                     .text,
                                                                 false,
                                                                 [],
-                                                                sdkModel.sdk,
-                                                                sdkModel
-                                                                    .keyring,
-                                                                sdkModel)
-                                                              )
-                                                            );
+                                                                sdkModel)));
                                               },
                                             ),
                                           ],

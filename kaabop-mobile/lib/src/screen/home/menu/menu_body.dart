@@ -4,42 +4,15 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
 
 class MenuBody extends StatelessWidget {
-  final GlobalKey<ScaffoldState> globalKey;
-  final bool isHaveWallet; /* isHaveWallet By Default false */
   final Map<String, dynamic> userInfo;
   final MenuModel model;
-  final PackageInfo packageInfo;
-  final Function editProfile;
-  final Function trxHistory;
-  final Function trxActivity;
-  final Function wallet;
-  final Function changePin;
-  final Function password;
-  final Function addAssets;
-  final Function snackBar;
-  final Function popScreen;
   final Function switchBio;
-  final Function createPin;
-  final Function callBack;
 
-  MenuBody(
-      {this.globalKey,
-      this.isHaveWallet,
-      this.userInfo,
-      this.model,
-      this.packageInfo,
-      this.editProfile,
-      this.trxHistory,
-      this.trxActivity,
-      this.addAssets,
-      this.changePin,
-      this.password,
-      this.wallet,
-      this.snackBar,
-      this.popScreen,
-      this.switchBio,
-      this.createPin,
-      this.callBack});
+  MenuBody({
+    this.userInfo,
+    this.model,
+    this.switchBio,
+  });
 
   Widget build(BuildContext context) {
     return Column(children: [
@@ -55,10 +28,6 @@ class MenuBody extends StatelessWidget {
           Navigator.pop(context, '');
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => TrxActivity()));
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //         builder: (context) => TrxHistory(userInfo['wallet'])));
         },
       ),
 
@@ -68,8 +37,6 @@ class MenuBody extends StatelessWidget {
         onTap: () {
           // callBack(_result);
           Navigator.pop(context, '');
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (context) => TrxActivity()));
         },
       ),
 
@@ -90,33 +57,11 @@ class MenuBody extends StatelessWidget {
         subIndex: 1,
         onTap: () {
           Navigator.pop(context, '');
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (context) => AddAsset()));
         },
       ),
 
       // Security
       MenuSubTitle(index: 2),
-
-      // MyListTile(
-      //   index: 2,
-      //   subIndex: 0,
-      //   onTap: () {
-      //     Navigator.pop(context, '');
-      //     Navigator.push(
-      //         context, MaterialPageRoute(builder: (context) => ChangePin()));
-      //   },
-      // ),
-
-      // MyListTile(
-      //   index: 2,
-      //   subIndex: 1,
-      //   onTap: () {
-      //     Navigator.pop(context, '');
-      //     Navigator.push(context,
-      //         MaterialPageRoute(builder: (context) => ChangePassword()));
-      //   },
-      // ),
 
       MyListTile(
         enable: false,
@@ -137,12 +82,6 @@ class MenuBody extends StatelessWidget {
         subIndex: 0,
         onTap: () async {
           Navigator.popAndPushNamed(context, Account.route);
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => ReferralProgram())
-          // );
-
-          //snackBar(globalKey, "Invite friend feature under implement");
         },
       ),
     ]);

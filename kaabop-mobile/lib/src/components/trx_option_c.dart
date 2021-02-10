@@ -1,6 +1,3 @@
-// import 'dart:html';
-
-import 'package:contacts_service/contacts_service.dart';
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polkawallet_sdk/polkawallet_sdk.dart';
@@ -36,13 +33,9 @@ class MyBottomSheetItem extends StatelessWidget {
 /* -------------------------Transaction Method--------------------------- */
 
 class TrxOptionMethod {
-  static PostRequest _postRequest = PostRequest();
-
   static void selectContact(BuildContext context, List<dynamic> listPortfolio,
       Function resetDbdState) async {
     if (await Permission.contacts.request().isGranted) {
-      String number = '';
-      var response;
       final PhoneContact _contact =
           await FlutterContactPicker.pickPhoneContact();
       // final Contact _contact = await ContactsService.openDeviceContactPicker();
@@ -107,35 +100,24 @@ class TrxOptionMethod {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                SubmitTrx("", true, portfolioList, sdk, keyring, sdkModel)));
+                SubmitTrx("", true, portfolioList, sdkModel)));
     if (response['status_code'] == 200) {
       resetDbdState(null, "portfolio");
     }
   }
 
   /* Scan QR Code */
-  static Future scanQR(
-      BuildContext context,
-      List<dynamic> portfolioList,
-      Function resetDbdState,
-      WalletSDK sdk,
-      Keyring keyring,
-      CreateAccModel sdkModel) async {
-    var _response = await Navigator.push(context, transitionRoute(QrScanner(
-        // portList: portfolioList,
-        // sdk: sdk,
-        // keyring: keyring,
-        )));
-    // if (_response != null) {
-    //   resetDbdState(null, "portfolio");
-    // }
+  static Future scanQR(BuildContext context, List<dynamic> portfolioList,
+      Function resetDbdState, CreateAccModel sdkModel) async {
+    var _response = await Navigator.push(context, transitionRoute(QrScanner()));
+
     print("Scan qr reponse $_response");
     if (_response != null) {
       await Navigator.push(
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  SubmitTrx(_response, false, portfolioList, sdk, keyring, sdkModel)));
+                  SubmitTrx(_response, false, portfolioList, sdkModel)));
     }
   }
 }
