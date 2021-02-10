@@ -126,8 +126,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             ));
           });
     });
-
-    print("Status 1 ${widget.sdkModel.apiConnected}");
   }
 
   void handleConnectNode() async {
