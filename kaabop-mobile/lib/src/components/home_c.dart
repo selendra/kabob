@@ -143,8 +143,6 @@ Widget homeAppBar(BuildContext context) {
   );
 }
 
-
-
 Widget cardToken(
   /* Card Token Display */
   String title,
@@ -249,7 +247,6 @@ class AddAssetRowButton extends StatelessWidget {
 Widget buildRowList(
     List<dynamic> portfolioData, int rate, CreateAccModel sdkModel) {
   return ListView.builder(
-    padding: EdgeInsets.all(0),
     shrinkWrap: true,
     itemCount: 1,
     physics: BouncingScrollPhysics(),

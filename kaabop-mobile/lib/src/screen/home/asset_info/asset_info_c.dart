@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 
 import '../../../../index.dart';
 
@@ -64,6 +65,32 @@ class AssetInfoC {
                       ),
                 ],
               ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void showRecieved(
+    BuildContext context,
+    CreateAccModel sdkModel,
+
+    //GlobalKey<FormState> allowanceKeyForm,
+  ) {
+    showModalBottomSheet<void>(
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            padding: const EdgeInsets.only(top: 16.0),
+            color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
+            child: ReceiveWalletBody(
+              name: sdkModel.userModel.username,
+              wallet: sdkModel.userModel.address,
             ),
           ),
         );

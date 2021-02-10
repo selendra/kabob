@@ -91,8 +91,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void startNode() async {
-    print("Status ${widget.sdkModel.apiConnected}");
-
     await Future.delayed(Duration(seconds: 1), () {
       showDialog(
           barrierDismissible: false,
@@ -167,7 +165,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     final res = await widget.sdkModel.sdk.api.balanceOf(
         widget.sdkModel.keyring.keyPairs[0].address,
         widget.sdkModel.keyring.keyPairs[0].address);
-    print('balance OF');
+
     if (res != null) {
       setState(() {
         widget.sdkModel.contractModel.pBalance =

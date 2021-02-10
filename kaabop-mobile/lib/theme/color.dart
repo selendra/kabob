@@ -1,7 +1,6 @@
 import 'package:wallet_apps/index.dart';
 
-class AppColors{
-
+class AppColors {
   static const String darkGreyBlue = "#242426";
 
   /* Grey color code */
