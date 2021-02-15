@@ -63,16 +63,16 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     });
   }
 
-  Future<void> _balanceOf(String from, String who) async {
-    final res = await widget.importAccModel.sdk.api.balanceOf(from, who);
-    if (res != null) {
-      setState(() {
-        widget.importAccModel.contractModel.pBalance =
-            BigInt.parse(res['output']).toString();
-        print(widget.importAccModel.contractModel.pBalance);
-      });
-    }
-  }
+  // Future<void> _balanceOf(String from, String who) async {
+  //   final res = await widget.importAccModel.sdk.api.balanceOf(from, who);
+  //   if (res != null) {
+  //     setState(() {
+  //       widget.importAccModel.contractModel.pBalance =
+  //           BigInt.parse(res['output']).toString();
+  //       print(widget.importAccModel.contractModel.pBalance);
+  //     });
+  //   }
+  // }
 
   Future<void> _importFromMnemonic() async {
     print(" firstName ${_userInfoM.controlFirstName.text}");
@@ -99,17 +99,18 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       if (acc != null) {
         _subscribeBalance();
         if (widget.importAccModel.keyring.keyPairs.length != 0) {
-          _balanceOf(widget.importAccModel.keyring.keyPairs[0].address,
-              widget.importAccModel.keyring.keyPairs[0].address);
+          await _contractSymbol();
+          await _getHashBySymbol().then((value) async {
+            await _balanceOf();
+          });
         }
         await dialog(context, Text("You haved imported successfully"),
             Text('Congratulation'),
             action: FlatButton(
                 onPressed: () {
-
                   //Close Dialog Loading
                   Navigator.pop(context);
-                  
+
                   Navigator.pushNamedAndRemoveUntil(
                       context, Home.route, ModalRoute.withName('/'));
                 },
@@ -123,6 +124,56 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         Text('Message'),
       );
       Navigator.pop(context);
+    }
+  }
+
+  Future<void> _balanceOf() async {
+    try {
+      final res = await widget.importAccModel.sdk.api.balanceOfByPartition(
+        widget.importAccModel.keyring.keyPairs[0].address,
+        widget.importAccModel.keyring.keyPairs[0].address,
+        widget.importAccModel.contractModel.pHash,
+      );
+
+      setState(() {
+        widget.importAccModel.contractModel.pBalance =
+            BigInt.parse(res['output']).toString();
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _contractSymbol() async {
+    try {
+      final res = await widget.importAccModel.sdk.api
+          .contractSymbol(widget.importAccModel.keyring.keyPairs[0].address);
+      if (res != null) {
+        setState(() {
+          widget.importAccModel.contractModel.pTokenSymbol = res[0];
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _getHashBySymbol() async {
+    print('my symbol${widget.importAccModel.contractModel.pTokenSymbol}');
+
+    try {
+      final res = await widget.importAccModel.sdk.api.getHashBySymbol(
+        widget.importAccModel.keyring.keyPairs[0].address,
+        widget.importAccModel.contractModel.pTokenSymbol,
+      );
+
+      if (res != null) {
+        widget.importAccModel.contractModel.pHash = res;
+
+        print(res);
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 

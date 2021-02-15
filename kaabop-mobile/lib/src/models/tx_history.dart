@@ -17,6 +17,7 @@ class TxHistory {
 
   List<TxHistory> tx = [];
   List<TxHistory> txKpi = [];
+  List<dynamic> txHistoryList = [];
   TxHistory.fromJson(Map<String, dynamic> json)
       : date = json['date'],
         symbol = json['symbol'],

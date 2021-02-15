@@ -118,16 +118,28 @@ final portfolioChart = LineChartData(
 
 Widget homeAppBar(BuildContext context) {
   return AppBar(
+    toolbarHeight: 60,
     backgroundColor: hexaCodeToColor(AppColors.bgdColor),
-    title: MyText(
-      text: "KABOB",
-      color: "#FFFFFF",
+    title: Padding(
+      padding: const EdgeInsets.only(top: 5.0),
+      child: MyText(
+        text: "KABOB",
+        fontSize: 27,
+        color: "#FFFFFF",
+        fontWeight: FontWeight.bold,
+      ),
     ),
-    leading: Padding(
-        padding: EdgeInsets.only(left: 20, top: 10, bottom: 10),
-        child: Align(
-            alignment: Alignment.center,
-            child: SvgPicture.asset('assets/sld_logo.svg'))),
+    // leading: MyText(
+    //   text: "KABOB",
+    //   fontSize: 27,
+    //   color: "#FFFFFF",
+    //   fontWeight: FontWeight.bold,
+    // ),
+    // leading: Padding(
+    //     padding: EdgeInsets.only(left: 20, bottom: 10),
+    //     child: Align(
+    //         alignment: Alignment.center,
+    //         child: SvgPicture.asset('assets/layer1.svg',width:300,height: 300,))),
     actions: [
       Align(
         alignment: Alignment.centerRight,
@@ -284,7 +296,7 @@ Widget portFolioItemRow(
                 color: "#FFFFFF",
                 fontSize: 18,
               ),
-              //  / MyText(text: ModelAsset.assetOrganization, fontSize: 15),
+              MyText(text: ModelAsset.assetOrganization, fontSize: 15),
             ],
           ),
         ),

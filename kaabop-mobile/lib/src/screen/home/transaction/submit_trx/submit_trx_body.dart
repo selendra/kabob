@@ -1,4 +1,5 @@
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class SubmitTrxBody extends StatelessWidget {
   final bool enableInput;
@@ -12,6 +13,7 @@ class SubmitTrxBody extends StatelessWidget {
   final Function validateInput;
   final Function clickSend;
   final Function resetAssetsDropDown;
+  final CreateAccModel sdkModel;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
   SubmitTrxBody({
@@ -26,6 +28,7 @@ class SubmitTrxBody extends StatelessWidget {
     this.validateInput,
     this.clickSend,
     this.resetAssetsDropDown,
+    this.sdkModel,
     this.item,
   });
 
@@ -74,7 +77,7 @@ class SubmitTrxBody extends StatelessWidget {
 
     List list = [
       {'asset_code': 'SEL'},
-      {'asset_code': 'KPI'}
+      {'asset_code': sdkModel.contractModel.pTokenSymbol}
     ];
 
     return Column(

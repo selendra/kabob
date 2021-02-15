@@ -422,7 +422,7 @@ Widget progress({String content}) {
                 ? Container()
                 : Padding(
                     child: textScale(text: content, hexaColor: "#FFFFFF"),
-                    padding: EdgeInsets.only(bottom: 10.0, top: 10.0)),
+                    padding: EdgeInsets.only(bottom: 10.0, top: 16.0)),
           ],
         )
       ],
@@ -506,8 +506,7 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
               border: Border.all(
                   width: 2, color: hexaCodeToColor(AppColors.secondary_text)),
               borderRadius: BorderRadius.circular(6),
-              color: Colors.white
-          ),
+              color: Colors.white),
           width: 300.0,
           height: 300.0,
           child: QrImage(

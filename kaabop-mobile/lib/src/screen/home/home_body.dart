@@ -258,7 +258,7 @@ class HomeBody extends StatelessWidget {
         sdkModel.contractModel.pBalance != ''
             ? GestureDetector(
                 onTap: () {
-                  balanceOf();
+                  //balanceOf();
                   Navigator.push(
                     context,
                     RouteAnimation(
@@ -270,10 +270,14 @@ class HomeBody extends StatelessWidget {
                     ),
                   );
                 },
-                child: buildRowList(
-                  portfolioM.list,
-                  portfolioRateM.totalRate,
-                  sdkModel,
+                child: AnimatedOpacity(
+                  opacity: sdkModel.contractModel.pBalance != '' ? 1.0 : 0.0,
+                  duration: Duration(milliseconds: 500),
+                  child: buildRowList(
+                    portfolioM.list,
+                    portfolioRateM.totalRate,
+                    sdkModel,
+                  ),
                 ),
               )
             : Container(

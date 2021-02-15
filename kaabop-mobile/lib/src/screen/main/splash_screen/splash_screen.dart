@@ -16,8 +16,11 @@ class MySplashScreen extends StatefulWidget {
   }
 }
 
-class MySplashScreenState extends State<MySplashScreen> {
+class MySplashScreenState extends State<MySplashScreen>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  AnimationController controller;
+  Animation<double> animation;
 
   void getCurrentAccount() async {
     await Future.delayed(Duration(seconds: 4), () {
@@ -62,8 +65,30 @@ class MySplashScreenState extends State<MySplashScreen> {
   // }
   @override
   void initState() {
-    getCurrentAccount();
+    //getCurrentAccount();
+    controller = AnimationController(
+      duration: Duration(seconds: 2),
+      vsync: this,
+    );
+
+    animation = CurvedAnimation(
+      curve: Curves.easeIn,
+      parent: controller,
+    );
+
+    /*Perform faded animation to logo*/
+    controller.forward().then(
+      (value) {
+        getCurrentAccount();
+      },
+    );
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   Widget build(BuildContext context) {
@@ -72,10 +97,13 @@ class MySplashScreenState extends State<MySplashScreen> {
       backgroundColor: hexaCodeToColor(AppColors.bgdColor),
       body: Align(
         alignment: Alignment.center,
-        child: Container(
-          width: 150.0,
-          height: 150.0,
-          child: SvgPicture.asset('assets/sld_logo.svg'),
+        child: FadeTransition(
+          opacity: animation,
+          child: Image.asset(
+            'assets/kabob_logo.png',
+            width: 200,
+            height: 200,
+          ),
         ),
       ),
     );

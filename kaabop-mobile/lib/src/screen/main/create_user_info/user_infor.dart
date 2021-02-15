@@ -59,14 +59,64 @@ class MyUserInfoState extends State<MyUserInfo> {
     widget.accModel.msgChannel = channel;
   }
 
-  Future<void> _balanceOf(String from, String who) async {
-    final res = await widget.accModel.sdk.api.balanceOf(from, who);
-    if (res != null) {
+  Future<void> _balanceOf() async {
+    try {
+      final res = await widget.accModel.sdk.api.balanceOfByPartition(
+        widget.accModel.keyring.keyPairs[0].address,
+        widget.accModel.keyring.keyPairs[0].address,
+        widget.accModel.contractModel.pHash,
+      );
+
       setState(() {
-        widget.accModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
+        widget.accModel.contractModel.pBalance =
+            BigInt.parse(res['output']).toString();
       });
+    } catch (e) {
+      print(e.toString());
     }
   }
+
+  Future<void> _contractSymbol() async {
+    try {
+      final res = await widget.accModel.sdk.api
+          .contractSymbol(widget.accModel.keyring.keyPairs[0].address);
+      if (res != null) {
+        setState(() {
+          widget.accModel.contractModel.pTokenSymbol = res[0];
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _getHashBySymbol() async {
+    print('my symbol${widget.accModel.contractModel.pTokenSymbol}');
+
+    try {
+      final res = await widget.accModel.sdk.api.getHashBySymbol(
+        widget.accModel.keyring.keyPairs[0].address,
+        widget.accModel.contractModel.pTokenSymbol,
+      );
+
+      if (res != null) {
+        widget.accModel.contractModel.pHash = res;
+
+        print(res);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  // Future<void> _balanceOf(String from, String who) async {
+  //   final res = await widget.accModel.sdk.api.balanceOf(from, who);
+  //   if (res != null) {
+  //     setState(() {
+  //       widget.accModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
+  //     });
+  //   }
+  // }
 
   void switchBiometric(bool value) async {
     _localAuth = LocalAuthentication();
@@ -219,8 +269,10 @@ class MyUserInfoState extends State<MyUserInfo> {
         await _subscribeBalance();
 
         if (widget.accModel.keyring.keyPairs.length != 0) {
-          _balanceOf(widget.accModel.keyring.keyPairs[0].address,
-              widget.accModel.keyring.keyPairs[0].address);
+          await _contractSymbol();
+          await _getHashBySymbol().then((value) async {
+            await _balanceOf();
+          });
         }
 
         // Close Loading Process

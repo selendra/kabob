@@ -96,21 +96,24 @@ class AppState extends State<App> {
           _createAccModel.balance = res;
           _createAccModel.mBalance =
               Fmt.balance(_createAccModel.balance.freeBalance, 18);
-          //print(mBalance);
         });
       });
       setState(() {
         _createAccModel.msgChannel = channel;
         print('Channel $channel');
       });
+      _getAddressIcons();
     }
   }
 
   Future<void> initContract() async {
     await _createAccModel.sdk.api.callContract();
-    await _contractSymbol();
-    await _getHashBySymbol();
-    await _balanceOfByPartition();
+    if (_createAccModel.keyring.keyPairs.isNotEmpty) {
+      await _contractSymbol();
+      await _getHashBySymbol().then((value) async {
+        await _balanceOfByPartition();
+      });
+    }
   }
 
   Future<void> _contractSymbol() async {
@@ -127,8 +130,15 @@ class AppState extends State<App> {
     }
   }
 
+  Future<void> _getAddressIcons() async {
+    final List res = await _createAccModel.sdk.api.account
+        .getAddressIcons([_createAccModel.keyring.keyPairs[0].address]);
+    print(res);
+  }
+
   Future<void> _getHashBySymbol() async {
     print('my symbol${_createAccModel.contractModel.pTokenSymbol}');
+
     try {
       final res = await _createAccModel.sdk.api.getHashBySymbol(
         _createAccModel.keyring.keyPairs[0].address,
@@ -136,9 +146,9 @@ class AppState extends State<App> {
       );
 
       if (res != null) {
-        setState(() {
-          _createAccModel.contractModel.pHash = res[0];
-        });
+        _createAccModel.contractModel.pHash = res;
+
+        print(res);
       }
     } catch (e) {
       print(e.toString());
@@ -147,6 +157,9 @@ class AppState extends State<App> {
 
   Future<void> _balanceOfByPartition() async {
     try {
+      print(_createAccModel.keyring.keyPairs[0].address);
+      print(_createAccModel.contractModel.pHash);
+
       final res = await _createAccModel.sdk.api.balanceOfByPartition(
         _createAccModel.keyring.keyPairs[0].address,
         _createAccModel.keyring.keyPairs[0].address,
@@ -157,8 +170,6 @@ class AppState extends State<App> {
         _createAccModel.contractModel.pBalance =
             BigInt.parse(res['output']).toString();
       });
-
-      print('balanceOfByPartition $res');
     } catch (e) {
       print(e.toString());
     }

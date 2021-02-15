@@ -14,7 +14,6 @@ class SubmitTrx extends StatefulWidget {
   final String _walletKey;
   final List<dynamic> _listPortfolio;
   final bool enableInput;
-
   final CreateAccModel sdkModel;
 
   SubmitTrx(
@@ -184,7 +183,11 @@ class SubmitTrxState extends State<SubmitTrx> {
   Future<void> transfer(String to, String pass, String value) async {
     // String hash =
     //     '0x6bc6587597acb08c96db1d83307e967dc1d7c9674d025122a417d01a53848112';
-    dialogLoading(context);
+    dialogLoading(context,
+        content: 'Please wait! This might take a little bit longer');
+
+    print(widget.sdkModel.keyring.keyPairs[0].address);
+    print(widget.sdkModel.keyring.keyPairs[0].pubKey);
     try {
       final res = await widget.sdkModel.sdk.api.keyring.contractTransfer(
         widget.sdkModel.keyring.keyPairs[0].pubKey,
@@ -195,8 +198,9 @@ class SubmitTrxState extends State<SubmitTrx> {
       );
 
       if (res['hash'] != null) {
-        assetbalanceOf(widget.sdkModel.keyring.keyPairs[0].address,
-            widget.sdkModel.keyring.keyPairs[0].address);
+        // assetbalanceOf(widget.sdkModel.keyring.keyPairs[0].address,
+        //     widget.sdkModel.keyring.keyPairs[0].address);
+        await _balanceOfByPartition();
 
         saveTxHistory(TxHistory(
           date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
@@ -216,7 +220,6 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future<String> sendTx(String target, String amount, String pin) async {
-    print('sendtx');
     dialogLoading(context);
     String mhash;
     final sender = TxSenderData(
@@ -262,16 +265,40 @@ class SubmitTrxState extends State<SubmitTrx> {
     return mhash;
   }
 
-  Future<void> assetbalanceOf(String from, String who) async {
-    final res = await widget.sdkModel.sdk.api.balanceOf(from, who);
-    if (res != null) {
+  Future<void> _balanceOfByPartition() async {
+    try {
+      final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
+        widget.sdkModel.keyring.keyPairs[0].address,
+        widget.sdkModel.keyring.keyPairs[0].address,
+        widget.sdkModel.contractModel.pHash,
+      );
+      // final res = await _createAccModel.sdk.api.balanceOfByPartition(
+      //   '14gV68QsGAEUGkcuV5JA1hx2ZFTuKJthMFfnkDyLMZyn8nnb',
+      //   '14gV68QsGAEUGkcuV5JA1hx2ZFTuKJthMFfnkDyLMZyn8nnb',
+      //   '0x0000000000000000000000000000000000000000000000000000000000000001',
+      // );
+
       setState(() {
         widget.sdkModel.contractModel.pBalance =
             BigInt.parse(res['output']).toString();
-        print(widget.sdkModel.contractModel.pBalance);
       });
+
+      print('balanceOfByPartition $res');
+    } catch (e) {
+      print(e.toString());
     }
   }
+
+  // Future<void> assetbalanceOf(String from, String who) async {
+  //   final res = await widget.sdkModel.sdk.api.balanceOf(from, who);
+  //   if (res != null) {
+  //     setState(() {
+  //       widget.sdkModel.contractModel.pBalance =
+  //           BigInt.parse(res['output']).toString();
+  //       print(widget.sdkModel.contractModel.pBalance);
+  //     });
+  //   }
+  // }
 
   void clickSend() async {
     String pin;
@@ -345,6 +372,7 @@ class SubmitTrxState extends State<SubmitTrx> {
                     validateInput: validateInput,
                     clickSend: clickSend,
                     resetAssetsDropDown: resetAssetsDropDown,
+                    sdkModel: widget.sdkModel,
                     item: item,
                   ),
                   _scanPayM.isPay == false
