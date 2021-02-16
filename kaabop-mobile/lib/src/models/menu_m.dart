@@ -28,7 +28,7 @@ class MenuModel {
       'sub': [
         {'icon': "assets/icons/pin_code.svg", 'subTitle': 'PIN'},
         {'icon': "assets/icons/password.svg", 'subTitle': 'Password'},
-        {'icon': "assets/icons/finger_print.svg", 'subTitle': 'Finger print'}
+        {'icon': "assets/icons/finger_print.svg", 'subTitle': 'Fingerprint'}
       ]
     },
     {

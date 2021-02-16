@@ -258,7 +258,7 @@ class HomeBody extends StatelessWidget {
         sdkModel.contractModel.pBalance != ''
             ? GestureDetector(
                 onTap: () {
-                  //balanceOf();
+                  balanceOf();
                   Navigator.push(
                     context,
                     RouteAnimation(

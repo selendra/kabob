@@ -33,6 +33,7 @@ class MenuState extends State<Menu> {
     _menuModel.globalKey = GlobalKey<ScaffoldState>();
     AppServices.noInternetConnection(_menuModel.globalKey);
     setUserInfo();
+    readBio();
     checkAvailableBio();
     super.initState();
   }
@@ -70,35 +71,82 @@ class MenuState extends State<Menu> {
     });
   }
 
-  void switchBiometric(bool value) async {
-    print(value);
-    print(_menuModel.switchBio);
+  void readBio() async {
+    await StorageServices.readSaveBio().then((value) {
+      setState(() {
+        _menuModel.switchBio = value;
+      });
+    });
+  }
+
+  void switchBiometric(bool switchValue) async {
+    print(switchValue);
+
+    // setState(() {
+    //   _menuModel.switchBio = switchValue;
+    // });
     _localAuth = LocalAuthentication();
+
     await _localAuth.canCheckBiometrics.then((value) async {
       if (value == false) {
         snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
       } else {
-        try {
-          if (value) {
-            await authenticateBiometric(_localAuth).then((values) async {
-              if (_menuModel.authenticated) {
-                _menuModel.switchBio = value;
-                await StorageServices.setData({'bio': values}, 'biometric');
-              }
-            });
-          } else {
-            await authenticateBiometric(_localAuth).then((values) async {
-              if (values) {
-                _menuModel.switchBio = value;
-                await StorageServices.removeKey('biometric');
-              }
-            });
-          }
-          // // Reset Switcher
-          setState(() {});
-        } catch (e) {}
+        if (switchValue) {
+          await authenticateBiometric(_localAuth).then((values) async {
+            print('value 1: $values');
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.saveBio(_menuModel.switchBio);
+            }
+          });
+        } else {
+          await authenticateBiometric(_localAuth).then((values) async {
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.removeKey('bio');
+            }
+          });
+        }
       }
     });
+
+    // print(_menuModel.switchBio);
+    // _localAuth = LocalAuthentication();
+    // await _localAuth.canCheckBiometrics.then((value) async {
+    //   if (value == false) {
+    //     snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
+    //   } else {
+    //     try {
+    //       if (value) {
+    //         await authenticateBiometric(_localAuth).then((values) async {
+    //           print('value 1: $values');
+    //           if (_menuModel.authenticated) {
+    //             setState(() {
+    //               _menuModel.switchBio = false;
+    //             });
+    //             await StorageServices.saveBio(_menuModel.switchBio);
+    //           }
+    //         });
+    //       } else {
+    //         await authenticateBiometric(_localAuth).then((values) async {
+    //           print('value 2: $values');
+    //           if (_menuModel.authenticated) {
+    //             setState(() {
+    //               _menuModel.switchBio = true;
+    //             });
+    //             await StorageServices.saveBio(_menuModel.switchBio);
+    //           }
+    //         });
+    //       }
+    //       // // Reset Switcher
+    //       setState(() {});
+    //     } catch (e) {}
+    //   }
+    // });
   }
 
   Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {

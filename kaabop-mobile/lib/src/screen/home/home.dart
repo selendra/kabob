@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:local_auth/auth_strings.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
@@ -28,6 +29,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   PortfolioM _portfolioM = PortfolioM();
 
   PortfolioRateModel _portfolioRate = PortfolioRateModel();
+
+  // Local_localAuth _localAuth = Local_localAuth();
 
   String mBalance = '';
   String status = '';
@@ -62,6 +65,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   initState() {
     /* Initialize State */
     // print("My name ${widget.keyring.current.name}");
+
     _homeM.portfolioList = null;
     _portfolioM.list = [];
     if (mounted) {
@@ -89,6 +93,21 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     super.initState();
   }
+
+  // Future<void> authenticateBiometric(Local_localAuth _localAuth) async {
+  //   try {
+  //     // Trigger _localAuth By Finger Print
+  //     var res = await _localAuth.authenticateWithBiometrics(
+  //       localizedReason: 'Scan your fingerprint to authenticate',
+  //       useErrorDialogs: true,
+  //       stickyAuth: true,
+  //     );
+
+  //     print(res);
+  //   } on PlatformException catch (e) {}
+
+  //   //return _menuModel.authenticated;
+  // }
 
   void startNode() async {
     await Future.delayed(Duration(seconds: 1), () {
@@ -162,15 +181,19 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   void resetState(String barcodeValue, String executeName) async {}
 
   Future<void> _balanceOf() async {
-    final res = await widget.sdkModel.sdk.api.balanceOf(
+    try {
+      final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
         widget.sdkModel.keyring.keyPairs[0].address,
-        widget.sdkModel.keyring.keyPairs[0].address);
+        widget.sdkModel.keyring.keyPairs[0].address,
+        widget.sdkModel.contractModel.pHash,
+      );
 
-    if (res != null) {
       setState(() {
-        widget.sdkModel.contractModel.pBalance =
-            BigInt.parse(res['output']).toString();
+        widget.sdkModel
+          ..contractModel.pBalance = BigInt.parse(res['output']).toString();
       });
+    } catch (e) {
+      print(e.toString());
     }
   }
 
@@ -245,3 +268,5 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 }
+
+

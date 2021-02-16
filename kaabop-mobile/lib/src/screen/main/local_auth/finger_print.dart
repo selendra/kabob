@@ -63,19 +63,24 @@ class _FingerPrintState extends State<FingerPrint> {
 
     try {
       authenticate = await localAuth.authenticateWithBiometrics(
-          localizedReason: '', useErrorDialogs: true, stickyAuth: true);
+          localizedReason: 'Scan your fingerprint to authenticate',
+          useErrorDialogs: true,
+          stickyAuth: true);
 
-      // Open Loading
-      dialogLoading(context);
       if (authenticate) {
-        await tokenChecker();
-      } else {
-        // Close Loading
-        Navigator.pop(context);
-        setState(() {
-          enableText = true;
-        });
+        Navigator.pushReplacementNamed(context, Home.route);
       }
+      // // Open Loading
+      // dialogLoading(context);
+      // if (authenticate) {
+      //   await tokenChecker();
+      // } else {
+      //   // Close Loading
+      //   Navigator.pop(context);
+      //   setState(() {
+      //     enableText = true;
+      //   });
+      // }
     } on SocketException catch (e) {
       await Future.delayed(Duration(milliseconds: 300), () {});
       AppServices.openSnackBar(globalkey, e.message);
@@ -179,9 +184,13 @@ class _FingerPrintState extends State<FingerPrint> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                MyText(
+                    text: 'Kabob Locked',
+                    fontSize: 27.0,
+                    fontWeight: FontWeight.bold),
                 SvgPicture.asset("assets/finger_print.svg",
                     width: 300, height: 300),
-                MyText(top: 50.0, text: 'Authentication Required'),
+                MyText(top: 19.0, text: 'Authentication Required'),
                 MyText(top: 19.0, text: 'Touch screen to trigger finger print')
               ],
             ),

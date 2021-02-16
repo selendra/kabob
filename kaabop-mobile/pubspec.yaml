@@ -101,6 +101,7 @@ dependencies:
   animations: ^1.1.2
   provider: ^4.3.3
   flutter_screenshot_switcher: ^1.2.0
+ 
 
   
 
@@ -121,9 +122,10 @@ dev_dependencies:
     sdk: flutter
 
 flutter_icons:
-  image_path: "assets/sld_stroke.png"
+  image_path: "assets/kabob1024Blue.png"
   ios: true
   android: true
+
   
 
 # For information on the generic Dart part of this file, see the

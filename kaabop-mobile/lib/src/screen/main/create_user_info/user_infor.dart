@@ -22,6 +22,7 @@ class MyUserInfoState extends State<MyUserInfo> {
   PostRequest _postRequest = PostRequest();
 
   Backend _backend = Backend();
+  MenuModel _menuModel = MenuModel();
 
   LocalAuthentication _localAuth;
 
@@ -118,36 +119,53 @@ class MyUserInfoState extends State<MyUserInfo> {
   //   }
   // }
 
-  void switchBiometric(bool value) async {
+  void switchBiometric(bool switchValue) async {
+    print(switchValue);
+
+    // setState(() {
+    //   _menuModel.switchBio = switchValue;
+    // });
     _localAuth = LocalAuthentication();
+
     await _localAuth.canCheckBiometrics.then((value) async {
       if (value == false) {
-        snackBar(_userInfoM.globalKey, "Your device doesn't have finger print");
+        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
       } else {
-        //   try {
-        //     if (value){
-        //       await authenticateBiometric(_localAuth).then((values) async {
-        //         if (_userInfoM.authenticated){
-        //           _userInfoM.switchBio = value;
-        //           await StorageServices.setData({'bio': values}, 'biometric');
-        //         }
-        //       });
-        //     } else {
-        //       await authenticateBiometric(_localAuth).then((values) async {
-        //         if(values) {
-        //           _menuModel.switchBio = value;
-        //           await StorageServices.removeKey('biometric');
-        //         }
-        //       });
-        //     }
-        //     // // Reset Switcher
-        //     setState(() { });
-        //   } catch (e) {
-
-        //   }
+        if (switchValue) {
+          await authenticateBiometric(_localAuth).then((values) async {
+            print('value 1: $values');
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.saveBio(_menuModel.switchBio);
+            }
+          });
+        } else {
+          await authenticateBiometric(_localAuth).then((values) async {
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.removeKey('bio');
+            }
+          });
+        }
       }
     });
   }
+
+  Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
+    try {
+      // Trigger Authentication By Finger Print
+      _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
+          localizedReason: 'Scan your fingerprint to authenticate',
+          useErrorDialogs: true,
+          stickyAuth: true);
+    } on PlatformException catch (e) {}
+    return _menuModel.authenticated;
+  }
+
 
   void popScreen() {
     Navigator.pop(context);

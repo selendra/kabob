@@ -89,6 +89,16 @@ class StorageServices {
     return _preferences;
   }
 
+  static Future<void> saveBio(bool enable) async {
+    _preferences = await SharedPreferences.getInstance();
+    _preferences.setBool('bio', enable);
+  }
+
+  static Future<bool> readSaveBio() async {
+    _preferences = await SharedPreferences.getInstance();
+    return _preferences.getBool('bio') ?? false;
+  }
+
   static Future<SharedPreferences> setUserID(String _data, String _path) async {
     _preferences = await SharedPreferences.getInstance();
     _decode = jsonEncode(_data);

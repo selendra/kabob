@@ -123,7 +123,7 @@ Widget homeAppBar(BuildContext context) {
     title: Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: MyText(
-        text: "KABOB",
+        text: "Kabob",
         fontSize: 27,
         color: "#FFFFFF",
         fontWeight: FontWeight.bold,
