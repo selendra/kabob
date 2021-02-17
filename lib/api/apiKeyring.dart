@@ -24,6 +24,18 @@ class ApiKeyring {
     return mnemonic;
   }
 
+
+  Future<bool> validateMnemonic(String mnemonic) async{
+    final res = await service.validateMnemonic(mnemonic);
+    return res;
+  }
+
+    Future<bool> validateAddress(String address) async{
+    final res = await service.validateAddress(address);
+    return res;
+  }
+
+
   /// Import account from mnemonic/rawSeed/keystore.
   /// param [cryptoType] can be `sr25519`(default) or `ed25519`.
   /// throw error if import failed.

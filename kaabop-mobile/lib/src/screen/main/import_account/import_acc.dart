@@ -113,32 +113,43 @@ class ImportAccState extends State<ImportAcc> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
   }
 
-  void validateMnemonic() {
-    tempMnemonic = _importAccModel.mnemonicCon.text;
-    widget.importAccModel.mnemonicList = tempMnemonic.split(' ');
-    if (widget.importAccModel.mnemonicList.length == 12) {
-      print("Equal");
-      setState(() {
-        enable = true;
-      });
-    }
-    // Validate User Input Less Than 12 Words And Greater Than 12 Words To Disable Button
-    else if (widget.importAccModel.mnemonicList.length < 12 ||
-        widget.importAccModel.mnemonicList.length > 12) {
-      print("Less or greater");
-      if (enable) {
-        setState(() {
-          enable = false;
-        });
-      }
-    }
-    print("Button $enable");
-    print("length ${widget.importAccModel.mnemonicList.length}");
-    print(widget.importAccModel.mnemonicList);
-  }
+  // void validateMnemonic() {
+  //   tempMnemonic = _importAccModel.mnemonicCon.text;
+  //   widget.importAccModel.mnemonicList = tempMnemonic.split(' ');
+  //   if (widget.importAccModel.mnemonicList.length == 12) {
+  //     print("Equal");
+  //     setState(() {
+  //       enable = true;
+  //     });
+  //   }
+  //   // Validate User Input Less Than 12 Words And Greater Than 12 Words To Disable Button
+  //   else if (widget.importAccModel.mnemonicList.length < 12 ||
+  //       widget.importAccModel.mnemonicList.length > 12) {
+  //     print("Less or greater");
+  //     if (enable) {
+  //       setState(() {
+  //         enable = false;
+  //       });
+  //     }
+  //   }
+  //   print("Button $enable");
+  //   print("length ${widget.importAccModel.mnemonicList.length}");
+  //   print(widget.importAccModel.mnemonicList);
+  // }
 
   String onChanged(String value) {
-    validateMnemonic();
+    validateMnemonic(value).then((value) {
+      setState(() {
+        enable = value;
+      });
+    });
+  }
+
+  Future<bool> validateMnemonic(String mnemonic) async {
+    final res =
+        await widget.importAccModel.sdk.api.keyring.validateMnemonic(mnemonic);
+    print(res);
+    return res;
   }
 
   void clearInput() {
@@ -151,11 +162,15 @@ class ImportAccState extends State<ImportAcc> {
   void onSubmit() async => await submit();
 
   Future<void> submit() async {
-    await Navigator.pushNamed(
-      context,
-      ImportUserInfo.route
-    );
-    clearInput();
+    validateMnemonic(_importAccModel.mnemonicCon.text).then((value) async {
+      if (value) {
+        setState(() {
+          widget.importAccModel.mnemonic = _importAccModel.mnemonicCon.text;
+        });
+        await Navigator.pushNamed(context, ImportUserInfo.route);
+        clearInput();
+      }
+    });
   }
 
   Widget build(BuildContext context) {
@@ -164,13 +179,13 @@ class ImportAccState extends State<ImportAcc> {
         body: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: ImportAccBody(
-              importAccModel: _importAccModel,
-              onChanged: onChanged,
-              onSubmit: onSubmit,
-              clearInput: clearInput,
-              enable: enable,
-              submit: submit,
-            ),
+            importAccModel: _importAccModel,
+            onChanged: onChanged,
+            onSubmit: onSubmit,
+            clearInput: clearInput,
+            enable: enable,
+            submit: submit,
+          ),
         ) //welcomeBody(context, navigatePage),
         );
   }

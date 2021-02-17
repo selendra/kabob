@@ -11,6 +11,7 @@ import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
   // Avoid Error, " accessed before the binding was initialized "
@@ -80,6 +81,7 @@ class AppState extends State<App> {
       setState(() {
         _createAccModel.apiConnected = true;
         _subscribeBalance();
+
         initContract();
       });
     } else {

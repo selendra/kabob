@@ -36,7 +36,7 @@ class SubmitTrxBody extends StatelessWidget {
     List<MyInputField> listInput = [
       MyInputField(
           pBottom: 16,
-          labelText: "Receiver addres",
+          labelText: "Receiver address",
           prefixText: null,
           textInputFormatter: [
             LengthLimitingTextInputFormatter(TextField.noMaxLength),
@@ -44,7 +44,8 @@ class SubmitTrxBody extends StatelessWidget {
           inputType: TextInputType.text,
           controller: scanPayM.controlReceiverAddress,
           focusNode: scanPayM.nodeReceiverAddress,
-          validateField: validateWallet,
+          validateField: (value) =>
+              value.isEmpty ? 'Please fill in receiver address' : null,
           onChanged: onChanged,
           onSubmit: onSubmit),
       MyInputField(
@@ -57,7 +58,10 @@ class SubmitTrxBody extends StatelessWidget {
           inputType: TextInputType.number,
           controller: scanPayM.controlAmount,
           focusNode: scanPayM.nodeAmount,
-          validateField: validateAmount,
+          validateField: (value) =>
+              value.isEmpty || int.parse(value) < 0 || value == '-0'
+                  ? 'Please fill in positive amount '
+                  : null,
           onChanged: onChanged,
           onSubmit: onSubmit),
       MyInputField(

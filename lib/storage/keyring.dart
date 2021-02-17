@@ -76,7 +76,7 @@ class KeyringPrivateStore {
   Map<String, String> _iconsMap = {};
   Map<String, Map> _indicesMap = {};
 
-  int ss58 = 0;
+  int ss58 = 42;
 
   String get currentPubKey => _storage.currentPubKey.val;
   void setCurrentPubKey(String pubKey) {

@@ -123,7 +123,7 @@ Widget homeAppBar(BuildContext context) {
     title: Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: MyText(
-        text: "Kabob",
+        text: "KABOB",
         fontSize: 27,
         color: "#FFFFFF",
         fontWeight: FontWeight.bold,
@@ -394,6 +394,7 @@ class MyBottomAppBar extends StatelessWidget {
                           resetHomeData: resetDbdState,
                           sdk: sdkModel.sdk,
                           keyring: sdkModel.keyring,
+                          sdkModel: sdkModel
                         );
                       },
               )),

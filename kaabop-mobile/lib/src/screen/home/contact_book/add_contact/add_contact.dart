@@ -1,15 +1,14 @@
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
-import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact_body.dart';
-import 'package:wallet_apps/src/screen/home/contact_book/contact_book_body.dart';
 
 class AddContact extends StatefulWidget {
   final PhoneContact contact;
+  final CreateAccModel sdkModel;
 
-  AddContact({this.contact});
+  AddContact({this.contact, this.sdkModel});
 
   @override
   _AddContactState createState() => _AddContactState();
@@ -19,41 +18,53 @@ class _AddContactState extends State<AddContact> {
   ContactBookModel _addContactModel = ContactBookModel();
 
   Future<void> submitContact() async {
-    try {
-      // Show Loading
-      dialogLoading(context);
+    await validateAddressF('').then((value) async {
+      if (value) {
+        try {
+          // Show Loading
+          dialogLoading(context);
 
-      await Future.delayed(Duration(seconds: 1), () {});
-      Map<String, dynamic> contactData = {
-        'username': _addContactModel.userName.text,
-        'phone': _addContactModel.contactNumber.text,
-        'address': _addContactModel.address.text,
-        'memo': _addContactModel.memo.text
-      };
+          await Future.delayed(Duration(seconds: 1), () {});
+          Map<String, dynamic> contactData = {
+            'username': _addContactModel.userName.text,
+            'phone': _addContactModel.contactNumber.text,
+            'address': _addContactModel.address.text,
+            'memo': _addContactModel.memo.text
+          };
 
-      await StorageServices.addMoreData(contactData, 'contactList');
+          await StorageServices.addMoreData(contactData, 'contactList');
 
-      // Close Dialog Loading
-      Navigator.pop(context);
-      print("Close Dialog");
+          // Close Dialog Loading
+          Navigator.pop(context);
+          print("Close Dialog");
 
-      await dialog(
-          context,
-          Text(
-              "Successfully add new contact!\n Please check your contact book"),
-          Text("Congratualtion"));
-      // Close Screen
-      Navigator.pop(context, true);
-    } catch (e) {
-      // Close Dialog Loading
-      Navigator.pop(context);
-      print("My error $e");
-    }
+          await dialog(
+              context,
+              Text(
+                  "Successfully add new contact!\n Please check your contact book"),
+              Text("Congratualtion"));
+          // Close Screen
+          Navigator.pop(context, true);
+        } catch (e) {
+          // Close Dialog Loading
+          Navigator.pop(context);
+          print("My error $e");
+        }
+      } else {
+        await dialog(context, Text('Please fill in a valid address'),
+            Text('Invalid Address'));
+      }
+    });
   }
 
   void onChanged(String value) {
     _addContactModel.formKey.currentState.validate();
     allValidator();
+  }
+
+  Future<bool> validateAddressF(String address) async {
+    final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
+    return res;
   }
 
   void onSubmit() async {

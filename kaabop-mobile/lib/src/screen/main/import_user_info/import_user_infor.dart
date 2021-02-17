@@ -84,7 +84,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       final json = await widget.importAccModel.sdk.api.keyring.importAccount(
         widget.importAccModel.keyring,
         keyType: KeyType.mnemonic,
-        key: widget.importAccModel.mnemonicList.join(" "),
+        key: widget.importAccModel.mnemonic,
         name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
@@ -99,6 +99,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
       print("My account name ${acc.name}");
       if (acc != null) {
+        widget.importAccModel.mnemonic = '';
         _subscribeBalance();
         if (widget.importAccModel.keyring.keyPairs.length != 0) {
           await _contractSymbol();
@@ -290,14 +291,15 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validateConfirmPassword(String value) {
     if (_userInfoM.confirmPasswordNode.hasFocus) {
-      _userInfoM.responseLastname = instanceValidate.validatePin(value);
-
-      if (_userInfoM.responseLastname == null) {
-        return null;
-      } else
-        _userInfoM.responseLastname += "confirm password";
+      if (value.isEmpty) {
+        return 'Please fill in confirm pin';
+      } else if (_userInfoM.confirmPasswordCon.text !=
+          _userInfoM.passwordCon.text) {
+        return 'Pin does not matched';
+      }
     }
-    return _userInfoM.responseLastname;
+
+    return null;
   }
 
   void validateAll() {

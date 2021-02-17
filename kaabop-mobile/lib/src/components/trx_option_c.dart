@@ -96,14 +96,14 @@ class TrxOptionMethod {
     Keyring keyring,
     CreateAccModel sdkModel,
   ) async {
-    var response = await Navigator.push(
+    Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
                 SubmitTrx("", true, portfolioList, sdkModel)));
-    if (response['status_code'] == 200) {
-      resetDbdState(null, "portfolio");
-    }
+    // if (response['status_code'] == 200) {
+    //   resetDbdState(null, "portfolio");
+    // }
   }
 
   /* Scan QR Code */

@@ -153,7 +153,7 @@ class MenuState extends State<Menu> {
     try {
       // Trigger Authentication By Finger Print
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-          localizedReason: 'Scan your fingerprint to authenticate',
+          localizedReason: '',
           useErrorDialogs: true,
           stickyAuth: true);
     } on PlatformException catch (e) {}

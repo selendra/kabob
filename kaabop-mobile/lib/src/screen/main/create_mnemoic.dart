@@ -84,24 +84,19 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
             ),
           ),
           Expanded(
-            child: Container(),
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              child: MyText(
+                textAlign: TextAlign.start,
+                text:
+                    'Note: Do not take screenshot, someone will have fully access to your assets, if they get your mnemonic! Please write down your mnemonic, then store it at a safe place.',
+              ),
+            ),
           ),
           MyFlatButton(
             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
             textButton: 'Next',
             action: () async {
-              await dialog(
-                  context,
-                  Text(
-                      'Sorry! we are not allow you to screen shot mnemonic, please write down your mnemonic on paper before you go next !'),
-                  Text("Please note",
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  action: FlatButton(
-                    child: Text('Next'),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                  ));
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -112,4 +107,17 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
       ),
     ));
   }
+
+  //  await dialog(
+  //                 context,
+  //                 Text(
+  //                     'Sorry! we are not allow you to screen shot mnemonic, please write down your mnemonic on paper before you go next !'),
+  //                 Text("Please note",
+  //                     style: TextStyle(fontWeight: FontWeight.bold)),
+  //                 action: FlatButton(
+  //                   child: Text('Next'),
+  //                   onPressed: () {
+  //                     Navigator.pop(context);
+  //                   },
+  //                 ));
 }

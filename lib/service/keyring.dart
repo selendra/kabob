@@ -55,6 +55,19 @@ class ServiceKeyring {
     return acc['mnemonic'];
   }
 
+  Future<bool> validateMnemonic(String mnemonic) async {
+    final res = await serviceRoot.webView
+        .evalJavascript('keyring.validateMnemonic("$mnemonic")');
+    return res;
+  }
+
+  Future<bool> validateAddress(String address) async {
+    final res = await serviceRoot.webView
+        .evalJavascript('keyring.validateAddress("$address")');
+
+    return res;
+  }
+
   /// Import account from mnemonic/rawSeed/keystore.
   /// param [cryptoType] can be `sr25519`(default) or `ed25519`.
   /// return [null] if import failed.
@@ -120,8 +133,8 @@ class ServiceKeyring {
     return res;
   }
 
-  Future<Map> contractTranfer(
-      String senderPubKey, String to, String value, String password,String hash) async {
+  Future<Map> contractTranfer(String senderPubKey, String to, String value,
+      String password, String hash) async {
     print('contract transfer js');
     final res = await serviceRoot.webView.evalJavascript(
         'keyring.contractTransfer(apiContract,"$senderPubKey","$to","$value", "$password","$hash")');

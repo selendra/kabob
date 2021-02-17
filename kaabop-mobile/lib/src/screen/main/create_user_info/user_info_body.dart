@@ -47,7 +47,7 @@ class MyUserInfoBody extends StatelessWidget {
                 children: <Widget>[
                   MyInputField(
                       pBottom: 16.0,
-                      labelText: "User name",
+                      labelText: "Username",
                       textInputFormatter: [
                         LengthLimitingTextInputFormatter(TextField.noMaxLength)
                       ],
@@ -73,7 +73,7 @@ class MyUserInfoBody extends StatelessWidget {
                             color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
                         maxLines: 1,
                         decoration: InputDecoration(
-                          labelText: "Password",
+                          labelText: "Pin",
                           labelStyle: TextStyle(
                               fontSize: 18.0,
                               color: modelUserInfo.passwordNode.hasFocus ||
@@ -119,12 +119,12 @@ class MyUserInfoBody extends StatelessWidget {
                         validator: validateLastName,
                         keyboardType: TextInputType.text,
                         obscureText: true,
-                        textInputAction: TextInputAction.next,
+                        textInputAction: TextInputAction.done,
                         style: TextStyle(
                             color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
                         maxLines: 1,
                         decoration: InputDecoration(
-                          labelText: "Confirm Password",
+                          labelText: "Confirm Pin",
                           labelStyle: TextStyle(
                               fontSize: 18.0,
                               color: modelUserInfo.passwordNode.hasFocus ||
@@ -172,23 +172,26 @@ class MyUserInfoBody extends StatelessWidget {
                   //   onSubmit: onSubmit
                   // ),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 50,
-                        child: Switch(
-                          value: model.switchBio,
-                          onChanged: (value) {
-                            switchBio(value);
-                          },
+                  Container(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: 50,
+                          child: Switch(
+                            value: model.switchBio,
+                            onChanged: (value) {
+                              switchBio(value);
+                            },
+                          ),
                         ),
-                      ),
-                      MyText(
-                        text: "Fingerprint",
-                        color: "#FFFFFF",
-                      )
-                    ],
+                        MyText(
+                          text: "Fingerprint",
+                          color: "#FFFFFF",
+                        )
+                      ],
+                    ),
                   )
                 ],
               ),

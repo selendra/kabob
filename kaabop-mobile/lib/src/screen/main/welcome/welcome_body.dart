@@ -1,43 +1,107 @@
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
-
 import '../import_account/import_acc.dart';
 
 class WelcomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        Positioned(
-          top: MediaQuery.of(context).size.height / 5,
-          left: MediaQuery.of(context).size.width / 2 - 75,
-          child:
-              SvgPicture.asset('assets/sld_logo.svg', width: 150, height: 150),
+        SizedBox(
+          height: 50,
         ),
-        Positioned(
-          bottom: 30,
-          width: MediaQuery.of(context).size.width,
+        Container(
+          padding: const EdgeInsets.only(
+            left: 42,
+            right: 16,
+            bottom: 16,
+          ),
           child: Column(
             children: [
-              MyFlatButton(
-                // width: 100,
-                edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-                textButton: 'Create Account',
-                action: () {
-                  Navigator.pushNamed(context, ContentsBackup.route);
-                },
+              Align(
+                  alignment: Alignment.topLeft,
+                  child: MyText(
+                    text: 'Welcome to',
+                    fontSize: 22,
+                    color: '#FFFFFF',
+                  )),
+              Container(
+                margin: const EdgeInsets.only(top: 10.0),
+                child: Align(
+                    alignment: Alignment.topLeft,
+                    child: MyText(
+                      text: 'KABOB',
+                      fontSize: 38,
+                      fontWeight: FontWeight.bold,
+                      color: '#FFFFFF',
+                    )),
               ),
-              MyFlatButton(
-                edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-                textButton: 'Import Account',
-                action: () {
-                  Navigator.pushNamed(context, ImportAcc.route);
-                },
-              )
             ],
           ),
         ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.2,
+        ),
+        SvgPicture.asset(
+          'assets/undraw_wallet.svg',
+          height: MediaQuery.of(context).size.height * 0.2,
+          width: MediaQuery.of(context).size.width * 0.2,
+        ),
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.2,
+        ),
+        Column(
+          children: [
+            MyFlatButton(
+              // width: 100,
+              edgeMargin: EdgeInsets.only(left: 42, right: 42, bottom: 16),
+              textButton: 'Create Account',
+              action: () {
+                Navigator.pushNamed(context, ContentsBackup.route);
+              },
+            ),
+            MyFlatButton(
+              edgeMargin: EdgeInsets.only(left: 42, right: 42, bottom: 16),
+              textButton: 'Import Account',
+              action: () {
+                Navigator.pushNamed(context, ImportAcc.route);
+              },
+            )
+          ],
+        ),
       ],
     );
+    // return Stack(
+    //   children: [
+    // Image.asset(
+    //     'assets/kabob_logo.png',
+    //     width: 200,
+    //     height: 200,
+    //   ),
+    //     Positioned(
+    //       bottom: 30,
+    //       width: MediaQuery.of(context).size.width,
+    //       child: Column(
+    //         children: [
+    //           MyFlatButton(
+    //             // width: 100,
+    //             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
+    //             textButton: 'Create Account',
+    //             action: () {
+    //               Navigator.pushNamed(context, ContentsBackup.route);
+    //             },
+    //           ),
+    //           MyFlatButton(
+    //             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
+    //             textButton: 'Import Account',
+    //             action: () {
+    //               Navigator.pushNamed(context, ImportAcc.route);
+    //             },
+    //           )
+    //         ],
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 }

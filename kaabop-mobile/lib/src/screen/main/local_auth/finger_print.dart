@@ -63,9 +63,7 @@ class _FingerPrintState extends State<FingerPrint> {
 
     try {
       authenticate = await localAuth.authenticateWithBiometrics(
-          localizedReason: 'Scan your fingerprint to authenticate',
-          useErrorDialogs: true,
-          stickyAuth: true);
+          localizedReason: '', useErrorDialogs: true, stickyAuth: true);
 
       if (authenticate) {
         Navigator.pushReplacementNamed(context, Home.route);

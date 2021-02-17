@@ -1,5 +1,6 @@
-import { keyExtractSuri, mnemonicGenerate, cryptoWaitReady, signatureVerify } from "@polkadot/util-crypto";
+import { keyExtractSuri, mnemonicGenerate, mnemonicValidate, cryptoWaitReady, signatureVerify } from "@polkadot/util-crypto";
 import { hexToU8a, u8aToHex, isHex, stringToHex } from "@polkadot/util";
+import { decodeAddress, encodeAddress } from '@polkadot/keyring';
 import BN from "bn.js";
 import { parseQrCode, getSigner, makeTx, getSubmittable } from "../utils/QrSigner";
 import gov from "./gov";
@@ -21,6 +22,35 @@ async function gen() {
   return {
     mnemonic,
   };
+}
+
+async function validateMnemonic(mnemonic: string) {
+  return new Promise(async (resolve, reject) => {
+    const isValidMnemonic = mnemonicValidate(mnemonic);
+    resolve(isValidMnemonic);
+  });
+}
+
+async function validateAddress(address: string) {
+  return new Promise(async (resolve, reject) => {
+
+    const isValidAddressPolkadotAddress = () => {
+      try {
+        encodeAddress(
+          isHex(address)
+            ? hexToU8a(address)
+            : decodeAddress(address, false, 42)
+        );
+
+
+        resolve(true);
+      } catch (error) {
+        resolve(false);
+      }
+    };
+
+    const isValid = isValidAddressPolkadotAddress();
+  });
 }
 
 /**
@@ -218,7 +248,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
     try {
       keyPair.decodePkcs8(password);
     } catch (err) {
-      resolve({ error: "password check failed" });
+      resolve({ error: "Pin check failed" });
     }
     tx.signAndSend(keyPair, { tip: new BN(txInfo.tip, 10) }, onStatusChange)
       .then((res) => {
@@ -230,7 +260,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
   });
 }
 
-async function contractTransfer(apiContract: ContractPromise, senderPubKey: string, to: string, value: string, password: string,hash:string) {
+async function contractTransfer(apiContract: ContractPromise, senderPubKey: string, to: string, value: string, password: string, hash: string) {
   return new Promise(async (resolve, reject) => {
     try {
       const keyPair = keyring.getPair(hexToU8a(senderPubKey));
@@ -240,7 +270,7 @@ async function contractTransfer(apiContract: ContractPromise, senderPubKey: stri
         resolve({ error: "password check failed" });
       }
 
-      await apiContract.tx.transfer(0, -1, to,hash, value).signAndSend(keyPair, ({ events = [], status }) => {
+      await apiContract.tx.transfer(0, -1, to, hash, value).signAndSend(keyPair, ({ events = [], status }) => {
         if (status.isInBlock) {
 
         } else if (status.isFinalized) {
@@ -473,6 +503,8 @@ async function verifySignature(message: string, signature: string, address: stri
 export default {
   initKeys,
   gen,
+  validateMnemonic,
+  validateAddress,
   recover,
   txFeeEstimate,
   sendTx,

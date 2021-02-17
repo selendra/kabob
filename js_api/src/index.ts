@@ -47,7 +47,7 @@ async function connect(nodes: string[]) {
 async function callContract(api: ApiPromise) {
   return new Promise(async (resolve, reject) => {
     //const ERC20 = '5CyvZsXQAUNKYH6f38vCku9bXkWVAxaAwksFYRDpGJYcx4Vv';
-    const ERC1400 = '5EZvUAqCZt1cJHduGoZfXdNkMmSuCKecK6DZUdRcfUJBCd17';
+    const ERC1400 = '5FiN3SCA2DA7zhCrWyqPyjtvV2RZ2Xx8fYNptWs7312Zkb2t';
     const abiJSONobj = (<any>metadata);
     const abi = new Abi(abiJSONobj);
     const res = new ContractPromise(api, abi, ERC1400);

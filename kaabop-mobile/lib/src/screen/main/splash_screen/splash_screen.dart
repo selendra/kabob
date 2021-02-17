@@ -33,7 +33,8 @@ class MySplashScreenState extends State<MySplashScreen>
         Navigator.pushReplacement(
             context, RouteAnimation(enterPage: Welcome()));
       } else {
-        Navigator.pushReplacementNamed(context, Home.route);
+        checkBiometric();
+        //Navigator.pushReplacementNamed(context, Home.route);
       }
     });
   }
@@ -44,7 +45,8 @@ class MySplashScreenState extends State<MySplashScreen>
         Navigator.pushReplacement(
             context, RouteAnimation(enterPage: FingerPrint()));
       } else {
-        getCurrentAccount();
+        Navigator.pushReplacementNamed(context, Home.route);
+        //getCurrentAccount();
       }
     });
   }
@@ -93,7 +95,7 @@ class MySplashScreenState extends State<MySplashScreen>
     /*Perform faded animation to logo*/
     controller.forward().then(
       (value) {
-        checkBiometric();
+        getCurrentAccount();
       },
     );
     super.initState();

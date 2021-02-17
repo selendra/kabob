@@ -54,7 +54,7 @@ class ContactBookBody extends StatelessWidget {
                         response = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddContact(contact: result),
+                              builder: (context) => AddContact(contact: result,sdkModel:sdkModel),
                             ));
                         if (response == true) await getContact();
                       }

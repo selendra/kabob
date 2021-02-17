@@ -159,13 +159,10 @@ class MyUserInfoState extends State<MyUserInfo> {
     try {
       // Trigger Authentication By Finger Print
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-          localizedReason: 'Scan your fingerprint to authenticate',
-          useErrorDialogs: true,
-          stickyAuth: true);
+          localizedReason: '', useErrorDialogs: true, stickyAuth: true);
     } on PlatformException catch (e) {}
     return _menuModel.authenticated;
   }
-
 
   void popScreen() {
     Navigator.pop(context);
@@ -232,13 +229,14 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   String validateConfirmPassword(String value) {
     if (_userInfoM.confirmPasswordNode.hasFocus) {
-      _userInfoM.responseLastname = instanceValidate.validatePin(value);
-      if (_userInfoM.responseLastname == null)
-        return null;
-      else
-        _userInfoM.responseLastname += "confirm password";
+      if (value.isEmpty) {
+        return 'Please fill in confirm password';
+      } else if (_userInfoM.confirmPasswordCon.text !=
+          _userInfoM.passwordCon.text) {
+        return 'Password does not matched';
+      }
     }
-    return _userInfoM.responseLastname;
+    return null;
   }
 
   void validateAll() {
@@ -325,17 +323,19 @@ class MyUserInfoState extends State<MyUserInfo> {
       body: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: MyUserInfoBody(
-              modelUserInfo: _userInfoM,
-              onSubmit: onSubmit,
-              onChanged: onChanged,
-              changeGender: changeGender,
-              validateFirstName: validateFirstName,
-              validateMidName: validatePassword,
-              validateLastName: validateConfirmPassword,
-              submitProfile: submitAcc,
-              popScreen: popScreen,
-              switchBio: switchBiometric,
-              item: item)),
+            modelUserInfo: _userInfoM,
+            onSubmit: onSubmit,
+            onChanged: onChanged,
+            changeGender: changeGender,
+            validateFirstName: validateFirstName,
+            validateMidName: validatePassword,
+            validateLastName: validateConfirmPassword,
+            submitProfile: submitAcc,
+            popScreen: popScreen,
+            switchBio: switchBiometric,
+            item: item,
+            model: _menuModel,
+          )),
     );
   }
 }

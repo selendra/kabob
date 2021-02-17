@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:local_auth/auth_strings.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
@@ -51,8 +50,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   Future<void> getCurrentAccount() async {
     final List<KeyPairData> ls = widget.sdkModel.keyring.keyPairs;
     setState(() {
-      widget.sdkModel.userModel.username = ls[0].name;
-      widget.sdkModel.userModel.address = ls[0].address;
+      widget.sdkModel.userModel.username =
+          widget.sdkModel.keyring.keyPairs[0].name;
+      widget.sdkModel.userModel.address =
+          widget.sdkModel.keyring.keyPairs[0].address;
 
       _homeM.userData['first_name'] = ls[0].name;
       _homeM.userData['wallet'] = ls[0].address;
@@ -268,5 +269,3 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 }
-
-
