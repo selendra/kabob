@@ -1,12 +1,16 @@
 class ContractModel {
   //list of partition token symbol
-  String pTokenSymbol = '';
+  String pContractAddress = '';
+
+  String pTokenSymbol = 'KMPI';
+
+  String pOrg = 'KOOMPI';
 
   //parition balance
-  String pBalance = '';
+  String pBalance = '0';
 
   //partion token logo
-  String ptLogo = '';
+  String ptLogo = 'assets/koompi_white_logo.png';
 
   //partitionHash
   String pHash = '';

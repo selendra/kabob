@@ -10,12 +10,14 @@ import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
   final String _walletKey;
+  final String asset;
   final List<dynamic> _listPortfolio;
   final bool enableInput;
   final CreateAccModel sdkModel;
 
   SubmitTrx(
-      this._walletKey, this.enableInput, this._listPortfolio, this.sdkModel);
+      this._walletKey, this.enableInput, this._listPortfolio, this.sdkModel,
+      {this.asset});
   @override
   State<StatefulWidget> createState() {
     return SubmitTrxState();
@@ -36,15 +38,28 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   @override
   void initState() {
-    _scanPayM.asset = "SEL";
+    widget.asset != null
+        ? _scanPayM.asset = widget.asset
+        : _scanPayM.asset = "SEL";
     print(c.transferFrom);
 
     AppServices.noInternetConnection(_scanPayM.globalKey);
 
     _scanPayM.controlReceiverAddress.text = widget._walletKey;
     _scanPayM.portfolio = widget._listPortfolio;
+    print(widget.sdkModel.contractModel.pHash);
+
     super.initState();
   }
+
+  List list = [
+    {'asset_code': 'SEL'},
+    {'asset_code': 'KMPI'}
+  ];
+
+  List nativeList = [
+    {'asset_code': 'SEL'},
+  ];
 
   void fetchIDs() async {
     await ProviderBloc.fetchUserIds();
@@ -288,7 +303,7 @@ class SubmitTrxState extends State<SubmitTrx> {
           symbol: 'SEL',
           destination: target,
           sender: widget.sdkModel.keyring.current.address,
-          org: 'Selendra',
+          org: 'SELENDRA',
           amount: amount.trim(),
         ));
 
@@ -431,6 +446,9 @@ class SubmitTrxState extends State<SubmitTrx> {
                     resetAssetsDropDown: resetAssetsDropDown,
                     sdkModel: widget.sdkModel,
                     item: item,
+                    list: widget.sdkModel.contractModel.pHash != ''
+                        ? list
+                        : nativeList,
                   ),
                   _scanPayM.isPay == false
                       ? Container()

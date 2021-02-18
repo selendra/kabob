@@ -11,7 +11,6 @@ import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 void main() async {
   // Avoid Error, " accessed before the binding was initialized "
@@ -81,7 +80,6 @@ class AppState extends State<App> {
       setState(() {
         _createAccModel.apiConnected = true;
         _subscribeBalance();
-
         initContract();
       });
     } else {
@@ -96,7 +94,7 @@ class AppState extends State<App> {
           .subscribeBalance(_createAccModel.keyring.current.address, (res) {
         setState(() {
           _createAccModel.balance = res;
-          _createAccModel.mBalance =
+          _createAccModel.nativeBalance =
               Fmt.balance(_createAccModel.balance.freeBalance, 18);
         });
       });
@@ -104,18 +102,21 @@ class AppState extends State<App> {
         _createAccModel.msgChannel = channel;
         print('Channel $channel');
       });
-      _getAddressIcons();
     }
   }
 
   Future<void> initContract() async {
-    await _createAccModel.sdk.api.callContract();
-    if (_createAccModel.keyring.keyPairs.isNotEmpty) {
-      await _contractSymbol();
-      await _getHashBySymbol().then((value) async {
-        await _balanceOfByPartition();
+    await StorageServices.readBool('KMPI').then((value) async {
+      await _createAccModel.sdk.api.callContract().then((value) {
+        _createAccModel.contractModel.pContractAddress = value;
       });
-    }
+      if (_createAccModel.keyring.keyPairs.isNotEmpty) {
+        await _contractSymbol();
+        await _getHashBySymbol().then((value) async {
+          await _balanceOfByPartition();
+        });
+      }
+    });
   }
 
   Future<void> _contractSymbol() async {
@@ -130,12 +131,6 @@ class AppState extends State<App> {
     } catch (e) {
       print(e.toString());
     }
-  }
-
-  Future<void> _getAddressIcons() async {
-    final List res = await _createAccModel.sdk.api.account
-        .getAddressIcons([_createAccModel.keyring.keyPairs[0].address]);
-    print(res);
   }
 
   Future<void> _getHashBySymbol() async {
@@ -194,8 +189,9 @@ class AppState extends State<App> {
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
               Home.route: (_) => Home(_createAccModel),
               ImportAcc.route: (_) => ImportAcc(_createAccModel),
-              Account.route: (_) =>
-                  Account(_createAccModel.sdk, _createAccModel.keyring),
+              Account.route: (_) => Account(_createAccModel.sdk,
+                  _createAccModel.keyring, _createAccModel),
+              AddAsset.route: (_) => AddAsset(_createAccModel),
             },
             builder: (context, widget) => ResponsiveWrapper.builder(
               BouncingScrollWrapper.builder(context, widget),

@@ -14,23 +14,24 @@ class SubmitTrxBody extends StatelessWidget {
   final Function clickSend;
   final Function resetAssetsDropDown;
   final CreateAccModel sdkModel;
+  final List list;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
-  SubmitTrxBody({
-    this.enableInput,
-    this.dialog,
-    this.scanPayM,
-    this.validateWallet,
-    this.validateAmount,
-    this.validateMemo,
-    this.onChanged,
-    this.onSubmit,
-    this.validateInput,
-    this.clickSend,
-    this.resetAssetsDropDown,
-    this.sdkModel,
-    this.item,
-  });
+  SubmitTrxBody(
+      {this.enableInput,
+      this.dialog,
+      this.scanPayM,
+      this.validateWallet,
+      this.validateAmount,
+      this.validateMemo,
+      this.onChanged,
+      this.onSubmit,
+      this.validateInput,
+      this.clickSend,
+      this.resetAssetsDropDown,
+      this.sdkModel,
+      this.item,
+      this.list});
 
   Widget build(BuildContext context) {
     List<MyInputField> listInput = [
@@ -77,11 +78,6 @@ class SubmitTrxBody extends StatelessWidget {
           validateField: validateMemo,
           onChanged: onChanged,
           onSubmit: onSubmit)
-    ];
-
-    List list = [
-      {'asset_code': 'SEL'},
-      {'asset_code': sdkModel.contractModel.pTokenSymbol}
     ];
 
     return Column(

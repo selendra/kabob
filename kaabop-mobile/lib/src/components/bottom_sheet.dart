@@ -38,7 +38,7 @@ class MyBottomSheet {
                     Expanded(
                       child: MyBottomSheetItem(
                         subTitle: "Scan wallet",
-                        icon: "sld_qr.svg",
+                        icon: "icons/qr_code.svg",
                         action: () async {
                           try {
                             await TrxOptionMethod.scanQR(context, portfolioList,

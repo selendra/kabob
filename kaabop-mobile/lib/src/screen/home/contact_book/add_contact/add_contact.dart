@@ -18,43 +18,44 @@ class _AddContactState extends State<AddContact> {
   ContactBookModel _addContactModel = ContactBookModel();
 
   Future<void> submitContact() async {
-    await validateAddressF('').then((value) async {
-      if (value) {
-        try {
-          // Show Loading
-          dialogLoading(context);
+    try {
+      // Show Loading
+      dialogLoading(context);
 
-          await Future.delayed(Duration(seconds: 1), () {});
-          Map<String, dynamic> contactData = {
-            'username': _addContactModel.userName.text,
-            'phone': _addContactModel.contactNumber.text,
-            'address': _addContactModel.address.text,
-            'memo': _addContactModel.memo.text
-          };
+      await Future.delayed(Duration(seconds: 1), () {});
+      Map<String, dynamic> contactData = {
+        'username': _addContactModel.userName.text,
+        'phone': _addContactModel.contactNumber.text,
+        'address': _addContactModel.address.text,
+        'memo': _addContactModel.memo.text
+      };
 
-          await StorageServices.addMoreData(contactData, 'contactList');
+      await StorageServices.addMoreData(contactData, 'contactList');
 
-          // Close Dialog Loading
-          Navigator.pop(context);
-          print("Close Dialog");
+      // Close Dialog Loading
+      Navigator.pop(context);
+      print("Close Dialog");
 
-          await dialog(
-              context,
-              Text(
-                  "Successfully add new contact!\n Please check your contact book"),
-              Text("Congratualtion"));
-          // Close Screen
-          Navigator.pop(context, true);
-        } catch (e) {
-          // Close Dialog Loading
-          Navigator.pop(context);
-          print("My error $e");
-        }
-      } else {
-        await dialog(context, Text('Please fill in a valid address'),
-            Text('Invalid Address'));
-      }
-    });
+      await dialog(
+          context,
+          Text(
+              "Successfully add new contact!\n Please check your contact book"),
+          Text("Congratualtion"));
+      // Close Screen
+      Navigator.pop(context, true);
+    } catch (e) {
+      // Close Dialog Loading
+      Navigator.pop(context);
+      print("My error $e");
+    }
+    // await validateAddressF(_addContactModel.address.text).then((value) async {
+    //   if (value) {
+
+    //   } else {
+    //     await dialog(context, Text('Please fill in a valid address'),
+    //         Text('Invalid Address'));
+    //   }
+    // });
   }
 
   void onChanged(String value) {
@@ -92,11 +93,15 @@ class _AddContactState extends State<AddContact> {
       });
   }
 
+  // String validateAddress(String value) {
+  //   _addContactModel.addressValidator = instanceValidate.validateAsset(value);
+  //   if (_addContactModel.addressValidator != null)
+  //     return _addContactModel.addressValidator + ' address';
+  //   return _addContactModel.addressValidator;
+  // }
+
   String validateAddress(String value) {
-    _addContactModel.addressValidator = instanceValidate.validateAsset(value);
-    if (_addContactModel.addressValidator != null)
-      return _addContactModel.addressValidator + ' address';
-    return _addContactModel.addressValidator;
+    return null;
   }
 
   @override

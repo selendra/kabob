@@ -1,7 +1,13 @@
+import 'dart:ui';
+
 import 'package:wallet_apps/index.dart';
 import 'package:http/http.dart' as http;
+import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class AddAsset extends StatefulWidget {
+  final CreateAccModel sdkModel;
+  AddAsset(this.sdkModel);
+  static const route = '/addasset';
   @override
   State<StatefulWidget> createState() {
     return AddAssetState();
@@ -12,25 +18,34 @@ class AddAssetState extends State<AddAsset> {
   ModelAsset _modelAsset = ModelAsset();
 
   PostRequest _postRequest = PostRequest();
+  FlareControls _flareController = FlareControls();
 
   GlobalKey<ScaffoldState> globalKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     _modelAsset.result = {};
+    _modelAsset.match = false;
     AppServices.noInternetConnection(globalKey);
+    initContract();
     super.initState();
   }
 
   void addContract() async {}
 
   String validateAssetCode(String value) {
-    if (_modelAsset.nodeAssetCode.hasFocus) {
-      _modelAsset.responseAssetCode = instanceValidate.validateAsset(value);
-      if (_modelAsset.responseAssetCode != null)
-        _modelAsset.responseAssetCode += "asset code";
-    }
-    return _modelAsset.responseAssetCode;
+    // if (_modelAsset.nodeAssetCode.hasFocus) {
+    //   if (_modelAsset.responseAssetCode != null)
+    //     _modelAsset.responseAssetCode += "asset address";
+    // }else{
+
+    // }
+    // return _modelAsset.responseAssetCode
+  }
+
+  Future<bool> validateAddress(String address) async {
+    final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
+    return res;
   }
 
   String validateIssuer(String value) {
@@ -67,52 +82,149 @@ class AddAssetState extends State<AddAsset> {
 
   void onChanged(String textChange) {
     _modelAsset.formStateAsset.currentState.validate();
-    // enableButton(true);
-    // Validate Form Of All Field
-    // validateAllFieldNotEmpty();
+    enableButton(true);
   }
 
-  void onSubmit() {
-    if (_modelAsset.nodeAssetCode.hasFocus) {
-      FocusScope.of(context).requestFocus(_modelAsset.nodeIssuer);
-    } else if (_modelAsset.nodeIssuer.hasFocus) {
-      if (_modelAsset.enable) submitAsset(context);
-    }
+  void addAsset() async {
+    dialogLoading(context);
+    await _contractSymbol();
+    await _getHashBySymbol().then((value) async {
+      await _balanceOfByPartition();
+    });
+    await StorageServices.saveBool('KMPI', true);
+    enableAnimation();
   }
 
-  void submitAsset(BuildContext context) async {
+  Future<void> initContract() async {
+    await widget.sdkModel.sdk.api.callContract().then((value) {
+      widget.sdkModel.contractModel.pContractAddress = value;
+    });
+  }
+
+  Future<void> _contractSymbol() async {
     try {
-      final res = await http.get('http://localhost:3000/:service/contract/');
-
-      print(res);
+      final res = await widget.sdkModel.sdk.api
+          .contractSymbol(widget.sdkModel.keyring.keyPairs[0].address);
+      if (res != null) {
+        setState(() {
+          widget.sdkModel.contractModel.pTokenSymbol = res[0];
+        });
+      }
     } catch (e) {
       print(e.toString());
     }
-    // dialogLoading(context); // Loading
-    // try {
-    //   _modelAsset.result = await _postRequest.addAsset(_modelAsset);
-    //   Navigator.pop(context); // Close Loading
-    //   if (_modelAsset.result.containsKey('message')) {
-    //     await dialog(
-    //         context,
-    //         Text(_modelAsset.result['message']),
-    //         Icon(Icons.done_outline,
-    //             color: hexaCodeToColor(
-    //               AppColors.lightBlueSky,
-    //             )));
-    //     _modelAsset.result.addAll({"dialog_name": "addAssetScreen"});
-    //     Navigator.pop(context, _modelAsset.result);
-    //   } else {
-    //     await dialog(context, Text(_modelAsset.result['error']['message']),
-    //         warningTitleDialog());
-    //     Navigator.pop(context, {}); /* Disable Loading Process */
-    //   }
-    // } on SocketException catch (e) {
-    //   await dialog(context, Text("${e.message}"), Text("Message"));
-    //   snackBar(globalKey, e.message.toString());
-    // } catch (e) {
-    //   await dialog(context, Text(e.message.toString()), Text("Message"));
-    // }
+  }
+
+  Future<void> _getHashBySymbol() async {
+    print('my symbol${widget.sdkModel.contractModel.pTokenSymbol}');
+
+    try {
+      final res = await widget.sdkModel.sdk.api.getHashBySymbol(
+        widget.sdkModel.keyring.keyPairs[0].address,
+        widget.sdkModel.contractModel.pTokenSymbol,
+      );
+
+      if (res != null) {
+        widget.sdkModel.contractModel.pHash = res;
+
+        print(res);
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _balanceOfByPartition() async {
+    try {
+      print(widget.sdkModel.keyring.keyPairs[0].address);
+      print(widget.sdkModel.contractModel.pHash);
+
+      final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
+        widget.sdkModel.keyring.keyPairs[0].address,
+        widget.sdkModel.keyring.keyPairs[0].address,
+        widget.sdkModel.contractModel.pHash,
+      );
+
+      setState(() {
+        widget.sdkModel.contractModel.pBalance =
+            BigInt.parse(res['output']).toString();
+      });
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  // void onSubmit() {
+  //   if (_modelAsset.nodeAssetCode.hasFocus) {
+  //     FocusScope.of(context).requestFocus(_modelAsset.nodeIssuer);
+  //   } else if (_modelAsset.nodeIssuer.hasFocus) {
+  //     if (_modelAsset.enable) submitAsset(context);
+  //   }
+  // }
+
+  Future enableAnimation() async {
+    Navigator.pop(context);
+    setState(() {
+      _modelAsset.added = true;
+    });
+    _flareController.play('Checkmark');
+    Timer(Duration(milliseconds: 2500), () {
+      Navigator.pushNamedAndRemoveUntil(
+          context, Home.route, ModalRoute.withName('/'));
+    });
+  }
+
+  void submitAsset() async {
+    setState(() {
+      _modelAsset.loading = true;
+    });
+    await StorageServices.readBool('KMPI').then((value) async {
+      if (!value) {
+        await validateAddress(_modelAsset.controllerAssetCode.text)
+            .then((value) async {
+          print(value);
+          if (value) {
+            if (_modelAsset.controllerAssetCode.text ==
+                widget.sdkModel.contractModel.pContractAddress) {
+              setState(() {
+                _modelAsset.match = true;
+                _modelAsset.loading = false;
+              });
+
+              print(_modelAsset.match);
+            } else {
+              setState(() {
+                _modelAsset.loading = false;
+                _modelAsset.controllerAssetCode.text = '';
+              });
+              await dialog(context, Text('Failed to find asset by address.'),
+                  Text('Asset not found'));
+            }
+          } else {
+            setState(() {
+              _modelAsset.loading = false;
+            });
+            await dialog(context, Text('Please fill in a valid address!'),
+                Text('Invalid Address'));
+          }
+        });
+      } else {
+        setState(() {
+          _modelAsset.loading = false;
+        });
+        await dialog(
+            context, Text('This asset is already added!'), Text('Asset Added'));
+      }
+    });
+  }
+
+  void qrRes(String value) {
+    if (value != null) {
+      setState(() {
+        _modelAsset.controllerAssetCode.text = value;
+        _modelAsset.enable = true;
+      });
+    }
   }
 
   void popScreen() {
@@ -124,14 +236,41 @@ class AddAssetState extends State<AddAsset> {
       key: globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
-        child: AddAssetBody(
-          assetM: _modelAsset,
-          validateAssetCode: validateAssetCode,
-          validateIssuer: validateIssuer,
-          popScreen: popScreen,
-          onChanged: onChanged,
-          onSubmit: onSubmit,
-          submitAsset: submitAsset,
+        child: Stack(
+          children: [
+            AddAssetBody(
+              assetM: _modelAsset,
+              validateAssetCode: validateAssetCode,
+              validateIssuer: validateIssuer,
+              popScreen: popScreen,
+              onChanged: onChanged,
+              onSubmit: null,
+              submitAsset: submitAsset,
+              addAsset: addAsset,
+              sdkModel: widget.sdkModel,
+              qrRes: qrRes,
+            ),
+            _modelAsset.added == false
+                ? Container()
+                : BackdropFilter(
+                    // Fill Blur Background
+                    filter: ImageFilter.blur(
+                      sigmaX: 5.0,
+                      sigmaY: 5.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Expanded(
+                          child: CustomAnimation.flareAnimation(
+                              _flareController,
+                              "assets/animation/check.flr",
+                              "Checkmark"),
+                        ),
+                      ],
+                    ),
+                  ),
+          ],
         ),
       ),
     );

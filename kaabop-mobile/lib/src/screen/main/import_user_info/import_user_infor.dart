@@ -54,9 +54,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
       setState(() {
         widget.importAccModel.balance = res;
-        widget.importAccModel.mBalance =
+        widget.importAccModel.nativeBalance =
             Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
-        print(widget.importAccModel.mBalance);
+        print(widget.importAccModel.nativeBalance);
       });
     });
     setState(() {

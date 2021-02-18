@@ -56,7 +56,12 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 1,
         onTap: () {
-          Navigator.pop(context, '');
+          Navigator.pushNamed(context, AddAsset.route);
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //       builder: (context) => AddAsset(),
+          //     ));
         },
       ),
 

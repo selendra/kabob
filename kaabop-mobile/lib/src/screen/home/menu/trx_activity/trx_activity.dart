@@ -110,24 +110,6 @@ class TrxActivityState extends State<TrxActivity> {
       await _preferences.setString('txhistory', jsonEncode(newTxList));
       //await StorageServices.addTxHistory(txHistory, '');
     });
-
-    // _txHistoryModel.tx.removeAt(index);
-    // setState(() {});
-    // await clearOldHistory().then((value) async {
-    //   await _preferences.setString(
-    //       'txhistory', jsonEncode(_txHistoryModel.txKpi));
-    //   //await StorageServices.addTxHistory(txHistory, '');
-    // });
-
-    // _txHistoryModel.txKpi.removeAt(index);
-
-    // setState(() {});
-
-    // await clearOldHistory().then((value) async {
-    //   await _preferences.setString(
-    //       'txhistory', jsonEncode(_txHistoryModel.txKpi));
-    //   //await StorageServices.addTxHistory(txHistory, '');
-    // });
   }
 
   Future<void> clearOldHistory() async {

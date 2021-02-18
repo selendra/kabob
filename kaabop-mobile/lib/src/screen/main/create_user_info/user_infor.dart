@@ -53,7 +53,7 @@ class MyUserInfoState extends State<MyUserInfo> {
     final channel = await widget.accModel.sdk.api.account
         .subscribeBalance(widget.accModel.keyring.current.address, (res) {
       widget.accModel.balance = res;
-      widget.accModel.mBalance =
+      widget.accModel.nativeBalance =
           Fmt.balance(widget.accModel.balance.freeBalance, 18);
     });
 

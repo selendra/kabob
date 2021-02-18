@@ -89,6 +89,18 @@ class StorageServices {
     return _preferences;
   }
 
+  static Future<void> saveBool(String key, bool value) async {
+    _preferences = await SharedPreferences.getInstance();
+    _preferences.setBool(key, value);
+  }
+
+  static Future<bool> readBool(String key) async {
+    _preferences = await SharedPreferences.getInstance();
+    final res = _preferences.getBool(key);
+
+    return res??false;
+  }
+
   static Future<void> saveBio(bool enable) async {
     _preferences = await SharedPreferences.getInstance();
     _preferences.setBool('bio', enable);

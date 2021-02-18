@@ -70,9 +70,9 @@ class PolkawalletApi {
     return res;
   }
 
-  Future<void> callContract() async {
-    await service.webView.callContract();
-    print('call Contract');
+  Future<String> callContract() async {
+   final res =  await service.webView.callContract();
+    return res;
   }
 
   Future<List> contractSymbol(String from) async {

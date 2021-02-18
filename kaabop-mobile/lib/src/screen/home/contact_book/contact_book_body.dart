@@ -54,7 +54,8 @@ class ContactBookBody extends StatelessWidget {
                         response = await Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => AddContact(contact: result,sdkModel:sdkModel),
+                              builder: (context) => AddContact(
+                                  contact: result, sdkModel: sdkModel),
                             ));
                         if (response == true) await getContact();
                       }
@@ -92,47 +93,50 @@ class ContactBookBody extends StatelessWidget {
                             itemBuilder: (context, int index) {
                               return GestureDetector(
                                   onTap: () async {
-                                    final options = await dialog(
-                                        context,
-                                        Text(
-                                            "You can edit, delete, and send to this wallet"),
-                                        Text("Options"),
-                                        action: Row(
-                                          children: [
-                                            FlatButton(
-                                              child: Text("delete"),
-                                              onPressed: () {
-                                                Navigator.pop(
-                                                    context, 'delete');
-                                              },
-                                            ),
-                                            FlatButton(
-                                              child: Text("Edit"),
-                                              onPressed: () {
-                                                Navigator.pop(context, 'edit');
-                                              },
-                                            ),
-                                            FlatButton(
-                                              child: Text("Send"),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            SubmitTrx(
-                                                                model
-                                                                    .contactBookList[
-                                                                        index]
-                                                                    .address
-                                                                    .text,
-                                                                false,
-                                                                [],
-                                                                sdkModel)));
-                                              },
-                                            ),
-                                          ],
-                                        ));
-
+                                    final options = await showDialog(
+                                        context: context,
+                                        builder: (ctx) {
+                                          return SimpleDialog(
+                                            title: Text('Options'),
+                                            children: [
+                                              SimpleDialogItem(
+                                                icon: Icons.near_me,
+                                                text: 'Send',
+                                                onPressed: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              SubmitTrx(
+                                                                  model
+                                                                      .contactBookList[
+                                                                          index]
+                                                                      .address
+                                                                      .text,
+                                                                  false,
+                                                                  [],
+                                                                  sdkModel)));
+                                                },
+                                              ),
+                                              SimpleDialogItem(
+                                                icon: Icons.edit,
+                                                text: 'Edit',
+                                                onPressed: () {
+                                                  Navigator.pop(context,
+                                                      'edit');
+                                                },
+                                              ),
+                                              SimpleDialogItem(
+                                                icon: Icons.delete,
+                                                text: 'Delete',
+                                                onPressed: () {
+                                                  Navigator.pop(context,
+                                                      'delete');
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        });
                                     if (options == 'delete') {
                                       await dialog(
                                           context,
@@ -150,6 +154,65 @@ class ContactBookBody extends StatelessWidget {
                                     } else if (options == 'edit') {
                                       await editContact(index);
                                     }
+
+                                    // final options = await dialog(
+                                    //     context,
+                                    //     Text(
+                                    //         "You can edit, delete, and send to this wallet"),
+                                    //     Text("Options"),
+                                    //     action: Row(
+                                    //       children: [
+                                    //         FlatButton(
+                                    //           child: Text("delete"),
+                                    //           onPressed: () {
+                                    //             Navigator.pop(
+                                    //                 context, 'delete');
+                                    //           },
+                                    //         ),
+                                    //         FlatButton(
+                                    //           child: Text("Edit"),
+                                    //           onPressed: () {
+                                    //             Navigator.pop(context, 'edit');
+                                    //           },
+                                    //         ),
+                                    //         FlatButton(
+                                    //           child: Text("Send"),
+                                    //           onPressed: () {
+                                    //             Navigator.push(
+                                    //                 context,
+                                    //                 MaterialPageRoute(
+                                    //                     builder: (context) =>
+                                    //                         SubmitTrx(
+                                    //                             model
+                                    //                                 .contactBookList[
+                                    //                                     index]
+                                    //                                 .address
+                                    //                                 .text,
+                                    //                             false,
+                                    //                             [],
+                                    //                             sdkModel)));
+                                    //           },
+                                    //         ),
+                                    //       ],
+                                    //     ));
+
+                                    // if (options == 'delete') {
+                                    //   await dialog(
+                                    //       context,
+                                    //       Text(
+                                    //           "Do you really want to deleteContact this contact"),
+                                    //       Text("Message"),
+                                    //       action: FlatButton(
+                                    //         child: Text("Yes"),
+                                    //         onPressed: () async {
+                                    //           print("deleted");
+                                    //           await deleteContact(index);
+                                    //           Navigator.pop(context);
+                                    //         },
+                                    //       ));
+                                    // } else if (options == 'edit') {
+                                    //   await editContact(index);
+                                    // }
                                   },
                                   child: Card(
                                     color: hexaCodeToColor(AppColors.cardColor),
@@ -218,6 +281,41 @@ class ContactBookBody extends StatelessWidget {
                                   ));
                             })))
       ],
+    );
+  }
+}
+
+class SimpleDialogItem extends StatelessWidget {
+  const SimpleDialogItem(
+      {Key key, this.icon, this.color, this.text, this.onPressed})
+      : super(key: key);
+
+  final IconData icon;
+  final Color color;
+  final String text;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialogOption(
+      onPressed: onPressed,
+      child: Container(
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(icon, size: 28.0, color: color),
+            Padding(
+              padding: const EdgeInsetsDirectional.only(start: 16.0),
+              child: Text(
+                text,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

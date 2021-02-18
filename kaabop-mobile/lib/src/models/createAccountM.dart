@@ -10,7 +10,7 @@ class CreateAccModel {
   BalanceData balance;
   bool sdkReady = false;
   bool apiConnected = false;
-  String mBalance = '';
+  String nativeBalance = '0';
   String msgChannel;
   String kpiSupply = '';
   String password;
@@ -18,6 +18,9 @@ class CreateAccModel {
 
   WalletSDK sdk;
   Keyring keyring;
+  String nativeToken = 'assets/native_token.png';
+  String nativeSymbol = 'SEL';
+  String nativeOrg = 'SELENDRA';
   ContractModel contractModel = ContractModel();
   UserModel userModel = UserModel();
 

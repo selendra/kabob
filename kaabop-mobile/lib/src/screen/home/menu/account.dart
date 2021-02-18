@@ -4,14 +4,17 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/src/components/component.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/models/contract.m.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/menu/account_c.dart';
 import '../../../../index.dart';
 
 class Account extends StatefulWidget {
   final WalletSDK sdk;
   final keyring;
+  final CreateAccModel sdkModel;
 
-  Account(this.sdk, this.keyring);
+  Account(this.sdk, this.keyring, this.sdkModel);
   static const route = '/account';
   @override
   _AccountState createState() => _AccountState();
@@ -72,6 +75,7 @@ class _AccountState extends State<Account> {
       );
       Navigator.pop(context);
       AppServices.clearStorage();
+      widget.sdkModel.contractModel = ContractModel();
       Navigator.pushAndRemoveUntil(context,
           RouteAnimation(enterPage: Welcome()), ModalRoute.withName('/'));
     } catch (e) {

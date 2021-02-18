@@ -146,7 +146,7 @@ class WebViewRunner {
     return null;
   }
 
-  Future<void> callContract() async {
+  Future<String> callContract() async {
     final res = await evalJavascript('settings.callContract(api)');
     return res;
   }

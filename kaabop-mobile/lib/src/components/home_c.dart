@@ -228,8 +228,9 @@ class AddAssetRowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddAsset()));
+          Navigator.pushNamed(context, AddAsset.route);
+          // Navigator.push(
+          //     context, MaterialPageRoute(builder: (context) => AddAsset()));
         },
         child: rowDecorationStyle(
             child: Row(children: [
@@ -389,18 +390,17 @@ class MyBottomAppBar extends StatelessWidget {
                     ? null
                     : () async {
                         await MyBottomSheet().trxOptions(
-                          context: context,
-                          portfolioList: homeM.portfolioList,
-                          resetHomeData: resetDbdState,
-                          sdk: sdkModel.sdk,
-                          keyring: sdkModel.keyring,
-                          sdkModel: sdkModel
-                        );
+                            context: context,
+                            portfolioList: homeM.portfolioList,
+                            resetHomeData: resetDbdState,
+                            sdk: sdkModel.sdk,
+                            keyring: sdkModel.keyring,
+                            sdkModel: sdkModel);
                       },
               )),
               Expanded(
                   child: MyIconButton(
-                icon: 'qr_code.svg',
+                icon: 'wallet.svg',
                 onPressed: !apiStatus
                     ? null
                     : () async {

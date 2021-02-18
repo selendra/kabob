@@ -237,8 +237,7 @@ class MyAppBar extends StatelessWidget {
       @required this.title,
       this.color,
       this.onPressed,
-      this.tile
-    });
+      this.tile});
 
   Widget build(BuildContext context) {
     return Container(
@@ -265,7 +264,6 @@ class MyAppBar extends StatelessWidget {
               left: 15,
               fontSize: 22,
             ),
-
             tile ?? Container()
           ],
         ));
@@ -290,14 +288,14 @@ class BodyScaffold extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      physics: BouncingScrollPhysics(),
+        physics: BouncingScrollPhysics(),
         child: Container(
-      width: MediaQuery.of(context).size.width,
-      height: height,
-      color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
-      padding: EdgeInsets.fromLTRB(left, top, right, bottom),
-      child: SafeArea(child: this.child),
-    ));
+          width: MediaQuery.of(context).size.width,
+          height: height,
+          color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
+          padding: EdgeInsets.fromLTRB(left, top, right, bottom),
+          child: SafeArea(child: this.child),
+        ));
   }
 }
 
@@ -320,6 +318,29 @@ class MyIconButton extends StatelessWidget {
         onTap: onPressed,
         child: SvgPicture.asset('assets/icons/$icon',
             width: 30, height: 30, color: Colors.white),
+      ),
+    );
+  }
+}
+
+class MyCusIconButton extends StatelessWidget {
+  final String icon;
+  final double iconSize;
+  final Function onPressed;
+  final EdgeInsetsGeometry padding;
+
+  MyCusIconButton(
+      {this.icon,
+      this.iconSize = 30,
+      this.padding = const EdgeInsets.all(0),
+      this.onPressed});
+
+  Widget build(BuildContext context) {
+    return Container(
+      padding: padding,
+      child: GestureDetector(
+        onTap: onPressed,
+        child: Image.asset(icon, width: 30, height: 30, color: Colors.white),
       ),
     );
   }

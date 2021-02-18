@@ -242,7 +242,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           child: FloatingActionButton(
             backgroundColor: hexaCodeToColor(AppColors.secondary)
                 .withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
-            child: SvgPicture.asset('assets/sld_qr.svg',
+            child: SvgPicture.asset('assets/icons/qr_code.svg',
                 width: 30,
                 height: 30,
                 color: !widget.sdkModel.apiConnected

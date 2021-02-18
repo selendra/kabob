@@ -96,7 +96,7 @@ class HomeBody extends StatelessWidget {
                                   child: Container(
                                     width: 150,
                                     child: MyText(
-                                      text: sdkModel.mBalance,
+                                      text: sdkModel.nativeBalance,
                                       fontSize: 30,
                                       color: AppColors.secondary_text,
                                       fontWeight: FontWeight.bold,
@@ -249,45 +249,160 @@ class HomeBody extends StatelessWidget {
                         left: 16,
                         fontWeight: FontWeight.bold,
                       ),
-                      Expanded(child: Container()),
+                      Expanded(
+                          child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(context, AddAsset.route);
+                        },
+                        child: Container(
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Icon(
+                              Icons.add_circle_outline,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            // child: MyText(
+                            //   text: 'Add',
+                            //   color: "#FFFFFF",
+                            // ),
+                          ),
+                        ),
+                      )),
                     ],
                   )),
             ],
           ),
         ),
-        sdkModel.contractModel.pBalance != ''
-            ? GestureDetector(
+        Container(
+          height: MediaQuery.of(context).size.height * 0.3,
+          child: ListView(
+            children: [
+              GestureDetector(
                 onTap: () {
-                  balanceOf();
+                  //balanceOf();
                   Navigator.push(
                     context,
                     RouteAnimation(
                       enterPage: AssetInfo(
-                        sdk: sdkModel.sdk,
-                        keyring: sdkModel.keyring,
                         sdkModel: sdkModel,
+                        assetLogo: sdkModel.nativeToken,
+                        balance: sdkModel.nativeBalance,
+                        tokenSymbol: sdkModel.nativeSymbol,
                       ),
                     ),
                   );
                 },
-                child: AnimatedOpacity(
-                  opacity: sdkModel.contractModel.pBalance != '' ? 1.0 : 0.0,
-                  duration: Duration(milliseconds: 500),
-                  child: buildRowList(
-                    portfolioM.list,
-                    portfolioRateM.totalRate,
-                    sdkModel,
-                  ),
-                ),
-              )
-            : Container(
-                child: SvgPicture.asset(
-                  'assets/no_data.svg',
-                  width: 200,
-                  height: 200,
-                ),
+                child: portFolioItemRow(
+                    sdkModel.nativeToken,
+                    sdkModel.nativeSymbol,
+                    sdkModel.nativeOrg,
+                    sdkModel.nativeBalance,
+                    Colors.white),
               ),
+              sdkModel.contractModel.pContractAddress != ''
+                  ? GestureDetector(
+                      onTap: () {
+                        balanceOf();
+                        Navigator.push(
+                          context,
+                          RouteAnimation(
+                            enterPage: AssetInfo(
+                              sdkModel: sdkModel,
+                              assetLogo: sdkModel.contractModel.ptLogo,
+                              balance: sdkModel.contractModel.pBalance,
+                              tokenSymbol: sdkModel.contractModel.pTokenSymbol,
+                            ),
+                          ),
+                        );
+                      },
+                      child: portFolioItemRow(
+                          sdkModel.contractModel.ptLogo,
+                          sdkModel.contractModel.pTokenSymbol,
+                          sdkModel.contractModel.pOrg,
+                          sdkModel.contractModel.pBalance,
+                          Colors.black),
+                    )
+                  : Container(),
+            ],
+          ),
+        )
       ],
     );
+  }
+
+  //hexaCodeToColor(AppColors.secondary)
+
+  Widget portFolioItemRow(String asset, String tokenSymbol, String org,
+      String balance, Color color) {
+    return rowDecorationStyle(
+        child: Row(
+      children: <Widget>[
+        Container(
+          width: 50,
+          height: 50,
+          padding: EdgeInsets.all(6),
+          margin: EdgeInsets.only(right: 20),
+          decoration: BoxDecoration(
+              color: color, borderRadius: BorderRadius.circular(40)),
+          child: Image.asset(asset),
+        ),
+        Expanded(
+          child: Container(
+            margin: const EdgeInsets.only(right: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MyText(
+                  text: tokenSymbol,
+                  color: "#FFFFFF",
+                  fontSize: 18,
+                ),
+                MyText(text: org, fontSize: 15),
+              ],
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(right: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MyText(
+                    width: double.infinity,
+                    text: balance, //portfolioData[0]["data"]['balance'],
+                    color: "#FFFFFF",
+                    fontSize: 18,
+                    textAlign: TextAlign.right,
+                    overflow: TextOverflow.ellipsis),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ));
+  }
+
+// Portfolow Row Decoration
+  Widget rowDecorationStyle(
+      {Widget child, double mTop: 0, double mBottom = 16}) {
+    return Container(
+        margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
+        padding: EdgeInsets.fromLTRB(15, 9, 15, 9),
+        height: 90,
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black12,
+                blurRadius: 2.0,
+                offset: Offset(1.0, 1.0))
+          ],
+          color: hexaCodeToColor(AppColors.cardColor),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: child);
   }
 }
