@@ -120,7 +120,7 @@ class HomeBody extends StatelessWidget {
                         },
                         child: MyText(
                           top: 16,
-                          width: 200,
+                          width: 300,
                           text: sdkModel.userModel.address ?? "address",
                           overflow: TextOverflow.ellipsis,
                         ),

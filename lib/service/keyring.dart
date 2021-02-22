@@ -135,9 +135,10 @@ class ServiceKeyring {
 
   Future<Map> contractTranfer(String senderPubKey, String to, String value,
       String password, String hash) async {
-    print('contract transfer js');
     final res = await serviceRoot.webView.evalJavascript(
         'keyring.contractTransfer(apiContract,"$senderPubKey","$to","$value", "$password","$hash")');
+    
+    print("service: $value");
 
     if (res != null) {
       return res;

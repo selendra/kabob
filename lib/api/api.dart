@@ -13,7 +13,7 @@ import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/service/index.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 
-/// The [PolkawalletApi] instance is the wrapper of `polkadot-js/api`.
+/// The [KabobApi] instance is the wrapper of `polkadot-js/api`.
 /// It provides:
 /// * [ApiKeyring] of npm package [@polkadot/keyring](https://www.npmjs.com/package/@polkadot/keyring)
 /// * [ApiSetting], the [networkConst] and [networkProperties] of `polkadot-js/api`.
@@ -22,8 +22,8 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 /// * [ApiStaking] and [ApiGov], the staking and governance module of substrate.
 /// * [ApiUOS], provides the offline-signature ability of polkawallet.
 /// * [ApiRecovery], the social-recovery module of Kusama network.
-class PolkawalletApi {
-  PolkawalletApi(this.service);
+class KabobApi {
+  KabobApi(this.service);
 
   final SubstrateService service;
 
@@ -67,6 +67,10 @@ class PolkawalletApi {
       // update indices of keyPairs after connect
       keyring.updateIndicesMap(keyringStorage);
     }
+    return res;
+  }
+  Future<int> getChainDecimal() async {
+   final res =  await service.webView.getChainDecimal();
     return res;
   }
 

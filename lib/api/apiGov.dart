@@ -9,7 +9,7 @@ import 'package:polkawallet_sdk/service/gov.dart';
 class ApiGov {
   ApiGov(this.apiRoot, this.service);
 
-  final PolkawalletApi apiRoot;
+  final KabobApi apiRoot;
   final ServiceGov service;
 
   Future<List> getDemocracyUnlocks(String address) async {

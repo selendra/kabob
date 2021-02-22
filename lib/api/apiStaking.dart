@@ -6,7 +6,7 @@ import 'package:polkawallet_sdk/service/staking.dart';
 class ApiStaking {
   ApiStaking(this.apiRoot, this.service);
 
-  final PolkawalletApi apiRoot;
+  final KabobApi apiRoot;
   final ServiceStaking service;
 
   Future<Map> queryElectedInfo() async {

@@ -23,7 +23,7 @@ class WebViewWithExtension extends StatefulWidget {
   });
 
   final String initialUrl;
-  final PolkawalletApi api;
+  final KabobApi api;
   final Keyring keyring;
   final Function(String) onPageFinished;
   final Function onExtensionReady;

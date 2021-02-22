@@ -12,7 +12,7 @@ import 'package:polkawallet_sdk/service/webViewRunner.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 
 /// The service calling JavaScript API of `polkadot-js/api` directly
-/// through [WebViewRunner], providing APIs for [PolkawalletApi].
+/// through [WebViewRunner], providing APIs for [KabobApi].
 class SubstrateService {
   ServiceKeyring keyring;
   ServiceSetting setting;

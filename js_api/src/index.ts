@@ -44,10 +44,18 @@ async function connect(nodes: string[]) {
   });
 }
 
+
+async function getChainDecimal(api: ApiPromise) {
+  return new Promise(async (resolve, reject) => {
+    const res = api.registry.chainDecimals;
+    resolve(res);
+  });
+}
+
 async function callContract(api: ApiPromise) {
   return new Promise(async (resolve, reject) => {
     //const ERC20 = '5CyvZsXQAUNKYH6f38vCku9bXkWVAxaAwksFYRDpGJYcx4Vv';
-    const ERC1400 = '5GaideMbrhPQvJzgfComYkcQX47iE8pQm3Dxutorn4Anoxyi';
+    const ERC1400 = '5GZ9uD6RgN84bpBuic1HWq9AP7k2SSFtK9jCVkrncZsuARQU';
     const abiJSONobj = (<any>metadata);
     const abi = new Abi(abiJSONobj);
     const res = new ContractPromise(api, abi, ERC1400);
@@ -145,11 +153,11 @@ async function getPartitionHash(apiContract: ContractPromise, from: string) {
   });
 }
 
-async function getHashBySymbol(apiContract:ContractPromise,from:string,symbol:string) {
+async function getHashBySymbol(apiContract: ContractPromise, from: string, symbol: string) {
   return new Promise(async (resolve, reject) => {
 
     try {
-      const result = await apiContract.query.getHashBySymbol(from,0,-1,symbol);
+      const result = await apiContract.query.getHashBySymbol(from, 0, -1, symbol);
 
       resolve(result.output);
       send('log', result.output.toString);
@@ -202,6 +210,7 @@ const test = async () => {
 const settings = {
   test,
   connect,
+  getChainDecimal,
   callContract,
   contractSymbol,
   totalSupply,

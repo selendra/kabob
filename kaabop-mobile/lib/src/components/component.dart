@@ -247,8 +247,10 @@ class MyAppBar extends StatelessWidget {
         color: hexaCodeToColor(AppColors.cardColor),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            IconButton(
+            Row(children: [
+              IconButton(
               /* Menu Icon */
               alignment: Alignment.center,
               // padding: edgePadding,
@@ -264,6 +266,7 @@ class MyAppBar extends StatelessWidget {
               left: 15,
               fontSize: 22,
             ),
+            ],),
             tile ?? Container()
           ],
         ));
@@ -307,7 +310,7 @@ class MyIconButton extends StatelessWidget {
 
   MyIconButton(
       {this.icon,
-      this.iconSize = 30,
+      this.iconSize,
       this.padding = const EdgeInsets.all(0),
       this.onPressed});
 
@@ -317,7 +320,7 @@ class MyIconButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onPressed,
         child: SvgPicture.asset('assets/icons/$icon',
-            width: 30, height: 30, color: Colors.white),
+            width: iconSize??30, height: iconSize??30, color: Colors.white),
       ),
     );
   }

@@ -95,6 +95,16 @@ class AddAssetState extends State<AddAsset> {
     enableAnimation();
   }
 
+  void addAssetInSearch() async{
+    await _contractSymbol();
+    await _getHashBySymbol().then((value) async {
+      await _balanceOfByPartition();
+    });
+    await StorageServices.saveBool('KMPI', true);
+    Navigator.pushNamedAndRemoveUntil(
+          context, Home.route, ModalRoute.withName('/'));
+  }
+
   Future<void> initContract() async {
     await widget.sdkModel.sdk.api.callContract().then((value) {
       widget.sdkModel.contractModel.pContractAddress = value;
@@ -173,6 +183,23 @@ class AddAssetState extends State<AddAsset> {
     });
   }
 
+  void submitSearch() async {
+    setState(() {
+      _modelAsset.loading = true;
+    });
+    await StorageServices.readBool('KMPI').then((value) async {
+      if (!value) {
+        addAssetInSearch();
+      } else {
+        setState(() {
+          _modelAsset.loading = false;
+        });
+        await dialog(
+            context, Text('This asset is already added!'), Text('Asset Added'));
+      }
+    });
+  }
+
   void submitAsset() async {
     setState(() {
       _modelAsset.loading = true;
@@ -246,6 +273,7 @@ class AddAssetState extends State<AddAsset> {
               onSubmit: null,
               submitAsset: submitAsset,
               addAsset: addAsset,
+              submitSearch: submitSearch,
               sdkModel: widget.sdkModel,
               qrRes: qrRes,
             ),

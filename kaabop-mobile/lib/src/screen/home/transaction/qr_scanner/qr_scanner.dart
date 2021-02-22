@@ -1,5 +1,4 @@
-import 'package:polkawallet_sdk/polkawallet_sdk.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
+
 import 'package:wallet_apps/index.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 

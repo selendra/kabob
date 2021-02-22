@@ -7,7 +7,7 @@ import 'package:polkawallet_sdk/service/tx.dart';
 class ApiTx {
   ApiTx(this.apiRoot, this.service);
 
-  final PolkawalletApi apiRoot;
+  final KabobApi apiRoot;
   final ServiceTx service;
 
   /// Estimate tx fees, [params] will be ignored if we have [rawParam].

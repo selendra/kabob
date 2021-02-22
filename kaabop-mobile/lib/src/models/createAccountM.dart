@@ -1,5 +1,5 @@
 import 'package:polkawallet_sdk/api/types/balanceData.dart';
-import 'package:polkawallet_sdk/polkawallet_sdk.dart';
+import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/user.m.dart';
@@ -11,6 +11,7 @@ class CreateAccModel {
   bool sdkReady = false;
   bool apiConnected = false;
   String nativeBalance = '0';
+  String chainDecimal='';
   String msgChannel;
   String kpiSupply = '';
   String password;
@@ -23,7 +24,6 @@ class CreateAccModel {
   String nativeOrg = 'SELENDRA';
   ContractModel contractModel = ContractModel();
   UserModel userModel = UserModel();
-
-  List<ContractModel> mContractModel = [];
+  List<String> asset = ['KMPI'];
   
 }

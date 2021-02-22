@@ -1,6 +1,6 @@
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:polkawallet_sdk/polkawallet_sdk.dart';
+import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';

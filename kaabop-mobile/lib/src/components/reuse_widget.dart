@@ -536,9 +536,10 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
           child: QrImage(
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
-            embeddedImage: AssetImage('assets/GroupB.png'),
-            embeddedImageStyle:
-                QrEmbeddedImageStyle(size: Size(50, 50), color: Colors.white),
+            embeddedImage: AssetImage(logoName),
+            embeddedImageStyle: QrEmbeddedImageStyle(
+              size: Size(60, 60),
+            ),
             // version: QrVersions.auto,
             data: wallet,
           )),

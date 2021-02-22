@@ -5,7 +5,7 @@ import 'package:polkawallet_sdk/service/setting.dart';
 class ApiSetting {
   ApiSetting(this.apiRoot, this.service);
 
-  final PolkawalletApi apiRoot;
+  final KabobApi apiRoot;
   final ServiceSetting service;
 
   final _msgChannel = "BestNumber";

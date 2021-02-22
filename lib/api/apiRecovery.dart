@@ -5,7 +5,7 @@ import 'package:polkawallet_sdk/service/recovery.dart';
 class ApiRecovery {
   ApiRecovery(this.apiRoot, this.service);
 
-  final PolkawalletApi apiRoot;
+  final KabobApi apiRoot;
   final ServiceRecovery service;
 
   Future<RecoveryInfo> queryRecoverable(String address) async {

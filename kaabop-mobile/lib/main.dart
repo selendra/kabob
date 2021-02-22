@@ -1,6 +1,6 @@
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
-import 'package:polkawallet_sdk/polkawallet_sdk.dart';
+import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -77,15 +77,21 @@ class AppState extends State<App> {
     setState(() {});
     if (res != null) {
       print('res null');
-
       setState(() {
         _createAccModel.apiConnected = true;
+        getChainDecimal();
         _subscribeBalance();
       });
       await initContract();
     } else {
       print('res null');
     }
+  }
+
+  Future<void> getChainDecimal() async {
+    final res = await _createAccModel.sdk.api.getChainDecimal();
+    _createAccModel.chainDecimal = res.toString();
+    print(res);
   }
 
   Future<void> _subscribeBalance() async {
@@ -115,7 +121,7 @@ class AppState extends State<App> {
         if (_createAccModel.keyring.keyPairs.isNotEmpty) {
           await _contractSymbol();
           await _getHashBySymbol().then((value) async {
-            await _balanceOfByPartition();
+            _balanceOfByPartition();
           });
         }
       }
@@ -167,6 +173,8 @@ class AppState extends State<App> {
       );
 
       setState(() {
+        // _createAccModel.contractModel.pBalance =
+        //     Fmt.balance(res['output'], 18);
         _createAccModel.contractModel.pBalance =
             BigInt.parse(res['output']).toString();
       });

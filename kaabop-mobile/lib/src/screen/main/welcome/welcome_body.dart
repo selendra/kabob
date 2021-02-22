@@ -32,7 +32,7 @@ class WelcomeBody extends StatelessWidget {
                     child: MyText(
                       text: 'KABOB',
                       fontSize: 38,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w500,
                       color: '#FFFFFF',
                     )),
               ),

@@ -248,7 +248,7 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
     try {
       keyPair.decodePkcs8(password);
     } catch (err) {
-      resolve({ error: "Pin check failed" });
+      resolve({ error: "PIN verification failed" });
     }
     tx.signAndSend(keyPair, { tip: new BN(txInfo.tip, 10) }, onStatusChange)
       .then((res) => {
@@ -267,10 +267,11 @@ async function contractTransfer(apiContract: ContractPromise, senderPubKey: stri
       try {
         keyPair.decodePkcs8(password);
       } catch (err) {
-        resolve({ error: "password check failed" });
+        resolve({ error: "PIN verification failed" });
       }
 
-      await apiContract.tx.transfer(0, -1, to, hash, value).signAndSend(keyPair, ({ events = [], status }) => {
+
+      await apiContract.tx.transfer(0, -1, to, hash, Number(value)).signAndSend(keyPair, ({ events = [], status }) => {
         if (status.isInBlock) {
 
         } else if (status.isFinalized) {
@@ -292,7 +293,7 @@ async function contractTransferFrom(apiContract: ContractPromise, from: string, 
       try {
         keyPair.decodePkcs8(password);
       } catch (err) {
-        resolve({ error: "password check failed" });
+        resolve({ error: "PIN verification failed" });
       }
       await apiContract.tx.transferFrom(0, -1, from, to, value).signAndSend(keyPair, ({ events = [], status }) => {
         if (status.isInBlock) {
@@ -318,7 +319,7 @@ async function approve(apiContract: ContractPromise, senderPubKey: string, to: s
       try {
         keyPair.decodePkcs8(password);
       } catch (err) {
-        resolve({ error: "password check failed" });
+        resolve({ error: "PIN verification failed" });
       }
       await apiContract.tx.approve(0, -1, to, value).signAndSend(keyPair, ({ events = [], status }) => {
         if (status.isInBlock) {

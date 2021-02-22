@@ -1,5 +1,6 @@
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/screen/home/menu/add_asset/search_asset.dart';
 
 class AddAssetBody extends StatelessWidget {
   final ModelAsset assetM;
@@ -10,6 +11,7 @@ class AddAssetBody extends StatelessWidget {
   final Function onSubmit;
   final Function submitAsset;
   final Function addAsset;
+  final Function submitSearch;
   final Function qrRes;
   final CreateAccModel sdkModel;
 
@@ -23,6 +25,7 @@ class AddAssetBody extends StatelessWidget {
     this.submitAsset,
     this.sdkModel,
     this.addAsset,
+    this.submitSearch,
     this.qrRes,
   });
 
@@ -35,6 +38,26 @@ class AddAssetBody extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
             },
+            tile: Padding(
+              padding: const EdgeInsets.only(right: 30.0),
+              child: IconButton(
+                /* Menu Icon */
+                alignment: Alignment.center,
+                // padding: edgePadding,
+                padding: EdgeInsets.only(left: 30),
+                iconSize: 40.0,
+                icon: Icon(Icons.search, color: Colors.white, size: 30),
+                onPressed: () {
+                  showSearch(
+                    context: context,
+                    delegate: SearchAsset(
+                      sdkModel: sdkModel,
+                      added: submitSearch,
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
         ),
         Expanded(

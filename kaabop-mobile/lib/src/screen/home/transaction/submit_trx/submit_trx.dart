@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:intl/intl.dart';
@@ -239,8 +240,6 @@ class SubmitTrxState extends State<SubmitTrx> {
     dialogLoading(context,
         content: 'Please wait! This might take a little bit longer');
 
-    print(widget.sdkModel.keyring.keyPairs[0].address);
-    print(widget.sdkModel.keyring.keyPairs[0].pubKey);
     try {
       final res = await widget.sdkModel.sdk.api.keyring.contractTransfer(
         widget.sdkModel.keyring.keyPairs[0].pubKey,
@@ -268,7 +267,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       }
     } catch (e) {
       Navigator.pop(context);
-      await dialog(context, Text(e.toString()), Text('Opps!!'));
+      await dialog(context, Text(e.message), Text('Opps!!'));
     }
   }
 
@@ -280,6 +279,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       widget.sdkModel.keyring.current.pubKey,
     );
     final txInfo = TxInfoData('balances', 'transfer', sender);
+
     try {
       final hash = await widget.sdkModel.sdk.api.tx.signAndSend(
           txInfo,
@@ -288,7 +288,8 @@ class SubmitTrxState extends State<SubmitTrx> {
             // _testAddressGav,
             target,
             // params.amount
-            Fmt.tokenInt(amount.trim(), 18).toString(),
+            Fmt.tokenInt(amount.trim(), int.parse(widget.sdkModel.chainDecimal))
+                .toString(),
           ],
           pin, onStatusChange: (status) async {
         print(status);
@@ -375,9 +376,9 @@ class SubmitTrxState extends State<SubmitTrx> {
                 sendTx(_scanPayM.controlReceiverAddress.text,
                     _scanPayM.controlAmount.text, pin);
               } else {
-                if (int.parse(widget.sdkModel.contractModel.pBalance) <
-                    int.parse(_scanPayM.controlAmount.text)) {
-                  await await dialog(
+                if (double.parse(widget.sdkModel.contractModel.pBalance) <
+                    double.parse(_scanPayM.controlAmount.text)) {
+                  await dialog(
                       context,
                       Text(
                           'Sorry, You do not have enough balance to make transaction '),

@@ -14,7 +14,7 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 class ApiUOS {
   ApiUOS(this.apiRoot, this.service);
 
-  final PolkawalletApi apiRoot;
+  final KabobApi apiRoot;
   final ServiceUOS service;
 
   /// parse data of QR code.

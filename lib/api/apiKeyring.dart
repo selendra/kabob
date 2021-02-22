@@ -15,7 +15,7 @@ enum CryptoType { sr25519, ed25519 }
 class ApiKeyring {
   ApiKeyring(this.apiRoot, this.service);
 
-  final PolkawalletApi apiRoot;
+  final KabobApi apiRoot;
   final ServiceKeyring service;
 
   /// Generate a set of new mnemonic.
@@ -262,6 +262,8 @@ class ApiKeyring {
       String senderPubKey, String to, String value, String password,String hash) async {
     final res =
         await service.contractTranfer(senderPubKey, to, value, password,hash);
+
+    print("apiKeyring: $value");
     if (res['error'] != null) {
       throw Exception(res['error']);
     }

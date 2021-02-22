@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:polkawallet_sdk/service/index.dart';
 
 class ServiceAccount {

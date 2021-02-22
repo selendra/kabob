@@ -119,27 +119,16 @@ final portfolioChart = LineChartData(
 Widget homeAppBar(BuildContext context) {
   return AppBar(
     toolbarHeight: 60,
+    leadingWidth: 110,
     backgroundColor: hexaCodeToColor(AppColors.bgdColor),
-    title: Padding(
-      padding: const EdgeInsets.only(top: 5.0),
-      child: MyText(
-        text: "KABOB",
-        fontSize: 27,
-        color: "#FFFFFF",
-        fontWeight: FontWeight.bold,
+    leading: Padding(
+      padding: const EdgeInsets.only(left: 16.0),
+      child: Image.asset(
+        'assets/Kabob-1.png',
+        width: 110,
+        height: 110,
       ),
     ),
-    // leading: MyText(
-    //   text: "KABOB",
-    //   fontSize: 27,
-    //   color: "#FFFFFF",
-    //   fontWeight: FontWeight.bold,
-    // ),
-    // leading: Padding(
-    //     padding: EdgeInsets.only(left: 20, bottom: 10),
-    //     child: Align(
-    //         alignment: Alignment.center,
-    //         child: SvgPicture.asset('assets/layer1.svg',width:300,height: 300,))),
     actions: [
       Align(
         alignment: Alignment.centerRight,
@@ -386,6 +375,7 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(
                   child: MyIconButton(
                 icon: 'telegram.svg',
+                iconSize: 32,
                 onPressed: !apiStatus
                     ? null
                     : () async {
@@ -401,6 +391,7 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(
                   child: MyIconButton(
                 icon: 'wallet.svg',
+                iconSize: 32,
                 onPressed: !apiStatus
                     ? null
                     : () async {
@@ -411,6 +402,7 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(
                   child: MyIconButton(
                 icon: 'contact_list.svg',
+                iconSize: 25,
                 onPressed: !apiStatus
                     ? null
                     : () async {
@@ -423,6 +415,7 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(
                 child: MyIconButton(
                   icon: 'menu.svg',
+                  iconSize: 25,
                   onPressed: !apiStatus ? null : openDrawer,
                 ),
               )

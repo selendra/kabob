@@ -66,6 +66,7 @@ class Fmt {
     }
     return BigInt.from(v * pow(10, decimals));
   }
+  
 
   static double bigIntToDouble(BigInt value, int decimals) {
     if (value == null) {

@@ -146,6 +146,11 @@ class WebViewRunner {
     return null;
   }
 
+  Future<int> getChainDecimal() async {
+    final res = await evalJavascript('settings.getChainDecimal(api)');
+    return res;
+  }
+
   Future<String> callContract() async {
     final res = await evalJavascript('settings.callContract(api)');
     return res;
@@ -186,8 +191,9 @@ class WebViewRunner {
     return res;
   }
 
-  Future<String> getHashBySymbol(String from,String symbol) async{
-    final res = await evalJavascript('settings.getHashBySymbol(apiContract,"$from","$symbol")');
+  Future<String> getHashBySymbol(String from, String symbol) async {
+    final res = await evalJavascript(
+        'settings.getHashBySymbol(apiContract,"$from","$symbol")');
     return res;
   }
 

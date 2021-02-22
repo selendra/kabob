@@ -60,7 +60,7 @@ class SubmitTrxBody extends StatelessWidget {
           controller: scanPayM.controlAmount,
           focusNode: scanPayM.nodeAmount,
           validateField: (value) =>
-              value.isEmpty || int.parse(value) < 0 || value == '-0'
+              value.isEmpty || double.parse(value) < 0 || value == '-0'
                   ? 'Please fill in positive amount '
                   : null,
           onChanged: onChanged,
