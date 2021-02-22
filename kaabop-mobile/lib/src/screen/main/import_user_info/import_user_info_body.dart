@@ -46,7 +46,7 @@ class ImportUserInfoBody extends StatelessWidget {
                 children: <Widget>[
                   MyInputField(
                       pBottom: 16.0,
-                      labelText: "User name",
+                      labelText: "Username",
                       textInputFormatter: [
                         LengthLimitingTextInputFormatter(TextField.noMaxLength)
                       ],

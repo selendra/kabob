@@ -284,20 +284,21 @@ class MyUserInfoState extends State<MyUserInfo> {
 
         await _subscribeBalance();
 
-        if (widget.accModel.keyring.keyPairs.length != 0) {
-          await _contractSymbol();
-          await _getHashBySymbol().then((value) async {
-            await _balanceOf();
-          });
-        }
+        // if (widget.accModel.keyring.keyPairs.length != 0) {
+        //   await _contractSymbol();
+        //   await _getHashBySymbol().then((value) async {
+        //     await _balanceOf();
+        //   });
+        // }
 
         // Close Loading Process
         Navigator.pop(context);
         enableScreenshot();
-        await dialog(context, Text("You haved create account successfully"),
+        await dialogSuccess(context, Text("You haved imported successfully"),
             Text('Congratulation'),
             action: FlatButton(
                 onPressed: () {
+                  Navigator.pop(context);
                   Navigator.pushNamedAndRemoveUntil(
                       context, Home.route, ModalRoute.withName('/'));
                 },

@@ -1,4 +1,5 @@
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/components/dimissible_background.dart';
 import 'package:wallet_apps/src/components/portfolio_c.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -14,6 +15,7 @@ class HomeBody extends StatelessWidget {
   final Map<String, double> dataMap;
   final CreateAccModel sdkModel;
   final Function balanceOf;
+  final Function onDismiss;
 
   HomeBody(
       {this.homeM,
@@ -22,7 +24,8 @@ class HomeBody extends StatelessWidget {
       this.pieColorList,
       this.dataMap,
       this.sdkModel,
-      this.balanceOf});
+      this.balanceOf,
+      this.onDismiss});
 
   Widget build(BuildContext context) {
     return Column(
@@ -96,7 +99,7 @@ class HomeBody extends StatelessWidget {
                                   child: Container(
                                     width: 150,
                                     child: MyText(
-                                      text: sdkModel.nativeBalance,
+                                      text: '', //sdkModel.nativeBalance,
                                       fontSize: 30,
                                       color: AppColors.secondary_text,
                                       fontWeight: FontWeight.bold,
@@ -300,28 +303,37 @@ class HomeBody extends StatelessWidget {
                     sdkModel.nativeBalance,
                     Colors.white),
               ),
-              sdkModel.contractModel.pContractAddress != ''
-                  ? GestureDetector(
-                      onTap: () {
-                        balanceOf();
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                              sdkModel: sdkModel,
-                              assetLogo: sdkModel.contractModel.ptLogo,
-                              balance: sdkModel.contractModel.pBalance,
-                              tokenSymbol: sdkModel.contractModel.pTokenSymbol,
-                            ),
-                          ),
-                        );
+              sdkModel.contractModel.pHash != ''
+                  ? Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.endToStart,
+                      background: DismissibleBackground(),
+                      onDismissed: (direct) {
+                        onDismiss();
                       },
-                      child: portFolioItemRow(
-                          sdkModel.contractModel.ptLogo,
-                          sdkModel.contractModel.pTokenSymbol,
-                          sdkModel.contractModel.pOrg,
-                          sdkModel.contractModel.pBalance,
-                          Colors.black),
+                      child: GestureDetector(
+                        onTap: () {
+                          // balanceOf();
+                          Navigator.push(
+                            context,
+                            RouteAnimation(
+                              enterPage: AssetInfo(
+                                sdkModel: sdkModel,
+                                assetLogo: sdkModel.contractModel.ptLogo,
+                                balance: sdkModel.contractModel.pBalance,
+                                tokenSymbol:
+                                    sdkModel.contractModel.pTokenSymbol,
+                              ),
+                            ),
+                          );
+                        },
+                        child: portFolioItemRow(
+                            sdkModel.contractModel.ptLogo,
+                            sdkModel.contractModel.pTokenSymbol,
+                            sdkModel.contractModel.pOrg,
+                            sdkModel.contractModel.pBalance,
+                            Colors.black),
+                      ),
                     )
                   : Container(),
             ],

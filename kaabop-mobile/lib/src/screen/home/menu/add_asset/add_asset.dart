@@ -169,8 +169,7 @@ class AddAssetState extends State<AddAsset> {
     });
     _flareController.play('Checkmark');
     Timer(Duration(milliseconds: 2500), () {
-      Navigator.pushNamedAndRemoveUntil(
-          context, Home.route, ModalRoute.withName('/'));
+      Navigator.pop(context);
     });
   }
 

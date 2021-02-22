@@ -118,7 +118,7 @@ class _AccountState extends State<Account> {
     print(res);
     if (res != null) {
       await dialog(
-          context, Text('You password has changed!!'), Text('Change Pin'));
+          context, Text('You pin has changed!!'), Text('Change Pin'));
     } else {
       await dialog(context, Text('Change Failed'), Text('Opps'));
       setState(() {

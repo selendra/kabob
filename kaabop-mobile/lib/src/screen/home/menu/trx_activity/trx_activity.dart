@@ -150,6 +150,10 @@ class TrxActivityState extends State<TrxActivity> {
       length: myTabs.length,
       child: Scaffold(
         appBar: AppBar(
+          title: MyText(
+            text: 'Transaction History',
+            fontSize: 22.0,
+          ),
           bottom: TabBar(
             tabs: myTabs,
           ),

@@ -101,19 +101,18 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       if (acc != null) {
         widget.importAccModel.mnemonic = '';
         _subscribeBalance();
-        if (widget.importAccModel.keyring.keyPairs.length != 0) {
-          await _contractSymbol();
-          await _getHashBySymbol().then((value) async {
-            await _balanceOf();
-          });
-        }
-        await dialog(context, Text("You haved imported successfully"),
+        // if (widget.importAccModel.keyring.keyPairs.length != 0) {
+        //   await _contractSymbol();
+        //   await _getHashBySymbol().then((value) async {
+        //     await _balanceOf();
+        //   });
+        // }
+
+        await dialogSuccess(context, Text("You haved imported successfully"),
             Text('Congratulation'),
             action: FlatButton(
                 onPressed: () {
-                  //Close Dialog Loading
                   Navigator.pop(context);
-
                   Navigator.pushNamedAndRemoveUntil(
                       context, Home.route, ModalRoute.withName('/'));
                 },
@@ -273,7 +272,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       if (_userInfoM.responseFirstname == null)
         return null;
       else
-        _userInfoM.responseFirstname += "user name";
+        _userInfoM.responseFirstname += "username";
     }
     return _userInfoM.responseFirstname;
   }
@@ -281,10 +280,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   String validatePassword(String value) {
     if (_userInfoM.passwordNode.hasFocus) {
       _userInfoM.responseMidname = instanceValidate.validatePin(value);
-      if (_userInfoM.responseMidname == null)
-        return null;
-      else
-        _userInfoM.responseMidname += "password";
+      if (_userInfoM.responseMidname == null) return null;
+      //  else
+      // _userInfoM.responseMidname += "password";
     }
     return _userInfoM.responseMidname;
   }

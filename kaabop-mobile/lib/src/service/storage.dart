@@ -122,7 +122,7 @@ class StorageServices {
     _preferences = await SharedPreferences.getInstance();
 
     var _data = _preferences.getString(_path);
-    print("Data $_data");
+    //print("Data $_data");
     if (_data == null)
       return null;
     else {

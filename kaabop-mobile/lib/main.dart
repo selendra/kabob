@@ -77,11 +77,12 @@ class AppState extends State<App> {
     setState(() {});
     if (res != null) {
       print('res null');
+
       setState(() {
         _createAccModel.apiConnected = true;
         _subscribeBalance();
-        initContract();
       });
+      await initContract();
     } else {
       print('res null');
     }
@@ -107,14 +108,16 @@ class AppState extends State<App> {
 
   Future<void> initContract() async {
     await StorageServices.readBool('KMPI').then((value) async {
-      await _createAccModel.sdk.api.callContract().then((value) {
-        _createAccModel.contractModel.pContractAddress = value;
-      });
-      if (_createAccModel.keyring.keyPairs.isNotEmpty) {
-        await _contractSymbol();
-        await _getHashBySymbol().then((value) async {
-          await _balanceOfByPartition();
+      if (value) {
+        await _createAccModel.sdk.api.callContract().then((value) {
+          _createAccModel.contractModel.pContractAddress = value;
         });
+        if (_createAccModel.keyring.keyPairs.isNotEmpty) {
+          await _contractSymbol();
+          await _getHashBySymbol().then((value) async {
+            await _balanceOfByPartition();
+          });
+        }
       }
     });
   }

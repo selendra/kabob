@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class Home extends StatefulWidget {
@@ -26,6 +27,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   PostRequest _postRequest = PostRequest();
 
   PortfolioM _portfolioM = PortfolioM();
+  BuildContext dialogContext;
 
   PortfolioRateModel _portfolioRate = PortfolioRateModel();
 
@@ -111,11 +113,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   // }
 
   void startNode() async {
-    await Future.delayed(Duration(seconds: 1), () {
+    await Future.delayed(Duration(milliseconds: 50), () {
       showDialog(
           barrierDismissible: false,
           context: context,
-          builder: (BuildContext context) {
+          builder: (context) {
+            dialogContext = context;
             return disableNativePopBackButton(AlertDialog(
               backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
@@ -147,12 +150,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void handleConnectNode() async {
-    print("My connection status ${widget.sdkModel.apiConnected}");
     if (widget.sdkModel.apiConnected) {
-      await Future.delayed(Duration(milliseconds: 300), () {
+      await Future.delayed(Duration(milliseconds: 200), () {
         status = null;
       });
-      Navigator.pop(context);
+      Navigator.of(dialogContext).pop();
     }
   }
 
@@ -194,7 +196,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           ..contractModel.pBalance = BigInt.parse(res['output']).toString();
       });
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -215,6 +217,28 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     _homeM.globalKey.currentState.openDrawer();
   }
 
+  Future<void> onRefresh() async {
+    await Future.delayed(Duration(milliseconds: 100)).then((value) {
+      if (widget.sdkModel.contractModel.pHash != '') {
+        _balanceOf();
+      }
+    });
+  }
+
+  void deleteAccout() async {
+    await dialog(context, Text('Are you sure to delete this asset?'),
+        Text('Delete Asset'),
+        action: FlatButton(onPressed: () async {}, child: Text('Delete')));
+  }
+
+  void onDismiss() async {
+    setState(() {
+      widget.sdkModel.contractModel.pHash = '';
+    });
+    widget.sdkModel.contractModel = ContractModel();
+    await StorageServices.removeKey('KMPI');
+  }
+
   @override
   Widget build(BuildContext context) {
     if (status != null) handleConnectNode();
@@ -222,20 +246,24 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       key: _homeM.globalKey,
       drawer: Theme(
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-        child: Menu(_homeM.userData),
+        child: Menu(_homeM.userData, _homeM),
       ),
       appBar: homeAppBar(context),
-      body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: HomeBody(
-            portfolioM: _portfolioM,
-            portfolioRateM: _portfolioRate,
-            homeM: _homeM,
-            pieColorList: pieColorList,
-            dataMap: dataMap,
-            sdkModel: widget.sdkModel,
-            balanceOf: _balanceOf,
-          )),
+      body: RefreshIndicator(
+        onRefresh: onRefresh,
+        child: BodyScaffold(
+            height: MediaQuery.of(context).size.height,
+            child: HomeBody(
+              portfolioM: _portfolioM,
+              portfolioRateM: _portfolioRate,
+              homeM: _homeM,
+              pieColorList: pieColorList,
+              dataMap: dataMap,
+              sdkModel: widget.sdkModel,
+              balanceOf: _balanceOf,
+              onDismiss: onDismiss,
+            )),
+      ),
       floatingActionButton: SizedBox(
           width: 64,
           height: 64,

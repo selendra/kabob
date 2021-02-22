@@ -229,6 +229,30 @@ Future dialog(BuildContext context, var text, var title,
   return result;
 }
 
+Future dialogSuccess(BuildContext context, var text, var title,
+    {Widget action, Color bgColor}) async {
+  var result = await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: bgColor,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            alignment: Alignment.center,
+            child: title,
+          ),
+          content: Padding(
+            padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: text,
+          ),
+          actions: <Widget>[action],
+        );
+      });
+  return result;
+}
+
 Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
   return showDialog(
     context: context,
@@ -512,10 +536,9 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
           child: QrImage(
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
-            embeddedImage: AssetImage('assets/group.png'),
-            embeddedImageStyle: QrEmbeddedImageStyle(
-              size: Size(50, 50),
-            ),
+            embeddedImage: AssetImage('assets/GroupB.png'),
+            embeddedImageStyle:
+                QrEmbeddedImageStyle(size: Size(50, 50), color: Colors.white),
             // version: QrVersions.auto,
             data: wallet,
           )),

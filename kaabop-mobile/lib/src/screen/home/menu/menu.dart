@@ -2,8 +2,9 @@ import 'package:wallet_apps/index.dart';
 
 class Menu extends StatefulWidget {
   final Map<String, dynamic> _userData;
+  final HomeModel _homeM;
 
-  Menu(this._userData);
+  Menu(this._userData, this._homeM);
 
   @override
   State<StatefulWidget> createState() {
@@ -153,9 +154,7 @@ class MenuState extends State<Menu> {
     try {
       // Trigger Authentication By Finger Print
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-          localizedReason: '',
-          useErrorDialogs: true,
-          stickyAuth: true);
+          localizedReason: '', useErrorDialogs: true, stickyAuth: true);
     } on PlatformException catch (e) {}
     return _menuModel.authenticated;
   }
@@ -163,26 +162,19 @@ class MenuState extends State<Menu> {
   /* ----------------------Side Bar -------------------------*/
 
   Widget build(BuildContext context) {
-    return Scaffold(
-        key: _menuModel.globalKey,
-        backgroundColor: Colors.transparent,
-        body: GestureDetector(
-          onTap: () {
-            // print("Tap");
-          },
-          child: Drawer(
-            child: SafeArea(
-              child: Container(
-                  width: 305,
-                  color: hexaCodeToColor(AppColors.bgdColor),
-                  child: SingleChildScrollView(
-                      child: MenuBody(
-                    userInfo: widget._userData,
-                    model: _menuModel,
-                    switchBio: switchBiometric,
-                  ))),
-            ),
-          ),
-        ));
+    return Drawer(
+      key: _menuModel.globalKey,
+      child: SafeArea(
+        child: Container(
+            //width: 305,
+            color: hexaCodeToColor(AppColors.bgdColor),
+            child: SingleChildScrollView(
+                child: MenuBody(
+              userInfo: widget._userData,
+              model: _menuModel,
+              switchBio: switchBiometric,
+            ))),
+      ),
+    );
   }
 }
