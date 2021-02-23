@@ -260,3 +260,12 @@ export 'package:wallet_apps/src/models/sms_code_model.dart';
 
 /* ---------------------Util------------------------ */
 export 'package:wallet_apps/src/utils/instance_trx_order.dart';
+
+export 'package:responsive_framework/responsive_framework.dart';
+export 'package:wallet_apps/src/models/createAccountM.dart';
+export 'package:wallet_apps/src/models/fmt.dart';
+export 'package:wallet_apps/src/screen/home/menu/account.dart';
+export 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
+export 'package:wallet_apps/src/screen/main/contents_backup.dart';
+export  'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
+export  'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';

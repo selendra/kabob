@@ -202,11 +202,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   void toReceiveToken() async {
     /* Navigate Receive Token */
-    await Navigator.of(context).push(RouteAnimation(
-        enterPage: ReceiveWallet(
-      sdk: widget.sdkModel.sdk,
-      keyring: widget.sdkModel.keyring,
-    )));
+    await Navigator.pushNamed(context, ReceiveWallet.route);
     if (Platform.isAndroid)
       await AndroidPlatform.resetBrightness();
     else
@@ -246,8 +242,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       key: _homeM.globalKey,
       drawer: Theme(
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-        child: Menu(_homeM.userData, _homeM),
-      ),
+        child: Menu(_homeM.userData, _homeM)),
       appBar: homeAppBar(context),
       body: RefreshIndicator(
         onRefresh: onRefresh,

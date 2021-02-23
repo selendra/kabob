@@ -3,24 +3,10 @@ import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:responsive_framework/responsive_framework.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/models/fmt.dart';
-import 'package:wallet_apps/src/screen/home/menu/account.dart';
-import 'package:wallet_apps/src/screen/home_screen.dart/home.dart';
-import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
-import 'package:wallet_apps/src/screen/main/contents_backup.dart';
-import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
-import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
 void main() async {
-  // Avoid Error, " accessed before the binding was initialized "
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Enable Debug Paint
-  // debugPaintSizeEnabled = true;
-
-  // Keep Screen Portrait
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   // Catch Error During Callback
@@ -64,40 +50,33 @@ class AppState extends State<App> {
   }
 
   Future<void> connectNode() async {
-    //print('connectNode');
     final node = NetworkParams();
 
     node.name = 'Indranet hosted By Selendra';
     node.endpoint = 'wss://rpc-testnet.selendra.org';
     node.ss58 = 42;
-    // print(node.endpoint);
 
     final res = await _createAccModel.sdk.api
         .connectNode(_createAccModel.keyring, [node]);
 
     setState(() {});
     if (res != null) {
-      // print('res null');
       setState(() {
         _createAccModel.apiConnected = true;
         getChainDecimal();
         _subscribeBalance();
       });
       await initContract();
-    } else {
-      // print('res null');
     }
   }
 
   Future<void> getChainDecimal() async {
     final res = await _createAccModel.sdk.api.getChainDecimal();
     _createAccModel.chainDecimal = res.toString();
-    // print(res);
   }
 
   Future<void> _subscribeBalance() async {
     if (_createAccModel.keyring.keyPairs.isNotEmpty) {
-      // print('subscribe');
       final channel = await _createAccModel.sdk.api.account
           .subscribeBalance(_createAccModel.keyring.current.address, (res) {
         setState(() {
@@ -108,7 +87,6 @@ class AppState extends State<App> {
       });
       setState(() {
         _createAccModel.msgChannel = channel;
-        //print('Channel $channel');
       });
     }
   }
@@ -138,14 +116,10 @@ class AppState extends State<App> {
           _createAccModel.contractModel.pTokenSymbol = res[0];
         });
       }
-    } catch (e) {
-      // print(e.toString());
-    }
+    } catch (e) {}
   }
 
   Future<void> _getHashBySymbol() async {
-    //print('my symbol${_createAccModel.contractModel.pTokenSymbol}');
-
     try {
       final res = await _createAccModel.sdk.api.getHashBySymbol(
         _createAccModel.keyring.keyPairs[0].address,
@@ -154,12 +128,8 @@ class AppState extends State<App> {
 
       if (res != null) {
         _createAccModel.contractModel.pHash = res;
-
-        // print(res);
       }
-    } catch (e) {
-      // print(e.toString());
-    }
+    } catch (e) {}
   }
 
   Future<void> _balanceOfByPartition() async {
@@ -171,8 +141,6 @@ class AppState extends State<App> {
       );
 
       setState(() {
-        // _createAccModel.contractModel.pBalance =
-        //     Fmt.balance(res['output'], 18);
         _createAccModel.contractModel.pBalance =
             BigInt.parse(res['output']).toString();
       });
@@ -197,11 +165,9 @@ class AppState extends State<App> {
               ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
-              // Home.route: (_) => Home(_createAccModel),
-              ReceiveWallet.route: (_) => ReceiveWallet(
-                    sdk: _createAccModel.sdk,
-                    keyring: _createAccModel.keyring,
-                  ),
+              Home.route: (_) => Home(_createAccModel),
+              ReceiveWallet.route: (_) =>
+                  ReceiveWallet(createAccModel: _createAccModel),
               ImportAcc.route: (_) => ImportAcc(_createAccModel),
               Account.route: (_) => Account(_createAccModel.sdk,
                   _createAccModel.keyring, _createAccModel),

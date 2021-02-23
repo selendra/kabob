@@ -1,13 +1,13 @@
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class ReceiveWallet extends StatefulWidget {
   final HomeModel homeM;
-  final WalletSDK sdk;
-  final Keyring keyring;
+  final CreateAccModel createAccModel;
 
-  ReceiveWallet({this.homeM, this.sdk, this.keyring});
+  ReceiveWallet({this.homeM, this.createAccModel});
 
   static const route = '/recievewallet';
 
@@ -18,10 +18,7 @@ class ReceiveWallet extends StatefulWidget {
 }
 
 class ReceiveWalletState extends State<ReceiveWallet> {
-  String _brightnessLevel = "Unkown brigtness level";
-
   GlobalKey<ScaffoldState> _globalKey;
-
   GlobalKey _keyQrShare = GlobalKey();
 
   dynamic result;
@@ -32,9 +29,8 @@ class ReceiveWalletState extends State<ReceiveWallet> {
 
   @override
   void initState() {
-    //print(widget.homeM.userData);
-    name = widget.keyring.keyPairs[0].name;
-    wallet = widget.keyring.keyPairs[0].address;
+    name = widget.createAccModel.keyring.keyPairs[0].name;
+    wallet = widget.createAccModel.keyring.keyPairs[0].address;
     _globalKey = GlobalKey<ScaffoldState>();
     AppServices.noInternetConnection(_globalKey);
     _method.platformChecker(context);
@@ -49,7 +45,6 @@ class ReceiveWalletState extends State<ReceiveWallet> {
           child: ReceiveWalletBody(
             keyQrShare: _keyQrShare,
             globalKey: _globalKey,
-            // homeM: widget.homeM,
             method: _method,
             name: name,
             wallet: wallet,

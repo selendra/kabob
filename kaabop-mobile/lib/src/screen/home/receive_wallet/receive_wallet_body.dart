@@ -1,5 +1,3 @@
-import 'package:polkawallet_sdk/kabob_sdk.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 
 class ReceiveWalletBody extends StatelessWidget {
