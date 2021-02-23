@@ -211,8 +211,7 @@ class LoginState extends State<Login> with WidgetsBindingObserver {
     // Close Loading
     Navigator.pop(context);
 
-    await StorageServices.fetchData('total_rate')
-        .then((value) => print("Login total rate $value"));
+    await StorageServices.fetchData('total_rate');
 
     if (_backend.response.statusCode != 502) {
       if (_backend.mapData.containsKey("error")) {

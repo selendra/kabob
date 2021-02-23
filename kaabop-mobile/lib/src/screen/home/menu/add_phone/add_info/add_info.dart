@@ -20,7 +20,7 @@ class AddInfoState extends State<AddInfo> {
   @override
   void initState() {
 
-    print("adding info");
+    //print("adding info");
     AppServices.noInternetConnection(_userInfoM.globalKey);
     /* If Registering Account */
     // if (widget.passwords != null) getToken();

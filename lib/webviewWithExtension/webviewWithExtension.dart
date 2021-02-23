@@ -46,7 +46,7 @@ class _WebViewWithExtensionState extends State<WebViewWithExtension> {
       case 'pub(accounts.list)':
         final List<KeyPairData> ls = widget.keyring.keyPairs;
         ls.forEach((element) {
-          print(element.encoding);
+          // print(element.encoding);
         });
         ls.retainWhere((e) => e.encoding['content'][1] == 'sr25519');
         final List res = ls.map((e) {
@@ -80,7 +80,7 @@ class _WebViewWithExtensionState extends State<WebViewWithExtension> {
         return _controller.evaluateJavascript(
             'walletExtension.onAppResponse("${params.msgType}", ${jsonEncode(result.toJson())})');
       default:
-        print('Unknown message from dapp: ${msg['msgType']}');
+        // print('Unknown message from dapp: ${msg['msgType']}');
     }
   }
 
@@ -113,7 +113,7 @@ class _WebViewWithExtensionState extends State<WebViewWithExtension> {
         JavascriptChannel(
           name: 'Extension',
           onMessageReceived: (JavascriptMessage message) {
-            print('msg from dapp: ${message.message}');
+            // print('msg from dapp: ${message.message}');
             compute(jsonDecode, message.message).then((msg) {
               if (msg['path'] != 'extensionRequest') return;
               _msgHandler(msg['data']);
@@ -125,16 +125,16 @@ class _WebViewWithExtensionState extends State<WebViewWithExtension> {
         if (widget.onPageFinished != null) {
           widget.onPageFinished(url);
         }
-        print('Page finished loading: $url');
+        // print('Page finished loading: $url');
 
         if (_jsInjected) return;
         setState(() {
           _jsInjected = true;
         });
 
-        print('Inject extension js code...');
+        // print('Inject extension js code...');
         _controller.evaluateJavascript(_jsCode);
-        print('js code injected');
+        // print('js code injected');
         if (widget.onExtensionReady != null) {
           widget.onExtensionReady();
         }

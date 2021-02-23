@@ -49,7 +49,7 @@ class MyUserInfoState extends State<MyUserInfo> {
   }
 
   Future<void> _subscribeBalance() async {
-    print('subscribe');
+    // print('subscribe');
     final channel = await widget.accModel.sdk.api.account
         .subscribeBalance(widget.accModel.keyring.current.address, (res) {
       widget.accModel.balance = res;
@@ -73,7 +73,7 @@ class MyUserInfoState extends State<MyUserInfo> {
             BigInt.parse(res['output']).toString();
       });
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -87,12 +87,12 @@ class MyUserInfoState extends State<MyUserInfo> {
         });
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
   Future<void> _getHashBySymbol() async {
-    print('my symbol${widget.accModel.contractModel.pTokenSymbol}');
+    // print('my symbol${widget.accModel.contractModel.pTokenSymbol}');
 
     try {
       final res = await widget.accModel.sdk.api.getHashBySymbol(
@@ -103,10 +103,10 @@ class MyUserInfoState extends State<MyUserInfo> {
       if (res != null) {
         widget.accModel.contractModel.pHash = res;
 
-        print(res);
+        // print(res);
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -120,7 +120,7 @@ class MyUserInfoState extends State<MyUserInfo> {
   // }
 
   void switchBiometric(bool switchValue) async {
-    print(switchValue);
+    // print(switchValue);
 
     // setState(() {
     //   _menuModel.switchBio = switchValue;
@@ -129,11 +129,11 @@ class MyUserInfoState extends State<MyUserInfo> {
 
     await _localAuth.canCheckBiometrics.then((value) async {
       if (value == false) {
-        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
+        // snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
       } else {
         if (switchValue) {
           await authenticateBiometric(_localAuth).then((values) async {
-            print('value 1: $values');
+            // print('value 1: $values');
             if (_menuModel.authenticated) {
               setState(() {
                 _menuModel.switchBio = switchValue;

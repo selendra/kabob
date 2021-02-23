@@ -193,7 +193,7 @@ class SignUpState extends State<SignUp> with SingleTickerProviderStateMixin{
       if (_backend.response != null) {
         // Navigator.pop(context);
         _backend.mapData = json.decode(_backend.response.body);
-        print("Register phone ${_backend.mapData}");
+       // print("Register phone ${_backend.mapData}");
       }
       // Navigator Route
       await navigator();

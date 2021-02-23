@@ -30,7 +30,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   @override
   void initState() {
-    // print(widget.importAccModel.mnemonicList);
+    // // print(widget.importAccModel.mnemonicList);
     AppServices.noInternetConnection(_userInfoM.globalKey);
     /* If Registering Account */
     // if (widget.passwords != null) getToken();
@@ -49,19 +49,19 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<void> _subscribeBalance() async {
-    print('subscribe');
+    // print('subscribe');
     final channel = await widget.importAccModel.sdk.api.account
         .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
       setState(() {
         widget.importAccModel.balance = res;
         widget.importAccModel.nativeBalance =
             Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
-        print(widget.importAccModel.nativeBalance);
+        // print(widget.importAccModel.nativeBalance);
       });
     });
     setState(() {
       widget.importAccModel.msgChannel = channel;
-      print('Channel $channel');
+      // print('Channel $channel');
     });
   }
 
@@ -71,14 +71,14 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   //     setState(() {
   //       widget.importAccModel.contractModel.pBalance =
   //           BigInt.parse(res['output']).toString();
-  //       print(widget.importAccModel.contractModel.pBalance);
+  // //       print(widget.importAccModel.contractModel.pBalance);
   //     });
   //   }
   // }
 
   Future<void> _importFromMnemonic() async {
-    print(" firstName ${_userInfoM.controlFirstName.text}");
-    print(" Password ${_userInfoM.confirmPasswordCon.text}");
+    // print(" firstName ${_userInfoM.controlFirstName.text}");
+    // print(" Password ${_userInfoM.confirmPasswordCon.text}");
 
     try {
       final json = await widget.importAccModel.sdk.api.keyring.importAccount(
@@ -88,7 +88,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
-      print("My json $json");
+      // print("My json $json");
 
       final acc = await widget.importAccModel.sdk.api.keyring.addAccount(
         widget.importAccModel.keyring,
@@ -97,7 +97,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         password: _userInfoM.confirmPasswordCon.text,
       );
 
-      print("My account name ${acc.name}");
+      // print("My account name ${acc.name}");
       if (acc != null) {
         widget.importAccModel.mnemonic = '';
         _subscribeBalance();
@@ -119,7 +119,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
                 child: Text('Continue')));
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
       await dialog(
         context,
         Text("Invalid mnemonic"),
@@ -142,7 +142,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
             BigInt.parse(res['output']).toString();
       });
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -156,12 +156,12 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         });
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
   Future<void> _getHashBySymbol() async {
-    print('my symbol${widget.importAccModel.contractModel.pTokenSymbol}');
+    // print('my symbol${widget.importAccModel.contractModel.pTokenSymbol}');
 
     try {
       final res = await widget.importAccModel.sdk.api.getHashBySymbol(
@@ -172,15 +172,15 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       if (res != null) {
         widget.importAccModel.contractModel.pHash = res;
 
-        print(res);
+        // print(res);
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
   void switchBiometric(bool switchValue) async {
-    print(switchValue);
+    // print(switchValue);
 
     // setState(() {
     //   _menuModel.switchBio = switchValue;
@@ -193,7 +193,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       } else {
         if (switchValue) {
           await authenticateBiometric(_localAuth).then((values) async {
-            print('value 1: $values');
+            // print('value 1: $values');
             if (_menuModel.authenticated) {
               setState(() {
                 _menuModel.switchBio = switchValue;

@@ -34,7 +34,7 @@ class _AddContactState extends State<AddContact> {
 
       // Close Dialog Loading
       Navigator.pop(context);
-      print("Close Dialog");
+      //print("Close Dialog");
 
       await dialog(
           context,
@@ -46,7 +46,7 @@ class _AddContactState extends State<AddContact> {
     } catch (e) {
       // Close Dialog Loading
       Navigator.pop(context);
-      print("My error $e");
+      //print("My error $e");
     }
     // await validateAddressF(_addContactModel.address.text).then((value) async {
     //   if (value) {

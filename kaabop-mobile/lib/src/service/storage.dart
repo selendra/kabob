@@ -76,12 +76,12 @@ class StorageServices {
     // if (_preferences.containsKey(key)) {
     //   var data = _preferences.getString(key);
     //   txHistoryList = List<TxHistory>.from(jsonDecode(data));
-    //   print('data: $data');
+      // print('data: $data');
     //   txHistoryList.add(txHistory);
-    //   print('added');
+      // print('added');
     // } else {
     //   txHistoryList.add(txHistory);
-    //   print('added');
+      // print('added');
     // }
 
 //    await setData(jsonEncode(txHistoryList), 'txhistory');
@@ -122,7 +122,7 @@ class StorageServices {
     _preferences = await SharedPreferences.getInstance();
 
     var _data = _preferences.getString(_path);
-    //print("Data $_data");
+    // print("Data $_data");
     if (_data == null)
       return null;
     else {

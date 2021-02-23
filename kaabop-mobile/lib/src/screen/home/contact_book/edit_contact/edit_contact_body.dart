@@ -19,7 +19,7 @@ class EditContactBody extends StatelessWidget {
         MyAppBar(
           title: "Edit Contact",
           onPressed: () {
-            print("Dae");
+            //print("Dae");
             Navigator.pop(context);
           },
         ),
@@ -100,7 +100,7 @@ class EditContactBody extends StatelessWidget {
                             onChanged(_response);
                           }
                         } catch (e) {
-                          print("Error from QR scanner $e");
+                          //print("Error from QR scanner $e");
                         }
                       },
                     )

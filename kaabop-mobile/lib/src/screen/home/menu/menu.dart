@@ -32,7 +32,7 @@ class MenuState extends State<Menu> {
   @override
   void initState() {
     _menuModel.globalKey = GlobalKey<ScaffoldState>();
-    AppServices.noInternetConnection(_menuModel.globalKey);
+    //AppServices.noInternetConnection(_menuModel.globalKey);
     setUserInfo();
     readBio();
     checkAvailableBio();
@@ -81,7 +81,7 @@ class MenuState extends State<Menu> {
   }
 
   void switchBiometric(bool switchValue) async {
-    print(switchValue);
+    //print(switchValue);
 
     // setState(() {
     //   _menuModel.switchBio = switchValue;
@@ -94,7 +94,7 @@ class MenuState extends State<Menu> {
       } else {
         if (switchValue) {
           await authenticateBiometric(_localAuth).then((values) async {
-            print('value 1: $values');
+            //print('value 1: $values');
             if (_menuModel.authenticated) {
               setState(() {
                 _menuModel.switchBio = switchValue;
@@ -115,7 +115,7 @@ class MenuState extends State<Menu> {
       }
     });
 
-    // print(_menuModel.switchBio);
+    // //print(_menuModel.switchBio);
     // _localAuth = LocalAuthentication();
     // await _localAuth.canCheckBiometrics.then((value) async {
     //   if (value == false) {
@@ -124,7 +124,7 @@ class MenuState extends State<Menu> {
     //     try {
     //       if (value) {
     //         await authenticateBiometric(_localAuth).then((values) async {
-    //           print('value 1: $values');
+    //           //print('value 1: $values');
     //           if (_menuModel.authenticated) {
     //             setState(() {
     //               _menuModel.switchBio = false;
@@ -134,7 +134,7 @@ class MenuState extends State<Menu> {
     //         });
     //       } else {
     //         await authenticateBiometric(_localAuth).then((values) async {
-    //           print('value 2: $values');
+    //           //print('value 2: $values');
     //           if (_menuModel.authenticated) {
     //             setState(() {
     //               _menuModel.switchBio = true;
@@ -166,7 +166,6 @@ class MenuState extends State<Menu> {
       key: _menuModel.globalKey,
       child: SafeArea(
         child: Container(
-            //width: 305,
             color: hexaCodeToColor(AppColors.bgdColor),
             child: SingleChildScrollView(
                 child: MenuBody(

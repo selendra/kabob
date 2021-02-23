@@ -121,12 +121,12 @@ class AddAssetState extends State<AddAsset> {
         });
       }
     } catch (e) {
-      print(e.toString());
+      //print(e.toString());
     }
   }
 
   Future<void> _getHashBySymbol() async {
-    print('my symbol${widget.sdkModel.contractModel.pTokenSymbol}');
+    //print('my symbol${widget.sdkModel.contractModel.pTokenSymbol}');
 
     try {
       final res = await widget.sdkModel.sdk.api.getHashBySymbol(
@@ -137,17 +137,17 @@ class AddAssetState extends State<AddAsset> {
       if (res != null) {
         widget.sdkModel.contractModel.pHash = res;
 
-        print(res);
+        //print(res);
       }
     } catch (e) {
-      print(e.toString());
+      //print(e.toString());
     }
   }
 
   Future<void> _balanceOfByPartition() async {
     try {
-      print(widget.sdkModel.keyring.keyPairs[0].address);
-      print(widget.sdkModel.contractModel.pHash);
+      //print(widget.sdkModel.keyring.keyPairs[0].address);
+      //print(widget.sdkModel.contractModel.pHash);
 
       final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
         widget.sdkModel.keyring.keyPairs[0].address,
@@ -160,7 +160,7 @@ class AddAssetState extends State<AddAsset> {
             BigInt.parse(res['output']).toString();
       });
     } catch (e) {
-      print(e.toString());
+      //print(e.toString());
     }
   }
 
@@ -208,7 +208,7 @@ class AddAssetState extends State<AddAsset> {
       if (!value) {
         await validateAddress(_modelAsset.controllerAssetCode.text)
             .then((value) async {
-          print(value);
+          //print(value);
           if (value) {
             if (_modelAsset.controllerAssetCode.text ==
                 widget.sdkModel.contractModel.pContractAddress) {
@@ -217,7 +217,7 @@ class AddAssetState extends State<AddAsset> {
                 _modelAsset.loading = false;
               });
 
-              print(_modelAsset.match);
+              //print(_modelAsset.match);
             } else {
               setState(() {
                 _modelAsset.loading = false;

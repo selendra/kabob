@@ -27,13 +27,13 @@ class _ContactBookState extends State<ContactBook> {
       _contactBookModel.contactBookList = [];
       var value = await StorageServices.fetchData('contactList');
 
-      print("Get from storage $value");
+      //print("Get from storage $value");
       if(value == null) {
         _contactBookModel.contactBookList = null;
-        print("My contact");
+        //print("My contact");
       }
       else {
-        print("Ke contact");
+        //print("Ke contact");
         for(var i in value){
           _contactBookModel.contactBookList.add(
             ContactBookModel.initList(
@@ -54,7 +54,7 @@ class _ContactBookState extends State<ContactBook> {
 
   Future<void> deleteContact(int index) async {
     _contactBookModel.contactBookList.removeAt(index);
-    print("Empty ${_contactBookModel.contactBookList.isEmpty}");
+    //print("Empty ${_contactBookModel.contactBookList.isEmpty}");
     if(_contactBookModel.contactBookList.isEmpty){
       await StorageServices.removeKey('contactList');
       _contactBookModel.contactBookList = null;
@@ -92,7 +92,7 @@ class _ContactBookState extends State<ContactBook> {
   @override
   initState(){
     getContact();
-    // print(widget.sdkModel.keyring.contacts)
+    // //print(widget.sdkModel.keyring.contacts)
     super.initState();
   }
 

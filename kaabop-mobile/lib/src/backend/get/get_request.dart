@@ -13,7 +13,7 @@ class GetRequest {
       var resJson = json.decode(res.body);
       response = resJson;
     } catch (e) {
-      print(e.toString());
+     // print(e.toString());
     }
     return response;
   }
@@ -22,7 +22,7 @@ class GetRequest {
     final res = await _http
         .get('http://localhost:3000/:service/contract/balanceof/$from/$who');
     var resJson = json.decode(res.body);
-    print(resJson);
+   // print(resJson);
     // ModelAsset().assetBalance = resJson['balanceOf'];
     String response = resJson['balanceOf'];
     return response;
@@ -32,7 +32,7 @@ class GetRequest {
     final res = await _http.get(
         'http://localhost:3000/:service/contract/allowance/$owner/$spender');
     var resJson = json.decode(res.body);
-    print(resJson);
+   // print(resJson);
     // ModelAsset().assetBalance = resJson['balanceOf'];
     String response = resJson['allowance'];
     return response;
@@ -42,7 +42,7 @@ class GetRequest {
     final res = await _http
         .get('http://localhost:3000/:service/contract/totalsupply$from');
     var resJson = json.decode(res.body);
-    print(resJson);
+    //print(resJson);
     // ModelAsset().assetBalance = resJson['balanceOf'];
     String response = resJson['totalSupply'];
     return response;

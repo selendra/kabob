@@ -33,7 +33,7 @@ class _AddPhoneState extends State<AddPhone>{
   }
 
   void enableButton(bool enable){
-    print(_phoneM.enable);
+    //print(_phoneM.enable);
     setState(() {
       _phoneM.enable = enable;
     });
@@ -59,7 +59,7 @@ class _AddPhoneState extends State<AddPhone>{
 
       _backend.mapData = json.decode(_backend.response.body);
 
-      print(_backend.mapData);
+      //print(_backend.mapData);
       // Convert String To Obj From Add Phone
       if(_backend.response.statusCode == 200 && !_backend.mapData.containsKey('error')){
         await Future.delayed(Duration(milliseconds: 100), () async {

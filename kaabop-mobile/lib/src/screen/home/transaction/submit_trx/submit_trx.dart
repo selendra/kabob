@@ -42,13 +42,13 @@ class SubmitTrxState extends State<SubmitTrx> {
     widget.asset != null
         ? _scanPayM.asset = widget.asset
         : _scanPayM.asset = "SEL";
-    print(c.transferFrom);
+    // print(c.transferFrom);
 
     AppServices.noInternetConnection(_scanPayM.globalKey);
 
     _scanPayM.controlReceiverAddress.text = widget._walletKey;
     _scanPayM.portfolio = widget._listPortfolio;
-    print(widget.sdkModel.contractModel.pHash);
+    // print(widget.sdkModel.contractModel.pHash);
 
     super.initState();
   }
@@ -226,7 +226,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   void resetAssetsDropDown(String data) {
-    print("My asset $data");
+    // print("My asset $data");
     /* Reset Asset */
     setState(() {
       _scanPayM.asset = data;
@@ -292,11 +292,11 @@ class SubmitTrxState extends State<SubmitTrx> {
                 .toString(),
           ],
           pin, onStatusChange: (status) async {
-        print(status);
+        // print(status);
       });
 
       //print('tx status: $_status');
-      print('hash: $hash');
+      // print('hash: $hash');
 
       if (hash != null) {
         saveTxHistory(TxHistory(
@@ -311,7 +311,7 @@ class SubmitTrxState extends State<SubmitTrx> {
         await enableAnimation();
       }
     } catch (e) {
-      print(e.message);
+      // print(e.message);
       Navigator.pop(context);
       await dialog(context, Text(e.message), Text("Opps"));
     }
@@ -334,9 +334,9 @@ class SubmitTrxState extends State<SubmitTrx> {
       widget.sdkModel.contractModel.pBalance =
           BigInt.parse(res['output']).toString();
 
-      print('balanceOfByPartition $res');
+      // print('balanceOfByPartition $res');
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -346,7 +346,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   //     setState(() {
   //       widget.sdkModel.contractModel.pBalance =
   //           BigInt.parse(res['output']).toString();
-  //       print(widget.sdkModel.contractModel.pBalance);
+       // print(widget.sdkModel.contractModel.pBalance);
   //     });
   //   }
   // }
@@ -389,7 +389,7 @@ class SubmitTrxState extends State<SubmitTrx> {
                 }
               }
             } else {
-              print('amount is null');
+              // print('amount is null');
             }
           });
         } else {

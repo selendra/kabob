@@ -60,7 +60,7 @@ class TrxActivityState extends State<TrxActivity> {
 
   Future<List<TxHistory>> readTxHistory() async {
     await StorageServices.fetchData('txhistory').then((value) {
-      print('My value $value');
+     // print('My value $value');
 
       if (value != null) {
         _txHistoryModel.txHistoryList = value;
@@ -153,6 +153,7 @@ class TrxActivityState extends State<TrxActivity> {
           title: MyText(
             text: 'Transaction History',
             fontSize: 22.0,
+            color: "#FFFFF",
           ),
           bottom: TabBar(
             tabs: myTabs,

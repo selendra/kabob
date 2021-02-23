@@ -263,7 +263,7 @@ class ApiKeyring {
     final res =
         await service.contractTranfer(senderPubKey, to, value, password,hash);
 
-    print("apiKeyring: $value");
+    // print("apiKeyring: $value");
     if (res['error'] != null) {
       throw Exception(res['error']);
     }
@@ -272,7 +272,7 @@ class ApiKeyring {
 
   Future<dynamic> contractTransferFrom(String from, String senderPubKey,
       String to, String value, String password) async {
-    print('contract transfer');
+    // print('contract transfer');
 
     final res = await service.contractTranferFrom(
         from, senderPubKey, to, value, password);

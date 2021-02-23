@@ -31,7 +31,7 @@ class _ContentsBackupState extends State<ContentsBackup> {
     setState(() {
       
     });
-    print("My mnemonic ${widget.createAccM.mnemonicList}");
+   // print("My mnemonic ${widget.createAccM.mnemonicList}");
     // widget.showResult(context, 'generateMnemonic', seed);
     // setState(() {
     //   _submitting = false;

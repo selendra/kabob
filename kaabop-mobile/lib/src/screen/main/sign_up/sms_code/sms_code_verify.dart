@@ -137,7 +137,7 @@ class SmsCodeVerifyState extends State<SmsCodeVerify> with WidgetsBindingObserve
           // Navigator.pop(context);
           _backend.mapData = json.decode(_backend.response.body);
 
-          print("Sms ${_backend.mapData}");
+         // print("Sms ${_backend.mapData}");
           if (_backend.response.statusCode == 200){
             // Set Timer
             setState(() {

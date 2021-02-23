@@ -62,7 +62,7 @@ class Fmt {
         v = double.parse(value);
       }
     } catch (err) {
-      print('Fmt.tokenInt() error: ${err.toString()}');
+     // print('Fmt.tokenInt() error: ${err.toString()}');
     }
     return BigInt.from(v * pow(10, decimals));
   }

@@ -138,7 +138,7 @@ class ServiceKeyring {
     final res = await serviceRoot.webView.evalJavascript(
         'keyring.contractTransfer(apiContract,"$senderPubKey","$to","$value", "$password","$hash")');
     
-    print("service: $value");
+    // print("service: $value");
 
     if (res != null) {
       return res;
@@ -148,10 +148,10 @@ class ServiceKeyring {
 
   Future<Map> contractTranferFrom(String from, String senderPubKey, String to,
       String value, String password) async {
-    print('contract transfer js');
+    // print('contract transfer js');
 
-    print('from js $from');
-    print('sender js$senderPubKey');
+    // print('from js $from');
+    // print('sender js$senderPubKey');
     final res = await serviceRoot.webView.evalJavascript(
         'keyring.contractTransferFrom(apiContract,"$from","$senderPubKey","$to","$value", "$password")');
 

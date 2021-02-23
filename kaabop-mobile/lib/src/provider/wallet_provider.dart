@@ -30,7 +30,7 @@ class WalletProvider with ChangeNotifier {
     node.name = 'Indranet hosted By Selendra';
     node.endpoint = 'wss://rpc-testnet.selendra.org';
     node.ss58 = 42;
-    print(node.endpoint);
+  //  print(node.endpoint);
 
     final res = await sdk.api.connectNode(
       keyring,
@@ -40,14 +40,14 @@ class WalletProvider with ChangeNotifier {
     if (res != null) {
       _isApiConnected = true;
     } else {
-      print('res null');
+    //  print('res null');
     }
 
     notifyListeners();
   }
 
   Future<void> subscribeBalance() async {
-    print('subscribe');
+   // print('subscribe');
     final channel =
         await sdk.api.account.subscribeBalance(keyring.current.address, (res) {
       if (res != null) {
@@ -55,6 +55,6 @@ class WalletProvider with ChangeNotifier {
       }
     });
     notifyListeners();
-    print('Channel $channel');
+   // print('Channel $channel');
   }
 }

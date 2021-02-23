@@ -274,7 +274,7 @@ class KeyringPrivateStore {
       try {
         res['seed'] = await FlutterAesEcbPkcs5.decryptString(mnemonic, key);
       } catch (err) {
-        print(err);
+        // print(err);
       }
       return res;
     }
@@ -284,7 +284,7 @@ class KeyringPrivateStore {
       try {
         res['seed'] = await FlutterAesEcbPkcs5.decryptString(rawSeed, key);
       } catch (err) {
-        print(err);
+        // print(err);
       }
       return res;
     }

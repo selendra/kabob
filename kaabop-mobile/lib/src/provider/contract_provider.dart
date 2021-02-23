@@ -21,7 +21,7 @@ class ContractProvider with ChangeNotifier {
     if (res != null) {
       _kpiBalance = BigInt.parse(res['output']).toString();
     } else {
-      print('res null');
+     // print('res null');
     }
 
     notifyListeners();

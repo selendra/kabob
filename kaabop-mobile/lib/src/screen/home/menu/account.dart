@@ -88,7 +88,7 @@ class _AccountState extends State<Account> {
     try {
       final pairs = await KeyringPrivateStore()
           .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
-      print(pairs);
+      //print(pairs);
 
       if (pairs['seed'] != null) {
         await dialog(
@@ -115,7 +115,7 @@ class _AccountState extends State<Account> {
     });
     final res = await widget.sdk.api.keyring
         .changePassword(widget.keyring, oldPass, newPass);
-    print(res);
+    //print(res);
     if (res != null) {
       await dialog(
           context, Text('You pin has changed!!'), Text('Change Pin'));

@@ -58,7 +58,7 @@ class _EditContactState extends State<EditContact> {
       
       // Close Dialog Loading
       Navigator.pop(context);
-      print("Close Dialog");
+      //print("Close Dialog");
 
       if (result) {
         await dialog(context, Text("Successfully edit contact!\n Please check your contact book"), Text("Congratualtion"));
@@ -71,7 +71,7 @@ class _EditContactState extends State<EditContact> {
     } catch (e) {
       // Close Dialog Loading
       Navigator.pop(context);
-      print("My error $e");
+      //print("My error $e");
     }
   }
 
@@ -93,9 +93,9 @@ class _EditContactState extends State<EditContact> {
   }
 
   void allValidator(){
-    print("1"+_addContactModel.contactNumber.text.isNotEmpty.toString());
-    print("2"+_addContactModel.userName.text.isNotEmpty.toString());
-    print("3"+_addContactModel.address.text.isNotEmpty.toString());
+    //print("1"+_addContactModel.contactNumber.text.isNotEmpty.toString());
+    //print("2"+_addContactModel.userName.text.isNotEmpty.toString());
+    //print("3"+_addContactModel.address.text.isNotEmpty.toString());
     if (
       _addContactModel.contactNumber.text.isNotEmpty &&
       _addContactModel.userName.text.isNotEmpty &&

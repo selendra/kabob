@@ -66,7 +66,7 @@ class TrxHistoryState extends State<TrxHistory>{
 
         // if (_backend.listData.isNotEmpty){
         // } else {
-        //   print("Empty boy");
+          print("Empty boy");
         // }
 
         // .then((_response) async {
@@ -89,7 +89,7 @@ class TrxHistoryState extends State<TrxHistory>{
         await dialog(context, Text("${e.message}"), Text("Message")); 
         snackBar(_globalKey, e.message.toString());
       } catch (e) {
-        print("Error $e");
+        // print("Error $e");
         await dialog(context, Text(e.message.toString()), Text("Message")); 
       }
     }
@@ -98,7 +98,7 @@ class TrxHistoryState extends State<TrxHistory>{
   void collectByTrxType(List _trxHistoryData){ // Collect Transaction By Type "Send", And Received
     _trxHistoryData.forEach((element) {
       if (widget._walletKey == element['sender']){
-        print("$element\n");
+        // print("$element\n");
         _trxSend.add(element);
       } else if (widget._walletKey != element['sender']) { /* Send Trx If Source Account Address Not Equal Wallet Adddress */ 
         _trxReceived.add(element);

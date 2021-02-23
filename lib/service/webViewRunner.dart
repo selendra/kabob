@@ -40,12 +40,12 @@ class WebViewRunner {
     }
     _subscription = _web.onStateChanged.listen((viewState) async {
       if (viewState.type == WebViewState.finishLoad) {
-        print('webview loaded');
+        // print('webview loaded');
         final js = jsCode ??
             await rootBundle
                 .loadString('packages/polkawallet_sdk/js_api/dist/main.js');
 
-        print('js file loaded');
+        // print('js file loaded');
         await _startJSCode(js, keyring, keyringStorage);
       }
     });
@@ -61,7 +61,7 @@ class WebViewRunner {
         JavascriptChannel(
             name: 'PolkaWallet',
             onMessageReceived: (JavascriptMessage message) {
-              print('received msg: ${message.message}');
+              // print('received msg: ${message.message}');
               compute(jsonDecode, message.message).then((msg) {
                 final String path = msg['path'];
                 if (_msgCompleters[path] != null) {
@@ -110,7 +110,7 @@ class WebViewRunner {
       for (String i in _msgCompleters.keys) {
         String call = code.split('(')[0];
         if (i.contains(call)) {
-          print('request $call loading');
+          // print('request $call loading');
           return _msgCompleters[i].future;
         }
       }
@@ -159,14 +159,14 @@ class WebViewRunner {
   Future<List> contractSymbol(String from) async {
     final res =
         await evalJavascript('settings.contractSymbol(apiContract,"$from")');
-    print('contract res $res');
+    // print('contract res $res');
     return res;
   }
 
   Future<dynamic> totalSupply(String from) async {
     final res =
         await evalJavascript('settings.totalSupply(apiContract,"$from")');
-    print('exec js');
+    // print('exec js');
     return res;
   }
 
@@ -181,7 +181,7 @@ class WebViewRunner {
       String from, String who, String hash) async {
     final res = await evalJavascript(
         'settings.balanceOfByPartition(apiContract,"$from","$who","$hash")');
-    print(res);
+    // print(res);
     return res;
   }
 
@@ -214,7 +214,7 @@ class WebViewRunner {
   }
 
   void unsubscribeMessage(String channel) {
-    print('unsubscribe $channel');
+    // print('unsubscribe $channel');
     final unsubCall = 'unsub$channel';
     _web.evalJavascript('$unsubCall && $unsubCall()');
   }

@@ -7,6 +7,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
+import 'package:wallet_apps/src/screen/home_screen.dart/home.dart';
 import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 import 'package:wallet_apps/src/screen/main/contents_backup.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
@@ -63,20 +64,20 @@ class AppState extends State<App> {
   }
 
   Future<void> connectNode() async {
-    print('connectNode');
+    //print('connectNode');
     final node = NetworkParams();
 
     node.name = 'Indranet hosted By Selendra';
     node.endpoint = 'wss://rpc-testnet.selendra.org';
     node.ss58 = 42;
-    print(node.endpoint);
+    // print(node.endpoint);
 
     final res = await _createAccModel.sdk.api
         .connectNode(_createAccModel.keyring, [node]);
 
     setState(() {});
     if (res != null) {
-      print('res null');
+      // print('res null');
       setState(() {
         _createAccModel.apiConnected = true;
         getChainDecimal();
@@ -84,19 +85,19 @@ class AppState extends State<App> {
       });
       await initContract();
     } else {
-      print('res null');
+      // print('res null');
     }
   }
 
   Future<void> getChainDecimal() async {
     final res = await _createAccModel.sdk.api.getChainDecimal();
     _createAccModel.chainDecimal = res.toString();
-    print(res);
+    // print(res);
   }
 
   Future<void> _subscribeBalance() async {
     if (_createAccModel.keyring.keyPairs.isNotEmpty) {
-      print('subscribe');
+      // print('subscribe');
       final channel = await _createAccModel.sdk.api.account
           .subscribeBalance(_createAccModel.keyring.current.address, (res) {
         setState(() {
@@ -107,7 +108,7 @@ class AppState extends State<App> {
       });
       setState(() {
         _createAccModel.msgChannel = channel;
-        print('Channel $channel');
+        //print('Channel $channel');
       });
     }
   }
@@ -138,12 +139,12 @@ class AppState extends State<App> {
         });
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
   Future<void> _getHashBySymbol() async {
-    print('my symbol${_createAccModel.contractModel.pTokenSymbol}');
+    //print('my symbol${_createAccModel.contractModel.pTokenSymbol}');
 
     try {
       final res = await _createAccModel.sdk.api.getHashBySymbol(
@@ -154,18 +155,15 @@ class AppState extends State<App> {
       if (res != null) {
         _createAccModel.contractModel.pHash = res;
 
-        print(res);
+        // print(res);
       }
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
   Future<void> _balanceOfByPartition() async {
     try {
-      print(_createAccModel.keyring.keyPairs[0].address);
-      print(_createAccModel.contractModel.pHash);
-
       final res = await _createAccModel.sdk.api.balanceOfByPartition(
         _createAccModel.keyring.keyPairs[0].address,
         _createAccModel.keyring.keyPairs[0].address,
@@ -179,7 +177,7 @@ class AppState extends State<App> {
             BigInt.parse(res['output']).toString();
       });
     } catch (e) {
-      print(e.toString());
+      // print(e.toString());
     }
   }
 
@@ -189,6 +187,7 @@ class AppState extends State<App> {
       return OrientationBuilder(
         builder: (context, orientation) {
           SizeConfig().init(constraints, orientation);
+
           return MaterialApp(
             initialRoute: '/',
             title: 'KABOB',
@@ -198,7 +197,11 @@ class AppState extends State<App> {
               ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
-              Home.route: (_) => Home(_createAccModel),
+              // Home.route: (_) => Home(_createAccModel),
+              ReceiveWallet.route: (_) => ReceiveWallet(
+                    sdk: _createAccModel.sdk,
+                    keyring: _createAccModel.keyring,
+                  ),
               ImportAcc.route: (_) => ImportAcc(_createAccModel),
               Account.route: (_) => Account(_createAccModel.sdk,
                   _createAccModel.keyring, _createAccModel),
@@ -222,3 +225,8 @@ class AppState extends State<App> {
     });
   }
 }
+//  await Navigator.of(context).push(RouteAnimation(
+//         enterPage: ReceiveWallet(
+//       sdk: widget.sdkModel.sdk,
+//       keyring: widget.sdkModel.keyring,
+//     )));

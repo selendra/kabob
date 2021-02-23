@@ -44,7 +44,7 @@ class MyBottomSheet {
                             await TrxOptionMethod.scanQR(context, portfolioList,
                                 resetHomeData, sdkModel);
                           } catch (e) {
-                            print(e.message);
+                          //  print(e.message);
                           }
                         },
                       ),

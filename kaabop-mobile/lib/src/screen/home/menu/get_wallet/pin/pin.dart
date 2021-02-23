@@ -48,9 +48,9 @@ class PinState extends State<Pin>{
       MaterialPageRoute(builder: (context) => (ConfirmPin(getWalletM: _getWalletM,)))
     ); 
 
-    print("Get wallet $response");
+    //print("Get wallet $response");
 
-    print("Get wallet ${response['message'].runtimeType}");
+    //print("Get wallet ${response['message'].runtimeType}");
 
     if (response != null){
       // Pin And ConfirmPin Do not Match
@@ -100,7 +100,7 @@ class PinState extends State<Pin>{
       // }
       // Pin And ConfirmPin Do Match And Navigate To PrivateKey Screen
       else if ( !((response['message'].runtimeType).toString() == 'String') ) {
-        print(response);
+        //print(response);
         response = await Navigator.push(context, MaterialPageRoute(builder: (context) => PrivateKey(data: response,)));
         // Succcessfully copy
         if (response != null){

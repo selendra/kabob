@@ -60,7 +60,7 @@ class KabobApi {
       Keyring keyringStorage, List<NetworkParams> nodes) async {
     _connectedNode = null;
     final NetworkParams res = await service.webView.connectNode(nodes);
-    print('api');
+   // print('api');
     if (res != null) {
       _connectedNode = res;
 

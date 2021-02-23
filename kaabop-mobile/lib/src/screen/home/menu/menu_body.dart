@@ -47,7 +47,8 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 0,
         onTap: () {
-          Navigator.pop(context);
+          //  Navigator.pop(context);
+          Navigator.pushNamed(context, ReceiveWallet.route);
           //createPin(context);
         },
       ),

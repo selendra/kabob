@@ -23,7 +23,7 @@ class ValidateMixin {
   /* ----------User Sign Up Next Step---------- */
   String validatePassword(String value) {
 
-    print("Validate $value");
+   // print("Validate $value");
 
     if (value == 'not match'){
       return 'Confirm password does not match';
@@ -34,7 +34,7 @@ class ValidateMixin {
 
   String validatePin(String value) {
 
-    print("Validate $value");
+   // print("Validate $value");
 
     if (value == 'not match'){
       return 'Confirm password does not match';

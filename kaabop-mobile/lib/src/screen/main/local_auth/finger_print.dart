@@ -37,7 +37,7 @@ class _FingerPrintState extends State<FingerPrint> {
     try {
       hasFingerPrint = await localAuth.canCheckBiometrics;
     } on PlatformException catch (e) {
-      print(e);
+      // print(e);
     }
     if (!mounted) return;
     setState(() {
@@ -50,7 +50,7 @@ class _FingerPrintState extends State<FingerPrint> {
     try {
       availableBio = await localAuth.getAvailableBiometrics();
     } on PlatformException catch (e) {
-      print(e);
+      // print(e);
     }
     if (!mounted) return;
     setState(() {
@@ -88,7 +88,7 @@ class _FingerPrintState extends State<FingerPrint> {
     }
 
     // if (authenticate) {
-    //   print("Hello navigation");
+    // //   print("Hello navigation");
     //   Navigator.pushReplacement(
     //     context,
     //     MaterialPageRoute(builder: (context) => screen)
@@ -189,7 +189,7 @@ class _FingerPrintState extends State<FingerPrint> {
                 SvgPicture.asset("assets/finger_print.svg",
                     width: 300, height: 300),
                 MyText(top: 19.0, text: 'Authentication Required'),
-                MyText(top: 19.0, text: 'Touch screen to trigger finger print')
+                // MyText(top: 19.0, text: 'Touch screen to trigger finger print')
               ],
             ),
           ),
