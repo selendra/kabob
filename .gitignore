@@ -15,7 +15,7 @@ android/app/google-services.json
 .packages
 .pub-cache/
 .pub/
-pubspec.lock
+.pubspec.lock
 /build/
 
 # Android Studio will place build artifacts here
