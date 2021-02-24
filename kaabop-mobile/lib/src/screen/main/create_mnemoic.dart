@@ -1,7 +1,5 @@
 import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
 
 class CreateMnemonic extends StatefulWidget {
   final CreateAccModel accModel;
@@ -25,99 +23,85 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
 
   void enableScreenShot() async {
     await FlutterScreenshotSwitcher.enableScreenshots();
+    Navigator.pop(context);
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BodyScaffold(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: [
-          MyAppBar(
-            color: hexaCodeToColor(AppColors.cardColor),
-            title: 'Create Account',
-            onPressed: () {
-              enableScreenShot();
-              Navigator.pop(context);
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: MyText(
-                      text: 'Backup mnemonic',
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: "#FFFFFF",
-                      bottom: 12,
-                    )),
-                MyText(
-                  textAlign: TextAlign.left,
-                  text: 'Use paper and pen to correctly copy mnemonics',
-                  fontWeight: FontWeight.w500,
-                  color: "#FFFFFF",
-                  bottom: 12,
-                ),
-
-                // Display Mnemonic
-                widget.accModel.mnemonic == null
-                    ? CircularProgressIndicator(
-                        backgroundColor: Colors.transparent,
-                        valueColor: AlwaysStoppedAnimation(
-                            hexaCodeToColor(AppColors.secondary)),
-                      )
-                    : Card(
-                        child: MyText(
-                            text: widget.accModel.mnemonic ?? '',
-                            textAlign: TextAlign.left,
-                            fontSize: 25,
-                            color: AppColors.secondary_text,
-                            fontWeight: FontWeight.bold,
-                            pLeft: 16,
-                            right: 16,
-                            top: 16,
-                            bottom: 16))
-              ],
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            MyAppBar(
+              color: hexaCodeToColor(AppColors.cardColor),
+              title: AppText.createAccTitle,
+              onPressed: enableScreenShot,
             ),
-          ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(16.0),
-              child: MyText(
-                textAlign: TextAlign.start,
-                text:
-                    'Note: Do not take screenshot, someone will have fully access to your assets, if they get your mnemonic! Please write down your mnemonic, then store it at a safe place.',
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: MyText(
+                        text: AppText.backupMnemonic,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.whiteColorHexa,
+                        bottom: 12,
+                      )),
+                  MyText(
+                    textAlign: TextAlign.left,
+                    text: AppText.keepMnemonic,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.whiteColorHexa,
+                    bottom: 12,
+                  ),
+
+                  // Display Mnemonic
+                  widget.accModel.mnemonic == null
+                      ? CircularProgressIndicator(
+                          backgroundColor: Colors.transparent,
+                          valueColor: AlwaysStoppedAnimation(
+                              hexaCodeToColor(AppColors.secondary)),
+                        )
+                      : Card(
+                          child: MyText(
+                              text: widget.accModel.mnemonic ?? '',
+                              textAlign: TextAlign.left,
+                              fontSize: 25,
+                              color: AppColors.secondary_text,
+                              fontWeight: FontWeight.bold,
+                              pLeft: 16,
+                              right: 16,
+                              top: 16,
+                              bottom: 16))
+                ],
               ),
             ),
-          ),
-          MyFlatButton(
-            edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-            textButton: 'Next',
-            action: () async {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ConfirmMnemonic(widget.accModel)));
-            },
-          )
-        ],
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                child: MyText(
+                  textAlign: TextAlign.start,
+                  text: AppText.screenshotNote,
+                ),
+              ),
+            ),
+            MyFlatButton(
+              edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
+              textButton: AppText.next,
+              action: () async {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ConfirmMnemonic(widget.accModel)));
+              },
+            )
+          ],
+        ),
       ),
-    ));
+    );
   }
-
-  //  await dialog(
-  //                 context,
-  //                 Text(
-  //                     'Sorry! we are not allow you to screen shot mnemonic, please write down your mnemonic on paper before you go next !'),
-  //                 Text("Please note",
-  //                     style: TextStyle(fontWeight: FontWeight.bold)),
-  //                 action: FlatButton(
-  //                   child: Text('Next'),
-  //                   onPressed: () {
-  //                     Navigator.pop(context);
-  //                   },
-  //                 ));
 }

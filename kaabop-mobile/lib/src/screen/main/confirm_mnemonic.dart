@@ -1,7 +1,5 @@
-import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 
 class ConfirmMnemonic extends StatefulWidget {
   final CreateAccModel accModel;
@@ -22,8 +20,6 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
   bool enable = false;
 
   List _wordsLeft = [];
-
-  
 
   Widget _buildWordsButtons() {
     if (_wordsLeft.length > 0) {
@@ -108,7 +104,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
   initState() {
     _mnemonic = List();
     _wordsLeft = List();
-    _wordsSelected = List<String> ();
+    _wordsSelected = List<String>();
     for (var i in widget.accModel.mnemonicList) {
       _wordsLeft.add(i); // Use For Sort Mnemonic
       _mnemonic.add(i); // Use For Compare
@@ -124,7 +120,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
         children: [
           MyAppBar(
             color: hexaCodeToColor(AppColors.cardColor),
-            title: 'Create Account',
+            title: AppText.createAccTitle,
             onPressed: () {
               Navigator.pop(context);
             },
@@ -136,20 +132,19 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                 Align(
                     alignment: Alignment.centerLeft,
                     child: MyText(
-                      text: 'Confirm the mnemonic',
+                      text: AppText.confirmMnemonic,
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
-                      color: "#FFFFFF",
+                      color: AppColors.whiteColorHexa,
                       bottom: 12,
                     )),
 
                 MyText(
                   textAlign: TextAlign.left,
-                  text:
-                      'Please click on the mnemonic in the correct order to confirm',
+                  text: AppText.clickMnemonic,
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: "#FFFFFF",
+                  color: AppColors.whiteColorHexa,
                   bottom: 12,
                 ),
 
@@ -161,7 +156,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                     child: Align(
                         alignment: Alignment.centerRight,
                         child: MyText(
-                            text: 'Reset',
+                            text: AppText.reset,
                             bottom: 16,
                             color: AppColors.secondary_text))),
 
@@ -189,16 +184,13 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
           ),
           MyFlatButton(
             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-            textButton: 'Next',
+            textButton: AppText.next,
             action: enable == false
-              ? null
-              : () async {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MyUserInfo(widget.accModel)));
-                },
-        )
+                ? null
+                : () async {
+                    Navigator.pushNamed(context, ConfirmMnemonic.route);
+                  },
+          )
         ],
       ),
     ));

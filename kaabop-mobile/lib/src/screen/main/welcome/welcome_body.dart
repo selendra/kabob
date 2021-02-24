@@ -21,19 +21,19 @@ class WelcomeBody extends StatelessWidget {
               Align(
                   alignment: Alignment.topLeft,
                   child: MyText(
-                    text: 'Welcome to',
+                    text: AppText.welcome,
                     fontSize: 22,
-                    color: '#FFFFFF',
+                    color: AppColors.whiteColorHexa,
                   )),
               Container(
                 margin: const EdgeInsets.only(top: 10.0),
                 child: Align(
                     alignment: Alignment.topLeft,
                     child: MyText(
-                      text: 'KABOB',
+                      text: AppText.appName,
                       fontSize: 38,
                       fontWeight: FontWeight.w500,
-                      color: '#FFFFFF',
+                      color: AppColors.whiteColorHexa,
                     )),
               ),
             ],
@@ -53,16 +53,15 @@ class WelcomeBody extends StatelessWidget {
         Column(
           children: [
             MyFlatButton(
-              // width: 100,
               edgeMargin: EdgeInsets.only(left: 42, right: 42, bottom: 16),
-              textButton: 'Create Account',
+              textButton: AppText.createAccTitle,
               action: () {
                 Navigator.pushNamed(context, ContentsBackup.route);
               },
             ),
             MyFlatButton(
               edgeMargin: EdgeInsets.only(left: 42, right: 42, bottom: 16),
-              textButton: 'Import Account',
+              textButton: AppText.importAccTitle,
               action: () {
                 Navigator.pushNamed(context, ImportAcc.route);
               },

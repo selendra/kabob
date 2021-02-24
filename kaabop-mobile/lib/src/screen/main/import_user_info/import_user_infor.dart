@@ -20,10 +20,6 @@ class ImportUserInfo extends StatefulWidget {
 class ImportUserInfoState extends State<ImportUserInfo> {
   ModelUserInfo _userInfoM = ModelUserInfo();
 
-  PostRequest _postRequest = PostRequest();
-
-  Backend _backend = Backend();
-
   LocalAuthentication _localAuth;
 
   MenuModel _menuModel = MenuModel();
@@ -65,17 +61,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     });
   }
 
-  // Future<void> _balanceOf(String from, String who) async {
-  //   final res = await widget.importAccModel.sdk.api.balanceOf(from, who);
-  //   if (res != null) {
-  //     setState(() {
-  //       widget.importAccModel.contractModel.pBalance =
-  //           BigInt.parse(res['output']).toString();
-  // //       print(widget.importAccModel.contractModel.pBalance);
-  //     });
-  //   }
-  // }
-
   Future<void> _importFromMnemonic() async {
     // print(" firstName ${_userInfoM.controlFirstName.text}");
     // print(" Password ${_userInfoM.confirmPasswordCon.text}");
@@ -101,12 +86,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       if (acc != null) {
         widget.importAccModel.mnemonic = '';
         _subscribeBalance();
-        // if (widget.importAccModel.keyring.keyPairs.length != 0) {
-        //   await _contractSymbol();
-        //   await _getHashBySymbol().then((value) async {
-        //     await _balanceOf();
-        //   });
-        // }
 
         await dialogSuccess(context, Text("You haved imported successfully"),
             Text('Congratulation'),
@@ -129,62 +108,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     }
   }
 
-  Future<void> _balanceOf() async {
-    try {
-      final res = await widget.importAccModel.sdk.api.balanceOfByPartition(
-        widget.importAccModel.keyring.keyPairs[0].address,
-        widget.importAccModel.keyring.keyPairs[0].address,
-        widget.importAccModel.contractModel.pHash,
-      );
-
-      setState(() {
-        widget.importAccModel.contractModel.pBalance =
-            BigInt.parse(res['output']).toString();
-      });
-    } catch (e) {
-      // print(e.toString());
-    }
-  }
-
-  Future<void> _contractSymbol() async {
-    try {
-      final res = await widget.importAccModel.sdk.api
-          .contractSymbol(widget.importAccModel.keyring.keyPairs[0].address);
-      if (res != null) {
-        setState(() {
-          widget.importAccModel.contractModel.pTokenSymbol = res[0];
-        });
-      }
-    } catch (e) {
-      // print(e.toString());
-    }
-  }
-
-  Future<void> _getHashBySymbol() async {
-    // print('my symbol${widget.importAccModel.contractModel.pTokenSymbol}');
-
-    try {
-      final res = await widget.importAccModel.sdk.api.getHashBySymbol(
-        widget.importAccModel.keyring.keyPairs[0].address,
-        widget.importAccModel.contractModel.pTokenSymbol,
-      );
-
-      if (res != null) {
-        widget.importAccModel.contractModel.pHash = res;
-
-        // print(res);
-      }
-    } catch (e) {
-      // print(e.toString());
-    }
-  }
-
   void switchBiometric(bool switchValue) async {
-    // print(switchValue);
-
-    // setState(() {
-    //   _menuModel.switchBio = switchValue;
-    // });
     _localAuth = LocalAuthentication();
 
     await _localAuth.canCheckBiometrics.then((value) async {
@@ -193,7 +117,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       } else {
         if (switchValue) {
           await authenticateBiometric(_localAuth).then((values) async {
-            // print('value 1: $values');
             if (_menuModel.authenticated) {
               setState(() {
                 _menuModel.switchBio = switchValue;
@@ -231,23 +154,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   /* Change Select Gender */
-  void changeGender(String gender) async {
-    // _userInfoM.genderLabel = gender;
-    // setState(() {
-    //   if (gender == "Male")
-    //     _userInfoM.gender = "M";
-    //   else
-    //     _userInfoM.gender = "F";
-    // });
-    // await Future.delayed(Duration(milliseconds: 100), () {
-    //   setState(() {
-    //     /* Unfocus All Field */
-    //     if (_userInfoM.gender != null)
-    //       enableButton(true); /* Enable Button If User Set Gender */
-    //     FocusScope.of(context).unfocus();
-    //   });
-    // });
-  }
+  void changeGender(String gender) async {}
 
   void onSubmit() async {
     if (_userInfoM.userNameNode.hasFocus) {

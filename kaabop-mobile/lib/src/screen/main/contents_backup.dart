@@ -20,26 +20,16 @@ class _ContentsBackupState extends State<ContentsBackup> {
   final double bpSize = 16.0;
 
   Future<void> _generateMnemonic(WalletSDK sdk) async {
-    // setState(() {
-    //   _submitting = true;
-    // });
     widget.createAccM.mnemonic = '';
     widget.createAccM.mnemonicList = [];
-    
+
     widget.createAccM.mnemonic = await sdk.api.keyring.generateMnemonic();
     widget.createAccM.mnemonicList = widget.createAccM.mnemonic.split(' ');
-    setState(() {
-      
-    });
-   // print("My mnemonic ${widget.createAccM.mnemonicList}");
-    // widget.showResult(context, 'generateMnemonic', seed);
-    // setState(() {
-    //   _submitting = false;
-    // }
+    setState(() {});
   }
 
   @override
-  initState(){
+  initState() {
     _generateMnemonic(widget.createAccM.sdk);
     super.initState();
   }
@@ -52,7 +42,7 @@ class _ContentsBackupState extends State<ContentsBackup> {
         children: [
           MyAppBar(
             color: hexaCodeToColor(AppColors.cardColor),
-            title: 'Create Account',
+            title: AppText.createAccTitle,
             onPressed: () {
               Navigator.pop(context);
             },
@@ -64,54 +54,52 @@ class _ContentsBackupState extends State<ContentsBackup> {
                 Align(
                     alignment: Alignment.centerLeft,
                     child: MyText(
-                      text: 'Backup prom',
+                      text: AppText.backup,
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
-                      color: "#FFFFFF",
+                      color: AppColors.whiteColorHexa,
                       bottom: bpSize,
                     )),
                 MyText(
                   textAlign: TextAlign.left,
-                  text:
-                      'Getting a mnemonic equals ownership of the wallet asset',
+                  text: AppText.getMnemonic,
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: "#FFFFFF",
+                  color: AppColors.whiteColorHexa,
                   bottom: bpSize,
                 ),
                 Align(
                     alignment: Alignment.centerLeft,
                     child: MyText(
-                      text: 'Backup mnemonic',
+                      text: AppText.backupMnemonic,
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
-                      color: "#FFFFFF",
+                      color: AppColors.whiteColorHexa,
                       bottom: bpSize,
                     )),
                 MyText(
                   textAlign: TextAlign.left,
-                  text: 'Use paper and pen to correctly copy mnemonics',
+                  text: AppText.keepMnemonic,
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: "#FFFFFF",
+                  color: AppColors.whiteColorHexa,
                   bottom: bpSize,
                 ),
                 Align(
                     alignment: Alignment.centerLeft,
                     child: MyText(
-                      text: 'Offline storage',
+                      text: AppText.offlineStorage,
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
-                      color: "#FFFFFF",
+                      color: AppColors.whiteColorHexa,
                       bottom: bpSize,
                     )),
                 MyText(
                   textAlign: TextAlign.left,
-                  text:
-                      'Kepp it safe to a safe place on the isolated network\nDo not share and store mnemonics in a networked environment, such as emails, photo albums, social applications',
+                  text: AppText.mnemonicAdvise,
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
-                  color: "#FFFFFF",
+                  color: AppColors.whiteColorHexa,
                 ),
               ],
             ),
@@ -121,7 +109,7 @@ class _ContentsBackupState extends State<ContentsBackup> {
           ),
           MyFlatButton(
             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-            textButton: 'Next',
+            textButton: AppText.next,
             action: () async {
               Navigator.push(
                   context,

@@ -29,7 +29,7 @@ Widget toLogin(BuildContext context) { /* Back To Login Screen*/
         child: Text('Back to login', style: TextStyle(color: Colors.white, fontSize: 18.0, fontWeight: FontWeight.w400))
       ),
       onTap: () { 
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+      //  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
       },
     ),
   );

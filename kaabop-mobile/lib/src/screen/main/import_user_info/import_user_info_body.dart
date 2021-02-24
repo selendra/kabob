@@ -56,32 +56,6 @@ class ImportUserInfoBody extends StatelessWidget {
                       textColor: "#FFFFFF",
                       onChanged: onChanged,
                       onSubmit: onSubmit),
-
-                  // MyInputField(
-                  //   pBottom: 16.0,
-                  //   labelText: "Password",
-                  //   textInputFormatter: [LengthLimitingTextInputFormatter(4)],
-                  //   controller: modelUserInfo.passwordCon,
-                  //   focusNode: modelUserInfo.passwordNode,
-                  //   validateField: validatepassword,
-                  //   inputAction: TextInputAction.next,
-                  //   textColor: "#FFFFFF",
-                  //   onChanged: onChanged,
-                  //   onSubmit: onSubmit
-                  // ),
-
-                  // MyInputField(
-                  //   pBottom: 16.0,
-                  //   labelText: "Confirm Password",
-                  //   textInputFormatter: [LengthLimitingTextInputFormatter(4)],
-                  //   controller: modelUserInfo.confirmPasswordCon,
-                  //   focusNode: modelUserInfo.confirmPasswordNode,
-                  //   validateField: validateConfirmPassword,
-                  //   inputAction: TextInputAction.done,
-                  //   textColor: "#FFFFFF",
-                  //   onChanged: onChanged,
-                  //   onSubmit: onSubmit
-                  // ),
                   Container(
                       padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
                       child: TextFormField(
@@ -132,7 +106,6 @@ class ImportUserInfoBody extends StatelessWidget {
                           onSubmit();
                         },
                       )),
-
                   Container(
                       padding: EdgeInsets.fromLTRB(16, 16, 16, 16),
                       child: TextFormField(
@@ -184,7 +157,6 @@ class ImportUserInfoBody extends StatelessWidget {
                           onSubmit();
                         },
                       )),
-
                   Container(
                     padding: const EdgeInsets.only(left: 16.0),
                     child: Row(

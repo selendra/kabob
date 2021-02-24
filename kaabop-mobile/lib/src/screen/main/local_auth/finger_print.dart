@@ -10,8 +10,6 @@ class FingerPrint extends StatefulWidget {
 class _FingerPrintState extends State<FingerPrint> {
   Widget screen = SlideBuilder();
 
-  GetRequest _getRequest = GetRequest();
-
   Backend _backend = Backend();
 
   final localAuth = LocalAuthentication();
@@ -32,31 +30,31 @@ class _FingerPrintState extends State<FingerPrint> {
     super.initState();
   }
 
-  Future<void> checkBioSupport() async {
-    bool hasFingerPrint = false;
-    try {
-      hasFingerPrint = await localAuth.canCheckBiometrics;
-    } on PlatformException catch (e) {
-      // print(e);
-    }
-    if (!mounted) return;
-    setState(() {
-      _hasFingerPrint = hasFingerPrint;
-    });
-  }
+  // Future<void> checkBioSupport() async {
+  //   bool hasFingerPrint = false;
+  //   try {
+  //     hasFingerPrint = await localAuth.canCheckBiometrics;
+  //   } on PlatformException catch (e) {
+  //     // print(e);
+  //   }
+  //   if (!mounted) return;
+  //   setState(() {
+  //     _hasFingerPrint = hasFingerPrint;
+  //   });
+  // }
 
-  Future<void> getBioList() async {
-    List<BiometricType> availableBio = List<BiometricType>();
-    try {
-      availableBio = await localAuth.getAvailableBiometrics();
-    } on PlatformException catch (e) {
-      // print(e);
-    }
-    if (!mounted) return;
-    setState(() {
-      _availableBio = availableBio;
-    });
-  }
+  // Future<void> getBioList() async {
+  //   List<BiometricType> availableBio = List<BiometricType>();
+  //   try {
+  //     availableBio = await localAuth.getAvailableBiometrics();
+  //   } on PlatformException catch (e) {
+  //     // print(e);
+  //   }
+  //   if (!mounted) return;
+  //   setState(() {
+  //     _availableBio = availableBio;
+  //   });
+  // }
 
   Future<void> authenticate() async {
     bool authenticate = false;
@@ -68,17 +66,6 @@ class _FingerPrintState extends State<FingerPrint> {
       if (authenticate) {
         Navigator.pushReplacementNamed(context, Home.route);
       }
-      // // Open Loading
-      // dialogLoading(context);
-      // if (authenticate) {
-      //   await tokenChecker();
-      // } else {
-      //   // Close Loading
-      //   Navigator.pop(context);
-      //   setState(() {
-      //     enableText = true;
-      //   });
-      // }
     } on SocketException catch (e) {
       await Future.delayed(Duration(milliseconds: 300), () {});
       AppServices.openSnackBar(globalkey, e.message);
@@ -86,14 +73,6 @@ class _FingerPrintState extends State<FingerPrint> {
       await dialog(context, Text("${e.message}", textAlign: TextAlign.center),
           "Message");
     }
-
-    // if (authenticate) {
-    // //   print("Hello navigation");
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => screen)
-    //   );
-    // }
   }
 
   // Time Out Handler Method
@@ -114,56 +93,6 @@ class _FingerPrintState extends State<FingerPrint> {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => SlideBuilder()));
     }
-  }
-
-  Future<void> tokenChecker() async {
-    // Processing Time Out Handler Method
-    AppServices.timerOutHandler(_backend.response, timeCounter);
-
-    await _getRequest.checkExpiredToken().then((value) async {
-      // Execute Statement If Rest Api Under 10 Second
-      if (AppServices.myNumCount < 10) {
-        // Assign Promise Data To Vairable
-        _backend.response = value;
-
-        // Convert String To Object
-        if (_backend.response != null) {
-          _backend.mapData = json.decode(_backend.response.body);
-
-          // Check Expired Token
-          if (_backend.response.statusCode == 200) {
-            await Future.delayed(Duration(seconds: 4), () {
-              Navigator.pushNamed(context, Home.route);
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => Home())
-              // );
-            });
-          }
-
-          // Reset isLoggedIn True -> False Cause Token Expired
-          else if (_backend.response.statusCode == 401) {
-            await dialog(
-                context,
-                Text("${_backend.mapData['error']['message']}",
-                    textAlign: TextAlign.center),
-                Text("Message"));
-            // Remove Key Token
-            StorageServices.removeKey('user_token');
-            // Navigate To Login
-            Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => Login()));
-          }
-        }
-        // No Previous Login Or Token Expired
-      } else {
-        await dialog(
-            context, Text("Something wrong with connection"), Text("Message"));
-
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SlideBuilder()));
-      }
-    });
   }
 
   @override

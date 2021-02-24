@@ -69,23 +69,6 @@ class StorageServices {
 
     await _preferences.setString(key, jsonEncode(txHistoryList));
 
-    // print('finalList: ${txHistoryList.length}');
-    // await _preferences.setString(key, jsonEncode(txHistoryList));
-    // await _preferences.setString('test', 'test');
-
-    // if (_preferences.containsKey(key)) {
-    //   var data = _preferences.getString(key);
-    //   txHistoryList = List<TxHistory>.from(jsonDecode(data));
-      // print('data: $data');
-    //   txHistoryList.add(txHistory);
-      // print('added');
-    // } else {
-    //   txHistoryList.add(txHistory);
-      // print('added');
-    // }
-
-//    await setData(jsonEncode(txHistoryList), 'txhistory');
-
     return _preferences;
   }
 
@@ -98,7 +81,7 @@ class StorageServices {
     _preferences = await SharedPreferences.getInstance();
     final res = _preferences.getBool(key);
 
-    return res??false;
+    return res ?? false;
   }
 
   static Future<void> saveBio(bool enable) async {

@@ -1,7 +1,5 @@
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/m_import_acc.dart';
-import 'package:wallet_apps/src/screen/main/contents_backup.dart';
-import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
 class ImportAccBody extends StatelessWidget {
   final bool enable;
@@ -11,18 +9,17 @@ class ImportAccBody extends StatelessWidget {
   final Function clearInput;
   final Function submit;
 
-  ImportAccBody({
-    this.importAccModel,
-    this.onChanged,
-    this.onSubmit,
-    this.clearInput,
-    this.enable,
-    this.submit
-  });
+  ImportAccBody(
+      {this.importAccModel,
+      this.onChanged,
+      this.onSubmit,
+      this.clearInput,
+      this.enable,
+      this.submit});
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BodyScaffold(
+        body: BodyScaffold(
       height: MediaQuery.of(context).size.height,
       child: Column(
         children: [
@@ -46,7 +43,6 @@ class ImportAccBody extends StatelessWidget {
                       color: "#FFFFFF",
                       bottom: 16,
                     )),
-
                 Row(
                   children: [
                     Expanded(
@@ -75,7 +71,6 @@ class ImportAccBody extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 Container(
                     margin: EdgeInsets.only(top: 30),
                     child: MyInputField(
@@ -95,17 +90,6 @@ class ImportAccBody extends StatelessWidget {
                         onChanged: onChanged,
                         inputAction: TextInputAction.done,
                         onSubmit: onSubmit))
-
-                // Card(
-                //   child: MyText(
-                //     text: mnemonic,
-                //     textAlign: TextAlign.left,
-                //     fontSize: 25,
-                //     color: AppColors.secondary_text,
-                //     fontWeight: FontWeight.bold,
-                //     pLeft: 16, right: 16, top: 16, bottom: 16
-                //   )
-                // )
               ],
             ),
           ),
@@ -113,12 +97,13 @@ class ImportAccBody extends StatelessWidget {
             child: Container(),
           ),
           MyFlatButton(
-            edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-            textButton: 'Next',
-            action: enable == false ? null : () async {
-              submit();
-            }
-          )
+              edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
+              textButton: AppText.next,
+              action: enable == false
+                  ? null
+                  : () async {
+                      submit();
+                    })
         ],
       ),
     ));

@@ -68,6 +68,9 @@ export 'package:wallet_apps/src/components/my_input.dart';
 export 'package:wallet_apps/src/components/bottom_sheet.dart';
 export 'package:wallet_apps/src/components/sms_component.dart';
 export 'package:wallet_apps/src/components/reuse_widget.dart';
+export 'package:wallet_apps/src/components/dimissible_background.dart';
+export 'package:wallet_apps/src/components/route_animation.dart';
+
 
 // Backend
 export 'package:wallet_apps/src/backend/api.dart';
@@ -87,10 +90,10 @@ export 'package:wallet_apps/src/screen/main/welcome/welcome_body.dart';
 
 // Finger Print
 
-export 'package:wallet_apps/src/screen/main/login/login.dart';
+
 export 'package:wallet_apps/src/screen/main/splash_screen/splash_screen.dart';
 export 'package:wallet_apps/src/screen/main/forgot_password/forget_password.dart';
-export 'package:wallet_apps/src/screen/main/login/login_body.dart';
+
 export 'package:wallet_apps/src/screen/home/add_user_info/add_user_info.dart';
 export 'package:wallet_apps/src/screen/home/fill_documents_screen/fill_documents.dart';
 export 'package:wallet_apps/src/screen/main/local_auth/finger_print.dart';
@@ -102,19 +105,6 @@ export 'package:wallet_apps/src/screen/main/forgot_password/reset_password_scree
 // Forgot Password
 export 'package:wallet_apps/src/screen/main/forgot_password/forget_password_body.dart';
 
-//SMS verify
-export 'package:wallet_apps/src/screen/main/sign_up/sms_code/sms_code_verify_body.dart';
-
-// User Information
-export 'package:wallet_apps/src/screen/main/sign_up/user_info/user_info.dart';
-export 'package:wallet_apps/src/screen/main/sign_up/user_info/user_info_body.dart';
-
-// Sign Up
-export 'package:wallet_apps/src/screen/main/sign_up/sign_up.dart';
-export 'package:wallet_apps/src/screen/main/sign_up/sign_up_body.dart';
-
-// Sms Code Verification
-export 'package:wallet_apps/src/screen/main/sign_up/sms_code/sms_code_verify.dart';
 
 // Slide Screen
 export 'package:wallet_apps/src/screen/main/carousel/widget/slide_dot.dart';
@@ -227,6 +217,7 @@ export 'package:wallet_apps/src/models/model_user_info.dart';
 export 'package:wallet_apps/src/models/forget_m.dart';
 export 'package:wallet_apps/src/models/slide_m.dart';
 export 'package:wallet_apps/src/models/sms_code_model.dart';
+export 'package:wallet_apps/src/models/createAccountM.dart';
 
 /* Home Screen */
 export 'package:wallet_apps/src/models/portfolio_m.dart';
@@ -238,6 +229,7 @@ export 'package:wallet_apps/src/models/model_document.dart';
 export 'package:wallet_apps/src/models/home_m.dart';
 export 'package:wallet_apps/src/models/model_scan_pay.dart';
 export 'package:wallet_apps/src/models/model_scan_invoice.dart';
+export 'package:wallet_apps/src/models/createAccountM.dart';
 
 /* Menu */
 export 'package:wallet_apps/src/models/menu_m.dart';

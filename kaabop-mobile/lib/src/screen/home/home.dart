@@ -97,21 +97,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     super.initState();
   }
 
-  // Future<void> authenticateBiometric(Local_localAuth _localAuth) async {
-  //   try {
-  //     // Trigger _localAuth By Finger Print
-  //     var res = await _localAuth.authenticateWithBiometrics(
-  //       localizedReason: 'Scan your fingerprint to authenticate',
-  //       useErrorDialogs: true,
-  //       stickyAuth: true,
-  //     );
-
-  //     print(res);
-  //   } on PlatformException catch (e) {}
-
-  //   //return _menuModel.authenticated;
-  // }
-
   void startNode() async {
     await Future.delayed(Duration(milliseconds: 50), () {
       showDialog(
@@ -201,7 +186,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void toReceiveToken() async {
-    /* Navigate Receive Token */
     await Navigator.pushNamed(context, ReceiveWallet.route);
     if (Platform.isAndroid)
       await AndroidPlatform.resetBrightness();
@@ -241,8 +225,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     return Scaffold(
       key: _homeM.globalKey,
       drawer: Theme(
-        data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-        child: Menu(_homeM.userData, _homeM)),
+          data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+          child: Menu(_homeM.userData, _homeM)),
       appBar: homeAppBar(context),
       body: RefreshIndicator(
         onRefresh: onRefresh,

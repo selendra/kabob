@@ -64,7 +64,7 @@ class SlideBuilderState extends State<SlideBuilder>{
                       curve: Curves.bounceIn,
                       child: InkWell(
                         onTap: (){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+                         // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
                         },
                         child: MyText(text: 'Skip', textAlign: TextAlign.left, color: "#FFFFFF", fontWeight: FontWeight.bold),
                       ),
@@ -95,7 +95,7 @@ class SlideBuilderState extends State<SlideBuilder>{
                       curve: Curves.bounceIn,
                       child: InkWell(
                         onTap: (){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
+                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Login()));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,

@@ -158,7 +158,7 @@ class AppState extends State<App> {
 
           return MaterialApp(
             initialRoute: '/',
-            title: 'KABOB',
+            title: AppText.appName,
             theme: AppStyle.myTheme(),
             routes: {
               MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
@@ -166,8 +166,7 @@ class AppState extends State<App> {
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
               Home.route: (_) => Home(_createAccModel),
-              ReceiveWallet.route: (_) =>
-                  ReceiveWallet(createAccModel: _createAccModel),
+              ReceiveWallet.route: (_) => ReceiveWallet(createAccModel: _createAccModel),
               ImportAcc.route: (_) => ImportAcc(_createAccModel),
               Account.route: (_) => Account(_createAccModel.sdk,
                   _createAccModel.keyring, _createAccModel),
