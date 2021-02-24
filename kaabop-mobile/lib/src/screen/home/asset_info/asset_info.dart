@@ -20,21 +20,17 @@ class AssetInfo extends StatefulWidget {
 }
 
 class _AssetInfoState extends State<AssetInfo> {
-  // TextEditingController _ownerController = TextEditingController();
-  // TextEditingController _spenderController = TextEditingController();
-  // TextEditingController _recieverController = TextEditingController();
-  // TextEditingController _amountController = TextEditingController();
-  // TextEditingController _pinController = TextEditingController();
-  // TextEditingController _fromController = TextEditingController();
-
   //AssetInfoC _c = AssetInfoC();
   ModelAssetInfo _modelAssetInfo = ModelAssetInfo();
 
   FlareControls _flareController = FlareControls();
   ModelScanPay _scanPayM = ModelScanPay();
+  GetWalletMethod _method = GetWalletMethod();
 
   FocusNode _ownerNode = FocusNode();
   TxHistory _txHistoryModel = TxHistory();
+  GlobalKey<ScaffoldState> _globalKey;
+  GlobalKey _keyQrShare = GlobalKey();
 
   // void submitAllowance() {
   //   if (_ownerController.text != null && _spenderController.text != null) {
@@ -78,86 +74,6 @@ class _AssetInfoState extends State<AssetInfo> {
           context, Home.route, ModalRoute.withName('/'));
     });
   }
-
-  // Future<void> approve(
-  //     String recieverAddress, String pass, String amount) async {
-  //   Navigator.pop(context);
-  //   try {
-  //     final res = await widget.sdk.api.keyring.approve(
-  //         widget.keyring.keyPairs[0].pubKey, recieverAddress, amount, pass);
-
-  //     print(res['hash']);
-  //     if (res['hash'] != null) {
-  //       await enableAnimation();
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //     await dialog(context, Text(e.toString()), Text('Opps!!'));
-  //   }
-
-  //   _amountController.text = '';
-  //   _recieverController.text = '';
-  //   _pinController.text = '';
-  // }
-
-  // Future<void> transferFrom(
-  //     String recieverAddress, String from, String pin, String amount) async {
-  //   Navigator.pop(context);
-  //   dialogLoading(context);
-  //   try {
-  //     final res = await widget.sdkModel.sdk.api.keyring.contractTransferFrom(
-  //       from,
-  //       widget.sdkModel.keyring.keyPairs[0].pubKey,
-  //       recieverAddress,
-  //       amount,
-  //       pin,
-  //     );
-  //     if (res['hash'] != null) {
-  //       await enableAnimation();
-  //     }
-  //   } catch (e) {
-  //     Navigator.pop(context);
-  //     await dialog(context, Text(e.toString()), Text('Opps!!'));
-  //   }
-  //   _fromController.text = '';
-  //   _amountController.text = '';
-  //   _recieverController.text = '';
-  //   _pinController.text = '';
-  // }
-
-  // Future<void> allowance(String owner, String spender) async {
-  //   Navigator.pop(context);
-  //   try {
-  //     final res = await widget.sdk.api.allowance(owner, spender);
-  //     if (res != null) {
-  //       await dialog(context, Text('Allowance: ${BigInt.parse(res['output'])}'),
-  //           Text('Allowance'));
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  //   _ownerController.text = '';
-  //   _spenderController.text = '';
-  // }
-
-  // Future<void> _balanceOf(String from, String who) async {
-  //   Navigator.pop(context);
-  //   try {
-  //     final res = await widget.sdk.api.balanceOf(from, who);
-  //     if (res != null) {
-  //       await dialog(
-  //           context,
-  //           MyText(
-  //             text: 'Account Balance: ${BigInt.parse(res['output'])}',
-  //             textAlign: TextAlign.center,
-  //           ),
-  //           Text('Balance Of'));
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //     await dialog(context, Text(e.toString()), Text('Opps!!'));
-  //   }
-  // }
 
   Future<List<TxHistory>> readTxHistory() async {
     await StorageServices.fetchData('txhistory').then((value) {
@@ -262,25 +178,18 @@ class _AssetInfoState extends State<AssetInfo> {
     await txDetailDialog(context, txHistory);
   }
 
-  // String validateAmount(String value) {
-  //   if (_scanPayM.nodeAmount.hasFocus) {
-  //     _scanPayM.responseAmount = instanceValidate.validateSendToken(value);
-  //     enableButton();
-  //     if (_scanPayM.responseAmount != null)
-  //       return _scanPayM.responseAmount += "amount";
-  //   }
-  //   return _scanPayM.responseAmount;
-  // }
-
   @override
   void initState() {
     readTxHistory();
+    _method.platformChecker(context);
+    _globalKey = GlobalKey<ScaffoldState>();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       body: RefreshIndicator(
         onRefresh: _refresh,
         child: BodyScaffold(
@@ -378,7 +287,13 @@ class _AssetInfoState extends State<AssetInfo> {
                       width: 150,
                       child: FlatButton(
                         onPressed: () {
-                          AssetInfoC().showRecieved(context, widget.sdkModel);
+                          AssetInfoC().showRecieved(
+                            context,
+                            widget.sdkModel,
+                            _method,
+                            _globalKey,
+                            _keyQrShare,
+                          );
                         },
                         color: hexaCodeToColor(AppColors.secondary),
                         disabledColor: Colors.grey[700],

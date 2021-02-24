@@ -75,7 +75,9 @@ class AssetInfoC {
   void showRecieved(
     BuildContext context,
     CreateAccModel sdkModel,
-
+    GetWalletMethod _method,
+    GlobalKey<ScaffoldState> _globalKey,
+    GlobalKey _keyQrShare,
     //GlobalKey<FormState> allowanceKeyForm,
   ) {
     showModalBottomSheet<void>(
@@ -91,6 +93,9 @@ class AssetInfoC {
             child: ReceiveWalletBody(
               name: sdkModel.userModel.username,
               wallet: sdkModel.userModel.address,
+              method: _method,
+              globalKey: _globalKey,
+              keyQrShare: _keyQrShare,
             ),
           ),
         );

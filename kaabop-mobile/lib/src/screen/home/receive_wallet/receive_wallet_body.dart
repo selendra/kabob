@@ -40,7 +40,6 @@ class ReceiveWalletBody extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      
                       Container(
                         margin: EdgeInsets.only(
                           bottom: 45.0,
@@ -54,9 +53,9 @@ class ReceiveWalletBody extends StatelessWidget {
                           child: Container(
                               padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
                               decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  color: hexaCodeToColor(AppColors.cardColor),
-                                  ),
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: hexaCodeToColor(AppColors.cardColor),
+                              ),
                               child: Column(
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
@@ -116,8 +115,9 @@ class ReceiveWalletBody extends StatelessWidget {
                           ],
                         ),
                         onPressed: () {
-                          Clipboard.setData(
-                              ClipboardData(text: wallet)); /* Copy Text */
+                          Clipboard.setData(ClipboardData(text: wallet));
+                          Navigator.pop(context);
+                          /* Copy Text */
                           method.snackBar('Copied', globalKey);
                         },
                       )
