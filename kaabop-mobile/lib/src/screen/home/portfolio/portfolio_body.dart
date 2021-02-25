@@ -190,38 +190,6 @@ class PortfolioBody extends StatelessWidget {
                 ),
               ),
 
-              // Container(
-              //   height: 250,
-              //   margin: EdgeInsets.fromLTRB(16, 0, 16, 16),
-              //   padding: EdgeInsets.all(16),
-              //   decoration: BoxDecoration(
-              //     color: hexaCodeToColor(AppColors.cardColor),
-              //     borderRadius: BorderRadius.circular(8)
-              //   ),
-              //   child: GroupedBarChart.withSampleData(),
-              // ),
-
-              // Container(
-              //   margin: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-              //   height: 50,
-              //   child: ListView.builder(
-              //     itemCount: months.length,
-              //     shrinkWrap: true,
-              //     scrollDirection: Axis.horizontal,
-              //     itemBuilder: (BuildContext context, int i){
-              //       return Align(
-              //         alignment: Alignment.center,
-              //         child: GestureDetector(
-              //           child: MyText(
-              //             width: 60,
-              //             text: "${months[i]}"
-              //           ),
-              //         )
-              //       );
-              //     }
-              //   )
-              // ),
-
               MyRowHeader(),
 
               Container(

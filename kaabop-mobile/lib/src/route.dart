@@ -10,8 +10,7 @@ class AppRouting {
     // '/getWalletScreen': (context) => GetWalletWidget(),
     // '/settingScreen': (context) => SettingWidget(),
     /* Verify User Screen */
-    '/add_profile_screen': (context) => AddUserInfo(),
-    '/addDocumentScreen': (context) => AddDocuments(),
-    '/forgotPasswordScreen': (context) => ForgetPassword()
+   
+  
   };
 }

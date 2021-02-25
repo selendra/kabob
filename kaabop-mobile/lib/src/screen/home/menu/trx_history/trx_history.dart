@@ -25,11 +25,7 @@ class TrxHistoryState extends State<TrxHistory>{
   List<dynamic> _trxSend = [];
   List<dynamic> _trxReceived = [];
 
-  GetRequest _getRequest = GetRequest();
-
-  PostRequest _postRequest = PostRequest();
-  Backend _backend = Backend();
-
+ 
   InstanceTrxOrder _instanceTrxAllOrder;
   InstanceTrxOrder _instanceTrxSendOrder;
   InstanceTrxOrder _instanceTrxReceivedOrder;
@@ -40,59 +36,8 @@ class TrxHistoryState extends State<TrxHistory>{
     _instanceTrxSendOrder = InstanceTrxOrder();
     _instanceTrxReceivedOrder = InstanceTrxOrder();
     AppServices.noInternetConnection(_globalKey);
-    fetchHistory();
+   
     super.initState();
-  }
-  
-  void login() async {
-    _backend.response = await _postRequest.loginByPhone("15894139", "123456");
-
-    _backend.mapData = json.decode(_backend.response.body);
-
-    await StorageServices.setData(_backend.mapData, 'user_token');
-  }
-
-  void fetchHistory() async { /* Request Transaction History */
-    if (mounted){
-      try {
-        _backend.response = await _getRequest.trxHistory();
-
-        _backend.listData = json.decode(_backend.response.body);
-  
-        setState(() {
-          _trxHistoryData = _backend.listData;
-          collectByTrxType(_trxHistoryData);
-        });
-
-        // if (_backend.listData.isNotEmpty){
-        // } else {
-          print("Empty boy");
-        // }
-
-        // .then((_response) async {
-          
-          // if ( (_response.runtimeType.toString()) != "List<dynamic>" && (_response.runtimeType.toString()) != "_GrowableList<dynamic>" ){ /* If Response DataType Not List<dynamic> */ 
-          //   if (_response.containsKey("error")){
-          //     if (this.mounted){ /* Prevent Future SetState */
-          //       setState(() {
-          //         _trxHistoryData = null; /* Set Portfolio Equal Null To Close Loading Process */
-          //       });
-          //     }
-          //   }
-          // } else {
-          //   if (this.mounted) { /* Prevent Future SetState */
-          //     collectByTrxType(_response);
-          //   }
-          // } 
-        // });
-      } on SocketException catch (e) {
-        await dialog(context, Text("${e.message}"), Text("Message")); 
-        snackBar(_globalKey, e.message.toString());
-      } catch (e) {
-        // print("Error $e");
-        await dialog(context, Text(e.message.toString()), Text("Message")); 
-      }
-    }
   }
 
   void collectByTrxType(List _trxHistoryData){ // Collect Transaction By Type "Send", And Received
@@ -124,7 +69,7 @@ class TrxHistoryState extends State<TrxHistory>{
     setState(() {
       isProgress = true;
     });
-    fetchHistory();
+   
     // _refreshController.refreshCompleted();
   }
 

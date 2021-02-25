@@ -19,9 +19,6 @@ class MyUserInfo extends StatefulWidget {
 class MyUserInfoState extends State<MyUserInfo> {
   ModelUserInfo _userInfoM = ModelUserInfo();
 
-  PostRequest _postRequest = PostRequest();
-
-  Backend _backend = Backend();
   MenuModel _menuModel = MenuModel();
 
   LocalAuthentication _localAuth;
@@ -60,71 +57,7 @@ class MyUserInfoState extends State<MyUserInfo> {
     widget.accModel.msgChannel = channel;
   }
 
-  Future<void> _balanceOf() async {
-    try {
-      final res = await widget.accModel.sdk.api.balanceOfByPartition(
-        widget.accModel.keyring.keyPairs[0].address,
-        widget.accModel.keyring.keyPairs[0].address,
-        widget.accModel.contractModel.pHash,
-      );
-
-      setState(() {
-        widget.accModel.contractModel.pBalance =
-            BigInt.parse(res['output']).toString();
-      });
-    } catch (e) {
-      // print(e.toString());
-    }
-  }
-
-  Future<void> _contractSymbol() async {
-    try {
-      final res = await widget.accModel.sdk.api
-          .contractSymbol(widget.accModel.keyring.keyPairs[0].address);
-      if (res != null) {
-        setState(() {
-          widget.accModel.contractModel.pTokenSymbol = res[0];
-        });
-      }
-    } catch (e) {
-      // print(e.toString());
-    }
-  }
-
-  Future<void> _getHashBySymbol() async {
-    // print('my symbol${widget.accModel.contractModel.pTokenSymbol}');
-
-    try {
-      final res = await widget.accModel.sdk.api.getHashBySymbol(
-        widget.accModel.keyring.keyPairs[0].address,
-        widget.accModel.contractModel.pTokenSymbol,
-      );
-
-      if (res != null) {
-        widget.accModel.contractModel.pHash = res;
-
-        // print(res);
-      }
-    } catch (e) {
-      // print(e.toString());
-    }
-  }
-
-  // Future<void> _balanceOf(String from, String who) async {
-  //   final res = await widget.accModel.sdk.api.balanceOf(from, who);
-  //   if (res != null) {
-  //     setState(() {
-  //       widget.accModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
-  //     });
-  //   }
-  // }
-
   void switchBiometric(bool switchValue) async {
-    // print(switchValue);
-
-    // setState(() {
-    //   _menuModel.switchBio = switchValue;
-    // });
     _localAuth = LocalAuthentication();
 
     await _localAuth.canCheckBiometrics.then((value) async {
@@ -168,27 +101,6 @@ class MyUserInfoState extends State<MyUserInfo> {
     Navigator.pop(context);
   }
 
-  /* Change Select Gender */
-  void changeGender(String gender) async {
-    // _userInfoM.genderLabel = gender;
-    // setState(() {
-    //   if (gender == "Male")
-    //     _userInfoM.gender = "M";
-    //   else
-    //     _userInfoM.gender = "F";
-    // });
-    // await Future.delayed(Duration(milliseconds: 100), () {
-    //   setState(() {
-    //     /* Unfocus All Field */
-    //     if (_userInfoM.gender != null)
-    //       enableButton(); /* Enable Button If User Set Gender */
-    //     _userInfoM.nodeFirstName.unfocus();
-    //     _userInfoM.nodeMidName.unfocus();
-    //     _userInfoM.nodeLastName.unfocus();
-    //   });
-    // });
-  }
-
   void onSubmit() {
     if (_userInfoM.userNameNode.hasFocus) {
       FocusScope.of(context).requestFocus(_userInfoM.passwordNode);
@@ -207,22 +119,18 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   String validateFirstName(String value) {
     if (_userInfoM.nodeFirstName.hasFocus) {
-      _userInfoM.responseFirstname = instanceValidate.validateUserInfo(value);
-      if (_userInfoM.responseFirstname == null)
-        return null;
-      else
-        _userInfoM.responseFirstname += "user name";
+      if (value.isEmpty) {
+        return 'Please fill in username';
+      }
     }
     return _userInfoM.responseFirstname;
   }
 
   String validatePassword(String value) {
     if (_userInfoM.passwordNode.hasFocus) {
-      _userInfoM.responseMidname = instanceValidate.validatePin(value);
-      if (_userInfoM.responseMidname == null)
-        return null;
-      else
-        _userInfoM.responseMidname += "password";
+      if (value.isEmpty) {
+        return 'Please fill in password';
+      }
     }
     return _userInfoM.responseMidname;
   }
@@ -327,7 +235,6 @@ class MyUserInfoState extends State<MyUserInfo> {
             modelUserInfo: _userInfoM,
             onSubmit: onSubmit,
             onChanged: onChanged,
-            changeGender: changeGender,
             validateFirstName: validateFirstName,
             validateMidName: validatePassword,
             validateLastName: validateConfirmPassword,

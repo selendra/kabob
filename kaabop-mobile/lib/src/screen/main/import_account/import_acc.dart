@@ -1,6 +1,3 @@
-import 'package:polkawallet_sdk/api/apiKeyring.dart';
-import 'package:polkawallet_sdk/kabob_sdk.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/m_import_acc.dart';
@@ -25,8 +22,6 @@ class ImportAccState extends State<ImportAcc> {
   ImportAccModel _importAccModel = ImportAccModel();
 
   PackageInfo _packageInfo;
-
-  FirebaseRemote _firebaseRemote;
 
   bool status;
   int currentVersion;

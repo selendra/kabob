@@ -175,21 +175,21 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validateFirstName(String value) {
     if (_userInfoM.nodeFirstName.hasFocus) {
-      _userInfoM.responseFirstname = instanceValidate.validateUserInfo(value);
-      if (_userInfoM.responseFirstname == null)
-        return null;
-      else
-        _userInfoM.responseFirstname += "username";
+     if (value.isEmpty) {
+        return 'Please fill in username';
+      } else if (_userInfoM.confirmPasswordCon.text !=
+          _userInfoM.passwordCon.text) {
+        return 'Password does not matched';
+      }
     }
     return _userInfoM.responseFirstname;
   }
 
   String validatePassword(String value) {
     if (_userInfoM.passwordNode.hasFocus) {
-      _userInfoM.responseMidname = instanceValidate.validatePin(value);
-      if (_userInfoM.responseMidname == null) return null;
-      //  else
-      // _userInfoM.responseMidname += "password";
+     if (value.isEmpty) {
+        return 'Please fill in password';
+      } 
     }
     return _userInfoM.responseMidname;
   }

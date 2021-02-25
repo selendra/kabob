@@ -20,48 +20,16 @@ class AssetInfo extends StatefulWidget {
 }
 
 class _AssetInfoState extends State<AssetInfo> {
-  //AssetInfoC _c = AssetInfoC();
+  
   ModelAssetInfo _modelAssetInfo = ModelAssetInfo();
 
   FlareControls _flareController = FlareControls();
   ModelScanPay _scanPayM = ModelScanPay();
   GetWalletMethod _method = GetWalletMethod();
 
-  FocusNode _ownerNode = FocusNode();
   TxHistory _txHistoryModel = TxHistory();
   GlobalKey<ScaffoldState> _globalKey;
   GlobalKey _keyQrShare = GlobalKey();
-
-  // void submitAllowance() {
-  //   if (_ownerController.text != null && _spenderController.text != null) {
-  //     allowance(_ownerController.text, _spenderController.text);
-  //   }
-  // }
-
-  // void submitApprove() {
-  //   if (_amountController.text != null &&
-  //       _recieverController.text != null &&
-  //       _pinController.text != null) {
-  //     approve(_recieverController.text, _pinController.text,
-  //         _amountController.text);
-  //   }
-  // }
-
-  // void submitTransferFrom() {
-  //   if (_amountController.text != null &&
-  //       _recieverController.text != null &&
-  //       _pinController.text != null) {
-  //     transferFrom(_recieverController.text, _fromController.text,
-  //         _pinController.text, _amountController.text);
-  //   }
-  // }
-
-  // void submitBalanceOf() {
-  //   if (_recieverController.text != null) {
-  //     _balanceOf(widget.sdkModel.keyring.keyPairs[0].address,
-  //         _recieverController.text);
-  //   }
-  // }
 
   Future enableAnimation() async {
     Navigator.pop(context);

@@ -1,17 +1,13 @@
-import 'package:fluttercontactpicker/fluttercontactpicker.dart';
-import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/edit_contact/edit_contact_body.dart';
-import 'package:wallet_apps/src/screen/home/contact_book/contact_book_body.dart';
 
 class EditContact extends StatefulWidget {
   final List<ContactBookModel> contact;
   final int index;
 
   EditContact({this.contact, this.index});
-  
+
   @override
   _EditContactState createState() => _EditContactState();
 }
@@ -23,7 +19,7 @@ class _EditContactState extends State<EditContact> {
   List<Map<String, dynamic>> contactData = List<Map<String, dynamic>>();
 
   Future<void> submitContact() async {
-    
+
     try {
       // Show Loading
       dialogLoading(context);
@@ -55,7 +51,7 @@ class _EditContactState extends State<EditContact> {
           },
         )
       );
-      
+
       // Close Dialog Loading
       Navigator.pop(context);
       //print("Close Dialog");
@@ -106,9 +102,12 @@ class _EditContactState extends State<EditContact> {
   }
 
   String validateAddress(String value){
-    _addContactModel.addressValidator = instanceValidate.validateAsset(value);
-    if (_addContactModel.addressValidator != null) return _addContactModel.addressValidator+' address';
-    return _addContactModel.addressValidator;
+    if(_addContactModel.addressNode.hasFocus){
+      if (value.isEmpty) {
+        return 'Please fill in address';
+      }
+    }
+    return null;
   }
 
   @override

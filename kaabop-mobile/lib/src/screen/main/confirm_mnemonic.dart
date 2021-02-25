@@ -1,5 +1,6 @@
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 
 class ConfirmMnemonic extends StatefulWidget {
   final CreateAccModel accModel;
@@ -188,7 +189,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
             action: enable == false
                 ? null
                 : () async {
-                    Navigator.pushNamed(context, ConfirmMnemonic.route);
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>MyUserInfo(widget.accModel)));
                   },
           )
         ],

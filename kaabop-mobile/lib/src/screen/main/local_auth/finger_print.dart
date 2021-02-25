@@ -8,18 +8,18 @@ class FingerPrint extends StatefulWidget {
 }
 
 class _FingerPrintState extends State<FingerPrint> {
-  Widget screen = SlideBuilder();
+ 
 
-  Backend _backend = Backend();
+ // Backend _backend = Backend();
 
   final localAuth = LocalAuthentication();
 
-  bool _hasFingerPrint = false;
+ // bool _hasFingerPrint = false;
   bool enableText = false;
 
   String authorNot = 'Not Authenticate';
 
-  List<BiometricType> _availableBio = List<BiometricType>();
+//  List<BiometricType> _availableBio = List<BiometricType>();
 
   GlobalKey<ScaffoldState> globalkey;
 
@@ -75,25 +75,7 @@ class _FingerPrintState extends State<FingerPrint> {
     }
   }
 
-  // Time Out Handler Method
-  void timeCounter(Timer timer) async {
-    // Assign Timer Number Counter To myNumCount Variable
-    AppServices.myNumCount = timer.tick;
-
-    // Cancel Timer When Rest Api Successfully
-    if (_backend.response != null) timer.cancel();
-
-    // Display TimeOut With SnackBar When Over 10 Second
-    if (AppServices.myNumCount == 10) {
-      Navigator.pop(context);
-      await dialog(
-          context,
-          Text("Connection timeout", textAlign: TextAlign.center),
-          Text("Mesage"));
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => SlideBuilder()));
-    }
-  }
+  
 
   @override
   Widget build(BuildContext context) {

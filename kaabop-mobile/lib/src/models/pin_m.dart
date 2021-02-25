@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:wallet_apps/src/bloc/bloc.dart';
+
 
 class ModelChangePin {
 
@@ -10,7 +10,7 @@ class ModelChangePin {
 
   bool enable = false;
 
-  Bloc bloc = Bloc();
+
 
   String responseOldPin, responseNewPin, responseConfirmPin;
 

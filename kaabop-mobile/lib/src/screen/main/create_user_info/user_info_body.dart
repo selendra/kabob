@@ -4,7 +4,6 @@ class MyUserInfoBody extends StatelessWidget {
   final ModelUserInfo modelUserInfo;
   final Function onSubmit;
   final Function onChanged;
-  final Function changeGender;
   final Function validateFirstName;
   final Function validateMidName;
   final Function validateLastName;
@@ -18,7 +17,6 @@ class MyUserInfoBody extends StatelessWidget {
     this.modelUserInfo,
     this.onSubmit,
     this.onChanged,
-    this.changeGender,
     this.validateFirstName,
     this.validateMidName,
     this.validateLastName,

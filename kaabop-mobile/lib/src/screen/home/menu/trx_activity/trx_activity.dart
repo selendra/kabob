@@ -18,45 +18,23 @@ class TrxActivityState extends State<TrxActivity> {
   bool isProgress = true;
   bool isLogout = false;
 
-  List<dynamic> _activity = [];
+ 
   TxHistory _txHistoryModel = TxHistory();
 
-  GetRequest _getRequest = GetRequest();
+ 
 
-  InstanceTrxOrder _instanceTrxOrder;
+
 
   @override
   void initState() {
-    _instanceTrxOrder = InstanceTrxOrder();
+    
     AppServices.noInternetConnection(_globalKey);
     readTxHistory();
     // fetchHistoryUser();
     super.initState();
   }
 
-  void fetchHistoryUser() async {
-    /* Request Transaction History */
-    try {
-      await _getRequest.getReceipt().then((_response) {
-        if (List<dynamic>.from(_response).length == 0)
-          _activity =
-              null; /* Assign TransactionActivity Variable With NUll If Reponse Empty Data */
-        else
-          _activity = _response;
-      });
-      if (!mounted) return; /* Prevent SetState After Dispose */
-      setState(() {});
-    } on SocketException catch (e) {
-      await dialog(context, Text("${e.message}"), Text("Message"));
-      snackBar(_globalKey, e.message.toString());
-    } catch (e) {
-      await dialog(context, Text(e.message.toString()), Text("Message"));
-    }
-  }
-
-  void sortByDate(List _trxHistory) {
-    _instanceTrxOrder = AppUtils.trxMonthOrder(_trxHistory);
-  }
+ 
 
   Future<List<TxHistory>> readTxHistory() async {
     await StorageServices.fetchData('txhistory').then((value) {
@@ -135,7 +113,7 @@ class TrxActivityState extends State<TrxActivity> {
     setState(() {
       isProgress = true;
     });
-    fetchHistoryUser();
+    
   }
 
   final List<Tab> myTabs = <Tab>[
@@ -149,6 +127,7 @@ class TrxActivityState extends State<TrxActivity> {
     return DefaultTabController(
       length: myTabs.length,
       child: Scaffold(
+        key: _globalKey,
         appBar: AppBar(
           title: MyText(
             text: 'Transaction History',

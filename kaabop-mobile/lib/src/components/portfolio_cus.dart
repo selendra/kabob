@@ -3,6 +3,7 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/portfolio_c.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/screen/home/portfolio/portfolio.dart';
 
 class PortFolioCus extends StatelessWidget {
    final HomeModel homeM;

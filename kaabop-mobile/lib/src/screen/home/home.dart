@@ -23,8 +23,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   HomeModel _homeM = HomeModel();
 
-  PostRequest _postRequest = PostRequest();
-
   PortfolioM _portfolioM = PortfolioM();
   BuildContext dialogContext;
 
@@ -225,7 +223,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       key: _homeM.globalKey,
       drawer: Theme(
           data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-          child: Menu(_homeM.userData, _homeM)),
+          child: Menu(_homeM.userData)),
       appBar: homeAppBar(context),
       body: RefreshIndicator(
         onRefresh: onRefresh,
@@ -265,7 +263,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           apiStatus: widget.sdkModel.apiConnected,
           homeM: _homeM,
           portfolioM: _portfolioM,
-          postRequest: _postRequest,
           scanReceipt: null, // Bottom Center Button
           resetDbdState: resetState,
           toReceiveToken: toReceiveToken,

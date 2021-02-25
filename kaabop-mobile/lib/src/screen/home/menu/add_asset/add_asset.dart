@@ -1,7 +1,5 @@
 import 'dart:ui';
-
 import 'package:wallet_apps/index.dart';
-import 'package:http/http.dart' as http;
 import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class AddAsset extends StatefulWidget {
@@ -17,7 +15,7 @@ class AddAsset extends StatefulWidget {
 class AddAssetState extends State<AddAsset> {
   ModelAsset _modelAsset = ModelAsset();
 
-  PostRequest _postRequest = PostRequest();
+
   FlareControls _flareController = FlareControls();
 
   GlobalKey<ScaffoldState> globalKey = new GlobalKey<ScaffoldState>();
@@ -48,14 +46,14 @@ class AddAssetState extends State<AddAsset> {
     return res;
   }
 
-  String validateIssuer(String value) {
-    if (_modelAsset.nodeIssuer.hasFocus) {
-      _modelAsset.responseIssuer = instanceValidate.validateAsset(value);
-      if (_modelAsset.responseIssuer != null)
-        _modelAsset.responseIssuer += "asset issuer";
-    }
-    return _modelAsset.responseIssuer;
-  }
+  // String validateIssuer(String value) {
+  //   if (_modelAsset.nodeIssuer.hasFocus) {
+  //     _modelAsset.responseIssuer = instanceValidate.validateAsset(value);
+  //     if (_modelAsset.responseIssuer != null)
+  //       _modelAsset.responseIssuer += "asset issuer";
+  //   }
+  //   return _modelAsset.responseIssuer;
+  // }
 
   void validateAllFieldNotEmpty() {
     // Validator 1 : All Field Not Empty
@@ -267,7 +265,6 @@ class AddAssetState extends State<AddAsset> {
             AddAssetBody(
               assetM: _modelAsset,
               validateAssetCode: validateAssetCode,
-              validateIssuer: validateIssuer,
               popScreen: popScreen,
               onChanged: onChanged,
               onSubmit: null,

@@ -335,7 +335,7 @@ class MyBottomAppBar extends StatelessWidget {
   final bool apiStatus;
   final HomeModel homeM;
   final PortfolioM portfolioM;
-  final PostRequest postRequest;
+ 
   final Function scanReceipt;
   final Function resetDbdState;
   final Function toReceiveToken;
@@ -349,7 +349,7 @@ class MyBottomAppBar extends StatelessWidget {
     this.apiStatus,
     this.homeM,
     this.portfolioM,
-    this.postRequest,
+
     this.scanReceipt,
     this.resetDbdState,
     this.toReceiveToken,

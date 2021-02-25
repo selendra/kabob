@@ -5,9 +5,7 @@ class SubmitTrxBody extends StatelessWidget {
   final bool enableInput;
   final dynamic dialog;
   final ModelScanPay scanPayM;
-  final Function validateWallet;
-  final Function validateAmount;
-  final Function validateMemo;
+ 
   final Function onChanged;
   final Function onSubmit;
   final Function validateInput;
@@ -21,9 +19,6 @@ class SubmitTrxBody extends StatelessWidget {
       {this.enableInput,
       this.dialog,
       this.scanPayM,
-      this.validateWallet,
-      this.validateAmount,
-      this.validateMemo,
       this.onChanged,
       this.onSubmit,
       this.validateInput,
@@ -75,7 +70,6 @@ class SubmitTrxBody extends StatelessWidget {
           inputType: TextInputType.text,
           controller: scanPayM.controlMemo,
           focusNode: scanPayM.nodeMemo,
-          validateField: validateMemo,
           onChanged: onChanged,
           onSubmit: onSubmit)
     ];

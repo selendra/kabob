@@ -2,9 +2,9 @@ import 'package:wallet_apps/index.dart';
 
 class Menu extends StatefulWidget {
   final Map<String, dynamic> _userData;
-  final HomeModel _homeM;
 
-  Menu(this._userData, this._homeM);
+
+  Menu(this._userData, );
 
   @override
   State<StatefulWidget> createState() {
@@ -13,7 +13,7 @@ class Menu extends StatefulWidget {
 }
 
 class MenuState extends State<Menu> {
-  ModelUserInfo _modelUserInfo = ModelUserInfo();
+ 
 
   MenuModel _menuModel = MenuModel();
 
@@ -26,14 +26,14 @@ class MenuState extends State<Menu> {
       isSuccessPin = false,
       isHaveWallet = false;
 
-  Backend _backend = Backend();
+
 
   /* InitState */
   @override
   void initState() {
     _menuModel.globalKey = GlobalKey<ScaffoldState>();
     //AppServices.noInternetConnection(_menuModel.globalKey);
-    setUserInfo();
+  
     readBio();
     checkAvailableBio();
     super.initState();
@@ -44,22 +44,7 @@ class MenuState extends State<Menu> {
     super.dispose();
   }
 
-  void setUserInfo() async {
-    if (widget._userData.length != 0) {
-      _modelUserInfo.userData = {
-        "first_name": widget._userData['first_name'],
-        "mid_name": widget._userData['mid_name'],
-        "last_name": widget._userData['last_name'],
-        "gender": widget._userData['gender'] == "M" ? "Male" : "Female",
-        "label": "profile"
-      };
-      await StorageServices.fetchData("user_token").then((_response) {
-        /* Fetch Token To Concete Authorization Update Profile User Info */
-        _backend.mapData = _response;
-      });
-    }
-  }
-
+ 
   void checkAvailableBio() async {
     await StorageServices.fetchData('biometric').then((value) {
       if (value != null) {
@@ -115,39 +100,6 @@ class MenuState extends State<Menu> {
       }
     });
 
-    // //print(_menuModel.switchBio);
-    // _localAuth = LocalAuthentication();
-    // await _localAuth.canCheckBiometrics.then((value) async {
-    //   if (value == false) {
-    //     snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
-    //   } else {
-    //     try {
-    //       if (value) {
-    //         await authenticateBiometric(_localAuth).then((values) async {
-    //           //print('value 1: $values');
-    //           if (_menuModel.authenticated) {
-    //             setState(() {
-    //               _menuModel.switchBio = false;
-    //             });
-    //             await StorageServices.saveBio(_menuModel.switchBio);
-    //           }
-    //         });
-    //       } else {
-    //         await authenticateBiometric(_localAuth).then((values) async {
-    //           //print('value 2: $values');
-    //           if (_menuModel.authenticated) {
-    //             setState(() {
-    //               _menuModel.switchBio = true;
-    //             });
-    //             await StorageServices.saveBio(_menuModel.switchBio);
-    //           }
-    //         });
-    //       }
-    //       // // Reset Switcher
-    //       setState(() {});
-    //     } catch (e) {}
-    //   }
-    // });
   }
 
   Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {

@@ -1,3 +1,4 @@
+
 import 'package:wallet_apps/index.dart';
 
 class GetWalletModel {

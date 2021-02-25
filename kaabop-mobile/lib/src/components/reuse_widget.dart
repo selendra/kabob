@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'dart:ui' as ui;
 import 'package:wallet_apps/index.dart';
@@ -499,18 +498,6 @@ Widget textDisplay(String text, TextStyle textStyle) {
 
 /* ---------------------------------Camera and Gallery------------------------------------------------ */
 
-/* Trigger image from gallery */
-Future<File> gallery() async {
-  // var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-  // return image;
-}
-
-/* Trigger image from gallery */
-Future<File> camera() async {
-  // var image = await ImagePicker.pickImage(
-  //     source: ImageSource.camera, imageQuality: 100);
-  // return image;
-}
 
 /* QR Code Generate Function */
 Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {

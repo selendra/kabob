@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wallet_apps/src/bloc/bloc.dart';
+
 
 class ModelLogin {
 
@@ -24,6 +24,6 @@ class ModelLogin {
   TextEditingController controlPasswords = TextEditingController();
   TextEditingController controlPhoneNums = TextEditingController();
 
-  Bloc bloc = Bloc();
+  //Bloc bloc = Bloc();
   
 }

@@ -1,5 +1,6 @@
 // import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/get_wallet.m.dart';
 
 class Component {
   static void popScreen(BuildContext context) {

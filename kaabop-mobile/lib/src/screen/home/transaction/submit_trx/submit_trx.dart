@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:intl/intl.dart';
@@ -27,8 +26,7 @@ class SubmitTrx extends StatefulWidget {
 
 class SubmitTrxState extends State<SubmitTrx> {
   ModelScanPay _scanPayM = ModelScanPay();
-  TextEditingController _pwController = TextEditingController();
-  FocusNode _pwNode = FocusNode();
+ 
 
   FlareControls flareController = FlareControls();
 
@@ -63,7 +61,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   ];
 
   void fetchIDs() async {
-    await ProviderBloc.fetchUserIds();
+ 
     setState(() {});
   }
 
@@ -100,73 +98,12 @@ class SubmitTrxState extends State<SubmitTrx> {
     return _result;
   }
 
-  Future<String> passwordDialog() async {
-    String result = await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor:
-                Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            title: MyText(
-              text: 'Enter your password',
-            ),
-            content: Container(
-              height: 200,
-              width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  MyInputField(
-                    obcureText: true,
-                    controller: _pwController,
-                    focusNode: _pwNode,
-                    onChanged: null,
-                    onSubmit: null,
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-    return result;
-  }
 
-  String validateWallet(String value) {
-    if (_scanPayM.nodeAmount.hasFocus) {
-      _scanPayM.responseAmount = instanceValidate.validateSendToken(value);
-      enableButton();
-      if (_scanPayM.responseAmount != null)
-        return _scanPayM.responseAmount += "wallet";
-    }
-    return _scanPayM.responseWallet;
-  }
-
-  Future<bool> validateAddress(String address) async {
+   Future<bool> validateAddress(String address) async {
     final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
     return res;
   }
 
-  String validateAmount(String value) {
-    if (_scanPayM.nodeAmount.hasFocus) {
-      _scanPayM.responseAmount = instanceValidate.validateSendToken(value);
-      enableButton();
-      if (_scanPayM.responseAmount != null)
-        return _scanPayM.responseAmount += "amount";
-    }
-    return _scanPayM.responseAmount;
-  }
-
-  String validateMemo(String value) {
-    if (_scanPayM.nodeMemo.hasFocus) {
-      _scanPayM.responseMemo = instanceValidate.validateSendToken(value);
-      enableButton();
-      if (_scanPayM.responseMemo != null)
-        return _scanPayM.responseMemo += "memo";
-    }
-    return _scanPayM.responseMemo;
-  }
 
   void onChanged(String value) {
     _scanPayM.formStateKey.currentState.validate();
@@ -326,31 +263,17 @@ class SubmitTrxState extends State<SubmitTrx> {
         widget.sdkModel.keyring.keyPairs[0].address,
         widget.sdkModel.contractModel.pHash,
       );
-      // final res = await _createAccModel.sdk.api.balanceOfByPartition(
-      //   '14gV68QsGAEUGkcuV5JA1hx2ZFTuKJthMFfnkDyLMZyn8nnb',
-      //   '14gV68QsGAEUGkcuV5JA1hx2ZFTuKJthMFfnkDyLMZyn8nnb',
-      //   '0x0000000000000000000000000000000000000000000000000000000000000001',
-      // );
+     
       widget.sdkModel.contractModel.pBalance =
           BigInt.parse(res['output']).toString();
 
-      // print('balanceOfByPartition $res');
+    
     } catch (e) {
       // print(e.toString());
     }
   }
 
-  // Future<void> assetbalanceOf(String from, String who) async {
-  //   final res = await widget.sdkModel.sdk.api.balanceOf(from, who);
-  //   if (res != null) {
-  //     setState(() {
-  //       widget.sdkModel.contractModel.pBalance =
-  //           BigInt.parse(res['output']).toString();
-       // print(widget.sdkModel.contractModel.pBalance);
-  //     });
-  //   }
-  // }
-
+ 
   void clickSend() async {
     String pin;
 
@@ -361,8 +284,6 @@ class SubmitTrxState extends State<SubmitTrx> {
         // Unfocus All Field Input
         unFocusAllField();
       });
-
-      //await passwordDialog();
 
       await validateAddress(_scanPayM.controlReceiverAddress.text)
           .then((value) async {
@@ -437,9 +358,6 @@ class SubmitTrxState extends State<SubmitTrx> {
                     enableInput: widget.enableInput,
                     dialog: dialogBox,
                     scanPayM: _scanPayM,
-                    validateWallet: validateAddress,
-                    validateAmount: validateAmount,
-                    validateMemo: validateMemo,
                     onChanged: onChanged,
                     onSubmit: onSubmit,
                     validateInput: validateInput,
