@@ -1,8 +1,10 @@
 import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
 
 class MyUserInfo extends StatefulWidget {
@@ -46,12 +48,19 @@ class MyUserInfoState extends State<MyUserInfo> {
   }
 
   Future<void> _subscribeBalance() async {
-    // print('subscribe');
+    var walletProvider = Provider.of<WalletProvider>(context,listen: false);
     final channel = await widget.accModel.sdk.api.account
         .subscribeBalance(widget.accModel.keyring.current.address, (res) {
       widget.accModel.balance = res;
       widget.accModel.nativeBalance =
           Fmt.balance(widget.accModel.balance.freeBalance, 18);
+      walletProvider.addAvaibleToken({
+        'symbol': widget.accModel.nativeSymbol,
+        'balance': widget.accModel.nativeBalance,
+      });
+        
+      Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+
     });
 
     widget.accModel.msgChannel = channel;

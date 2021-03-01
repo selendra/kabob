@@ -1,5 +1,5 @@
-import 'package:http/http.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
@@ -65,7 +65,10 @@ class MySplashScreenState extends State<MySplashScreen>
         getCurrentAccount();
       },
     );
+
     super.initState();
+
+    // Provider.of<WalletProvider>(context,listen: false).test();
   }
 
   @override

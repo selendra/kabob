@@ -16,11 +16,18 @@ class AppColors {
   static const String secondary_text = "#40FF90";
   static const String selected = "#00642A";
 
+  //blue
+  static const String primary = "#03A9F4";
+  //mono black
+  static const String text = "#1D3442";
+
   /* High Then Background Color */
   static const String highThenBackgroundColor = "#1F2833"; //"#191F30";
 
   /* Color Black 38 */
   static const Color black38 = Colors.black38;
+
+  
 
   /* White Color */
   static const String whiteColorHexa = "#FFFFFF";

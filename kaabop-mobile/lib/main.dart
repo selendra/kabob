@@ -2,7 +2,9 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +17,11 @@ void main() async {
     if (kReleaseMode) exit(1);
   };
 
-  runApp(App());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider<WalletProvider>(
+      create: (context) => WalletProvider(),
+    ),
+  ], child: App()));
 }
 
 class App extends StatefulWidget {
@@ -33,6 +39,7 @@ class AppState extends State<App> {
     _createAccModel.sdk = WalletSDK();
     _createAccModel.keyring = Keyring();
     _initApi();
+    //Provider.of<WalletProvider>(context).connectNetwork();
 
     super.initState();
   }
@@ -63,10 +70,12 @@ class AppState extends State<App> {
     if (res != null) {
       setState(() {
         _createAccModel.apiConnected = true;
-        getChainDecimal();
-        _subscribeBalance();
+        
       });
+      getChainDecimal();
+      _subscribeBalance();
       await initContract();
+      
     }
   }
 
@@ -76,15 +85,27 @@ class AppState extends State<App> {
   }
 
   Future<void> _subscribeBalance() async {
+    
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    walletProvider.clearPortfolio();
     if (_createAccModel.keyring.keyPairs.isNotEmpty) {
       final channel = await _createAccModel.sdk.api.account
           .subscribeBalance(_createAccModel.keyring.current.address, (res) {
         setState(() {
           _createAccModel.balance = res;
-          _createAccModel.nativeBalance =
-              Fmt.balance(_createAccModel.balance.freeBalance, 18);
+          _createAccModel.nativeBalance = Fmt.balance(_createAccModel.balance.freeBalance, 18);
+
+          walletProvider.addAvaibleToken({
+            'symbol': _createAccModel.nativeSymbol,
+            'balance': _createAccModel.nativeBalance,
+          });
+
+          Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+                  
         });
+          
       });
+
       setState(() {
         _createAccModel.msgChannel = channel;
       });
@@ -92,6 +113,7 @@ class AppState extends State<App> {
   }
 
   Future<void> initContract() async {
+    //var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     await StorageServices.readBool('KMPI').then((value) async {
       if (value) {
         await _createAccModel.sdk.api.callContract().then((value) {
@@ -105,6 +127,7 @@ class AppState extends State<App> {
         }
       }
     });
+   
   }
 
   Future<void> _contractSymbol() async {
@@ -133,6 +156,7 @@ class AppState extends State<App> {
   }
 
   Future<void> _balanceOfByPartition() async {
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     try {
       final res = await _createAccModel.sdk.api.balanceOfByPartition(
         _createAccModel.keyring.keyPairs[0].address,
@@ -143,10 +167,15 @@ class AppState extends State<App> {
       setState(() {
         _createAccModel.contractModel.pBalance =
             BigInt.parse(res['output']).toString();
+        walletProvider.addAvaibleToken({
+          'symbol': _createAccModel.contractModel.pTokenSymbol,
+          'balance': _createAccModel.contractModel.pBalance,
+        });
       });
     } catch (e) {
       // print(e.toString());
     }
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
   @override
@@ -155,7 +184,6 @@ class AppState extends State<App> {
       return OrientationBuilder(
         builder: (context, orientation) {
           SizeConfig().init(constraints, orientation);
-
           return MaterialApp(
             initialRoute: '/',
             title: AppText.appName,
@@ -166,7 +194,8 @@ class AppState extends State<App> {
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
               Home.route: (_) => Home(_createAccModel),
-              ReceiveWallet.route: (_) => ReceiveWallet(createAccModel: _createAccModel),
+              ReceiveWallet.route: (_) =>
+                  ReceiveWallet(createAccModel: _createAccModel),
               ImportAcc.route: (_) => ImportAcc(_createAccModel),
               Account.route: (_) => Account(_createAccModel.sdk,
                   _createAccModel.keyring, _createAccModel),
@@ -190,8 +219,3 @@ class AppState extends State<App> {
     });
   }
 }
-//  await Navigator.of(context).push(RouteAnimation(
-//         enterPage: ReceiveWallet(
-//       sdk: widget.sdkModel.sdk,
-//       keyring: widget.sdkModel.keyring,
-//     )));

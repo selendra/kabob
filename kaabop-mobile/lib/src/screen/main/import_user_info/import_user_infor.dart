@@ -1,7 +1,9 @@
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
@@ -26,11 +28,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   @override
   void initState() {
-    // // print(widget.importAccModel.mnemonicList);
     AppServices.noInternetConnection(_userInfoM.globalKey);
-    /* If Registering Account */
-    // if (widget.passwords != null) getToken();
-
     super.initState();
   }
 
@@ -45,26 +43,29 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<void> _subscribeBalance() async {
-    // print('subscribe');
+    var walletProvider = Provider.of<WalletProvider>(context,listen: false);
+    
     final channel = await widget.importAccModel.sdk.api.account
         .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
       setState(() {
         widget.importAccModel.balance = res;
-        widget.importAccModel.nativeBalance =
-            Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
-        // print(widget.importAccModel.nativeBalance);
+        widget.importAccModel.nativeBalance = Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
+        walletProvider.addAvaibleToken({
+          'symbol': widget.importAccModel.nativeSymbol,
+          'balance': widget.importAccModel.nativeBalance,
+        });
+          
+        Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  
       });
     });
     setState(() {
       widget.importAccModel.msgChannel = channel;
-      // print('Channel $channel');
+      
     });
   }
 
   Future<void> _importFromMnemonic() async {
-    // print(" firstName ${_userInfoM.controlFirstName.text}");
-    // print(" Password ${_userInfoM.confirmPasswordCon.text}");
-
     try {
       final json = await widget.importAccModel.sdk.api.keyring.importAccount(
         widget.importAccModel.keyring,
@@ -73,7 +74,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
-      // print("My json $json");
 
       final acc = await widget.importAccModel.sdk.api.keyring.addAccount(
         widget.importAccModel.keyring,
@@ -82,7 +82,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         password: _userInfoM.confirmPasswordCon.text,
       );
 
-      // print("My account name ${acc.name}");
       if (acc != null) {
         widget.importAccModel.mnemonic = '';
         _subscribeBalance();

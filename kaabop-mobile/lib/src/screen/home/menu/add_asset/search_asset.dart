@@ -17,7 +17,7 @@ class SearchAsset extends SearchDelegate {
         hintStyle: TextStyle(color: Colors.white),
       ),
       textTheme: TextTheme(
-        title: TextStyle(
+        headline6: TextStyle(
           color: Colors.white,
           fontSize: 18,
         ),

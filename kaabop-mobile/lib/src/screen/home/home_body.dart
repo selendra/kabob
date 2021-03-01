@@ -50,7 +50,7 @@ class HomeBody extends StatelessWidget {
                       MyText(
                         text: 'Assets',
                         fontSize: 27,
-                        color: "#FFFFFF",
+                        color: AppColors.whiteColorHexa,
                         left: 16,
                         fontWeight: FontWeight.bold,
                       ),

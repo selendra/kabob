@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/src/components/component.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/home/menu/account_c.dart';
 import '../../../../index.dart';
 
@@ -76,6 +78,7 @@ class _AccountState extends State<Account> {
       Navigator.pop(context);
       AppServices.clearStorage();
       widget.sdkModel.contractModel = ContractModel();
+      Provider.of<WalletProvider>(context,listen: false).clearPortfolio();
       Navigator.pushAndRemoveUntil(context,
           RouteAnimation(enterPage: Welcome()), ModalRoute.withName('/'));
     } catch (e) {

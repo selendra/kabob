@@ -3,6 +3,7 @@ import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
+import '../../index.dart';
 
 class WalletProvider with ChangeNotifier {
   WalletSDK _sdk = WalletSDK();
@@ -10,9 +11,25 @@ class WalletProvider with ChangeNotifier {
   String _nativeBalance = '';
   bool _isApiConnected = false;
   bool _isSdkReady = false;
+  List<PortfolioM> _portfolioM = [];
+  List<Map<String, String>> availableToken = [];
+
+
+  List<Color> pieColorList = [
+    hexaCodeToColor("#08B952"),
+    hexaCodeToColor("#40FF90"),
+  ];
+ 
+
+  Map<String, double> dataMap = {
+    'SEL':100,
+    'KMPI':0
+  };
+
 
   WalletSDK get sdk => _sdk;
   Keyring get keyring => _keyring;
+  List<PortfolioM> get portfolio => _portfolioM;
   String get nativeBalance => _nativeBalance;
   bool get isApiConnected => _isApiConnected;
 
@@ -30,7 +47,6 @@ class WalletProvider with ChangeNotifier {
     node.name = 'Indranet hosted By Selendra';
     node.endpoint = 'wss://rpc-testnet.selendra.org';
     node.ss58 = 42;
-    //  print(node.endpoint);
 
     final res = await sdk.api.connectNode(
       keyring,
@@ -39,8 +55,6 @@ class WalletProvider with ChangeNotifier {
 
     if (res != null) {
       _isApiConnected = true;
-    } else {
-      //  print('res null');
     }
 
     notifyListeners();
@@ -52,6 +66,58 @@ class WalletProvider with ChangeNotifier {
         _nativeBalance = Fmt.balance(res.freeBalance, 18);
       }
     });
+    notifyListeners();
+  }
+
+  void addAvaibleToken(Map<String, String> token) {
+    availableToken.add(token);
+    print('added');
+    notifyListeners();
+    
+  }
+  void clearPortfolio() {
+    availableToken.clear();
+    _portfolioM.clear();
+    notifyListeners();
+  }
+  Future<double> getTotal() async{
+    double total = 0;
+    print(availableToken);
+    for(int i= 0; i<availableToken.length; i++){
+      total = total + double.parse(availableToken[i]['balance']);
+    }
+    return total;
+  }
+
+  void getPortfolio() async{
+    print('get port');
+    _portfolioM.clear();
+    await getTotal().then((total) {
+      print(total);
+      for (int i = 0; i < availableToken.length; i++) {
+        if(availableToken[i]['symbol']=='SEL'){
+          var percen = double.parse(availableToken[i]['balance']) /total * 100;
+          _portfolioM.add(
+            PortfolioM(
+              color: pieColorList[0],
+              symbol: 'SEL',
+              percentage: percen.toStringAsFixed(2),
+          ));
+          dataMap.update('SEL', (value) => value = double.parse(percen.toStringAsFixed(2)));
+        }else if (availableToken[i]['symbol']=='KMPI'){
+          var percen = double.parse(availableToken[i]['balance']) /total * 100;
+          _portfolioM.add(
+            PortfolioM(
+              color: pieColorList[1],
+              symbol: 'KMPI',
+              percentage: percen.toStringAsFixed(2)
+          ));
+          dataMap.update('KMPI', (value) => value = double.parse(percen.toStringAsFixed(2)));
+        }
+    }
+    });
+ 
+    
     notifyListeners();
   }
 }

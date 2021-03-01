@@ -4,6 +4,7 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 
+
 class Home extends StatefulWidget {
   final CreateAccModel sdkModel;
   Home(this.sdkModel);
@@ -17,55 +18,43 @@ class Home extends StatefulWidget {
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
   GlobalKey<AnimatedCircularChartState> chartKey =
-      new GlobalKey<AnimatedCircularChartState>();
-
+      GlobalKey<AnimatedCircularChartState>();
   MenuModel menuModel = MenuModel();
-
   HomeModel _homeM = HomeModel();
-
   PortfolioM _portfolioM = PortfolioM();
   BuildContext dialogContext;
-
   PortfolioRateModel _portfolioRate = PortfolioRateModel();
-
-  // Local_localAuth _localAuth = Local_localAuth();
-
-  String mBalance = '';
+  String action = "no_action";
   String status = '';
 
   List<Color> pieColorList = [
     hexaCodeToColor("#08B952"),
-    hexaCodeToColor("#40FF90"),
-    hexaCodeToColor("#00FFF0"),
-    hexaCodeToColor(AppColors.bgdColor)
+    // hexaCodeToColor("#40FF90"),
+    // hexaCodeToColor("#00FFF0"),
+    // hexaCodeToColor(AppColors.bgdColor)
   ];
+
   Map<String, double> dataMap = {
-    "FLutter": 5,
-    "React": 3,
-    "Xamain": 2,
-    "Ionic": 2,
+    "FLutter": 100,
+    // "React": 3,
+    // "Xamain": 2,
+    // "Ionic": 2,
   };
+
 
   Future<void> getCurrentAccount() async {
     final List<KeyPairData> ls = widget.sdkModel.keyring.keyPairs;
     setState(() {
-      widget.sdkModel.userModel.username =
-          widget.sdkModel.keyring.keyPairs[0].name;
-      widget.sdkModel.userModel.address =
-          widget.sdkModel.keyring.keyPairs[0].address;
+      widget.sdkModel.userModel.username = widget.sdkModel.keyring.keyPairs[0].name;
+      widget.sdkModel.userModel.address = widget.sdkModel.keyring.keyPairs[0].address;
 
       _homeM.userData['first_name'] = ls[0].name;
       _homeM.userData['wallet'] = ls[0].address;
     });
   }
 
-  String action = "no_action";
-
   @override
   initState() {
-    /* Initialize State */
-    // print("My name ${widget.keyring.current.name}");
-
     _homeM.portfolioList = null;
     _portfolioM.list = [];
     if (mounted) {
@@ -91,6 +80,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       startNode();
     }
 
+    
+
     super.initState();
   }
 
@@ -109,8 +100,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 children: [
                   CircularProgressIndicator(
                       backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation(
-                          hexaCodeToColor(AppColors.secondary))),
+                      valueColor: AlwaysStoppedAnimation(hexaCodeToColor(AppColors.secondary))),
                   Align(
                     alignment: Alignment.center,
                     child: MyText(
@@ -123,8 +113,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               content: Padding(
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: MyText(
-                    text: "Please wait ! this might take a bit longer",
-                    color: "#000000"),
+                  text: "Please wait ! this might take a bit longer",
+                  color: "#000000",
+                ),
               ),
             ));
           });
@@ -136,6 +127,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       await Future.delayed(Duration(milliseconds: 200), () {
         status = null;
       });
+      
       Navigator.of(dialogContext).pop();
     }
   }
@@ -174,8 +166,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       );
 
       setState(() {
-        widget.sdkModel
-          ..contractModel.pBalance = BigInt.parse(res['output']).toString();
+        widget.sdkModel.contractModel.pBalance =
+            BigInt.parse(res['output']).toString();
       });
     } catch (e) {
       // print(e.toString());
@@ -203,9 +195,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void deleteAccout() async {
-    await dialog(context, Text('Are you sure to delete this asset?'),
-        Text('Delete Asset'),
-        action: FlatButton(onPressed: () async {}, child: Text('Delete')));
+    await dialog(
+      context, 
+      Text('Are you sure to delete this asset?'),
+      Text('Delete Asset'),
+      action: FlatButton(onPressed: () async {}, child: Text('Delete')
+    ));
   }
 
   void onDismiss() async {

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/portfolio_c.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/home/portfolio/portfolio.dart';
 
 class PortFolioCus extends StatelessWidget {
@@ -30,7 +32,7 @@ class PortFolioCus extends StatelessWidget {
                     MyText(
                       text: 'Portfolio',
                       fontSize: 27,
-                      color: "#FFFFFF",
+                      color: AppColors.whiteColorHexa,
                       left: 16,
                       fontWeight: FontWeight.bold,
                     ),
@@ -66,55 +68,71 @@ class PortFolioCus extends StatelessWidget {
                           child: SizedBox(
                             width: 150,
                             height: 150,
-                            child: PieChart(
-                              ringStrokeWidth: 15,
-                              dataMap: dataMap,
-                              chartType: ChartType.ring,
-                              colorList: pieColorList,
-                              centerText: "10%",
-                              legendOptions: LegendOptions(
-                                showLegends: false,
-                              ),
-                              chartValuesOptions: ChartValuesOptions(
-                                showChartValues: false,
-                                showChartValueBackground: false,
-                                chartValueStyle: TextStyle(
-                                  color: hexaCodeToColor("#FFFFFF"),
-                                  fontSize: 16,
-                                ),
-                              ),
+                            child: Consumer<WalletProvider>(
+                              builder: (context,value,child){
+                                return PieChart(
+                                  ringStrokeWidth: 15,
+                                  dataMap: value.dataMap,
+                                  chartType: ChartType.ring,
+                                  colorList: value.pieColorList,
+                                  centerText: "10%",
+                                  legendOptions: LegendOptions(
+                                    showLegends: false,
+                                  ),
+                                  chartValuesOptions: ChartValuesOptions(
+                                    showChartValues: false,
+                                    showChartValueBackground: false,
+                                    chartValueStyle: TextStyle(
+                                      color: hexaCodeToColor("#FFFFFF"),
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                );
+                              },                                                  
                             ),
                           ),
                         ),
                       ),
                       Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MyPieChartRow(
-                              color: pieColorList[0],
-                              centerText: 'KMPI',
-                              endText: "25%",
-                            ),
-                            MyPieChartRow(
-                              color: pieColorList[1],
-                              centerText: "SEL",
-                              endText: "50%",
-                            ),
-                            MyPieChartRow(
-                              color: pieColorList[2],
-                              centerText: "POK",
-                              endText: "25%",
-                            ),
-                            MyPieChartRow(
-                              color: pieColorList[3],
-                              centerText: "Emp",
-                              endText: "0%",
-                            ),
-                          ],
-                        ),
-                      ),
+                        child: Consumer<WalletProvider>(
+                          builder: (context,value,child){
+                            return  Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: List.generate(value.portfolio.length, (index) {
+                              return MyPieChartRow(
+                                color: value.portfolio[index].color,
+                                centerText: value.portfolio[index].symbol,
+                                endText: value.portfolio[index].percentage,
+                              );
+                            }),
+                          //   children: [
+                          //     MyPieChartRow(
+                          //       color: pieColorList[0],
+                          //       centerText: 'KMPI',
+                          //       endText: "25%",
+                          //     ),
+                          //     MyPieChartRow(
+                          //       color: pieColorList[1],
+                          //       centerText: "SEL",
+                          //       endText: "50%",
+                          //     ),
+                          //     MyPieChartRow(
+                          //       color: pieColorList[2],
+                          //       centerText: "POK",
+                          //       endText: "25%",
+                          //     ),
+                          //     MyPieChartRow(
+                          //       color: pieColorList[3],
+                          //       centerText: "Emp",
+                          //       endText: "0%",
+                          //     ),
+                          //   ],
+                          // ),
+                      );
+                          },
+                                                  
+                        ))
                     ],
                   ),
                 ),

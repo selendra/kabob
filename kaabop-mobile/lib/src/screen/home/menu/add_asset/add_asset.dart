@@ -1,6 +1,8 @@
 import 'dart:ui';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class AddAsset extends StatefulWidget {
   final CreateAccModel sdkModel;
@@ -31,15 +33,7 @@ class AddAssetState extends State<AddAsset> {
 
   void addContract() async {}
 
-  String validateAssetCode(String value) {
-    // if (_modelAsset.nodeAssetCode.hasFocus) {
-    //   if (_modelAsset.responseAssetCode != null)
-    //     _modelAsset.responseAssetCode += "asset address";
-    // }else{
 
-    // }
-    // return _modelAsset.responseAssetCode
-  }
 
   Future<bool> validateAddress(String address) async {
     final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
@@ -98,6 +92,7 @@ class AddAssetState extends State<AddAsset> {
     await _getHashBySymbol().then((value) async {
       await _balanceOfByPartition();
     });
+    setPortfolio();
     await StorageServices.saveBool('KMPI', true);
     Navigator.pushNamedAndRemoveUntil(
           context, Home.route, ModalRoute.withName('/'));
@@ -124,7 +119,6 @@ class AddAssetState extends State<AddAsset> {
   }
 
   Future<void> _getHashBySymbol() async {
-    //print('my symbol${widget.sdkModel.contractModel.pTokenSymbol}');
 
     try {
       final res = await widget.sdkModel.sdk.api.getHashBySymbol(
@@ -134,8 +128,6 @@ class AddAssetState extends State<AddAsset> {
 
       if (res != null) {
         widget.sdkModel.contractModel.pHash = res;
-
-        //print(res);
       }
     } catch (e) {
       //print(e.toString());
@@ -154,13 +146,31 @@ class AddAssetState extends State<AddAsset> {
       );
 
       setState(() {
-        widget.sdkModel.contractModel.pBalance =
-            BigInt.parse(res['output']).toString();
+        widget.sdkModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
       });
     } catch (e) {
       //print(e.toString());
     }
   }
+  void setPortfolio() {
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    walletProvider.clearPortfolio();
+
+    if (widget.sdkModel.contractModel.pHash != '') {
+      walletProvider.addAvaibleToken({
+        'symbol': widget.sdkModel.contractModel.pTokenSymbol,
+        'balance': widget.sdkModel.contractModel.pBalance,
+      });
+    }
+
+    walletProvider.availableToken.add({
+      'symbol': widget.sdkModel.nativeSymbol,
+      'balance': widget.sdkModel.nativeBalance,
+    });
+ 
+   Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  }
+
 
   // void onSubmit() {
   //   if (_modelAsset.nodeAssetCode.hasFocus) {
@@ -264,7 +274,6 @@ class AddAssetState extends State<AddAsset> {
           children: [
             AddAssetBody(
               assetM: _modelAsset,
-              validateAssetCode: validateAssetCode,
               popScreen: popScreen,
               onChanged: onChanged,
               onSubmit: null,

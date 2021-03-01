@@ -1,6 +1,11 @@
 import 'package:wallet_apps/index.dart';
 
-class PortfolioM{
+class PortfolioM {
+  Color color;
+  String symbol;
+  String percentage;
+
+  PortfolioM({this.color,this.symbol,this.percentage});
 
   List<Map<String, dynamic>> list = [];
 
@@ -11,5 +16,4 @@ class PortfolioM{
   double total = 0;
 
   double remainDataChart = 100;
-
 }

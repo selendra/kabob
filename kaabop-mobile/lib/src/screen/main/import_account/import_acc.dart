@@ -21,7 +21,7 @@ class ImportAccState extends State<ImportAcc> {
 
   ImportAccModel _importAccModel = ImportAccModel();
 
-  PackageInfo _packageInfo;
+
 
   bool status;
   int currentVersion;

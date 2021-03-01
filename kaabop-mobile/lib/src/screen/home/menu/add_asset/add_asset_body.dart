@@ -4,7 +4,7 @@ import 'package:wallet_apps/src/screen/home/menu/add_asset/search_asset.dart';
 
 class AddAssetBody extends StatelessWidget {
   final ModelAsset assetM;
-  final Function validateAssetCode;
+  
   final Function validateIssuer;
   final Function popScreen;
   final Function onChanged;
@@ -17,7 +17,6 @@ class AddAssetBody extends StatelessWidget {
 
   AddAssetBody({
     this.assetM,
-    this.validateAssetCode,
     this.validateIssuer,
     this.popScreen,
     this.onChanged,
