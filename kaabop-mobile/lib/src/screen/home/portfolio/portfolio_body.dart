@@ -1,7 +1,9 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 import 'package:pie_chart/pie_chart.dart';
 import 'package:wallet_apps/src/components/portfolio_c.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class PortfolioBody extends StatelessWidget {
   final List<dynamic> listData;
@@ -11,35 +13,7 @@ class PortfolioBody extends StatelessWidget {
   PortfolioBody({@required this.listData, @required this.portfolioM});
 
   Widget build(BuildContext context) {
-    final List<String> months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'June',
-      'July',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec'
-    ];
-
-    Map<String, double> dataMap = {
-      "FLutter": 5,
-      "React": 3,
-      "Xamain": 2,
-      "Ionic": 2,
-    };
-
-    List<Color> pieColorList = [
-      hexaCodeToColor("#08B952"),
-      hexaCodeToColor("#40FF90"),
-      hexaCodeToColor("#00FFF0"),
-      hexaCodeToColor(AppColors.bgdColor)
-    ];
-
+   
     return Column(
       children: [
         MyAppBar(
@@ -60,75 +34,63 @@ class PortfolioBody extends StatelessWidget {
         else
           Column(
             children: [
-              Hero(
-                tag: 'chart',
-                child: Container(
-                  margin:
-                      EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 16),
-                  padding: EdgeInsets.only(left: 25, top: 25, bottom: 25),
-                  width: double.infinity,
-                  height: 200,
-                  decoration: BoxDecoration(
-                      color: hexaCodeToColor(AppColors.cardColor),
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: 150,
-                            height: 150,
-                            child: PieChart(
+              Container(
+                margin:EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 16),
+                padding: EdgeInsets.only(left: 25, top: 25, bottom: 25),
+                width: double.infinity,
+                height: 200,
+                decoration: BoxDecoration(
+                    color: hexaCodeToColor(AppColors.cardColor),
+                    borderRadius: BorderRadius.circular(8)),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: Consumer<WalletProvider>(
+                            builder: (context,value,child){
+                              return PieChart(
                               ringStrokeWidth: 15,
-                              dataMap: dataMap,
+                              dataMap: value.dataMap,
                               chartType: ChartType.ring,
-                              colorList: pieColorList,
-                              centerText: "10%",
+                              colorList: value.pieColorList,
+                              centerText: "100%",
                               legendOptions: LegendOptions(
                                 showLegends: false,
                               ),
                               chartValuesOptions: ChartValuesOptions(
                                   showChartValues: false,
-                                  // showChartValuesInPercentage: true,
                                   showChartValueBackground: false,
                                   chartValueStyle: TextStyle(
                                       color: hexaCodeToColor("#FFFFFF"),
                                       fontSize: 16)),
-                            ),
+                              );
+                            },                                                  
                           ),
                         ),
                       ),
-                      Expanded(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MyPieChartRow(
-                            color: pieColorList[0],
-                            centerText: "SEL",
-                            endText: "25%",
-                          ),
-                          MyPieChartRow(
-                            color: pieColorList[1],
-                            centerText: "XML",
-                            endText: "50%",
-                          ),
-                          MyPieChartRow(
-                            color: pieColorList[2],
-                            centerText: "POK",
-                            endText: "25%",
-                          ),
-                          MyPieChartRow(
-                            color: pieColorList[3],
-                            centerText: "Emp",
-                            endText: "0%",
-                          ),
-                        ],
+                    ),
+                    Expanded(
+                      child: Consumer<WalletProvider>(
+                        builder: (context,value,child){
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: List.generate(value.portfolio.length,(index) {
+                              return MyPieChartRow(
+                                color: value.portfolio[index].color,
+                                centerText: value.portfolio[index].symbol,
+                                endText: value.portfolio[index].percentage,
+                              );
+                            }),
+                          );
+                        },                                                 
                       ))
-                    ],
-                  ),
+                  ],
                 ),
               ),
 
@@ -151,10 +113,8 @@ class PortfolioBody extends StatelessWidget {
                             width: 100.0,
                             lineHeight: 5.0,
                             percent: 0.5,
-                            backgroundColor:
-                                hexaCodeToColor(AppColors.cardColor),
-                            progressColor:
-                                hexaCodeToColor(AppColors.secondary_text),
+                            backgroundColor: hexaCodeToColor(AppColors.cardColor),
+                            progressColor: hexaCodeToColor(AppColors.secondary_text),
                             animation: true,
                           )
                         ],
@@ -178,8 +138,7 @@ class PortfolioBody extends StatelessWidget {
                             width: 100.0,
                             lineHeight: 5.0,
                             percent: 0.5,
-                            backgroundColor:
-                                hexaCodeToColor(AppColors.cardColor),
+                            backgroundColor: hexaCodeToColor(AppColors.cardColor),
                             progressColor: hexaCodeToColor("#00FFF0"),
                             animation: true,
                           )

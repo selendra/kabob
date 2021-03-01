@@ -82,17 +82,17 @@ class HomeBody extends StatelessWidget {
               GestureDetector(
                 onTap: () {
                   //balanceOf();
-                  Navigator.push(
-                    context,
-                    RouteAnimation(
-                      enterPage: AssetInfo(
-                        sdkModel: sdkModel,
-                        assetLogo: sdkModel.nativeToken,
-                        balance: sdkModel.nativeBalance,
-                        tokenSymbol: sdkModel.nativeSymbol,
-                      ),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   RouteAnimation(
+                  //     enterPage: AssetInfo(
+                  //       sdkModel: sdkModel,
+                  //       assetLogo: sdkModel.nativeToken,
+                  //       balance: sdkModel.nativeBalance,
+                  //       tokenSymbol: sdkModel.nativeSymbol,
+                  //     ),
+                  //   ),
+                  // );
                 },
                 child: AssetItem(sdkModel.nativeToken, sdkModel.nativeSymbol,
                     sdkModel.nativeOrg, sdkModel.nativeBalance, Colors.white),

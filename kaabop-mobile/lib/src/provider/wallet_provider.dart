@@ -89,6 +89,12 @@ class WalletProvider with ChangeNotifier {
     return total;
   }
 
+  void resetDatamap(){
+    dataMap.update('SEL', (value) => value = 100);
+    dataMap.update('KMPI', (value) => value = 0);
+    notifyListeners();
+  }
+
   void getPortfolio() async{
     print('get port');
     _portfolioM.clear();
@@ -115,9 +121,7 @@ class WalletProvider with ChangeNotifier {
           dataMap.update('KMPI', (value) => value = double.parse(percen.toStringAsFixed(2)));
         }
     }
-    });
- 
-    
+    });    
     notifyListeners();
   }
 }

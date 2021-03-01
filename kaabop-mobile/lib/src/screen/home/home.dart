@@ -80,8 +80,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       startNode();
     }
 
-    
-
     super.initState();
   }
 
@@ -130,11 +128,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       
       Navigator.of(dialogContext).pop();
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   void setChartData() {
@@ -249,7 +242,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     : Colors.white),
             onPressed: () async {
               await TrxOptionMethod.scanQR(
-                  context, _homeM.portfolioList, resetState, widget.sdkModel);
+                  context, _homeM.portfolioList, 
+                  resetState, widget.sdkModel,
+              );
             },
           )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

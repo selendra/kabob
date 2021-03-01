@@ -75,7 +75,7 @@ class PortFolioCus extends StatelessWidget {
                                   dataMap: value.dataMap,
                                   chartType: ChartType.ring,
                                   colorList: value.pieColorList,
-                                  centerText: "10%",
+                                  centerText: "100%",
                                   legendOptions: LegendOptions(
                                     showLegends: false,
                                   ),
@@ -106,29 +106,7 @@ class PortFolioCus extends StatelessWidget {
                                 endText: value.portfolio[index].percentage,
                               );
                             }),
-                          //   children: [
-                          //     MyPieChartRow(
-                          //       color: pieColorList[0],
-                          //       centerText: 'KMPI',
-                          //       endText: "25%",
-                          //     ),
-                          //     MyPieChartRow(
-                          //       color: pieColorList[1],
-                          //       centerText: "SEL",
-                          //       endText: "50%",
-                          //     ),
-                          //     MyPieChartRow(
-                          //       color: pieColorList[2],
-                          //       centerText: "POK",
-                          //       endText: "25%",
-                          //     ),
-                          //     MyPieChartRow(
-                          //       color: pieColorList[3],
-                          //       centerText: "Emp",
-                          //       endText: "0%",
-                          //     ),
-                          //   ],
-                          // ),
+                            
                       );
                           },
                                                   
