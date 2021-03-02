@@ -335,9 +335,8 @@ class MyBottomAppBar extends StatelessWidget {
   final bool apiStatus;
   final HomeModel homeM;
   final PortfolioM portfolioM;
- 
   final Function scanReceipt;
-  final Function resetDbdState;
+
   final Function toReceiveToken;
   final Function opacityController;
   final Function fillAddress;
@@ -349,9 +348,7 @@ class MyBottomAppBar extends StatelessWidget {
     this.apiStatus,
     this.homeM,
     this.portfolioM,
-
     this.scanReceipt,
-    this.resetDbdState,
     this.toReceiveToken,
     this.opacityController,
     this.fillAddress,
@@ -382,7 +379,7 @@ class MyBottomAppBar extends StatelessWidget {
                         await MyBottomSheet().trxOptions(
                             context: context,
                             portfolioList: homeM.portfolioList,
-                            resetHomeData: resetDbdState,
+                           
                             sdk: sdkModel.sdk,
                             keyring: sdkModel.keyring,
                             sdkModel: sdkModel);

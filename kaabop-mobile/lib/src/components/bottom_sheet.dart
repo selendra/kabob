@@ -9,7 +9,6 @@ class MyBottomSheet {
   Future<dynamic> trxOptions({
     BuildContext context,
     List portfolioList,
-    Function resetHomeData,
     WalletSDK sdk,
     Keyring keyring,
     CreateAccModel sdkModel,
@@ -41,10 +40,13 @@ class MyBottomSheet {
                         icon: "icons/qr_code.svg",
                         action: () async {
                           try {
-                            await TrxOptionMethod.scanQR(context, portfolioList,
-                                resetHomeData, sdkModel);
+                            await TrxOptionMethod.scanQR(
+                              context,
+                              portfolioList,
+                              sdkModel,
+                            );
                           } catch (e) {
-                          //  print(e.message);
+                            //  print(e.message);
                           }
                         },
                       ),
@@ -57,7 +59,6 @@ class MyBottomSheet {
                               TrxOptionMethod.navigateFillAddress(
                                 context,
                                 portfolioList,
-                                resetHomeData,
                                 sdk,
                                 keyring,
                                 sdkModel,
@@ -69,7 +70,7 @@ class MyBottomSheet {
                             subTitle: "Invite friend",
                             action: () {
                               TrxOptionMethod.selectContact(
-                                  context, portfolioList, resetHomeData);
+                                  context, portfolioList);
                             }))
                   ],
                 )

@@ -39,7 +39,6 @@ class AppState extends State<App> {
     _createAccModel.sdk = WalletSDK();
     _createAccModel.keyring = Keyring();
     _initApi();
-    //Provider.of<WalletProvider>(context).connectNetwork();
 
     super.initState();
   }
@@ -67,11 +66,12 @@ class AppState extends State<App> {
 
     setState(() {});
     if (res != null) {
-      
+      setState(() {
+        _createAccModel.apiConnected = true;
+      });
       initContract();
       getChainDecimal();
       _subscribeBalance();
-      
       
     }
   }
@@ -91,11 +91,12 @@ class AppState extends State<App> {
         setState(() {
           _createAccModel.balance = res;
           _createAccModel.nativeBalance = Fmt.balance(_createAccModel.balance.freeBalance, 18);
-
-          walletProvider.addAvaibleToken({
+          
+          walletProvider.updateAvailableToken({
             'symbol': _createAccModel.nativeSymbol,
             'balance': _createAccModel.nativeBalance,
           });
+
           Provider.of<WalletProvider>(context, listen: false).getPortfolio();
                   
         });
@@ -123,9 +124,8 @@ class AppState extends State<App> {
           });
         }
       }
-
       setState(() {
-        _createAccModel.apiConnected = true;
+        _createAccModel.dataReady = true;
       });
     });
    
@@ -194,11 +194,9 @@ class AppState extends State<App> {
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
               Home.route: (_) => Home(_createAccModel),
-              ReceiveWallet.route: (_) =>
-                  ReceiveWallet(createAccModel: _createAccModel),
+              ReceiveWallet.route: (_) => ReceiveWallet(createAccModel: _createAccModel),
               ImportAcc.route: (_) => ImportAcc(_createAccModel),
-              Account.route: (_) => Account(_createAccModel.sdk,
-                  _createAccModel.keyring, _createAccModel),
+              Account.route: (_) => Account(_createAccModel.sdk, _createAccModel.keyring, _createAccModel),
               AddAsset.route: (_) => AddAsset(_createAccModel),
             },
             builder: (context, widget) => ResponsiveWrapper.builder(

@@ -25,23 +25,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   HomeModel _homeM = HomeModel();
   PortfolioM _portfolioM = PortfolioM();
   BuildContext dialogContext;
-  PortfolioRateModel _portfolioRate = PortfolioRateModel();
   String action = "no_action";
   String status = '';
 
-  List<Color> pieColorList = [
-    hexaCodeToColor("#08B952"),
-    // hexaCodeToColor("#40FF90"),
-    // hexaCodeToColor("#00FFF0"),
-    // hexaCodeToColor(AppColors.bgdColor)
-  ];
-
-  Map<String, double> dataMap = {
-    "FLutter": 100,
-    // "React": 3,
-    // "Xamain": 2,
-    // "Ionic": 2,
-  };
 
 
   Future<void> getCurrentAccount() async {
@@ -122,7 +108,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void handleConnectNode() async {
-    if (widget.sdkModel.apiConnected) {
+    if (widget.sdkModel.apiConnected && widget.sdkModel.dataReady) {
       await Future.delayed(Duration(milliseconds: 200), () {
         status = null;
       });
@@ -180,12 +166,32 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 100)).then((value) {
+    await Future.delayed(Duration(milliseconds: 300)).then((value) {
+      setPortfolio();
       if (widget.sdkModel.contractModel.pHash != '') {
         _balanceOf();
       }
     });
   }
+  void setPortfolio() {
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    walletProvider.clearPortfolio();
+
+    if (widget.sdkModel.contractModel.pHash != '') {
+      walletProvider.addAvaibleToken({
+        'symbol': widget.sdkModel.contractModel.pTokenSymbol,
+        'balance': widget.sdkModel.contractModel.pBalance,
+      });
+    }
+
+    walletProvider.availableToken.add({
+      'symbol': widget.sdkModel.nativeSymbol,
+      'balance': widget.sdkModel.nativeBalance,
+    });
+ 
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  }
+
 
   void deleteAccout() async {
     await dialog(
@@ -217,56 +223,48 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     if (status != null) handleConnectNode();
     return Scaffold(
       key: _homeM.globalKey,
-      drawer: Theme(
-          data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-          child: Menu(_homeM.userData)),
+      drawer: Theme(data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+      child: Menu(_homeM.userData)),
       appBar: homeAppBar(context),
       body: RefreshIndicator(
         onRefresh: onRefresh,
         child: BodyScaffold(
-            height: MediaQuery.of(context).size.height,
-            child: HomeBody(
-              portfolioM: _portfolioM,
-              portfolioRateM: _portfolioRate,
-              homeM: _homeM,
-              pieColorList: pieColorList,
-              dataMap: dataMap,
-              sdkModel: widget.sdkModel,
-              balanceOf: _balanceOf,
-              onDismiss: onDismiss,
-            )),
+          height: MediaQuery.of(context).size.height,
+          child: HomeBody(
+            sdkModel: widget.sdkModel,
+            balanceOf: _balanceOf,
+            onDismiss: onDismiss,
+          ),),
       ),
       floatingActionButton: SizedBox(
-          width: 64,
-          height: 64,
-          child: FloatingActionButton(
-            backgroundColor: hexaCodeToColor(AppColors.secondary)
-                .withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
-            child: SvgPicture.asset('assets/icons/qr_code.svg',
-                width: 30,
-                height: 30,
-                color: !widget.sdkModel.apiConnected
-                    ? Colors.white.withOpacity(0.2)
-                    : Colors.white),
-            onPressed: () async {
-              await TrxOptionMethod.scanQR(
-                  context, _homeM.portfolioList, 
-                  resetState, widget.sdkModel,
-              );
-            },
-          )),
+        width: 64,
+        height: 64,
+        child: FloatingActionButton(
+          backgroundColor: hexaCodeToColor(AppColors.secondary).withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
+          child: SvgPicture.asset('assets/icons/qr_code.svg',
+            width: 30,
+            height: 30,
+            color: !widget.sdkModel.apiConnected
+                ? Colors.white.withOpacity(0.2)
+                : Colors.white),
+          onPressed: () async {
+            await TrxOptionMethod.scanQR(
+              context, 
+              _homeM.portfolioList, 
+              widget.sdkModel,
+            );
+          },
+        )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(
-          /* Bottom Navigation Bar */
-          apiStatus: widget.sdkModel.apiConnected,
-          homeM: _homeM,
-          portfolioM: _portfolioM,
-          scanReceipt: null, // Bottom Center Button
-          resetDbdState: resetState,
-          toReceiveToken: toReceiveToken,
-          opacityController: opacityController,
-          openDrawer: openMyDrawer,
-          sdkModel: widget.sdkModel),
+        apiStatus: widget.sdkModel.apiConnected,
+        homeM: _homeM,
+        portfolioM: _portfolioM,
+        scanReceipt: null, // Bottom Center Button
+        toReceiveToken: toReceiveToken,
+        opacityController: opacityController,
+        openDrawer: openMyDrawer,
+        sdkModel: widget.sdkModel),
     );
   }
 }

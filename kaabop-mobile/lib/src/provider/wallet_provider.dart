@@ -72,6 +72,28 @@ class WalletProvider with ChangeNotifier {
     notifyListeners();
     
   }
+  
+  void updateAvailableToken(Map<String,String> token){
+    
+    if(availableToken.isEmpty){
+      addAvaibleToken(token);
+    }else{
+      for(int i = 0; i<availableToken.length; i++){
+        print(availableToken[i]['symbol']);
+        if(availableToken[i]['symbol'] == token['symbol']){
+          availableToken[i].update('balance', (value) => token['balance']);
+        }
+        //  if(availableToken[i]['symbol']=='SEL'){
+        //    availableToken[i].update('balance', (value) => token['balance']);
+        //   print(' SEL: ${availableToken[i]['balance']}');
+        // }else if (availableToken[i]['symbol']=='KMPI'){
+        //   print(' KMPI: ${availableToken[i]['balance']}');
+        //   availableToken[i].update('balance', (value) => token['balance']);
+        // }
+      }
+    }
+    notifyListeners();
+  }
 
   void removeAvailableToken(Map<String,String> token){
     availableToken.remove(token);

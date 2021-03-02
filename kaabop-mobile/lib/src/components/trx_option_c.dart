@@ -34,7 +34,7 @@ class MyBottomSheetItem extends StatelessWidget {
 
 class TrxOptionMethod {
   static void selectContact(BuildContext context, List<dynamic> listPortfolio,
-      Function resetDbdState) async {
+     ) async {
     if (await Permission.contacts.request().isGranted) {
       final PhoneContact _contact =
           await FlutterContactPicker.pickPhoneContact();
@@ -91,7 +91,6 @@ class TrxOptionMethod {
   static void navigateFillAddress(
     BuildContext context,
     List<dynamic> portfolioList,
-    Function resetDbdState,
     WalletSDK sdk,
     Keyring keyring,
     CreateAccModel sdkModel,
@@ -101,14 +100,14 @@ class TrxOptionMethod {
         MaterialPageRoute(
             builder: (context) =>
                 SubmitTrx("", true, portfolioList, sdkModel)));
-    // if (response['status_code'] == 200) {
-    //   resetDbdState(null, "portfolio");
-    // }
   }
 
   /* Scan QR Code */
-  static Future scanQR(BuildContext context, List<dynamic> portfolioList,
-      Function resetDbdState, CreateAccModel sdkModel) async {
+  static Future scanQR(
+    BuildContext context,
+    List<dynamic> portfolioList,
+    CreateAccModel sdkModel,
+  ) async {
     var _response = await Navigator.push(context, transitionRoute(QrScanner()));
 
     print("Scan qr reponse $_response");

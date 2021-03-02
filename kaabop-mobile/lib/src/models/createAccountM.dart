@@ -10,6 +10,7 @@ class CreateAccModel {
   BalanceData balance;
   bool sdkReady = false;
   bool apiConnected = false;
+  bool dataReady = false;
   String nativeBalance = '0';
   String chainDecimal='';
   String msgChannel;

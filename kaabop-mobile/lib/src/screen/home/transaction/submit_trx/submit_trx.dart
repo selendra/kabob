@@ -2,10 +2,12 @@ import 'dart:ui';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:intl/intl.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
@@ -132,6 +134,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       disable = true;
     });
     flareController.play('Checkmark');
+    setPortfolio();
     Timer(Duration(milliseconds: 2500), () {
       Navigator.pushNamedAndRemoveUntil(
           context, Home.route, ModalRoute.withName('/'));
@@ -163,8 +166,6 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   void resetAssetsDropDown(String data) {
-    // print("My asset $data");
-    /* Reset Asset */
     setState(() {
       _scanPayM.asset = data;
     });
@@ -172,8 +173,6 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future<void> transfer(String to, String pass, String value) async {
-    // String hash =
-    //     '0x6bc6587597acb08c96db1d83307e967dc1d7c9674d025122a417d01a53848112';
     dialogLoading(context,
         content: 'Please wait! This might take a little bit longer');
 
@@ -232,9 +231,6 @@ class SubmitTrxState extends State<SubmitTrx> {
         // print(status);
       });
 
-      //print('tx status: $_status');
-      // print('hash: $hash');
-
       if (hash != null) {
         saveTxHistory(TxHistory(
           date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
@@ -254,6 +250,24 @@ class SubmitTrxState extends State<SubmitTrx> {
     }
 
     return mhash;
+  }
+  void setPortfolio() {
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    walletProvider.clearPortfolio();
+
+    if (widget.sdkModel.contractModel.pHash != '') {
+      walletProvider.addAvaibleToken({
+        'symbol': widget.sdkModel.contractModel.pTokenSymbol,
+        'balance': widget.sdkModel.contractModel.pBalance,
+      });
+    }
+
+    walletProvider.availableToken.add({
+      'symbol': widget.sdkModel.nativeSymbol,
+      'balance': widget.sdkModel.nativeBalance,
+    });
+ 
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
   Future<void> _balanceOfByPartition() async {

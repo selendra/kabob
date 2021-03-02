@@ -7,21 +7,13 @@ import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'asset_info/asset_info.dart';
 
 class HomeBody extends StatelessWidget {
-  final HomeModel homeM;
-  final PortfolioM portfolioM;
-  final PortfolioRateModel portfolioRateM;
-  final List<Color> pieColorList;
-  final Map<String, double> dataMap;
+ 
   final CreateAccModel sdkModel;
   final Function balanceOf;
   final Function onDismiss;
 
   HomeBody(
-      {this.homeM,
-      this.portfolioM,
-      this.portfolioRateM,
-      this.pieColorList,
-      this.dataMap,
+      {
       this.sdkModel,
       this.balanceOf,
       this.onDismiss});
@@ -34,7 +26,7 @@ class HomeBody extends StatelessWidget {
           child: Column(
             children: [
               ProfileCard(sdkModel),
-              PortFolioCus(homeM, portfolioM, pieColorList, dataMap),
+              PortFolioCus(),
               Container(
                   margin: EdgeInsets.only(top: 16),
                   child: Row(
@@ -81,18 +73,18 @@ class HomeBody extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  //balanceOf();
-                  // Navigator.push(
-                  //   context,
-                  //   RouteAnimation(
-                  //     enterPage: AssetInfo(
-                  //       sdkModel: sdkModel,
-                  //       assetLogo: sdkModel.nativeToken,
-                  //       balance: sdkModel.nativeBalance,
-                  //       tokenSymbol: sdkModel.nativeSymbol,
-                  //     ),
-                  //   ),
-                  // );
+                  balanceOf();
+                  Navigator.push(
+                    context,
+                    RouteAnimation(
+                      enterPage: AssetInfo(
+                        sdkModel: sdkModel,
+                        assetLogo: sdkModel.nativeToken,
+                        balance: sdkModel.nativeBalance,
+                        tokenSymbol: sdkModel.nativeSymbol,
+                      ),
+                    ),
+                  );
                 },
                 child: AssetItem(sdkModel.nativeToken, sdkModel.nativeSymbol,
                     sdkModel.nativeOrg, sdkModel.nativeBalance, Colors.white),
