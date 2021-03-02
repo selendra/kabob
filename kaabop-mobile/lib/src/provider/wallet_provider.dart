@@ -6,6 +6,7 @@ import 'package:wallet_apps/src/models/fmt.dart';
 import '../../index.dart';
 
 class WalletProvider with ChangeNotifier {
+  
   WalletSDK _sdk = WalletSDK();
   Keyring _keyring = Keyring();
   String _nativeBalance = '';
@@ -48,10 +49,7 @@ class WalletProvider with ChangeNotifier {
     node.endpoint = 'wss://rpc-testnet.selendra.org';
     node.ss58 = 42;
 
-    final res = await sdk.api.connectNode(
-      keyring,
-      [node],
-    );
+    final res = await sdk.api.connectNode(keyring,[node]);
 
     if (res != null) {
       _isApiConnected = true;
@@ -71,10 +69,15 @@ class WalletProvider with ChangeNotifier {
 
   void addAvaibleToken(Map<String, String> token) {
     availableToken.add(token);
-    print('added');
     notifyListeners();
     
   }
+
+  void removeAvailableToken(Map<String,String> token){
+    availableToken.remove(token);
+    notifyListeners();
+  } 
+
   void clearPortfolio() {
     availableToken.clear();
     _portfolioM.clear();
@@ -94,12 +97,10 @@ class WalletProvider with ChangeNotifier {
     dataMap.update('KMPI', (value) => value = 0);
     notifyListeners();
   }
-
+  
   void getPortfolio() async{
-    print('get port');
     _portfolioM.clear();
     await getTotal().then((total) {
-      print(total);
       for (int i = 0; i < availableToken.length; i++) {
         if(availableToken[i]['symbol']=='SEL'){
           var percen = double.parse(availableToken[i]['balance']) /total * 100;

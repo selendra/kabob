@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 
 class Home extends StatefulWidget {
@@ -17,8 +19,8 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
-  GlobalKey<AnimatedCircularChartState> chartKey =
-      GlobalKey<AnimatedCircularChartState>();
+  
+  GlobalKey<AnimatedCircularChartState> chartKey = GlobalKey<AnimatedCircularChartState>();
   MenuModel menuModel = MenuModel();
   HomeModel _homeM = HomeModel();
   PortfolioM _portfolioM = PortfolioM();
@@ -62,8 +64,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.globalKey = GlobalKey<ScaffoldState>();
       _homeM.total = 0;
       _homeM.circularChart = [
-        CircularSegmentEntry(
-            _homeM.emptyChartData, hexaCodeToColor(AppColors.cardColor))
+        CircularSegmentEntry(_homeM.emptyChartData, hexaCodeToColor(AppColors.cardColor))
       ];
       _homeM.userData = {};
       setChartData();
@@ -159,8 +160,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       );
 
       setState(() {
-        widget.sdkModel.contractModel.pBalance =
-            BigInt.parse(res['output']).toString();
+        widget.sdkModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
       });
     } catch (e) {
       // print(e.toString());
@@ -201,6 +201,14 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       widget.sdkModel.contractModel.pHash = '';
     });
     widget.sdkModel.contractModel = ContractModel();
+    widget.sdkModel.contractModel.isContain = false;
+    Provider.of<WalletProvider>(context).clearPortfolio();
+    Provider.of<WalletProvider>(context).resetDatamap();
+    Provider.of<WalletProvider>(context).addAvaibleToken({
+      'symbol': widget.sdkModel.nativeSymbol,
+      'balance': widget.sdkModel.nativeBalance,
+    });
+    Provider.of<WalletProvider>(context).getPortfolio();
     await StorageServices.removeKey('KMPI');
   }
 

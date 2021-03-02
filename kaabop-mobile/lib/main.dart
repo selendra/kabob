@@ -63,18 +63,15 @@ class AppState extends State<App> {
     node.endpoint = 'wss://rpc-testnet.selendra.org';
     node.ss58 = 42;
 
-    final res = await _createAccModel.sdk.api
-        .connectNode(_createAccModel.keyring, [node]);
+    final res = await _createAccModel.sdk.api.connectNode(_createAccModel.keyring, [node]);
 
     setState(() {});
     if (res != null) {
-      setState(() {
-        _createAccModel.apiConnected = true;
-        
-      });
+      
+      initContract();
       getChainDecimal();
       _subscribeBalance();
-      await initContract();
+      
       
     }
   }
@@ -99,7 +96,6 @@ class AppState extends State<App> {
             'symbol': _createAccModel.nativeSymbol,
             'balance': _createAccModel.nativeBalance,
           });
-
           Provider.of<WalletProvider>(context, listen: false).getPortfolio();
                   
         });
@@ -113,9 +109,10 @@ class AppState extends State<App> {
   }
 
   Future<void> initContract() async {
-    //var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+
     await StorageServices.readBool('KMPI').then((value) async {
       if (value) {
+        _createAccModel.contractModel.isContain = value;
         await _createAccModel.sdk.api.callContract().then((value) {
           _createAccModel.contractModel.pContractAddress = value;
         });
@@ -126,6 +123,10 @@ class AppState extends State<App> {
           });
         }
       }
+
+      setState(() {
+        _createAccModel.apiConnected = true;
+      });
     });
    
   }
@@ -165,8 +166,7 @@ class AppState extends State<App> {
       );
 
       setState(() {
-        _createAccModel.contractModel.pBalance =
-            BigInt.parse(res['output']).toString();
+        _createAccModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
         walletProvider.addAvaibleToken({
           'symbol': _createAccModel.contractModel.pTokenSymbol,
           'balance': _createAccModel.contractModel.pBalance,

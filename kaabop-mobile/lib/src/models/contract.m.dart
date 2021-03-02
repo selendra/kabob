@@ -1,4 +1,6 @@
 class ContractModel {
+
+  bool isContain = false;
   //list of partition token symbol
   String pContractAddress = '';
 

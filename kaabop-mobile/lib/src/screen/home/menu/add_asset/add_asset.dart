@@ -40,15 +40,6 @@ class AddAssetState extends State<AddAsset> {
     return res;
   }
 
-  // String validateIssuer(String value) {
-  //   if (_modelAsset.nodeIssuer.hasFocus) {
-  //     _modelAsset.responseIssuer = instanceValidate.validateAsset(value);
-  //     if (_modelAsset.responseIssuer != null)
-  //       _modelAsset.responseIssuer += "asset issuer";
-  //   }
-  //   return _modelAsset.responseIssuer;
-  // }
-
   void validateAllFieldNotEmpty() {
     // Validator 1 : All Field Not Empty
     if (_modelAsset.controllerAssetCode.text.isNotEmpty &&
@@ -79,6 +70,9 @@ class AddAssetState extends State<AddAsset> {
 
   void addAsset() async {
     dialogLoading(context);
+    setState(() {
+      widget.sdkModel.contractModel.isContain = true;
+    });
     await _contractSymbol();
     await _getHashBySymbol().then((value) async {
       await _balanceOfByPartition();
@@ -88,6 +82,9 @@ class AddAssetState extends State<AddAsset> {
   }
 
   void addAssetInSearch() async{
+    setState(() {
+      widget.sdkModel.contractModel.isContain = true;
+    });
     await _contractSymbol();
     await _getHashBySymbol().then((value) async {
       await _balanceOfByPartition();
@@ -136,8 +133,6 @@ class AddAssetState extends State<AddAsset> {
 
   Future<void> _balanceOfByPartition() async {
     try {
-      //print(widget.sdkModel.keyring.keyPairs[0].address);
-      //print(widget.sdkModel.contractModel.pHash);
 
       final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
         widget.sdkModel.keyring.keyPairs[0].address,

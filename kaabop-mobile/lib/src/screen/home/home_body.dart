@@ -97,7 +97,7 @@ class HomeBody extends StatelessWidget {
                 child: AssetItem(sdkModel.nativeToken, sdkModel.nativeSymbol,
                     sdkModel.nativeOrg, sdkModel.nativeBalance, Colors.white),
               ),
-              sdkModel.contractModel.pHash != ''
+              sdkModel.contractModel.isContain
                   ? Dismissible(
                       key: UniqueKey(),
                       direction: DismissDirection.endToStart,
