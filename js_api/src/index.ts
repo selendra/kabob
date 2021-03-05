@@ -8,6 +8,7 @@ import gov from "./service/gov";
 import { genLinks } from "./utils/config/config";
 import { Abi, ContractPromise } from '@polkadot/api-contract';
 import metadata from "./metadata.json";
+import ametadata from "./meta/metadata.json";
 
 // send message to JSChannel: PolkaWallet
 function send(path: string, data: any) {
@@ -54,7 +55,6 @@ async function getChainDecimal(api: ApiPromise) {
 
 async function callContract(api: ApiPromise) {
   return new Promise(async (resolve, reject) => {
-    //const ERC20 = '5CyvZsXQAUNKYH6f38vCku9bXkWVAxaAwksFYRDpGJYcx4Vv';
     const ERC1400 = '5GZ9uD6RgN84bpBuic1HWq9AP7k2SSFtK9jCVkrncZsuARQU';
     const abiJSONobj = (<any>metadata);
     const abi = new Abi(abiJSONobj);
@@ -63,7 +63,64 @@ async function callContract(api: ApiPromise) {
     resolve(res.address);
     send("log", `${res.address} contract connected success`);
   });
+}
 
+async function initAttendant(api:ApiPromise) {
+  return new Promise(async(resolve,reject) => {
+    
+    const attendentAddress = '5DjQjeWKfU5u3QC15HaMK8p5iiYEbvBLCaXgPHnqfxgDbAAU';
+    const abiJSONobj = (<any>ametadata);
+    const abi = new Abi(abiJSONobj);
+    const res = new ContractPromise(api,abi,attendentAddress);
+
+    (<any>window).aContract = res;
+    resolve(res.address);
+    send("log", `${res.address} contract connected success`);
+  });
+}
+
+async function getAToken(aContract:ContractPromise,attender:string) {
+  return new Promise(async(resolve,reject) => {
+    try{
+      const result = await aContract.query.getToken(attender,0,-1,attender);
+      resolve(result.output);
+    }catch (e){
+      resolve({err:e.message});
+    }
+  });
+}
+
+async function getAStatus(aContract:ContractPromise,attender:string) {
+  return new Promise(async(resolve,reject)=>{
+    try{
+      const result = await aContract.query.checkedInStatus(attender,0,-1,attender);
+      resolve(result.output);
+    }catch(e){
+      resolve({err:e.message});
+    }
+  });
+}
+
+async function getCheckInList(aContract:ContractPromise,attender:string) {
+  return new Promise(async(resolve,reject)=>{
+    try{
+      const result = await aContract.query.checkedInList(attender, 0, -1, attender);
+      resolve(result.output);
+    }catch(e){
+      resolve({err:e.message});
+    }
+  });
+}
+
+async function getCheckOutList(aContract:ContractPromise,attender:string) {
+  return new Promise(async (resolve,reject)=>{
+    try{
+      const result = await aContract.query.checkedOutList(attender,0,-1,attender);
+      resolve(result.output);
+    }catch(e){
+      resolve({err:e.message});
+    }
+  })
 }
 
 async function contractSymbol(apiContract: ContractPromise, from: string) {
@@ -189,18 +246,6 @@ async function allowance(apiContract: ContractPromise, owner: string, spender: s
 }
 
 
-// async function totalSupply(apiContract: ContractPromise, from: string) {
-//   return new Promise(async (resolve, reject) => {
-//     try {
-//       const result = await apiContract.query.totalSupply(from, 0, -1);
-
-//       send('log', result.output.toString);
-//       resolve(result);
-//     } catch (e) {
-//       send('error', e.message);
-//     }
-//   });
-// }
 
 const test = async () => {
   // const props = await api.rpc.system.properties();
@@ -212,6 +257,11 @@ const settings = {
   connect,
   getChainDecimal,
   callContract,
+  initAttendant,
+  getAToken,
+  getAStatus,
+  getCheckInList,
+  getCheckOutList,
   contractSymbol,
   totalSupply,
   balanceOf,

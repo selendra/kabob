@@ -25,6 +25,6 @@ class CreateAccModel {
   String nativeOrg = 'SELENDRA';
   ContractModel contractModel = ContractModel();
   UserModel userModel = UserModel();
-  List<String> asset = ['KMPI'];
+  List<String> asset = ['KMPI','ATT'];
   
 }

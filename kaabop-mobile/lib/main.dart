@@ -5,6 +5,7 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
+import 'package:wallet_apps/src/screen/check_in/check_in.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,18 +63,58 @@ class AppState extends State<App> {
     node.endpoint = 'wss://rpc-testnet.selendra.org';
     node.ss58 = 42;
 
-    final res = await _createAccModel.sdk.api.connectNode(_createAccModel.keyring, [node]);
+    final res = await _createAccModel.sdk.api
+        .connectNode(_createAccModel.keyring, [node]);
 
     setState(() {});
     if (res != null) {
       setState(() {
         _createAccModel.apiConnected = true;
       });
+      await readContract();
+      await readATT();
       initContract();
       getChainDecimal();
       _subscribeBalance();
-      
     }
+  }
+
+  Future<void> initAttendant() async {
+    final res = await _createAccModel.sdk.api.initAttendant();
+    print(res);
+    getToken();
+  }
+
+  Future<void> getToken() async {
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    final res = await _createAccModel.sdk.api
+        .getAToken(_createAccModel.keyring.keyPairs[0].address);
+    print(res);
+    setState(() {
+      _createAccModel.contractModel.attendantM.aBalance =
+          BigInt.parse(res).toString();
+    });
+    if (_createAccModel.contractModel.attendantM.isAContain) {
+      walletProvider.updateAvailableToken({
+        'symbol': _createAccModel.contractModel.attendantM.aSymbol,
+        'balance': _createAccModel.contractModel.attendantM.aBalance,
+      });
+    }
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  }
+
+  // Future<void> getHash() async{
+  //   final res = await _createAccModel.sdk.api.
+  // }
+
+  Future<void> readATT() async {
+    await StorageServices.readBool('ATT').then((value) async {
+      if (value) {
+        print('att $value');
+        _createAccModel.contractModel.attendantM.isAContain = value;
+        initAttendant();
+      }
+    });
   }
 
   Future<void> getChainDecimal() async {
@@ -82,7 +123,6 @@ class AppState extends State<App> {
   }
 
   Future<void> _subscribeBalance() async {
-    
     var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
     if (_createAccModel.keyring.keyPairs.isNotEmpty) {
@@ -90,17 +130,16 @@ class AppState extends State<App> {
           .subscribeBalance(_createAccModel.keyring.current.address, (res) {
         setState(() {
           _createAccModel.balance = res;
-          _createAccModel.nativeBalance = Fmt.balance(_createAccModel.balance.freeBalance, 18);
-          
+          _createAccModel.nativeBalance =
+              Fmt.balance(_createAccModel.balance.freeBalance, 18);
+
           walletProvider.updateAvailableToken({
             'symbol': _createAccModel.nativeSymbol,
             'balance': _createAccModel.nativeBalance,
           });
 
           Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-                  
         });
-          
       });
 
       setState(() {
@@ -109,26 +148,30 @@ class AppState extends State<App> {
     }
   }
 
-  Future<void> initContract() async {
-
+  Future<void> readContract() async {
     await StorageServices.readBool('KMPI').then((value) async {
       if (value) {
         _createAccModel.contractModel.isContain = value;
-        await _createAccModel.sdk.api.callContract().then((value) {
-          _createAccModel.contractModel.pContractAddress = value;
-        });
-        if (_createAccModel.keyring.keyPairs.isNotEmpty) {
-          await _contractSymbol();
-          await _getHashBySymbol().then((value) async {
-            _balanceOfByPartition();
-          });
-        }
       }
-      setState(() {
-        _createAccModel.dataReady = true;
-      });
     });
-   
+  }
+
+  Future<void> initContract() async {
+    if (_createAccModel.contractModel.isContain) {
+      await _createAccModel.sdk.api.callContract().then((value) {
+        _createAccModel.contractModel.pContractAddress = value;
+      });
+      if (_createAccModel.keyring.keyPairs.isNotEmpty) {
+        await _contractSymbol();
+        await _getHashBySymbol().then((value) async {
+          _balanceOfByPartition();
+        });
+      }
+    }
+
+    setState(() {
+      _createAccModel.dataReady = true;
+    });
   }
 
   Future<void> _contractSymbol() async {
@@ -166,7 +209,8 @@ class AppState extends State<App> {
       );
 
       setState(() {
-        _createAccModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
+        _createAccModel.contractModel.pBalance =
+            BigInt.parse(res['output']).toString();
         walletProvider.addAvaibleToken({
           'symbol': _createAccModel.contractModel.pTokenSymbol,
           'balance': _createAccModel.contractModel.pBalance,
@@ -194,10 +238,13 @@ class AppState extends State<App> {
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
               Home.route: (_) => Home(_createAccModel),
-              ReceiveWallet.route: (_) => ReceiveWallet(createAccModel: _createAccModel),
+              ReceiveWallet.route: (_) =>
+                  ReceiveWallet(createAccModel: _createAccModel),
               ImportAcc.route: (_) => ImportAcc(_createAccModel),
-              Account.route: (_) => Account(_createAccModel.sdk, _createAccModel.keyring, _createAccModel),
+              Account.route: (_) => Account(_createAccModel.sdk,
+                  _createAccModel.keyring, _createAccModel),
               AddAsset.route: (_) => AddAsset(_createAccModel),
+              CheckIn.route: (_) => CheckIn(_createAccModel),
             },
             builder: (context, widget) => ResponsiveWrapper.builder(
               BouncingScrollWrapper.builder(context, widget),

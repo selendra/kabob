@@ -1,4 +1,8 @@
+import 'package:wallet_apps/src/models/attendant.m.dart';
+
 class ContractModel {
+
+  AttendantModel attendantM = AttendantModel();
 
   bool isContain = false;
   //list of partition token symbol

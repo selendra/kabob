@@ -1,5 +1,6 @@
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/models/token.m.dart';
 import 'package:wallet_apps/src/screen/home/menu/add_asset/search_asset.dart';
 
 class AddAssetBody extends StatelessWidget {
@@ -13,6 +14,7 @@ class AddAssetBody extends StatelessWidget {
   final Function addAsset;
   final Function submitSearch;
   final Function qrRes;
+  final List<TokenModel> token;
   final CreateAccModel sdkModel;
 
   AddAssetBody({
@@ -22,6 +24,7 @@ class AddAssetBody extends StatelessWidget {
     this.onChanged,
     this.onSubmit,
     this.submitAsset,
+    this.token,
     this.sdkModel,
     this.addAsset,
     this.submitSearch,
@@ -52,6 +55,7 @@ class AddAssetBody extends StatelessWidget {
                     delegate: SearchAsset(
                       sdkModel: sdkModel,
                       added: submitSearch,
+                      token: token
                     ),
                   );
                 },
@@ -60,8 +64,7 @@ class AddAssetBody extends StatelessWidget {
           ),
         ),
         Expanded(
-          child:
-              SvgPicture.asset('assets/add_data.svg', width: 293, height: 216),
+          child: SvgPicture.asset('assets/add_data.svg', width: 293, height: 216),
         ),
         Expanded(
           child: Container(
@@ -106,21 +109,6 @@ class AddAssetBody extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  // MyInputField(
-                  //   pBottom: 30,
-                  //   labelText: "Issuer",
-                  //   prefixText: null,
-                  //   textInputFormatter: [
-                  //     LengthLimitingTextInputFormatter(TextField.noMaxLength)
-                  //   ],
-                  //   inputType: TextInputType.text,
-                  //   controller: assetM.controllerIssuer,
-                  //   focusNode: assetM.nodeIssuer,
-                  //   validateField: validateIssuer,
-                  //   onChanged: onChanged,
-                  //   onSubmit: onSubmit,
-                  // ),
                 ],
               ),
             ),

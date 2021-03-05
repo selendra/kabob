@@ -17,29 +17,27 @@ class MyPieChartRow extends StatelessWidget{
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Expanded(
-            child: Row(
-              children: [
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: color,
-                    borderRadius: BorderRadius.circular(10)
-                  ),
+          Row(
+            children: [
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(10)
                 ),
+              ),
 
-                MyText(
-                  left: 11,
-                  text: centerText,
-                  fontSize: 16.0,
-                  color: "#FFFFFF",
-                )
-              ],
-            ),
+              MyText(
+                left: 11,
+                text: centerText,
+                fontSize: 16.0,
+                color: "#FFFFFF",
+              )
+            ],
           ),
 
-          Flexible(
+          Expanded(
             child: MyText(
               text: endText,
               fontSize: 16.0,

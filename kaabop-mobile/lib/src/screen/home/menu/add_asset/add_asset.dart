@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/models/token.m.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class AddAsset extends StatefulWidget {
@@ -17,10 +18,10 @@ class AddAsset extends StatefulWidget {
 class AddAssetState extends State<AddAsset> {
   ModelAsset _modelAsset = ModelAsset();
 
-
   FlareControls _flareController = FlareControls();
 
   GlobalKey<ScaffoldState> globalKey = new GlobalKey<ScaffoldState>();
+  List<TokenModel> _token = [];
 
   @override
   void initState() {
@@ -28,12 +29,9 @@ class AddAssetState extends State<AddAsset> {
     _modelAsset.match = false;
     AppServices.noInternetConnection(globalKey);
     initContract();
+    listToken();
     super.initState();
   }
-
-  void addContract() async {}
-
-
 
   Future<bool> validateAddress(String address) async {
     final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
@@ -68,7 +66,22 @@ class AddAssetState extends State<AddAsset> {
     enableButton(true);
   }
 
-  void addAsset() async {
+  void listToken() async {
+    _token.add(TokenModel(
+      logo: widget.sdkModel.contractModel.ptLogo,
+      symbol: widget.sdkModel.contractModel.pTokenSymbol,
+      org: widget.sdkModel.contractModel.pOrg,
+      color: Colors.black,
+    ));
+    _token.add(TokenModel(
+      logo: widget.sdkModel.contractModel.attendantM.attLogo,
+      symbol: widget.sdkModel.contractModel.attendantM.aSymbol,
+      org: widget.sdkModel.contractModel.attendantM.aOrg,
+      color: Colors.transparent,
+    ));
+  }
+
+  void addAsset(String symbol) async {
     dialogLoading(context);
     setState(() {
       widget.sdkModel.contractModel.isContain = true;
@@ -81,18 +94,34 @@ class AddAssetState extends State<AddAsset> {
     enableAnimation();
   }
 
-  void addAssetInSearch() async{
-    setState(() {
+  void addAssetInSearch(String symbol) async {
+    if (symbol == 'KMPI') {
       widget.sdkModel.contractModel.isContain = true;
-    });
-    await _contractSymbol();
-    await _getHashBySymbol().then((value) async {
-      await _balanceOfByPartition();
-    });
-    setPortfolio();
-    await StorageServices.saveBool('KMPI', true);
-    Navigator.pushNamedAndRemoveUntil(
+      await _contractSymbol();
+      await _getHashBySymbol().then((value) async {
+        await _balanceOfByPartition();
+      });
+      setPortfolio();
+      await StorageServices.saveBool('KMPI', true);
+      Navigator.pushNamedAndRemoveUntil(
           context, Home.route, ModalRoute.withName('/'));
+    } else {
+      setState(() {
+        widget.sdkModel.contractModel.attendantM.isAContain = true;
+      });
+      await initAttendant();
+      await StorageServices.saveBool('ATT', true);
+      Navigator.pushNamedAndRemoveUntil(
+          context, Home.route, ModalRoute.withName('/'));
+    }
+  }
+
+  Future<void> initAttendant() async {
+    final res = await widget.sdkModel.sdk.api.initAttendant();
+    print(res);
+    await getToken().then((value) {
+      addATT();
+    });
   }
 
   Future<void> initContract() async {
@@ -116,7 +145,6 @@ class AddAssetState extends State<AddAsset> {
   }
 
   Future<void> _getHashBySymbol() async {
-
     try {
       final res = await widget.sdkModel.sdk.api.getHashBySymbol(
         widget.sdkModel.keyring.keyPairs[0].address,
@@ -133,39 +161,60 @@ class AddAssetState extends State<AddAsset> {
 
   Future<void> _balanceOfByPartition() async {
     try {
-
       final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
         widget.sdkModel.keyring.keyPairs[0].address,
         widget.sdkModel.keyring.keyPairs[0].address,
         widget.sdkModel.contractModel.pHash,
       );
 
-      setState(() {
-        widget.sdkModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
-      });
+      widget.sdkModel.contractModel.pBalance =
+          BigInt.parse(res['output']).toString();
     } catch (e) {
       //print(e.toString());
     }
   }
-  void setPortfolio() {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    walletProvider.clearPortfolio();
 
-    if (widget.sdkModel.contractModel.pHash != '') {
-      walletProvider.addAvaibleToken({
-        'symbol': widget.sdkModel.contractModel.pTokenSymbol,
-        'balance': widget.sdkModel.contractModel.pBalance,
-      });
-    }
-
-    walletProvider.availableToken.add({
-      'symbol': widget.sdkModel.nativeSymbol,
-      'balance': widget.sdkModel.nativeBalance,
-    });
- 
-   Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  Future<void> getToken() async {
+    final res = await widget.sdkModel.sdk.api
+        .getAToken(widget.sdkModel.keyring.keyPairs[0].address);
+    print(res);
+    widget.sdkModel.contractModel.attendantM.aBalance =
+        BigInt.parse(res).toString();
   }
 
+  void addATT() {
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+
+    walletProvider.updateAvailableToken({
+      'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
+      'balance': widget.sdkModel.contractModel.attendantM.aBalance,
+    });
+
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  }
+
+  void setPortfolio() {
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    // walletProvider.clearPortfolio();
+    walletProvider.updateAvailableToken({
+      'symbol': widget.sdkModel.contractModel.pTokenSymbol,
+      'balance': widget.sdkModel.contractModel.pBalance,
+    });
+
+    // if (widget.sdkModel.contractModel.pHash != '') {
+    //   walletProvider.addAvaibleToken({
+    //     'symbol': widget.sdkModel.contractModel.pTokenSymbol,
+    //     'balance': widget.sdkModel.contractModel.pBalance,
+    //   });
+    // }
+
+    // walletProvider.availableToken.add({
+    //   'symbol': widget.sdkModel.nativeSymbol,
+    //   'balance': widget.sdkModel.nativeBalance,
+    // });
+
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  }
 
   // void onSubmit() {
   //   if (_modelAsset.nodeAssetCode.hasFocus) {
@@ -186,21 +235,30 @@ class AddAssetState extends State<AddAsset> {
     });
   }
 
-  void submitSearch() async {
-    setState(() {
-      _modelAsset.loading = true;
-    });
-    await StorageServices.readBool('KMPI').then((value) async {
-      if (!value) {
-        addAssetInSearch();
-      } else {
-        setState(() {
-          _modelAsset.loading = false;
-        });
-        await dialog(
-            context, Text('This asset is already added!'), Text('Asset Added'));
-      }
-    });
+  void submitSearch(String symbol) async {
+    // setState(() {
+    //   _modelAsset.loading = true;
+    // });
+    if (symbol == 'KMPI') {
+      await StorageServices.readBool('KMPI').then((value) async {
+        if (!value) {
+          addAssetInSearch(symbol);
+        } else {
+          await dialog(context, Text('This asset is already added!'),
+              Text('Asset Added'));
+        }
+      });
+    } else {
+      await StorageServices.readBool('ATT').then((value) async {
+        if (!value) {
+          print(value);
+          addAssetInSearch(symbol);
+        } else {
+          await dialog(context, Text('This asset is already added!'),
+              Text('Asset Added'));
+        }
+      });
+    }
   }
 
   void submitAsset() async {
@@ -219,8 +277,6 @@ class AddAssetState extends State<AddAsset> {
                 _modelAsset.match = true;
                 _modelAsset.loading = false;
               });
-
-              //print(_modelAsset.match);
             } else {
               setState(() {
                 _modelAsset.loading = false;
@@ -275,6 +331,7 @@ class AddAssetState extends State<AddAsset> {
               submitAsset: submitAsset,
               addAsset: addAsset,
               submitSearch: submitSearch,
+              token: _token,
               sdkModel: widget.sdkModel,
               qrRes: qrRes,
             ),

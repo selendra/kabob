@@ -9,9 +9,9 @@ class PortfolioM {
 
   List<Map<String, dynamic>> list = [];
 
-  GlobalKey<AnimatedCircularChartState> chartKey = GlobalKey<AnimatedCircularChartState>();
+  // GlobalKey<AnimatedCircularChartState> chartKey = GlobalKey<AnimatedCircularChartState>();
 
-  List<CircularSegmentEntry> circularChart;
+  // List<CircularSegmentEntry> circularChart;
 
   double total = 0;
 

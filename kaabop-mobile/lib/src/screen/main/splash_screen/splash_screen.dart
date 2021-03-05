@@ -50,7 +50,7 @@ class MySplashScreenState extends State<MySplashScreen>
   @override
   void initState() {
     controller = AnimationController(
-      duration: Duration(seconds: 3),
+      duration: Duration(seconds: 2),
       vsync: this,
     );
 

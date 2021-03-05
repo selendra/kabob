@@ -4,9 +4,9 @@ import 'package:wallet_apps/src/screen/home/portfolio/portfolio_body.dart';
 class Portfolio extends StatefulWidget{
 
   final List<dynamic> listData;
-  final List<CircularSegmentEntry> listChart;
+  // /final List<CircularSegmentEntry> listChart;
 
-  Portfolio({@required this.listData, @required this.listChart});
+  Portfolio({@required this.listData});
 
   @override
   State<StatefulWidget> createState() {
@@ -25,9 +25,9 @@ class PortfolioState extends State<Portfolio>{
   }
 
   void setChartData(){
-    setState(() {
-      _portfolioM.circularChart = widget.listChart;
-    });
+    // setState(() {
+    //   _portfolioM.circularChart = widget.listChart;
+    // });
   }
 
   Widget build(BuildContext context) {

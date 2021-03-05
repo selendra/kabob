@@ -2,10 +2,10 @@ import 'dart:ui';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/attendant.m.dart';
 import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
-
 
 class Home extends StatefulWidget {
   final CreateAccModel sdkModel;
@@ -19,8 +19,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
-  
-  GlobalKey<AnimatedCircularChartState> chartKey = GlobalKey<AnimatedCircularChartState>();
+  // GlobalKey<AnimatedCircularChartState> chartKey = GlobalKey<AnimatedCircularChartState>();
   MenuModel menuModel = MenuModel();
   HomeModel _homeM = HomeModel();
   PortfolioM _portfolioM = PortfolioM();
@@ -28,13 +27,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   String action = "no_action";
   String status = '';
 
-
-
   Future<void> getCurrentAccount() async {
     final List<KeyPairData> ls = widget.sdkModel.keyring.keyPairs;
     setState(() {
-      widget.sdkModel.userModel.username = widget.sdkModel.keyring.keyPairs[0].name;
-      widget.sdkModel.userModel.address = widget.sdkModel.keyring.keyPairs[0].address;
+      widget.sdkModel.userModel.username =
+          widget.sdkModel.keyring.keyPairs[0].name;
+      widget.sdkModel.userModel.address =
+          widget.sdkModel.keyring.keyPairs[0].address;
 
       _homeM.userData['first_name'] = ls[0].name;
       _homeM.userData['wallet'] = ls[0].address;
@@ -49,11 +48,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.result = {};
       _homeM.globalKey = GlobalKey<ScaffoldState>();
       _homeM.total = 0;
-      _homeM.circularChart = [
-        CircularSegmentEntry(_homeM.emptyChartData, hexaCodeToColor(AppColors.cardColor))
-      ];
       _homeM.userData = {};
-      setChartData();
       getCurrentAccount();
     }
 
@@ -85,7 +80,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 children: [
                   CircularProgressIndicator(
                       backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation(hexaCodeToColor(AppColors.secondary))),
+                      valueColor: AlwaysStoppedAnimation(
+                          hexaCodeToColor(AppColors.secondary))),
                   Align(
                     alignment: Alignment.center,
                     child: MyText(
@@ -112,15 +108,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       await Future.delayed(Duration(milliseconds: 200), () {
         status = null;
       });
-      
+
       Navigator.of(dialogContext).pop();
     }
-  }
-
-  void setChartData() {
-    setState(() {
-      _portfolioM.circularChart = _homeM.circularChart;
-    });
   }
 
   void opacityController(bool visible) {
@@ -146,7 +136,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       );
 
       setState(() {
-        widget.sdkModel.contractModel.pBalance = BigInt.parse(res['output']).toString();
+        widget.sdkModel.contractModel.pBalance =
+            BigInt.parse(res['output']).toString();
       });
     } catch (e) {
       // print(e.toString());
@@ -173,6 +164,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       }
     });
   }
+
   void setPortfolio() {
     var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
@@ -184,22 +176,25 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       });
     }
 
+    if (widget.sdkModel.contractModel.attendantM.isAContain) {
+      walletProvider.updateAvailableToken({
+        'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
+        'balance': widget.sdkModel.contractModel.attendantM.aBalance,
+      });
+    }
+
     walletProvider.availableToken.add({
       'symbol': widget.sdkModel.nativeSymbol,
       'balance': widget.sdkModel.nativeBalance,
     });
- 
+
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
-
   void deleteAccout() async {
-    await dialog(
-      context, 
-      Text('Are you sure to delete this asset?'),
-      Text('Delete Asset'),
-      action: FlatButton(onPressed: () async {}, child: Text('Delete')
-    ));
+    await dialog(context, Text('Are you sure to delete this asset?'),
+        Text('Delete Asset'),
+        action: FlatButton(onPressed: () async {}, child: Text('Delete')));
   }
 
   void onDismiss() async {
@@ -208,14 +203,19 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     });
     widget.sdkModel.contractModel = ContractModel();
     widget.sdkModel.contractModel.isContain = false;
-    Provider.of<WalletProvider>(context).clearPortfolio();
-    Provider.of<WalletProvider>(context).resetDatamap();
-    Provider.of<WalletProvider>(context).addAvaibleToken({
+    Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
+    Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+    Provider.of<WalletProvider>(context, listen: false).addAvaibleToken({
       'symbol': widget.sdkModel.nativeSymbol,
       'balance': widget.sdkModel.nativeBalance,
     });
-    Provider.of<WalletProvider>(context).getPortfolio();
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
     await StorageServices.removeKey('KMPI');
+  }
+
+  void onDismissATT() async {
+    widget.sdkModel.contractModel.attendantM = AttendantModel();
+    await StorageServices.removeKey('ATT');
   }
 
   @override
@@ -223,8 +223,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     if (status != null) handleConnectNode();
     return Scaffold(
       key: _homeM.globalKey,
-      drawer: Theme(data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-      child: Menu(_homeM.userData)),
+      drawer: Theme(
+          data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+          child: Menu(_homeM.userData)),
       appBar: homeAppBar(context),
       body: RefreshIndicator(
         onRefresh: onRefresh,
@@ -234,37 +235,40 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             sdkModel: widget.sdkModel,
             balanceOf: _balanceOf,
             onDismiss: onDismiss,
-          ),),
+            onDismissATT: onDismissATT,
+          ),
+        ),
       ),
       floatingActionButton: SizedBox(
-        width: 64,
-        height: 64,
-        child: FloatingActionButton(
-          backgroundColor: hexaCodeToColor(AppColors.secondary).withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
-          child: SvgPicture.asset('assets/icons/qr_code.svg',
-            width: 30,
-            height: 30,
-            color: !widget.sdkModel.apiConnected
-                ? Colors.white.withOpacity(0.2)
-                : Colors.white),
-          onPressed: () async {
-            await TrxOptionMethod.scanQR(
-              context, 
-              _homeM.portfolioList, 
-              widget.sdkModel,
-            );
-          },
-        )),
+          width: 64,
+          height: 64,
+          child: FloatingActionButton(
+            backgroundColor: hexaCodeToColor(AppColors.secondary)
+                .withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
+            child: SvgPicture.asset('assets/icons/qr_code.svg',
+                width: 30,
+                height: 30,
+                color: !widget.sdkModel.apiConnected
+                    ? Colors.white.withOpacity(0.2)
+                    : Colors.white),
+            onPressed: () async {
+              await TrxOptionMethod.scanQR(
+                context,
+                _homeM.portfolioList,
+                widget.sdkModel,
+              );
+            },
+          )),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(
-        apiStatus: widget.sdkModel.apiConnected,
-        homeM: _homeM,
-        portfolioM: _portfolioM,
-        scanReceipt: null, // Bottom Center Button
-        toReceiveToken: toReceiveToken,
-        opacityController: opacityController,
-        openDrawer: openMyDrawer,
-        sdkModel: widget.sdkModel),
+          apiStatus: widget.sdkModel.apiConnected,
+          homeM: _homeM,
+          portfolioM: _portfolioM,
+          scanReceipt: null, // Bottom Center Button
+          toReceiveToken: toReceiveToken,
+          opacityController: opacityController,
+          openDrawer: openMyDrawer,
+          sdkModel: widget.sdkModel),
     );
   }
 }

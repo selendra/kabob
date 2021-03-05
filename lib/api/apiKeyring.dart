@@ -258,6 +258,19 @@ class ApiKeyring {
     return VerifyResult.fromJson(Map<String, dynamic>.of(res));
   }
 
+  Future<Map> aCheckIn(String senderPubKey,String password,String aHash,String location) async{
+        print('api');
+    final res = await service.aCheckIn(senderPubKey, password, aHash, location);
+    print(res);
+
+    return res;
+  }
+  
+  Future<Map> aCheckOut(String senderPubKey,String password,String aHash,String location) async{
+    final res = await service.aCheckOut(senderPubKey, password, aHash, location);
+    return res;
+  }
+
   Future<dynamic> contractTransfer(
       String senderPubKey, String to, String value, String password,String hash) async {
     final res =

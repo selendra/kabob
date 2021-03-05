@@ -13,6 +13,7 @@ class MyInputField extends StatelessWidget {
   final TextInputType inputType;
   final TextInputAction inputAction;
   final TextEditingController controller;
+  final Function onTap;
   final FocusNode focusNode;
   final IconButton icon;
   final Function validateField;
@@ -32,8 +33,9 @@ class MyInputField extends StatelessWidget {
       this.enableInput = true,
       this.textInputFormatter,
       this.inputType = TextInputType.text,
-      this.inputAction = TextInputAction.next,
+      this.inputAction ,
       this.maxLine = 1,
+      this.onTap,
       @required this.controller,
       @required this.focusNode,
       this.icon,
@@ -52,7 +54,8 @@ class MyInputField extends StatelessWidget {
           keyboardType: inputType,
           obscureText: obcureText,
           controller: controller,
-          textInputAction: inputAction,
+          onTap: onTap,
+          textInputAction: inputAction == null ?  TextInputAction.next : inputAction,
           style: TextStyle(color: hexaCodeToColor(textColor), fontSize: 18.0),
           validator: validateField,
           maxLines: maxLine,

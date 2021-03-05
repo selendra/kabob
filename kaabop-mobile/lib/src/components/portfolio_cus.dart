@@ -99,8 +99,7 @@ class PortFolioCus extends StatelessWidget {
                           centerText: value.portfolio[index].symbol,
                           endText: value.portfolio[index].percentage,
                         );
-                      }),
-                      
+                      }),                      
                     );
                   },                                           
                 ))

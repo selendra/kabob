@@ -20,7 +20,7 @@ export 'package:package_info/package_info.dart';
 // export 'package:outline_material_icons/outline_material_icons.dart';
 export 'package:pinput/pin_put/pin_put.dart';
 export 'package:barcode_scan/barcode_scan.dart';
-export 'package:flutter_circular_chart/flutter_circular_chart.dart';
+// export 'package:flutter_circular_chart/flutter_circular_chart.dart';
 export 'package:image_cropper/image_cropper.dart';
 export 'package:autocomplete_textfield/autocomplete_textfield.dart';
 export 'package:image_picker/image_picker.dart';

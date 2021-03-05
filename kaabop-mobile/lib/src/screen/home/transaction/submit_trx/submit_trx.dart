@@ -28,7 +28,6 @@ class SubmitTrx extends StatefulWidget {
 
 class SubmitTrxState extends State<SubmitTrx> {
   ModelScanPay _scanPayM = ModelScanPay();
- 
 
   FlareControls flareController = FlareControls();
 
@@ -63,7 +62,6 @@ class SubmitTrxState extends State<SubmitTrx> {
   ];
 
   void fetchIDs() async {
- 
     setState(() {});
   }
 
@@ -100,12 +98,10 @@ class SubmitTrxState extends State<SubmitTrx> {
     return _result;
   }
 
-
-   Future<bool> validateAddress(String address) async {
+  Future<bool> validateAddress(String address) async {
     final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
     return res;
   }
-
 
   void onChanged(String value) {
     _scanPayM.formStateKey.currentState.validate();
@@ -251,6 +247,7 @@ class SubmitTrxState extends State<SubmitTrx> {
 
     return mhash;
   }
+
   void setPortfolio() {
     var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
@@ -266,7 +263,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       'symbol': widget.sdkModel.nativeSymbol,
       'balance': widget.sdkModel.nativeBalance,
     });
- 
+
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
@@ -277,17 +274,14 @@ class SubmitTrxState extends State<SubmitTrx> {
         widget.sdkModel.keyring.keyPairs[0].address,
         widget.sdkModel.contractModel.pHash,
       );
-     
+
       widget.sdkModel.contractModel.pBalance =
           BigInt.parse(res['output']).toString();
-
-    
     } catch (e) {
       // print(e.toString());
     }
   }
 
- 
   void clickSend() async {
     String pin;
 

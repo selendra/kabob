@@ -25,13 +25,13 @@ class HomeModel {
 
   /* Chart */
 
-  GlobalKey<AnimatedCircularChartState> chartKey;
+  // GlobalKey<AnimatedCircularChartState> chartKey;
 
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
   
   double emptyChartData = 100;
 
-  List<CircularSegmentEntry> circularChart;
+  // List<CircularSegmentEntry> circularChart;
 
   // RefreshController refreshController = RefreshController();
 }

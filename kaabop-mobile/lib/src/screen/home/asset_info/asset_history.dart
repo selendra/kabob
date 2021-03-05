@@ -95,14 +95,14 @@ class AssetHistory extends StatelessWidget {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               MyText(
-                                                  width: double.infinity,
-                                                  text: _txHistoryModel[index]
-                                                      .amount,
-                                                  color: "#FFFFFF",
-                                                  fontSize: 18,
-                                                  textAlign: TextAlign.right,
-                                                  overflow:
-                                                      TextOverflow.ellipsis),
+                                                width: double.infinity,
+                                                text: _txHistoryModel[index]
+                                                    .amount,
+                                                color: "#FFFFFF",
+                                                fontSize: 18,
+                                                textAlign: TextAlign.right,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ],
                                           ),
                                         ),

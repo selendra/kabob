@@ -350,48 +350,48 @@ class MyCusIconButton extends StatelessWidget {
   }
 }
 
-class MyCircularChart extends StatelessWidget {
-  final String amount;
-  final GlobalKey<AnimatedCircularChartState> chartKey;
-  final EdgeInsetsGeometry margin;
-  final List<CircularSegmentEntry> listChart;
-  final Alignment alignment;
-  final double width;
-  final double height;
+// class MyCircularChart extends StatelessWidget {
+//   final String amount;
+//   final GlobalKey<AnimatedCircularChartState> chartKey;
+//   final EdgeInsetsGeometry margin;
+//   final List<CircularSegmentEntry> listChart;
+//   final Alignment alignment;
+//   final double width;
+//   final double height;
 
-  MyCircularChart(
-      {this.amount,
-      this.chartKey,
-      this.margin = const EdgeInsets.only(bottom: 24.0),
-      this.alignment,
-      this.width = 300.0,
-      this.height = 250.0,
-      this.listChart});
+//   MyCircularChart(
+//       {this.amount,
+//       this.chartKey,
+//       this.margin = const EdgeInsets.only(bottom: 24.0),
+//       this.alignment,
+//       this.width = 300.0,
+//       this.height = 250.0,
+//       this.listChart});
 
-  Widget build(BuildContext context) {
-    return Container(
-        margin: margin,
-        alignment: alignment,
-        child: AnimatedCircularChart(
-          holeRadius: 70.0,
-          key: chartKey,
-          duration: Duration(seconds: 1),
-          // startAngle: 125.0,
-          size: Size(width, height),
-          percentageValues: true,
-          // holeLabel: amount,
-          // labelStyle:TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, ),
-          edgeStyle: SegmentEdgeStyle.flat,
-          initialChartData: <CircularStackEntry>[
-            CircularStackEntry(
-              listChart,
-              rankKey: 'progress',
-            ),
-          ],
-          chartType: CircularChartType.Radial,
-        ));
-  }
-}
+//   Widget build(BuildContext context) {
+//     return Container(
+//         margin: margin,
+//         alignment: alignment,
+//         child: AnimatedCircularChart(
+//           holeRadius: 70.0,
+//           key: chartKey,
+//           duration: Duration(seconds: 1),
+//           // startAngle: 125.0,
+//           size: Size(width, height),
+//           percentageValues: true,
+//           // holeLabel: amount,
+//           // labelStyle:TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, ),
+//           edgeStyle: SegmentEdgeStyle.flat,
+//           initialChartData: <CircularStackEntry>[
+//             CircularStackEntry(
+//               listChart,
+//               rankKey: 'progress',
+//             ),
+//           ],
+//           chartType: CircularChartType.Radial,
+//         ));
+//   }
+// }
 
 class MyColumnBuilder extends StatelessWidget {
   final List<dynamic> data;
@@ -494,6 +494,7 @@ void snackBar(GlobalKey<ScaffoldState> globalKey, String contents) {
     content: Text(contents),
   );
   globalKey.currentState.showSnackBar(snackbar);
+ 
 }
 
 class MyPinput extends StatelessWidget {

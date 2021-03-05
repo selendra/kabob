@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/reuse_widget.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/models/token.m.dart';
 import 'package:wallet_apps/theme/color.dart';
 
 class SearchAsset extends SearchDelegate {
   final CreateAccModel sdkModel;
   final Function added;
-  SearchAsset({this.sdkModel, this.added});
+  final List<TokenModel> token;
+  SearchAsset({this.sdkModel, this.added, this.token});
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -53,54 +55,90 @@ class SearchAsset extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    var searchProducts = query.isEmpty
+    List<TokenModel> searchProducts = query.isEmpty
         ? []
-        : sdkModel.asset
+        : token
             .where(
-              (element) => element.toLowerCase().startsWith(
+              (element) => element.symbol.toLowerCase().startsWith(
                     query.toLowerCase(),
                   ),
             )
             .toList();
     return searchProducts.isNotEmpty
-        ? Container(
-            padding: const EdgeInsets.all(8.0),
-            child: portFolioItemRow(
-                sdkModel.contractModel.ptLogo,
-                sdkModel.contractModel.pTokenSymbol,
-                sdkModel.contractModel.pOrg,
-                sdkModel.contractModel.pBalance,
-                Colors.black,
-                added),
-          )
+        ? ListView.builder(
+            itemCount: searchProducts.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  added(searchProducts[index].symbol);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: portFolioItemRow(
+                      searchProducts[index].logo,
+                      searchProducts[index].symbol,
+                      searchProducts[index].org,
+                      searchProducts[index].balance,
+                      searchProducts[index].color,
+                      added),
+                ),
+              );
+            })
+        // ? Container(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: portFolioItemRow(
+        //         sdkModel.contractModel.ptLogo,
+        //         sdkModel.contractModel.pTokenSymbol,
+        //         sdkModel.contractModel.pOrg,
+        //         sdkModel.contractModel.pBalance,
+        //         Colors.black,
+        //         added),
+        //   )
         : Container();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    var searchProducts = query.isEmpty
+    List<TokenModel> searchProducts = query.isEmpty
         ? []
-        : sdkModel.asset
+        : token
             .where(
-              (element) => element.toLowerCase().startsWith(
+              (element) => element.symbol.toLowerCase().startsWith(
                     query.toLowerCase(),
                   ),
             )
             .toList();
-    // print(searchProducts);
-    // return Container();
-
+    print(token.length);
     return searchProducts.isNotEmpty
-        ? Container(
-            padding: const EdgeInsets.all(8.0),
-            child: portFolioItemRow(
-                sdkModel.contractModel.ptLogo,
-                sdkModel.contractModel.pTokenSymbol,
-                sdkModel.contractModel.pOrg,
-                sdkModel.contractModel.pBalance,
-                Colors.black,
-                added),
-          )
+        ? ListView.builder(
+            itemCount: searchProducts.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  added(searchProducts[index].symbol);
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: portFolioItemRow(
+                      searchProducts[index].logo,
+                      searchProducts[index].symbol,
+                      searchProducts[index].org,
+                      searchProducts[index].balance,
+                      searchProducts[index].color,
+                      added),
+                ),
+              );
+            })
+        // ? Container(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: portFolioItemRow(
+        //         sdkModel.contractModel.ptLogo,
+        //         sdkModel.contractModel.pTokenSymbol,
+        //         sdkModel.contractModel.pOrg,
+        //         sdkModel.contractModel.pBalance,
+        //         Colors.black,
+        //         added),
+        //   )
         : Container();
   }
 
@@ -135,27 +173,27 @@ class SearchAsset extends SearchDelegate {
             ),
           ),
         ),
-        Expanded(
-          child: GestureDetector(
-            onTap: added,
-            child: Container(
-              margin: EdgeInsets.only(right: 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyText(
-                      width: double.infinity,
-                      text: 'Add', //portfolioData[0]["data"]['balance'],
-                      color: AppColors.secondary,
-                      fontSize: 18,
-                      textAlign: TextAlign.right,
-                      overflow: TextOverflow.ellipsis),
-                ],
-              ),
-            ),
-          ),
-        ),
+        // Expanded(
+        //   child: GestureDetector(
+        //     onTap: added,
+        //     child: Container(
+        //       margin: EdgeInsets.only(right: 16),
+        //       child: Column(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         crossAxisAlignment: CrossAxisAlignment.start,
+        //         children: [
+        //           MyText(
+        //               width: double.infinity,
+        //               text: 'Add', //portfolioData[0]["data"]['balance'],
+        //               color: AppColors.secondary,
+        //               fontSize: 18,
+        //               textAlign: TextAlign.right,
+        //               overflow: TextOverflow.ellipsis),
+        //         ],
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     ));
   }
@@ -163,19 +201,18 @@ class SearchAsset extends SearchDelegate {
   Widget rowDecorationStyle(
       {Widget child, double mTop: 0, double mBottom = 16}) {
     return Container(
-        margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
-        padding: EdgeInsets.fromLTRB(15, 9, 15, 9),
-        height: 90,
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black12,
-                blurRadius: 2.0,
-                offset: Offset(1.0, 1.0))
-          ],
-          color: hexaCodeToColor(AppColors.cardColor),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: child);
+      margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
+      padding: EdgeInsets.fromLTRB(15, 9, 15, 9),
+      height: 90,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
+        ],
+        color: hexaCodeToColor(AppColors.cardColor),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: child,
+    );
   }
 }

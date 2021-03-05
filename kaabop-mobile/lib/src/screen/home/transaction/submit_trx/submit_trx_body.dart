@@ -5,7 +5,6 @@ class SubmitTrxBody extends StatelessWidget {
   final bool enableInput;
   final dynamic dialog;
   final ModelScanPay scanPayM;
- 
   final Function onChanged;
   final Function onSubmit;
   final Function validateInput;
@@ -56,7 +55,7 @@ class SubmitTrxBody extends StatelessWidget {
           focusNode: scanPayM.nodeAmount,
           validateField: (value) =>
               value.isEmpty || double.parse(value) < 0 || value == '-0'
-                  ? 'Please fill in positive amount '
+                  ? 'Please fill in positive amount'
                   : null,
           onChanged: onChanged,
           onSubmit: onSubmit),
