@@ -188,33 +188,35 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       'balance': widget.sdkModel.nativeBalance,
     });
 
-    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-  }
+    if (!widget.sdkModel.contractModel.isContain &&
+        !widget.sdkModel.contractModel.attendantM.isAContain) {
+      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+    }
 
-  void deleteAccout() async {
-    await dialog(context, Text('Are you sure to delete this asset?'),
-        Text('Delete Asset'),
-        action: FlatButton(onPressed: () async {}, child: Text('Delete')));
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
   void onDismiss() async {
-    setState(() {
-      widget.sdkModel.contractModel.pHash = '';
-    });
-    widget.sdkModel.contractModel = ContractModel();
+    // setState(() {
+    //   widget.sdkModel.contractModel.pHash = '';
+    // });
     widget.sdkModel.contractModel.isContain = false;
-    Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
-    Provider.of<WalletProvider>(context, listen: false).resetDatamap();
-    Provider.of<WalletProvider>(context, listen: false).addAvaibleToken({
-      'symbol': widget.sdkModel.nativeSymbol,
-      'balance': widget.sdkModel.nativeBalance,
-    });
-    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+    widget.sdkModel.contractModel.pHash = '';
+    setPortfolio();
+
+    // Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
+    // Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+    // Provider.of<WalletProvider>(context, listen: false).addAvaibleToken({
+    //   'symbol': widget.sdkModel.nativeSymbol,
+    //   'balance': widget.sdkModel.nativeBalance,
+    // });
+    // Provider.of<WalletProvider>(context, listen: false).getPortfolio();
     await StorageServices.removeKey('KMPI');
   }
 
   void onDismissATT() async {
     widget.sdkModel.contractModel.attendantM = AttendantModel();
+    setPortfolio();
     await StorageServices.removeKey('ATT');
   }
 

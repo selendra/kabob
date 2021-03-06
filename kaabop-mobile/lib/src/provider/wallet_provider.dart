@@ -109,6 +109,7 @@ class WalletProvider with ChangeNotifier {
   void resetDatamap() {
     dataMap.update('SEL', (value) => value = 100);
     dataMap.update('KMPI', (value) => value = 0);
+    dataMap.update('ATT', (value) => value = 0);
     notifyListeners();
   }
 

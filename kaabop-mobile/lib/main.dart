@@ -238,11 +238,9 @@ class AppState extends State<App> {
               ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
               ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
               Home.route: (_) => Home(_createAccModel),
-              ReceiveWallet.route: (_) =>
-                  ReceiveWallet(createAccModel: _createAccModel),
+              ReceiveWallet.route: (_) => ReceiveWallet(createAccModel: _createAccModel),
               ImportAcc.route: (_) => ImportAcc(_createAccModel),
-              Account.route: (_) => Account(_createAccModel.sdk,
-                  _createAccModel.keyring, _createAccModel),
+              Account.route: (_) => Account(_createAccModel.sdk,_createAccModel.keyring, _createAccModel),
               AddAsset.route: (_) => AddAsset(_createAccModel),
               CheckIn.route: (_) => CheckIn(_createAccModel),
             },

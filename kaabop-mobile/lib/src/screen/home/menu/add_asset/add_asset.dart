@@ -185,7 +185,7 @@ class AddAssetState extends State<AddAsset> {
   void addATT() {
     var walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
-    walletProvider.updateAvailableToken({
+    walletProvider.addAvaibleToken({
       'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
       'balance': widget.sdkModel.contractModel.attendantM.aBalance,
     });
@@ -196,22 +196,14 @@ class AddAssetState extends State<AddAsset> {
   void setPortfolio() {
     var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     // walletProvider.clearPortfolio();
-    walletProvider.updateAvailableToken({
+    // walletProvider.updateAvailableToken({
+    //   'symbol': widget.sdkModel.contractModel.pTokenSymbol,
+    //   'balance': widget.sdkModel.contractModel.pBalance,
+    // });
+    walletProvider.addAvaibleToken({
       'symbol': widget.sdkModel.contractModel.pTokenSymbol,
       'balance': widget.sdkModel.contractModel.pBalance,
     });
-
-    // if (widget.sdkModel.contractModel.pHash != '') {
-    //   walletProvider.addAvaibleToken({
-    //     'symbol': widget.sdkModel.contractModel.pTokenSymbol,
-    //     'balance': widget.sdkModel.contractModel.pBalance,
-    //   });
-    // }
-
-    // walletProvider.availableToken.add({
-    //   'symbol': widget.sdkModel.nativeSymbol,
-    //   'balance': widget.sdkModel.nativeBalance,
-    // });
 
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
@@ -248,7 +240,7 @@ class AddAssetState extends State<AddAsset> {
               Text('Asset Added'));
         }
       });
-    } else {
+    } else if (symbol == 'ATT') {
       await StorageServices.readBool('ATT').then((value) async {
         if (!value) {
           print(value);

@@ -24,17 +24,15 @@ class ApiKeyring {
     return mnemonic;
   }
 
-
-  Future<bool> validateMnemonic(String mnemonic) async{
+  Future<bool> validateMnemonic(String mnemonic) async {
     final res = await service.validateMnemonic(mnemonic);
     return res;
   }
 
-    Future<bool> validateAddress(String address) async{
+  Future<bool> validateAddress(String address) async {
     final res = await service.validateAddress(address);
     return res;
   }
-
 
   /// Import account from mnemonic/rawSeed/keystore.
   /// param [cryptoType] can be `sr25519`(default) or `ed25519`.
@@ -258,23 +256,32 @@ class ApiKeyring {
     return VerifyResult.fromJson(Map<String, dynamic>.of(res));
   }
 
-  Future<Map> aCheckIn(String senderPubKey,String password,String aHash,String location) async{
-        print('api');
+  Future<Map> aCheckIn(String senderPubKey, String password, String aHash,
+      String location) async {
     final res = await service.aCheckIn(senderPubKey, password, aHash, location);
-    print(res);
+
+    if (res['err'] != null) {
+      throw Exception(res['err']);
+    }
 
     return res;
   }
-  
-  Future<Map> aCheckOut(String senderPubKey,String password,String aHash,String location) async{
-    final res = await service.aCheckOut(senderPubKey, password, aHash, location);
-    return res;
-  }
 
-  Future<dynamic> contractTransfer(
-      String senderPubKey, String to, String value, String password,String hash) async {
+  Future<Map> aCheckOut(String senderPubKey, String password, String aHash,
+      String location) async {
     final res =
-        await service.contractTranfer(senderPubKey, to, value, password,hash);
+        await service.aCheckOut(senderPubKey, password, aHash, location);
+
+    if (res['err'] != null) {
+      throw Exception(res['err']);
+    }
+    return res;
+  }
+
+  Future<dynamic> contractTransfer(String senderPubKey, String to, String value,
+      String password, String hash) async {
+    final res =
+        await service.contractTranfer(senderPubKey, to, value, password, hash);
 
     // print("apiKeyring: $value");
     if (res['error'] != null) {

@@ -193,6 +193,7 @@ class _CheckInState extends State<CheckIn> {
         enableAnimation();
       }
     } catch (e) {
+      Navigator.pop(context);
       print(e.message);
     }
   }
@@ -237,6 +238,7 @@ class _CheckInState extends State<CheckIn> {
         enableAnimation();
       }
     } catch (e) {
+      Navigator.pop(context);
       print(e.toString());
     }
   }

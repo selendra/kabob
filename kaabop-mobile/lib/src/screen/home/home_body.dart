@@ -95,7 +95,7 @@ class HomeBody extends StatelessWidget {
                 ),
                 sdkModel.contractModel.isContain
                     ? Dismissible(
-                        key: UniqueKey(),
+                        key: Key(sdkModel.nativeSymbol),
                         direction: DismissDirection.endToStart,
                         background: DismissibleBackground(),
                         onDismissed: (direct) {
