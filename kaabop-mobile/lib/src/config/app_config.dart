@@ -36,6 +36,13 @@ class AppConfig {
   // Main Net API
   static final url = "https://testnet-api.selendra.com/pub/v1";
 
+
+  static const nodeName = 'Indranet hosted By Selendra';
+
+  static const nodeEndpoint = 'wss://rpc-testnet.selendra.org';
+
+  static int ss58 = 42;
+
   // sld_market net API
   // https://sld_marketnet-api.selendra.com/pub/v1
 }

@@ -12,11 +12,11 @@ import 'package:wallet_apps/src/screen/home/menu/account_c.dart';
 import '../../../../index.dart';
 
 class Account extends StatefulWidget {
-  final WalletSDK sdk;
-  final keyring;
+  // final WalletSDK sdk;
+  // final keyring;
   final CreateAccModel sdkModel;
 
-  Account(this.sdk, this.keyring, this.sdkModel);
+  Account(this.sdkModel);
   static const route = '/account';
   @override
   _AccountState createState() => _AccountState();
@@ -71,15 +71,15 @@ class _AccountState extends State<Account> {
 
   Future<void> _deleteAccount() async {
     try {
-      await widget.sdk.api.keyring.deleteAccount(
-        widget.keyring,
+      await widget.sdkModel.sdk.api.keyring.deleteAccount(
+        widget.sdkModel.keyring,
         _currentAcc,
       );
       Navigator.pop(context);
       AppServices.clearStorage();
       widget.sdkModel.contractModel = ContractModel();
-      Provider.of<WalletProvider>(context,listen: false).resetDatamap();
-      Provider.of<WalletProvider>(context,listen: false).clearPortfolio();
+      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+      Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
       Navigator.pushAndRemoveUntil(context,
           RouteAnimation(enterPage: Welcome()), ModalRoute.withName('/'));
     } catch (e) {
@@ -90,8 +90,8 @@ class _AccountState extends State<Account> {
   Future<void> getBackupKey(String pass) async {
     Navigator.pop(context);
     try {
-      final pairs = await KeyringPrivateStore()
-          .getDecryptedSeed('${widget.keyring.keyPairs[0].pubKey}', pass);
+      final pairs = await KeyringPrivateStore().getDecryptedSeed(
+          '${widget.sdkModel.keyring.keyPairs[0].pubKey}', pass);
       //print(pairs);
 
       if (pairs['seed'] != null) {
@@ -117,12 +117,10 @@ class _AccountState extends State<Account> {
     setState(() {
       _loading = true;
     });
-    final res = await widget.sdk.api.keyring
-        .changePassword(widget.keyring, oldPass, newPass);
-    //print(res);
+    final res = await widget.sdkModel.sdk.api.keyring
+        .changePassword(widget.sdkModel.keyring, oldPass, newPass);
     if (res != null) {
-      await dialog(
-          context, Text('You pin has changed!!'), Text('Change Pin'));
+      await dialog(context, Text('You pin has changed!!'), Text('Change Pin'));
     } else {
       await dialog(context, Text('Change Failed'), Text('Opps'));
       setState(() {
@@ -153,7 +151,7 @@ class _AccountState extends State<Account> {
 
   @override
   void initState() {
-    _currentAcc = widget.keyring.keyPairs[0];
+    _currentAcc = widget.sdkModel.keyring.keyPairs[0];
     super.initState();
   }
 

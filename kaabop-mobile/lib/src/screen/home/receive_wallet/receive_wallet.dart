@@ -2,10 +2,9 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class ReceiveWallet extends StatefulWidget {
-  final HomeModel homeM;
   final CreateAccModel createAccModel;
 
-  ReceiveWallet({this.homeM, this.createAccModel});
+  ReceiveWallet(this.createAccModel);
 
   static const route = '/recievewallet';
 

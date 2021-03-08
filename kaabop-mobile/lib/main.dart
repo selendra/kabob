@@ -59,12 +59,14 @@ class AppState extends State<App> {
   Future<void> connectNode() async {
     final node = NetworkParams();
 
-    node.name = 'Indranet hosted By Selendra';
-    node.endpoint = 'wss://rpc-testnet.selendra.org';
-    node.ss58 = 42;
+    node.name = AppConfig.nodeName;
+    node.endpoint = AppConfig.nodeEndpoint;
+    node.ss58 = AppConfig.ss58;
 
-    final res = await _createAccModel.sdk.api
-        .connectNode(_createAccModel.keyring, [node]);
+    final res = await _createAccModel.sdk.api.connectNode(
+      _createAccModel.keyring,
+      [node],
+    );
 
     setState(() {});
     if (res != null) {
@@ -80,8 +82,7 @@ class AppState extends State<App> {
   }
 
   Future<void> initAttendant() async {
-    final res = await _createAccModel.sdk.api.initAttendant();
-    print(res);
+    await _createAccModel.sdk.api.initAttendant();
     getToken();
   }
 
@@ -89,7 +90,7 @@ class AppState extends State<App> {
     var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     final res = await _createAccModel.sdk.api
         .getAToken(_createAccModel.keyring.keyPairs[0].address);
-    print(res);
+
     setState(() {
       _createAccModel.contractModel.attendantM.aBalance =
           BigInt.parse(res).toString();
@@ -103,14 +104,11 @@ class AppState extends State<App> {
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
-  // Future<void> getHash() async{
-  //   final res = await _createAccModel.sdk.api.
-  // }
-
   Future<void> readATT() async {
-    await StorageServices.readBool('ATT').then((value) async {
+    await StorageServices.readBool(
+      _createAccModel.contractModel.attendantM.aSymbol,
+    ).then((value) async {
       if (value) {
-        print('att $value');
         _createAccModel.contractModel.attendantM.isAContain = value;
         initAttendant();
       }
@@ -149,9 +147,12 @@ class AppState extends State<App> {
   }
 
   Future<void> readContract() async {
-    await StorageServices.readBool('KMPI').then((value) async {
+    await StorageServices.readBool(_createAccModel.contractModel.pTokenSymbol)
+        .then((value) async {
       if (value) {
-        _createAccModel.contractModel.isContain = value;
+        setState(() {
+          _createAccModel.contractModel.isContain = value;
+        });
       }
     });
   }
@@ -216,49 +217,49 @@ class AppState extends State<App> {
           'balance': _createAccModel.contractModel.pBalance,
         });
       });
-    } catch (e) {
-      // print(e.toString());
-    }
+    } catch (e) {}
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (builder, constraints) {
-      return OrientationBuilder(
-        builder: (context, orientation) {
-          SizeConfig().init(constraints, orientation);
-          return MaterialApp(
-            initialRoute: '/',
-            title: AppText.appName,
-            theme: AppStyle.myTheme(),
-            routes: {
-              MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
-              ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
-              ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
-              ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
-              Home.route: (_) => Home(_createAccModel),
-              ReceiveWallet.route: (_) => ReceiveWallet(createAccModel: _createAccModel),
-              ImportAcc.route: (_) => ImportAcc(_createAccModel),
-              Account.route: (_) => Account(_createAccModel.sdk,_createAccModel.keyring, _createAccModel),
-              AddAsset.route: (_) => AddAsset(_createAccModel),
-              CheckIn.route: (_) => CheckIn(_createAccModel),
-            },
-            builder: (context, widget) => ResponsiveWrapper.builder(
-              BouncingScrollWrapper.builder(context, widget),
-              maxWidth: 1200,
-              minWidth: 450,
-              defaultScale: true,
-              breakpoints: [
-                ResponsiveBreakpoint.autoScale(480, name: MOBILE),
-                ResponsiveBreakpoint.autoScale(800, name: TABLET),
-                ResponsiveBreakpoint.resize(1000, name: DESKTOP),
-                ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-              ],
-            ),
-          );
-        },
-      );
-    });
+    return LayoutBuilder(
+      builder: (builder, constraints) {
+        return OrientationBuilder(
+          builder: (context, orientation) {
+            SizeConfig().init(constraints, orientation);
+            return MaterialApp(
+              initialRoute: '/',
+              title: AppText.appName,
+              theme: AppStyle.myTheme(),
+              routes: {
+                Home.route: (_) => Home(_createAccModel),
+                CheckIn.route: (_) => CheckIn(_createAccModel),
+                Account.route: (_) => Account(_createAccModel),
+                AddAsset.route: (_) => AddAsset(_createAccModel),
+                ImportAcc.route: (_) => ImportAcc(_createAccModel),
+                ReceiveWallet.route: (_) => ReceiveWallet(_createAccModel),
+                MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
+                ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
+                ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
+                ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
+              },
+              builder: (context, widget) => ResponsiveWrapper.builder(
+                BouncingScrollWrapper.builder(context, widget),
+                maxWidth: 1200,
+                minWidth: 450,
+                defaultScale: true,
+                breakpoints: [
+                  ResponsiveBreakpoint.autoScale(480, name: MOBILE),
+                  ResponsiveBreakpoint.autoScale(800, name: TABLET),
+                  ResponsiveBreakpoint.resize(1000, name: DESKTOP),
+                  ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
