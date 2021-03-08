@@ -2,10 +2,13 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:latlong/latlong.dart';
 import 'package:wallet_apps/src/models/checkin.m.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in_body.dart';
+
+import '../../provider/wallet_provider.dart';
 
 class CheckIn extends StatefulWidget {
   final CreateAccModel sdkModel;
@@ -141,6 +144,7 @@ class _CheckInState extends State<CheckIn> {
     });
     getToken();
     getAStatus();
+    setPortfolio();
     flareController.play('Checkmark');
     Timer(Duration(milliseconds: 2500), () {
       Navigator.pushNamedAndRemoveUntil(
@@ -174,6 +178,36 @@ class _CheckInState extends State<CheckIn> {
     //   });
     // }
   }
+  void setPortfolio() {
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    walletProvider.clearPortfolio();
+
+    if (widget.sdkModel.contractModel.pHash != '') {
+      walletProvider.addAvaibleToken({
+        'symbol': widget.sdkModel.contractModel.pTokenSymbol,
+        'balance': widget.sdkModel.contractModel.pBalance,
+      });
+    }
+
+    if (widget.sdkModel.contractModel.attendantM.isAContain) {
+      walletProvider.updateAvailableToken({
+        'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
+        'balance': widget.sdkModel.contractModel.attendantM.aBalance,
+      });
+    }
+
+    walletProvider.availableToken.add({
+      'symbol': widget.sdkModel.nativeSymbol,
+      'balance': widget.sdkModel.nativeBalance,
+    });
+
+    if (!widget.sdkModel.contractModel.isContain &&
+        !widget.sdkModel.contractModel.attendantM.isAContain) {
+      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+    }
+
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  }
 
   Future<void> checkIn(String aHash, String password, String location) async {
     dialogLoading(context,
@@ -202,19 +236,15 @@ class _CheckInState extends State<CheckIn> {
     final res = await widget.sdkModel.sdk.api
         .getAToken(widget.sdkModel.keyring.keyPairs[0].address);
 
-    setState(() {
-      widget.sdkModel.contractModel.attendantM.aBalance =
-          BigInt.parse(res).toString();
-    });
+    widget.sdkModel.contractModel.attendantM.aBalance =
+        BigInt.parse(res).toString();
   }
 
   Future<void> getAStatus() async {
     final res = await widget.sdkModel.sdk.api
         .getAStatus(widget.sdkModel.keyring.keyPairs[0].address);
     if (res) {
-      setState(() {
-        widget.sdkModel.contractModel.attendantM.aStatus = true;
-      });
+      widget.sdkModel.contractModel.attendantM.aStatus = true;
     } else {
       widget.sdkModel.contractModel.attendantM.aStatus = false;
     }

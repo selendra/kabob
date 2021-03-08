@@ -208,7 +208,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   void onDismissATT() async {
     widget.sdkModel.contractModel.attendantM = AttendantModel();
     setPortfolio();
-    await StorageServices.removeKey('ATT');
+    await StorageServices.removeKey('ATD');
   }
 
   @override

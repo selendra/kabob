@@ -6,7 +6,7 @@ class AttendantModel {
   String aHash ='';
   bool aStatus = false;
   String attLogo = 'assets/FingerPrint1.png';
-  String aSymbol = 'ATT';
+  String aSymbol = 'ATD';
   String aOrg = 'KOOMPI';
   String aBalance = '0';
 

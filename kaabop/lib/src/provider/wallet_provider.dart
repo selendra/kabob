@@ -23,7 +23,7 @@ class WalletProvider with ChangeNotifier {
   Map<String, double> dataMap = {
     'SEL': 100,
     'KMPI': 0,
-    'ATT': 0,
+    'ATD': 0,
   };
 
   WalletSDK get sdk => _sdk;
@@ -109,7 +109,7 @@ class WalletProvider with ChangeNotifier {
   void resetDatamap() {
     dataMap.update('SEL', (value) => value = 100);
     dataMap.update('KMPI', (value) => value = 0);
-    dataMap.update('ATT', (value) => value = 0);
+    dataMap.update('ATD', (value) => value = 0);
     notifyListeners();
   }
 
@@ -134,13 +134,13 @@ class WalletProvider with ChangeNotifier {
               percentage: percen.toStringAsFixed(2)));
           dataMap.update('KMPI',
               (value) => value = double.parse(percen.toStringAsFixed(2)));
-        } else if (availableToken[i]['symbol'] == 'ATT') {
+        } else if (availableToken[i]['symbol'] == 'ATD') {
           var percen = double.parse(availableToken[i]['balance']) / total * 100;
           _portfolioM.add(PortfolioM(
               color: pieColorList[1],
-              symbol: 'ATT',
+              symbol: 'ATD',
               percentage: percen.toStringAsFixed(2)));
-          dataMap.update('ATT',
+          dataMap.update('ATD',
               (value) => value = double.parse(percen.toStringAsFixed(2)));
         }
       }
