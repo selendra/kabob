@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/component.dart';
 import 'package:wallet_apps/src/models/checkin.m.dart';
@@ -66,10 +65,9 @@ class CheckInBody extends StatelessWidget {
                     onChanged: onChanged,
                     onSubmit: null,
                   ),
-                  
                   GestureDetector(
                     onTap: () {
-                     // getLocation();
+                      // getLocation();
                     },
                     child: MyInputField(
                       pBottom: 16.0,
@@ -91,7 +89,11 @@ class CheckInBody extends StatelessWidget {
                   ),
                   Container(
                     /* Type of payment */
-                    margin: EdgeInsets.only(bottom: 16.0, left: 16, right: 16,),
+                    margin: EdgeInsets.only(
+                      bottom: 16.0,
+                      left: 16,
+                      right: 16,
+                    ),
                     child: customDropDown(
                         checkinM.status != null
                             ? checkinM.status
@@ -103,7 +105,6 @@ class CheckInBody extends StatelessWidget {
 
                     // child: customDropDown(label, list, _model, changeValue, item),
                   ),
-
                 ],
               ),
             ),

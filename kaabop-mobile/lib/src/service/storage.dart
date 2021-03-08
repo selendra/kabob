@@ -16,17 +16,17 @@ class StorageServices {
       dynamic _data, String _path) async {
     List<Map<String, dynamic>> ls = [];
     _preferences = await SharedPreferences.getInstance();
-    print(_preferences.containsKey(_path));
+    //print(_preferences.containsKey(_path));
     if (_preferences.containsKey(_path)) {
       var _dataString = _preferences.getString(_path);
-      print("Get string $_dataString");
+      //print("Get string $_dataString");
       ls = List<Map<String, dynamic>>.from(jsonDecode(_dataString));
       ls.add(_data);
     } else {
       ls.add(_data);
     }
 
-    print("Contact adding $ls");
+    //print("Contact adding $ls");
 
     _decode = jsonEncode(ls);
     _preferences.setString(_path, _decode);
@@ -37,13 +37,13 @@ class StorageServices {
       TxHistory txHistory, String key) async {
     List<TxHistory> txHistoryList = [];
     _preferences = await SharedPreferences.getInstance();
-    print(txHistory.symbol);
+    //print(txHistory.symbol);
 
     await StorageServices.fetchData('txhistory').then((value) {
-      print('My value $value');
+      //print('My value $value');
       if (value != null) {
         for (var i in value) {
-          print(i);
+          //print(i);
           txHistoryList.add(TxHistory(
             date: i['date'],
             symbol: i['symbol'],
@@ -54,17 +54,17 @@ class StorageServices {
           ));
         }
         txHistoryList.add(txHistory);
-        print('1 ${txHistory.symbol}');
+        //print('1 ${txHistory.symbol}');
       } else {
         txHistoryList.add(txHistory);
-        print('2 ${txHistory.symbol}');
+        //print('2 ${txHistory.symbol}');
       }
     });
 
-    print('3 ${txHistoryList[0].symbol}');
+    //print('3 ${txHistoryList[0].symbol}');
 
     for (var i in txHistoryList) {
-      print(i.symbol);
+      //print(i.symbol);
     }
 
     await _preferences.setString(key, jsonEncode(txHistoryList));
@@ -105,7 +105,7 @@ class StorageServices {
     _preferences = await SharedPreferences.getInstance();
 
     var _data = _preferences.getString(_path);
-    // print("Data $_data");
+    // //print("Data $_data");
     if (_data == null)
       return null;
     else {

@@ -261,9 +261,9 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
 }
 
 
-async function aCheckIn(aContract:ContractPromise,senderPubKey:string,password:string,attendantHash:string,location:string) {
-  return new Promise(async(resolve,reject)=>{
-    try{
+async function aCheckIn(aContract: ContractPromise, senderPubKey: string, password: string, attendantHash: string, location: string) {
+  return new Promise(async (resolve, reject) => {
+    try {
       const keyPair = keyring.getPair(hexToU8a(senderPubKey));
       try {
         keyPair.decodePkcs8(password);
@@ -271,21 +271,21 @@ async function aCheckIn(aContract:ContractPromise,senderPubKey:string,password:s
         resolve({ error: "PIN verification failed" });
       }
 
-      await aContract.tx.checkedIn(0,-1,attendantHash,location).signAndSend(keyPair, ({ events = [], status }) => {
+      await aContract.tx.checkedIn(0, -1, attendantHash, location).signAndSend(keyPair, ({ events = [], status }) => {
         if (status.isInBlock) {
-          resolve({status: "In Block"});
-        } 
+          resolve({ status: "In Block" });
+        }
       });
 
-    }catch(e){
-      resolve({err:e.message});
+    } catch (e) {
+      resolve({ err: e.message });
     }
   });
 }
 
-async function aCheckOut(aContract:ContractPromise,senderPubKey:string,password:string,attendantHash:string,location:string) {
-  return new Promise(async(resolve,reject)=>{
-    try{
+async function aCheckOut(aContract: ContractPromise, senderPubKey: string, password: string, attendantHash: string, location: string) {
+  return new Promise(async (resolve, reject) => {
+    try {
       const keyPair = keyring.getPair(hexToU8a(senderPubKey));
       try {
         keyPair.decodePkcs8(password);
@@ -293,13 +293,13 @@ async function aCheckOut(aContract:ContractPromise,senderPubKey:string,password:
         resolve({ error: "PIN verification failed" });
       }
 
-      await aContract.tx.checkedOut(0,-1,attendantHash,location).signAndSend(keyPair, ({ events = [], status }) => {
+      await aContract.tx.checkedOut(0, -1, attendantHash, location).signAndSend(keyPair, ({ events = [], status }) => {
         if (status.isInBlock) {
-          resolve({status: "In Block"});
-        } 
+          resolve({ status: "In Block" });
+        }
       });
-    }catch(e){
-      resolve({err:e.message});
+    } catch (e) {
+      resolve({ err: e.message });
     }
   });
 }
@@ -557,7 +557,7 @@ export default {
   aCheckOut,
   contractTransfer,
   contractTransferFrom,
-  approve,
+  //approve,
   checkPassword,
   changePassword,
   checkDerivePath,
@@ -565,7 +565,7 @@ export default {
   signAsync,
   makeTx,
   addSignatureAndSend,
-  signTxAsExtension,
-  signBytesAsExtension,
-  verifySignature,
+  //signTxAsExtension,
+  //signBytesAsExtension,
+  //verifySignature,
 };

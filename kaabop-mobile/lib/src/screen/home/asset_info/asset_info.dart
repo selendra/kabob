@@ -10,6 +10,7 @@ import 'package:wallet_apps/src/models/tx_history.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_history.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
+import 'package:wallet_apps/src/screen/home/asset_info/att_activity.dart';
 import '../../../../index.dart';
 
 class AssetInfo extends StatefulWidget {
@@ -52,7 +53,6 @@ class _AssetInfoState extends State<AssetInfo> {
 
   Future<List<TxHistory>> readTxHistory() async {
     await StorageServices.fetchData('txhistory').then((value) {
-      print('My value $value');
       if (value != null) {
         for (var i in value) {
           if ((i['symbol'] == 'SEL')) {
@@ -77,7 +77,7 @@ class _AssetInfoState extends State<AssetInfo> {
         }
       }
       //var responseJson = json.decode(value);
-      //print(responseJson);
+      ////print(responseJson);
     });
     setState(() {});
     return _txHistoryModel.tx;
@@ -135,7 +135,6 @@ class _AssetInfoState extends State<AssetInfo> {
     for (var i in res) {
       String latlong = i['location'];
 
-      print(latlong.split(',')[0]);
       await addressName(LatLng(double.parse(latlong.split(',')[0]),
               double.parse(latlong.split(',')[1])))
           .then((value) async {
@@ -155,21 +154,18 @@ class _AssetInfoState extends State<AssetInfo> {
   Future<void> getCheckOutList() async {
     final res = await widget.sdkModel.sdk.api
         .getCheckOutList(widget.sdkModel.keyring.keyPairs[0].address);
-    print(res);
+
     setState(() {
       _checkOutList.clear();
     });
+
     for (var i in res) {
       String latlong = i['location'];
 
-      print(latlong.split(',')[0]);
-      String lat = latlong.split(',')[0];
-      print(lat);
-      print(double.parse(latlong.split(',')[0]));
       await addressName(LatLng(double.parse(latlong.split(',')[0]),
               double.parse(latlong.split(',')[1])))
           .then((value) async {
-        print(value);
+        
         if (value != null) {
           await dateConvert(i['time']).then((time) {
             setState(() {
@@ -178,6 +174,7 @@ class _AssetInfoState extends State<AssetInfo> {
             });
           });
         }
+
       });
     }
     return res;
@@ -210,8 +207,6 @@ class _AssetInfoState extends State<AssetInfo> {
     } else {
       widget.sdkModel.contractModel.attendantM.aStatus = false;
     }
-
-    print(res);
   }
 
   String onChangedTransferFrom(String value) {
@@ -279,9 +274,7 @@ class _AssetInfoState extends State<AssetInfo> {
           ? Container()
           : FloatingActionButton(
               onPressed: () {
-                //Navigator.pushNamed(context, CheckIn.route);
                 qrRes();
-                // Navigator.push(context,MaterialPageRoute(builder: (context) => CheckIn()));
               },
               backgroundColor: hexaCodeToColor(AppColors.secondary),
               child: Icon(
@@ -395,7 +388,6 @@ class _AssetInfoState extends State<AssetInfo> {
                               child: MyText(
                                 text: 'Transfer',
                                 color: '#FFFFFF',
-                                //fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
@@ -457,109 +449,7 @@ class _AssetInfoState extends State<AssetInfo> {
                       _scanPayM.isPay, _deleteHistory, showDetailDialog)
                   : Container(),
               widget.tokenSymbol == 'ATT'
-                  ? Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: ListView.builder(
-                            itemCount: _checkInList.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(
-                                    top: 0, left: 16, right: 16, bottom: 16),
-                                padding: EdgeInsets.fromLTRB(15, 9, 15, 9),
-                                height: 90,
-                                decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 2.0,
-                                        offset: Offset(1.0, 1.0))
-                                  ],
-                                  color: hexaCodeToColor(AppColors.cardColor),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      padding: EdgeInsets.all(6),
-                                      margin: EdgeInsets.only(right: 20),
-                                      decoration: BoxDecoration(
-                                          color: Colors.black,
-                                          borderRadius:
-                                              BorderRadius.circular(40)),
-                                      child: Image.asset(widget.sdkModel
-                                          .contractModel.attendantM.attLogo),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin:
-                                            const EdgeInsets.only(right: 16),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            MyText(
-                                              text: widget.tokenSymbol,
-                                              color: "#FFFFFF",
-                                              fontSize: 18,
-                                            ),
-                                            MyText(
-                                                textAlign: TextAlign.start,
-                                                text: _checkInList[index]
-                                                    ['location'],
-                                                fontSize: 14),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin:
-                                            EdgeInsets.only(right: 16, top: 10),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            MyText(
-                                              width: double.infinity,
-                                              text: _checkInList[index]
-                                                      ['time'] ??
-                                                  "",
-                                              color: "#FFFFFF",
-                                              fontSize: 12,
-                                              textAlign: TextAlign.right,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                            Expanded(
-                                                child: Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Container(
-                                                height: 10,
-                                                width: 10,
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  color: _checkInList[index]
-                                                          ['status']
-                                                      ? hexaCodeToColor(
-                                                          AppColors.secondary)
-                                                      : Colors.red,
-                                                ),
-                                              ),
-                                            ))
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                      ),
-                    )
+                  ? AttActivity(_checkInList, widget.sdkModel)
                   : Container()
             ],
           ),

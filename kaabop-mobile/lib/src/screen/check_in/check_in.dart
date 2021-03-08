@@ -59,7 +59,7 @@ class _CheckInState extends State<CheckIn> {
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       if (mounted) {
-        print(position);
+        //print(position);
         _location =
             '${position.latitude},${position.longitude}'; //position.toString();
 
@@ -121,8 +121,8 @@ class _CheckInState extends State<CheckIn> {
     });
 
     for (var i in placemark) {
-      print(i.administrativeArea);
-      print(i.name);
+      //print(i.administrativeArea);
+      //print(i.name);
     }
     //pattern for saving address throughtfare(st) +
     //subadministrative(sangkat) + sublocality(khan) + locality(province or city)
@@ -180,7 +180,7 @@ class _CheckInState extends State<CheckIn> {
         content: 'Please wait! This might take a little bit longer');
 
     try {
-      print('res');
+      //print('res');
       final res = await widget.sdkModel.sdk.api.keyring.aCheckIn(
         widget.sdkModel.keyring.keyPairs[0].pubKey,
         password,
@@ -189,12 +189,12 @@ class _CheckInState extends State<CheckIn> {
       );
 
       if ((res['status'] != null)) {
-        print(res['status']);
+        //print(res['status']);
         enableAnimation();
       }
     } catch (e) {
       Navigator.pop(context);
-      print(e.message);
+      //print(e.message);
     }
   }
 
@@ -219,7 +219,7 @@ class _CheckInState extends State<CheckIn> {
       widget.sdkModel.contractModel.attendantM.aStatus = false;
     }
 
-    print(res);
+    //print(res);
   }
 
   Future<void> checkOut(String aHash, String password, String location) async {
@@ -234,12 +234,10 @@ class _CheckInState extends State<CheckIn> {
       );
 
       if ((res['status'] != null)) {
-        print(res['status']);
         enableAnimation();
       }
     } catch (e) {
       Navigator.pop(context);
-      print(e.toString());
     }
   }
 
@@ -248,10 +246,10 @@ class _CheckInState extends State<CheckIn> {
       await dialogBox().then((value) {
         if (value != null && _location != null) {
           if (_checkInModel.status == "Check In") {
-            print('checkIN');
+            //print('checkIN');
             checkIn(_checkInModel.hashController.text, value, _location);
           } else {
-            print('checkIN');
+            //print('checkIN');
             checkOut(_checkInModel.hashController.text, value, _location);
           }
           // dialogLoading(context);
@@ -297,8 +295,11 @@ class _CheckInState extends State<CheckIn> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Expanded(
-                          child: CustomAnimation.flareAnimation(flareController,
-                              "assets/animation/check.flr", "Checkmark"),
+                          child: CustomAnimation.flareAnimation(
+                            flareController,
+                            "assets/animation/check.flr",
+                            "Checkmark",
+                          ),
                         ),
                       ],
                     ),

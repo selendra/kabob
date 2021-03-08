@@ -75,7 +75,7 @@ class WalletProvider with ChangeNotifier {
       addAvaibleToken(token);
     } else {
       for (int i = 0; i < availableToken.length; i++) {
-        print(availableToken[i]['symbol']);
+        //print(availableToken[i]['symbol']);
         if (availableToken[i]['symbol'] == token['symbol']) {
           availableToken[i].update('balance', (value) => token['balance']);
         } else {
@@ -99,7 +99,7 @@ class WalletProvider with ChangeNotifier {
 
   Future<double> getTotal() async {
     double total = 0;
-    print(availableToken);
+    //print(availableToken);
     for (int i = 0; i < availableToken.length; i++) {
       total = total + double.parse(availableToken[i]['balance']);
     }

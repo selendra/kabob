@@ -75,7 +75,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             return disableNativePopBackButton(AlertDialog(
               backgroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               title: Column(
                 children: [
                   CircularProgressIndicator(
@@ -197,20 +198,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void onDismiss() async {
-    // setState(() {
-    //   widget.sdkModel.contractModel.pHash = '';
-    // });
     widget.sdkModel.contractModel.isContain = false;
     widget.sdkModel.contractModel.pHash = '';
     setPortfolio();
 
-    // Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
-    // Provider.of<WalletProvider>(context, listen: false).resetDatamap();
-    // Provider.of<WalletProvider>(context, listen: false).addAvaibleToken({
-    //   'symbol': widget.sdkModel.nativeSymbol,
-    //   'balance': widget.sdkModel.nativeBalance,
-    // });
-    // Provider.of<WalletProvider>(context, listen: false).getPortfolio();
     await StorageServices.removeKey('KMPI');
   }
 
@@ -242,35 +233,37 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         ),
       ),
       floatingActionButton: SizedBox(
-          width: 64,
-          height: 64,
-          child: FloatingActionButton(
-            backgroundColor: hexaCodeToColor(AppColors.secondary)
-                .withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
-            child: SvgPicture.asset('assets/icons/qr_code.svg',
-                width: 30,
-                height: 30,
-                color: !widget.sdkModel.apiConnected
-                    ? Colors.white.withOpacity(0.2)
-                    : Colors.white),
-            onPressed: () async {
-              await TrxOptionMethod.scanQR(
-                context,
-                _homeM.portfolioList,
-                widget.sdkModel,
-              );
-            },
-          )),
+        width: 64,
+        height: 64,
+        child: FloatingActionButton(
+          backgroundColor: hexaCodeToColor(AppColors.secondary)
+              .withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
+          child: SvgPicture.asset('assets/icons/qr_code.svg',
+              width: 30,
+              height: 30,
+              color: !widget.sdkModel.apiConnected
+                  ? Colors.white.withOpacity(0.2)
+                  : Colors.white),
+          onPressed: () async {
+            await TrxOptionMethod.scanQR(
+              context,
+              _homeM.portfolioList,
+              widget.sdkModel,
+            );
+          },
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(
-          apiStatus: widget.sdkModel.apiConnected,
-          homeM: _homeM,
-          portfolioM: _portfolioM,
-          scanReceipt: null, // Bottom Center Button
-          toReceiveToken: toReceiveToken,
-          opacityController: opacityController,
-          openDrawer: openMyDrawer,
-          sdkModel: widget.sdkModel),
+        apiStatus: widget.sdkModel.apiConnected,
+        homeM: _homeM,
+        portfolioM: _portfolioM,
+        scanReceipt: null, // Bottom Center Button
+        toReceiveToken: toReceiveToken,
+        opacityController: opacityController,
+        openDrawer: openMyDrawer,
+        sdkModel: widget.sdkModel,
+      ),
     );
   }
 }
