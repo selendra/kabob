@@ -47,21 +47,17 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
     final channel = await widget.importAccModel.sdk.api.account
         .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
-      setState(() {
-        widget.importAccModel.balance = res;
-        widget.importAccModel.nativeBalance =
-            Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
-        walletProvider.addAvaibleToken({
-          'symbol': widget.importAccModel.nativeSymbol,
-          'balance': widget.importAccModel.nativeBalance,
-        });
-
-        Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+      widget.importAccModel.balance = res;
+      widget.importAccModel.nativeBalance =
+          Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
+      walletProvider.addAvaibleToken({
+        'symbol': widget.importAccModel.nativeSymbol,
+        'balance': widget.importAccModel.nativeBalance,
       });
+
+      Provider.of<WalletProvider>(context, listen: false).getPortfolio();
     });
-    setState(() {
-      widget.importAccModel.msgChannel = channel;
-    });
+    widget.importAccModel.msgChannel = channel;
   }
 
   Future<void> _importFromMnemonic() async {

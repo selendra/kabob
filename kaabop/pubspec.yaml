@@ -37,18 +37,19 @@ dependencies:
 
   # Backend
   http: 
-  connectivity:
+  connectivity: ^3.0.2
   connectivity_wrapper:
   # firebase_remote_config: ^0.4.0+2
   async: ^2.4.2
 
   # Image service
-  image_picker:
-  path_provider:
+  #image_picker:
+  path_provider: ^1.6.22
   # image:
   
   flutter_svg: ^0.19.0
   intl:
+
   #image_cropper: ^1.4.0
   #flutter_image_compress:
  
@@ -58,10 +59,10 @@ dependencies:
   qr_code_scanner: ^0.3.4
 
   # Share
-  share_extend: ^1.1.9
+  share_extend: 
 
   # Chart
-  #flutter_circular_chart:
+  flutter_circular_chart:
   syncfusion_flutter_charts:
   charts_flutter:
   fl_chart: ^0.12.0
@@ -89,7 +90,7 @@ dependencies:
   device_preview:
   store_redirect:
   # fluttercontactpicker: ^3.1.0
-  #share: ^2.0.0
+  # share: ^2.0.0
   flutter_sms: ^2.1.1
 
   # Apps Configuration

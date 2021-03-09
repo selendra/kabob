@@ -223,9 +223,11 @@ class _CheckInState extends State<CheckIn> {
         location,
       );
 
-      if ((res['status'] != null)) {
+      if (res['status'] != null) {
         //print(res['status']);
         enableAnimation();
+      }else{
+         Navigator.pop(context);
       }
     } catch (e) {
       Navigator.pop(context);
@@ -264,8 +266,10 @@ class _CheckInState extends State<CheckIn> {
         location,
       );
 
-      if ((res['status'] != null)) {
+      if (res['status'] != null) {
         enableAnimation();
+      }else{
+         Navigator.pop(context);
       }
     } catch (e) {
       Navigator.pop(context);

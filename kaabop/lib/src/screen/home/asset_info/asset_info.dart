@@ -275,7 +275,7 @@ class _AssetInfoState extends State<AssetInfo> {
   @override
   void initState() {
     readTxHistory();
-    if (widget.tokenSymbol != 'ATD') _method.platformChecker(context);
+    
     _globalKey = GlobalKey<ScaffoldState>();
     initATD();
     super.initState();

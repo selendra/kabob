@@ -30,7 +30,7 @@ class ReceiveWalletState extends State<ReceiveWallet> {
     wallet = widget.createAccModel.keyring.keyPairs[0].address;
     _globalKey = GlobalKey<ScaffoldState>();
     AppServices.noInternetConnection(_globalKey);
-    _method.platformChecker(context);
+   // _method.platformChecker(context);
     super.initState();
   }
 

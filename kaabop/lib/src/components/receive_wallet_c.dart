@@ -3,10 +3,10 @@ import 'dart:ui';
 
 class GetWalletMethod {
   void platformChecker(BuildContext context) {
-    if (Platform.isAndroid)
-      androidHighBright(context);
-    else
-      iOSHighBright();
+    // if (Platform.isAndroid)
+    //   androidHighBright(context);
+    // else
+    //   iOSHighBright();
   }
 
   Future<void> androidHighBright(BuildContext context) async {
