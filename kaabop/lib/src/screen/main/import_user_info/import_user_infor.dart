@@ -22,7 +22,7 @@ class ImportUserInfo extends StatefulWidget {
 class ImportUserInfoState extends State<ImportUserInfo> {
   ModelUserInfo _userInfoM = ModelUserInfo();
 
-  LocalAuthentication _localAuth;
+  LocalAuthentication _localAuth = LocalAuthentication();
 
   MenuModel _menuModel = MenuModel();
 
@@ -43,25 +43,24 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<void> _subscribeBalance() async {
-    var walletProvider = Provider.of<WalletProvider>(context,listen: false);
-    
+    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+
     final channel = await widget.importAccModel.sdk.api.account
         .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
       setState(() {
         widget.importAccModel.balance = res;
-        widget.importAccModel.nativeBalance = Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
+        widget.importAccModel.nativeBalance =
+            Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
         walletProvider.addAvaibleToken({
           'symbol': widget.importAccModel.nativeSymbol,
           'balance': widget.importAccModel.nativeBalance,
         });
-          
+
         Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-  
       });
     });
     setState(() {
       widget.importAccModel.msgChannel = channel;
-      
     });
   }
 
@@ -138,13 +137,12 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
-    try {
-      // Trigger Authentication By Finger Print
-      _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-          localizedReason: 'Scan your fingerprint to authenticate',
-          useErrorDialogs: true,
-          stickyAuth: true);
-    } on PlatformException catch (e) {}
+    // Trigger Authentication By Finger Print
+    _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
+        localizedReason: 'Scan your fingerprint to authenticate',
+        useErrorDialogs: true,
+        stickyAuth: true);
+
     return _menuModel.authenticated;
   }
 
@@ -174,7 +172,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validateFirstName(String value) {
     if (_userInfoM.nodeFirstName.hasFocus) {
-     if (value.isEmpty) {
+      if (value.isEmpty) {
         return 'Please fill in username';
       } else if (_userInfoM.confirmPasswordCon.text !=
           _userInfoM.passwordCon.text) {
@@ -186,9 +184,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validatePassword(String value) {
     if (_userInfoM.passwordNode.hasFocus) {
-     if (value.isEmpty) {
+      if (value.isEmpty) {
         return 'Please fill in password';
-      } 
+      }
     }
     return _userInfoM.responseMidname;
   }

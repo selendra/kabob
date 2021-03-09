@@ -3,7 +3,6 @@ import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/attendant.m.dart';
-import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
@@ -208,7 +207,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   void onDismissATT() async {
     widget.sdkModel.contractModel.attendantM = AttendantModel();
     setPortfolio();
-    await StorageServices.removeKey('ATT');
+    await StorageServices.removeKey('ATD');
   }
 
   @override

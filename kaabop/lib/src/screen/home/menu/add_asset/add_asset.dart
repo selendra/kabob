@@ -110,15 +110,18 @@ class AddAssetState extends State<AddAsset> {
         widget.sdkModel.contractModel.attendantM.isAContain = true;
       });
       await initAttendant();
-      await StorageServices.saveBool('ATT', true);
+      await StorageServices.saveBool(
+        widget.sdkModel.contractModel.attendantM.aSymbol,
+        true,
+      );
       Navigator.pushNamedAndRemoveUntil(
           context, Home.route, ModalRoute.withName('/'));
     }
   }
 
   Future<void> initAttendant() async {
-    final res = await widget.sdkModel.sdk.api.initAttendant();
-    print(res);
+    await widget.sdkModel.sdk.api.initAttendant();
+    //print(res);
     await getToken().then((value) {
       addATT();
     });
@@ -240,8 +243,8 @@ class AddAssetState extends State<AddAsset> {
               Text('Asset Added'));
         }
       });
-    } else if (symbol == 'ATT') {
-      await StorageServices.readBool('ATT').then((value) async {
+    } else if (symbol == 'ATD') {
+      await StorageServices.readBool('ATD').then((value) async {
         if (!value) {
           print(value);
           addAssetInSearch(symbol);

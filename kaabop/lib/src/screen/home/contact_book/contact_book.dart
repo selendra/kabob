@@ -20,7 +20,7 @@ class _ContactBookState extends State<ContactBook> {
 
   ContactBookModel _contactBookModel = ContactBookModel();
 
-  List<Map<String, dynamic>> contactData = List<Map<String, dynamic>>();
+  List<Map<String, dynamic>> contactData = [];
 
   Future<void> getContact() async {
     try {

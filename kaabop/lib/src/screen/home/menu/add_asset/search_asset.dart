@@ -108,7 +108,7 @@ class SearchAsset extends SearchDelegate {
                   ),
             )
             .toList();
-    print(token.length);
+    //print(token.length);
     return searchProducts.isNotEmpty
         ? ListView.builder(
             itemCount: searchProducts.length,

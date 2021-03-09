@@ -74,7 +74,7 @@ class AppState extends State<App> {
         _createAccModel.apiConnected = true;
       });
       await readContract();
-      await readATT();
+      await readAtd();
       initContract();
       getChainDecimal();
       _subscribeBalance();
@@ -104,7 +104,7 @@ class AppState extends State<App> {
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
-  Future<void> readATT() async {
+  Future<void> readAtd() async {
     await StorageServices.readBool(
       _createAccModel.contractModel.attendantM.aSymbol,
     ).then((value) async {

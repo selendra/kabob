@@ -46,6 +46,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  
     }
 
     signingConfigs{
@@ -72,6 +73,7 @@ flutter {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
+  
 }
 
 apply plugin: 'com.google.gms.google-services'

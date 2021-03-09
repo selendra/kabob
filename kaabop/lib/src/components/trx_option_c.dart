@@ -110,7 +110,7 @@ class TrxOptionMethod {
   ) async {
     var _response = await Navigator.push(context, transitionRoute(QrScanner()));
 
-    print("Scan qr reponse $_response");
+    //print("Scan qr reponse $_response");
     if (_response != null) {
       await Navigator.push(
           context,

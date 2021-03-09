@@ -35,7 +35,7 @@ class _AssetInfoState extends State<AssetInfo> {
 
   List<Map> _checkInList = [];
   List<Map> _checkOutList = [];
-  //List<Map> _checkAll = [];
+  List<Map> _checkAll = [];
   GlobalKey<ScaffoldState> _globalKey;
   GlobalKey _keyQrShare = GlobalKey();
 
@@ -120,10 +120,11 @@ class _AssetInfoState extends State<AssetInfo> {
 
   Future<Null> _refresh() async {
     await Future.delayed(Duration(seconds: 3)).then((value) {
-      if (widget.tokenSymbol == "ATT") {
+      if (widget.tokenSymbol == "ATD") {
         getAStatus();
         getCheckInList();
         getCheckOutList();
+        sortList();
       }
     });
   }
@@ -172,7 +173,7 @@ class _AssetInfoState extends State<AssetInfo> {
         if (value != null) {
           await dateConvert(i['time']).then((time) {
             setState(() {
-              _checkInList
+              _checkOutList
                   .add({'time': time, 'location': value, 'status': false});
             });
           });
@@ -181,6 +182,15 @@ class _AssetInfoState extends State<AssetInfo> {
     }
     if (!mounted) return;
     return res;
+  }
+
+  void initATD() async {
+    if (widget.tokenSymbol == "ATD") {
+      getAStatus();
+      await getCheckInList();
+      await getCheckOutList();
+      sortList();
+    }
   }
 
   Future<String> addressName(LatLng place) async {
@@ -201,7 +211,8 @@ class _AssetInfoState extends State<AssetInfo> {
   }
 
   Future<void> sortList() async {
-    _checkInList.sort((a, b) => a['time'].compareTo(b['time']));
+    _checkAll = List.from(_checkInList)..addAll(_checkOutList);
+    _checkAll.sort((a, b) => a['time'].compareTo(b['time']));
     setState(() {});
     if (!mounted) return;
   }
@@ -264,15 +275,9 @@ class _AssetInfoState extends State<AssetInfo> {
   @override
   void initState() {
     readTxHistory();
-    if (widget.tokenSymbol != 'ATT') _method.platformChecker(context);
+    if (widget.tokenSymbol != 'ATD') _method.platformChecker(context);
     _globalKey = GlobalKey<ScaffoldState>();
-
-    if (widget.tokenSymbol == "ATT") {
-      getAStatus();
-      getCheckInList();
-      getCheckOutList();
-      sortList();
-    }
+    initATD();
     super.initState();
   }
 
@@ -280,7 +285,7 @@ class _AssetInfoState extends State<AssetInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,
-      floatingActionButton: widget.tokenSymbol != "ATT"
+      floatingActionButton: widget.tokenSymbol != "ATD"
           ? Container()
           : FloatingActionButton(
               onPressed: () {
@@ -350,7 +355,7 @@ class _AssetInfoState extends State<AssetInfo> {
                         ],
                       ),
                     ),
-                    widget.tokenSymbol != "ATT"
+                    widget.tokenSymbol != "ATD"
                         ? Container()
                         : Expanded(
                             child: Align(
@@ -370,10 +375,10 @@ class _AssetInfoState extends State<AssetInfo> {
               ),
             ),
             Container(
-              padding: widget.tokenSymbol == 'ATT'
+              padding: widget.tokenSymbol == 'ATD'
                   ? const EdgeInsets.symmetric(vertical: 0.0)
                   : const EdgeInsets.symmetric(vertical: 16.0),
-              child: widget.tokenSymbol == 'ATT'
+              child: widget.tokenSymbol == 'ATD'
                   ? Container()
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -456,9 +461,9 @@ class _AssetInfoState extends State<AssetInfo> {
                 ? AssetHistory(_txHistoryModel.txKpi, _flareController,
                     _scanPayM.isPay, _deleteHistory, showDetailDialog)
                 : Container(),
-            widget.tokenSymbol == 'ATT'
+            widget.tokenSymbol == 'ATD'
                 ? AttActivity(
-                    _checkInList,
+                    _checkAll.reversed.toList(),
                     widget.sdkModel,
                     _refresh,
                   )
