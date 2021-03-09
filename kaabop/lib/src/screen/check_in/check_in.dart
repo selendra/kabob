@@ -9,6 +9,8 @@ import 'package:wallet_apps/src/models/checkin.m.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in_body.dart';
 
+import '../../provider/wallet_provider.dart';
+
 class CheckIn extends StatefulWidget {
   final CreateAccModel sdkModel;
   final String qrRes;
@@ -177,73 +179,6 @@ class _CheckInState extends State<CheckIn> {
     //   });
     // }
   }
-
-  Future<void> checkIn(String aHash, String password, String location) async {
-    dialogLoading(context,
-        content: 'Please wait! This might take a little bit longer');
-
-    try {
-      //print('res');
-      final res = await widget.sdkModel.sdk.api.keyring.aCheckIn(
-        widget.sdkModel.keyring.keyPairs[0].pubKey,
-        password,
-        aHash,
-        location,
-      );
-
-      if ((res['status'] != null)) {
-        //print(res['status']);
-        enableAnimation();
-      }
-    } catch (e) {
-      Navigator.pop(context);
-      //print(e.message);
-    }
-  }
-
-  Future<void> getToken() async {
-    final res = await widget.sdkModel.sdk.api
-        .getAToken(widget.sdkModel.keyring.keyPairs[0].address);
-
-    setState(() {
-      widget.sdkModel.contractModel.attendantM.aBalance =
-          BigInt.parse(res).toString();
-    });
-  }
-
-  Future<void> getAStatus() async {
-    final res = await widget.sdkModel.sdk.api
-        .getAStatus(widget.sdkModel.keyring.keyPairs[0].address);
-    if (res) {
-      setState(() {
-        widget.sdkModel.contractModel.attendantM.aStatus = true;
-      });
-    } else {
-      widget.sdkModel.contractModel.attendantM.aStatus = false;
-    }
-
-    //print(res);
-  }
-
-  Future<void> checkOut(String aHash, String password, String location) async {
-    dialogLoading(context,
-        content: 'Please wait! This might take a little bit longer');
-    try {
-      final res = await widget.sdkModel.sdk.api.keyring.aCheckOut(
-        widget.sdkModel.keyring.keyPairs[0].pubKey,
-        password,
-        aHash,
-        location,
-      );
-
-      if ((res['status'] != null)) {
-        enableAnimation();
-      }
-    } catch (e) {
-      Navigator.pop(context);
-    }
-  }
-
   void setPortfolio() {
     var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
@@ -273,6 +208,68 @@ class _CheckInState extends State<CheckIn> {
     }
 
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  }
+
+  Future<void> checkIn(String aHash, String password, String location) async {
+    dialogLoading(context,
+        content: 'Please wait! This might take a little bit longer');
+
+    try {
+      //print('res');
+      final res = await widget.sdkModel.sdk.api.keyring.aCheckIn(
+        widget.sdkModel.keyring.keyPairs[0].pubKey,
+        password,
+        aHash,
+        location,
+      );
+
+      if ((res['status'] != null)) {
+        //print(res['status']);
+        enableAnimation();
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      //print(e.message);
+    }
+  }
+
+  Future<void> getToken() async {
+    final res = await widget.sdkModel.sdk.api
+        .getAToken(widget.sdkModel.keyring.keyPairs[0].address);
+
+    widget.sdkModel.contractModel.attendantM.aBalance =
+        BigInt.parse(res).toString();
+  }
+
+  Future<void> getAStatus() async {
+    final res = await widget.sdkModel.sdk.api
+        .getAStatus(widget.sdkModel.keyring.keyPairs[0].address);
+    if (res) {
+      widget.sdkModel.contractModel.attendantM.aStatus = true;
+    } else {
+      widget.sdkModel.contractModel.attendantM.aStatus = false;
+    }
+
+    //print(res);
+  }
+
+  Future<void> checkOut(String aHash, String password, String location) async {
+    dialogLoading(context,
+        content: 'Please wait! This might take a little bit longer');
+    try {
+      final res = await widget.sdkModel.sdk.api.keyring.aCheckOut(
+        widget.sdkModel.keyring.keyPairs[0].pubKey,
+        password,
+        aHash,
+        location,
+      );
+
+      if ((res['status'] != null)) {
+        enableAnimation();
+      }
+    } catch (e) {
+      Navigator.pop(context);
+    }
   }
 
   void clickSend() async {
