@@ -37,7 +37,7 @@ dependencies:
 
   # Backend
   http: 
-  connectivity: ^3.0.2
+  connectivity:
   connectivity_wrapper:
   # firebase_remote_config: ^0.4.0+2
   async: ^2.4.2
@@ -66,12 +66,10 @@ dependencies:
   syncfusion_flutter_charts:
   charts_flutter:
   fl_chart: ^0.12.0
-  pie_chart: 4.0.1
+  pie_chart:
 
   #Indecator
   percent_indicator:
-  
- 
 
   # Icons
   # outline_material_icons:
@@ -94,7 +92,7 @@ dependencies:
   flutter_sms: ^2.1.1
 
   # Apps Configuration
-  rename:
+  rename: ^1.3.0
   package_info: 
 
   #Authenticatioin & Verification
@@ -109,9 +107,6 @@ dependencies:
   animations: ^1.1.2
   provider: ^4.3.3
   flutter_screenshot_switcher: ^1.2.0
- 
-
-  
 
   #Contact
   contacts_service: ^0.4.6 

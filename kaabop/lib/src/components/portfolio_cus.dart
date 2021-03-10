@@ -11,6 +11,7 @@ class PortFolioCus extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+
         Container(
           margin: EdgeInsets.only(top: 16),
           child: Row(
@@ -94,6 +95,7 @@ class PortFolioCus extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: List.generate(value.portfolio.length, (index) {
+                      print("My value ${value.portfolio[index].percentage}");
                         return MyPieChartRow(
                           color: value.portfolio[index].color,
                           centerText: value.portfolio[index].symbol,

@@ -115,35 +115,90 @@ class WalletProvider with ChangeNotifier {
 
   void getPortfolio() async {
     _portfolioM.clear();
+
+    double defaultPercen = 100;
+    
+    double temp = 0.0;
+
     await getTotal().then((total) {
-      for (int i = 0; i < availableToken.length; i++) {
-        if (availableToken[i]['symbol'] == 'SEL') {
-          var percen = double.parse(availableToken[i]['balance']) / total * 100;
+      double percen = 0.0;
+       for (int i = 0; i < availableToken.length; i++) {
+         
+          temp = double.parse(availableToken[i]['balance']) / total;
+
+          if( total==0.0 ){
           _portfolioM.add(PortfolioM(
-            color: pieColorList[0],
-            symbol: 'SEL',
-            percentage: percen.toStringAsFixed(2),
-          ));
-          dataMap.update('SEL',
-              (value) => value = double.parse(percen.toStringAsFixed(2)));
-        } else if (availableToken[i]['symbol'] == 'KMPI') {
-          var percen = double.parse(availableToken[i]['balance']) / total * 100;
-          _portfolioM.add(PortfolioM(
-              color: pieColorList[1],
-              symbol: 'KMPI',
-              percentage: percen.toStringAsFixed(2)));
-          dataMap.update('KMPI',
-              (value) => value = double.parse(percen.toStringAsFixed(2)));
-        } else if (availableToken[i]['symbol'] == 'ATD') {
-          var percen = double.parse(availableToken[i]['balance']) / total * 100;
-          _portfolioM.add(PortfolioM(
-              color: pieColorList[1],
-              symbol: 'ATD',
-              percentage: percen.toStringAsFixed(2)));
-          dataMap.update('ATD',
-              (value) => value = double.parse(percen.toStringAsFixed(2)));
+              color: pieColorList[i],
+              symbol: availableToken[i]['symbol'],
+              percentage: '0' //percen.toStringAsFixed(2),
+              ));
+            //  dataMap.update(availableToken[i]['symbol'],
+            //       (value) => value = double.parse(percen.toStringAsFixed(2)));
+          }else{
+            if (availableToken[i]['symbol'] == 'SEL') {
+
+              percen = temp * 100;//double.parse(availableToken[i]['balance']) / total * 100;
+              _portfolioM.add(PortfolioM(
+                color: pieColorList[0],
+                symbol: 'SEL',
+                percentage: percen.toStringAsFixed(4),
+              ));
+              dataMap.update('SEL', (value) => value = double.parse(percen.toStringAsFixed(4)));
+            } else if (availableToken[i]['symbol'] == 'KMPI') {
+              percen = temp * 100; //double.parse(availableToken[i]['balance']) / total * 100;
+              _portfolioM.add(PortfolioM(
+                  color: pieColorList[1],
+                  symbol: 'KMPI',
+                  percentage: percen.toStringAsFixed(4)));
+              dataMap.update('KMPI',
+                  (value) => value = double.parse(percen.toStringAsFixed(4)));
+            } else if (availableToken[i]['symbol'] == 'ATD') {
+              percen = temp * 100; //double.parse(availableToken[i]['balance']) / total * 100;
+              // print("My percen ${double.parse(availableToken[i]['balance'])}");
+              _portfolioM.add(PortfolioM(
+                  color: pieColorList[1],
+                  symbol: 'ATD',
+                  percentage: percen.toStringAsFixed(4)));
+              dataMap.update('ATD',
+                  (value) => value = double.parse(percen.toStringAsFixed(4)));
+            }
+          }
         }
-      }
+
+      // for (int i = 0; i < availableToken.length; i++) {
+      //   if (availableToken[i]['symbol'] == 'SEL') {
+      //     // if ((double.parse(availableToken[i]['balance'])) == 0.0) {
+      //     //   percen = 100;
+      //     // } else {
+      //     percen = double.parse(availableToken[i]['balance']) / total * 100;
+      //     print("My percen ${double.parse(availableToken[i]['balance'])}");
+      //     _portfolioM.add(PortfolioM(
+      //       color: pieColorList[0],
+      //       symbol: 'SEL',
+      //       percentage: percen.toStringAsFixed(2),
+      //     ));
+      //     dataMap.update('SEL',
+      //         (value) => value = double.parse(percen.toStringAsFixed(2)));
+      //   } else if (availableToken[i]['symbol'] == 'KMPI') {
+      //     // percen = double.parse(availableToken[i]['balance']) / total * 100;
+      //     // print("My percen ${double.parse(availableToken[i]['balance'])}");
+      //     _portfolioM.add(PortfolioM(
+      //         color: pieColorList[1],
+      //         symbol: 'KMPI',
+      //         percentage: percen.toStringAsFixed(2)));
+      //     dataMap.update('KMPI',
+      //         (value) => value = double.parse(percen.toStringAsFixed(2)));
+      //   } else if (availableToken[i]['symbol'] == 'ATD') {
+      //     // percen = double.parse(availableToken[i]['balance']) / total * 100;
+      //     // print("My percen ${double.parse(availableToken[i]['balance'])}");
+      //     _portfolioM.add(PortfolioM(
+      //         color: pieColorList[1],
+      //         symbol: 'ATD',
+      //         percentage: percen.toStringAsFixed(2)));
+      //     dataMap.update('ATD',
+      //         (value) => value = double.parse(percen.toStringAsFixed(2)));
+      //   }
+      // }
     });
     notifyListeners();
   }

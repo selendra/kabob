@@ -39,7 +39,7 @@ class MyPieChartRow extends StatelessWidget{
 
           Expanded(
             child: MyText(
-              text: endText,
+              text: endText + " %",
               fontSize: 16.0,
             ),
           ),
