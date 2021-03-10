@@ -49,7 +49,7 @@ class ImportAccState extends State<ImportAcc> {
   Future<bool> validateMnemonic(String mnemonic) async {
     final res =
         await widget.importAccModel.sdk.api.keyring.validateMnemonic(mnemonic);
-    print(res);
+    //print(res);
     return res;
   }
 

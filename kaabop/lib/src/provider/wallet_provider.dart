@@ -21,9 +21,9 @@ class WalletProvider with ChangeNotifier {
   ];
 
   Map<String, double> dataMap = {
-    'SEL': 100,
-    'KMPI': 0,
-    'ATD': 0,
+    'SEL': 100.0,
+    'KMPI': 0.0,
+    'ATD': 0.0,
   };
 
   WalletSDK get sdk => _sdk;

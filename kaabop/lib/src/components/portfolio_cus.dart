@@ -5,7 +5,6 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/portfolio_c.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
-
 class PortFolioCus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -21,8 +20,8 @@ class PortFolioCus extends StatelessWidget {
                 width: 5,
                 height: 40,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: hexaCodeToColor(AppColors.secondary)),
+                    borderRadius: BorderRadius.circular(5),
+                    color: hexaCodeToColor(AppColors.secondary)),
               ),
               MyText(
                 text: 'Portfolio',
@@ -64,7 +63,7 @@ class PortFolioCus extends StatelessWidget {
                       width: 150,
                       height: 150,
                       child: Consumer<WalletProvider>(
-                        builder: (context,value,child){
+                        builder: (context, value, child) {
                           return PieChart(
                             ringStrokeWidth: 15,
                             dataMap: value.dataMap,
@@ -83,28 +82,29 @@ class PortFolioCus extends StatelessWidget {
                               ),
                             ),
                           );
-                        },                                                  
+                        },
                       ),
                     ),
                   ),
                 ),
                 Expanded(
                   child: Consumer<WalletProvider>(
-                    builder: (context,value,child){
-                      return  Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(value.portfolio.length, (index) {
-                      print("My value ${value.portfolio[index].percentage}");
-                        return MyPieChartRow(
-                          color: value.portfolio[index].color,
-                          centerText: value.portfolio[index].symbol,
-                          endText: value.portfolio[index].percentage,
-                        );
-                      }),                      
-                    );
-                  },                                           
-                ))
+                    builder: (context, value, child) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children:
+                            List.generate(value.portfolio.length, (index) {
+                          return MyPieChartRow(
+                            color: value.portfolio[index].color,
+                            centerText: value.portfolio[index].symbol,
+                            endText: value.portfolio[index].percentage,
+                          );
+                        }),
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ),

@@ -66,7 +66,11 @@ dependencies:
   syncfusion_flutter_charts:
   charts_flutter:
   fl_chart: ^0.12.0
+<<<<<<< HEAD
   pie_chart:
+=======
+  pie_chart: ^5.0.0
+>>>>>>> 4a1f83b606a912030d2df0c0ad0a384545157098
 
   #Indecator
   percent_indicator:
