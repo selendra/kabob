@@ -128,8 +128,10 @@ class AppState extends State<App> {
           .subscribeBalance(_createAccModel.keyring.current.address, (res) {
         setState(() {
           _createAccModel.balance = res;
-          _createAccModel.nativeBalance =
-              Fmt.balance(_createAccModel.balance.freeBalance, 18);
+          _createAccModel.nativeBalance = Fmt.balance(
+            _createAccModel.balance.freeBalance,
+            18,
+          );
 
           walletProvider.updateAvailableToken({
             'symbol': _createAccModel.nativeSymbol,
