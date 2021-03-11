@@ -68,3 +68,5 @@ android/key.properties
 
 # IntelliJ
 out/
+
+.vscode/
