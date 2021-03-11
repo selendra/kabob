@@ -134,7 +134,6 @@ class ServiceKeyring {
   }
 
   Future<Map> aCheckIn(String senderPubKey,String password,String aHash,String location)async{
-    print('js');
     final res = await serviceRoot.webView.evalJavascript('keyring.aCheckIn(aContract,"$senderPubKey","$password","$aHash","$location")');
     return res;
   }

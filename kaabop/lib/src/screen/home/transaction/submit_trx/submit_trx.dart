@@ -248,6 +248,7 @@ class SubmitTrxState extends State<SubmitTrx> {
     return mhash;
   }
 
+  
   void setPortfolio() {
     var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
@@ -259,13 +260,26 @@ class SubmitTrxState extends State<SubmitTrx> {
       });
     }
 
+    if (widget.sdkModel.contractModel.attendantM.isAContain) {
+      walletProvider.addAvaibleToken({
+        'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
+        'balance': widget.sdkModel.contractModel.attendantM.aBalance,
+      });
+    }
+
     walletProvider.availableToken.add({
       'symbol': widget.sdkModel.nativeSymbol,
       'balance': widget.sdkModel.nativeBalance,
     });
 
+    if (!widget.sdkModel.contractModel.isContain &&
+        !widget.sdkModel.contractModel.attendantM.isAContain) {
+      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+    }
+
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
+
 
   Future<void> _balanceOfByPartition() async {
     try {

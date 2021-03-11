@@ -5,14 +5,15 @@ import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/user.m.dart';
 
 class CreateAccModel {
-
   List mnemonicList;
   BalanceData balance;
   bool sdkReady = false;
   bool apiConnected = false;
   bool dataReady = false;
+  bool kmpiReady = false;
+  bool atdReady = false;
   String nativeBalance = '0';
-  String chainDecimal='';
+  String chainDecimal = '';
   String msgChannel;
   String kpiSupply = '';
   String password;
@@ -25,6 +26,5 @@ class CreateAccModel {
   String nativeOrg = 'SELENDRA';
   ContractModel contractModel = ContractModel();
   UserModel userModel = UserModel();
-  List<String> asset = ['KMPI','ATD'];
-  
+  List<String> asset = ['KMPI', 'ATD'];
 }

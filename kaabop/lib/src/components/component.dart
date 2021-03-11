@@ -234,7 +234,7 @@ class MyAppBar extends StatelessWidget {
       this.pTop = 0,
       this.pRight = 0,
       this.pBottom = 0,
-      this.margin = const EdgeInsets.fromLTRB(0, 16, 0, 0),
+      this.margin = const EdgeInsets.fromLTRB(0, 0, 0, 0),
       @required this.title,
       this.color,
       this.onPressed,

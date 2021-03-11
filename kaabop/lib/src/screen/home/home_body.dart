@@ -73,7 +73,7 @@ class HomeBody extends StatelessWidget {
         Expanded(
           child: Container(
             height: MediaQuery.of(context).size.height * 0.3,
-            child: Column(
+            child: ListView(
               children: [
                 GestureDetector(
                   onTap: () {

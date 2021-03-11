@@ -87,21 +87,14 @@ class AppState extends State<App> {
   }
 
   Future<void> getToken() async {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     final res = await _createAccModel.sdk.api
         .getAToken(_createAccModel.keyring.keyPairs[0].address);
 
     setState(() {
       _createAccModel.contractModel.attendantM.aBalance =
           BigInt.parse(res).toString();
+      _createAccModel.atdReady = true;
     });
-    if (_createAccModel.contractModel.attendantM.isAContain) {
-      walletProvider.updateAvailableToken({
-        'symbol': _createAccModel.contractModel.attendantM.aSymbol,
-        'balance': _createAccModel.contractModel.attendantM.aBalance,
-      });
-    }
-    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
   Future<void> readAtd() async {
@@ -132,16 +125,9 @@ class AppState extends State<App> {
             _createAccModel.balance.freeBalance,
             18,
           );
-
-          walletProvider.updateAvailableToken({
-            'symbol': _createAccModel.nativeSymbol,
-            'balance': _createAccModel.nativeBalance,
-          });
-
-          Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+          _createAccModel.dataReady = true;
         });
       });
-
       setState(() {
         _createAccModel.msgChannel = channel;
       });
@@ -157,6 +143,7 @@ class AppState extends State<App> {
         });
       }
     });
+  
   }
 
   Future<void> initContract() async {
@@ -171,10 +158,6 @@ class AppState extends State<App> {
         });
       }
     }
-
-    setState(() {
-      _createAccModel.dataReady = true;
-    });
   }
 
   Future<void> _contractSymbol() async {
@@ -203,7 +186,6 @@ class AppState extends State<App> {
   }
 
   Future<void> _balanceOfByPartition() async {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
     try {
       final res = await _createAccModel.sdk.api.balanceOfByPartition(
         _createAccModel.keyring.keyPairs[0].address,
@@ -214,13 +196,9 @@ class AppState extends State<App> {
       setState(() {
         _createAccModel.contractModel.pBalance =
             BigInt.parse(res['output']).toString();
-        walletProvider.addAvaibleToken({
-          'symbol': _createAccModel.contractModel.pTokenSymbol,
-          'balance': _createAccModel.contractModel.pBalance,
-        });
+        _createAccModel.kmpiReady = true;
       });
     } catch (e) {}
-    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
   @override

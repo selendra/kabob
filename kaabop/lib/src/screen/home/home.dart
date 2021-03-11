@@ -104,12 +104,43 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void handleConnectNode() async {
-    if (widget.sdkModel.apiConnected && widget.sdkModel.dataReady) {
-      await Future.delayed(Duration(milliseconds: 200), () {
-        status = null;
-      });
+    if (widget.sdkModel.contractModel.isContain &&
+        widget.sdkModel.contractModel.attendantM.isAContain) {
+      if (widget.sdkModel.apiConnected &&
+          widget.sdkModel.dataReady &&
+          widget.sdkModel.kmpiReady &&
+          widget.sdkModel.atdReady) {
+        await Future.delayed(Duration(milliseconds: 200), () {
+          status = null;
+        });
 
-      Navigator.of(dialogContext).pop();
+        Navigator.of(dialogContext).pop();
+        setPortfolio();
+      }
+    } else if (widget.sdkModel.contractModel.isContain ||
+        widget.sdkModel.contractModel.attendantM.isAContain) {
+      if (widget.sdkModel.apiConnected &&
+              widget.sdkModel.dataReady &&
+              widget.sdkModel.kmpiReady ||
+          widget.sdkModel.apiConnected &&
+              widget.sdkModel.dataReady &&
+              widget.sdkModel.atdReady) {
+        await Future.delayed(Duration(milliseconds: 200), () {
+          status = null;
+        });
+
+        Navigator.of(dialogContext).pop();
+        setPortfolio();
+      }
+    } else {
+      if (widget.sdkModel.apiConnected && widget.sdkModel.dataReady) {
+        await Future.delayed(Duration(milliseconds: 200), () {
+          status = null;
+        });
+
+        Navigator.of(dialogContext).pop();
+        setPortfolio();
+      }
     }
   }
 
@@ -124,8 +155,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       });
     }
   }
-
-  void resetState(String barcodeValue, String executeName) async {}
 
   Future<void> _balanceOf() async {
     try {
@@ -177,7 +206,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     }
 
     if (widget.sdkModel.contractModel.attendantM.isAContain) {
-      walletProvider.updateAvailableToken({
+      walletProvider.addAvaibleToken({
         'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
         'balance': widget.sdkModel.contractModel.attendantM.aBalance,
       });
@@ -216,8 +245,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     return Scaffold(
       key: _homeM.globalKey,
       drawer: Theme(
-          data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
-          child: Menu(_homeM.userData)),
+        data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
+        child: Menu(_homeM.userData),
+      ),
       appBar: homeAppBar(context),
       body: RefreshIndicator(
         onRefresh: onRefresh,

@@ -191,7 +191,7 @@ class _CheckInState extends State<CheckIn> {
     }
 
     if (widget.sdkModel.contractModel.attendantM.isAContain) {
-      walletProvider.updateAvailableToken({
+      walletProvider.addAvaibleToken({
         'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
         'balance': widget.sdkModel.contractModel.attendantM.aBalance,
       });

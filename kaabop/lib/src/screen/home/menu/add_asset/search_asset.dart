@@ -84,16 +84,6 @@ class SearchAsset extends SearchDelegate {
                 ),
               );
             })
-        // ? Container(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: portFolioItemRow(
-        //         sdkModel.contractModel.ptLogo,
-        //         sdkModel.contractModel.pTokenSymbol,
-        //         sdkModel.contractModel.pOrg,
-        //         sdkModel.contractModel.pBalance,
-        //         Colors.black,
-        //         added),
-        //   )
         : Container();
   }
 
@@ -108,7 +98,6 @@ class SearchAsset extends SearchDelegate {
                   ),
             )
             .toList();
-    //print(token.length);
     return searchProducts.isNotEmpty
         ? ListView.builder(
             itemCount: searchProducts.length,
@@ -129,73 +118,43 @@ class SearchAsset extends SearchDelegate {
                 ),
               );
             })
-        // ? Container(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: portFolioItemRow(
-        //         sdkModel.contractModel.ptLogo,
-        //         sdkModel.contractModel.pTokenSymbol,
-        //         sdkModel.contractModel.pOrg,
-        //         sdkModel.contractModel.pBalance,
-        //         Colors.black,
-        //         added),
-        //   )
         : Container();
   }
 
   Widget portFolioItemRow(String asset, String tokenSymbol, String org,
       String balance, Color color, Function added) {
     return rowDecorationStyle(
-        child: Row(
-      children: <Widget>[
-        Container(
-          width: 50,
-          height: 50,
-          padding: EdgeInsets.all(6),
-          margin: EdgeInsets.only(right: 20),
-          decoration: BoxDecoration(
-              color: color, borderRadius: BorderRadius.circular(40)),
-          child: Image.asset(asset),
-        ),
-        Expanded(
-          child: Container(
-            margin: const EdgeInsets.only(right: 16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                MyText(
-                  text: tokenSymbol,
-                  color: "#FFFFFF",
-                  fontSize: 18,
-                ),
-                MyText(text: org, fontSize: 15),
-              ],
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 50,
+            height: 50,
+            padding: EdgeInsets.all(6),
+            margin: EdgeInsets.only(right: 20),
+            decoration: BoxDecoration(
+                color: color, borderRadius: BorderRadius.circular(40)),
+            child: Image.asset(asset),
+          ),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(right: 16),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MyText(
+                    text: tokenSymbol,
+                    color: "#FFFFFF",
+                    fontSize: 18,
+                  ),
+                  MyText(text: org, fontSize: 15),
+                ],
+              ),
             ),
           ),
-        ),
-        // Expanded(
-        //   child: GestureDetector(
-        //     onTap: added,
-        //     child: Container(
-        //       margin: EdgeInsets.only(right: 16),
-        //       child: Column(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         crossAxisAlignment: CrossAxisAlignment.start,
-        //         children: [
-        //           MyText(
-        //               width: double.infinity,
-        //               text: 'Add', //portfolioData[0]["data"]['balance'],
-        //               color: AppColors.secondary,
-        //               fontSize: 18,
-        //               textAlign: TextAlign.right,
-        //               overflow: TextOverflow.ellipsis),
-        //         ],
-        //       ),
-        //     ),
-        //   ),
-        // ),
-      ],
-    ));
+        ],
+      ),
+    );
   }
 
   Widget rowDecorationStyle(

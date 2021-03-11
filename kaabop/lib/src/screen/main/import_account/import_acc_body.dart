@@ -87,7 +87,7 @@ class ImportAccBody extends StatelessWidget {
                         textColor: AppColors.whiteColorHexa,
                         maxLine: null,
                         onChanged: onChanged,
-                        inputAction: TextInputAction.done,
+                        //inputAction: TextInputAction.done,
                         onSubmit: onSubmit))
               ],
             ),

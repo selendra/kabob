@@ -121,7 +121,7 @@ class AddAssetState extends State<AddAsset> {
 
   Future<void> initAttendant() async {
     await widget.sdkModel.sdk.api.initAttendant();
-    //print(res);
+
     await getToken().then((value) {
       addATT();
     });
@@ -172,15 +172,12 @@ class AddAssetState extends State<AddAsset> {
 
       widget.sdkModel.contractModel.pBalance =
           BigInt.parse(res['output']).toString();
-    } catch (e) {
-      //print(e.toString());
-    }
+    } catch (e) {}
   }
 
   Future<void> getToken() async {
     final res = await widget.sdkModel.sdk.api
         .getAToken(widget.sdkModel.keyring.keyPairs[0].address);
-    print(res);
     widget.sdkModel.contractModel.attendantM.aBalance =
         BigInt.parse(res).toString();
   }
@@ -198,11 +195,7 @@ class AddAssetState extends State<AddAsset> {
 
   void setPortfolio() {
     var walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    // walletProvider.clearPortfolio();
-    // walletProvider.updateAvailableToken({
-    //   'symbol': widget.sdkModel.contractModel.pTokenSymbol,
-    //   'balance': widget.sdkModel.contractModel.pBalance,
-    // });
+
     walletProvider.addAvaibleToken({
       'symbol': widget.sdkModel.contractModel.pTokenSymbol,
       'balance': widget.sdkModel.contractModel.pBalance,
@@ -210,14 +203,6 @@ class AddAssetState extends State<AddAsset> {
 
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
-
-  // void onSubmit() {
-  //   if (_modelAsset.nodeAssetCode.hasFocus) {
-  //     FocusScope.of(context).requestFocus(_modelAsset.nodeIssuer);
-  //   } else if (_modelAsset.nodeIssuer.hasFocus) {
-  //     if (_modelAsset.enable) submitAsset(context);
-  //   }
-  // }
 
   Future enableAnimation() async {
     Navigator.pop(context);
@@ -231,9 +216,6 @@ class AddAssetState extends State<AddAsset> {
   }
 
   void submitSearch(String symbol) async {
-    // setState(() {
-    //   _modelAsset.loading = true;
-    // });
     if (symbol == 'KMPI') {
       await StorageServices.readBool('KMPI').then((value) async {
         if (!value) {
@@ -246,7 +228,6 @@ class AddAssetState extends State<AddAsset> {
     } else if (symbol == 'ATD') {
       await StorageServices.readBool('ATD').then((value) async {
         if (!value) {
-          print(value);
           addAssetInSearch(symbol);
         } else {
           await dialog(context, Text('This asset is already added!'),
