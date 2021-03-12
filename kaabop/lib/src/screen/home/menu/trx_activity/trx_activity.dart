@@ -18,27 +18,19 @@ class TrxActivityState extends State<TrxActivity> {
   bool isProgress = true;
   bool isLogout = false;
 
- 
   TxHistory _txHistoryModel = TxHistory();
-
- 
-
-
 
   @override
   void initState() {
-    
     AppServices.noInternetConnection(_globalKey);
     readTxHistory();
     // fetchHistoryUser();
     super.initState();
   }
 
- 
-
   Future<List<TxHistory>> readTxHistory() async {
     await StorageServices.fetchData('txhistory').then((value) {
-     // print('My value $value');
+      // print('My value $value');
 
       if (value != null) {
         _txHistoryModel.txHistoryList = value;
@@ -113,7 +105,6 @@ class TrxActivityState extends State<TrxActivity> {
     setState(() {
       isProgress = true;
     });
-    
   }
 
   final List<Tab> myTabs = <Tab>[
@@ -132,7 +123,7 @@ class TrxActivityState extends State<TrxActivity> {
           title: MyText(
             text: 'Transaction History',
             fontSize: 22.0,
-            color: "#FFFFF",
+            color: "#FFFFFF",
           ),
           bottom: TabBar(
             tabs: myTabs,

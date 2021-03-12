@@ -37,8 +37,12 @@ class _AccountState extends State<Account> {
   bool _loading = false;
 
   String onChanged(String value) {
-    _changePinKey.currentState.validate();
     _backupKey.currentState.validate();
+    return value;
+  }
+
+  String onChangedChangePin(String value) {
+    _changePinKey.currentState.validate();
     return value;
   }
 
@@ -47,8 +51,14 @@ class _AccountState extends State<Account> {
     return value;
   }
 
-  String onSubmit(String value) {
-    return value;
+  void onSubmit() async {
+    if (_backupKey.currentState.validate()) {
+      await getBackupKey(_pinController.text);
+    }
+  }
+
+  void onSubmitChangePin() async {
+    submitChangePin();
   }
 
   void submitBackUpKey() {
@@ -343,8 +353,8 @@ class _AccountState extends State<Account> {
                                     _newPinController,
                                     _oldNode,
                                     _newNode,
-                                    onChanged,
-                                    onSubmit,
+                                    onChangedChangePin,
+                                    onSubmitChangePin,
                                     submitChangePin,
                                   );
                                 },

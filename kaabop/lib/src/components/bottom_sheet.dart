@@ -14,70 +14,81 @@ class MyBottomSheet {
     CreateAccModel sdkModel,
   }) {
     return showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        builder: (context) {
-          return Container(
-            decoration:
-                BoxDecoration(color: hexaCodeToColor(AppColors.bgdColor)),
-            height: 153,
-            child: Column(
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: MyText(
-                    color: "#FFFFFF",
-                    top: 20,
-                    bottom: 33,
-                    text: "Transaction options",
-                  ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Container(
+          decoration: BoxDecoration(
+            color: hexaCodeToColor(AppColors.bgdColor),
+          ),
+          height: 153,
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: MyText(
+                  color: "#FFFFFF",
+                  top: 20,
+                  bottom: 33,
+                  text: "Transaction options",
                 ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: MyBottomSheetItem(
-                        subTitle: "Scan wallet",
-                        icon: "icons/qr_code.svg",
-                        action: () async {
-                          try {
-                            await TrxOptionMethod.scanQR(
-                              context,
-                              portfolioList,
-                              sdkModel,
-                            );
-                          } catch (e) {
-                            //  print(e.message);
-                          }
-                        },
-                      ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: MyBottomSheetItem(
+                      subTitle: "Scan wallet",
+                      icon: "icons/qr_code.svg",
+                      action: () async {
+                        try {
+                          await TrxOptionMethod.scanQR(
+                            context,
+                            portfolioList,
+                            sdkModel,
+                          );
+                        } catch (e) {
+                          //  print(e.message);
+                        }
+                      },
                     ),
-                    Expanded(
-                        child: MyBottomSheetItem(
-                            icon: "icons/form.svg",
-                            subTitle: "Fill wallet",
-                            action: () {
-                              TrxOptionMethod.navigateFillAddress(
-                                context,
-                                portfolioList,
-                                sdk,
-                                keyring,
-                                sdkModel,
-                              );
-                            })),
-                    Expanded(
-                        child: MyBottomSheetItem(
-                            icon: "icons/contact.svg",
-                            subTitle: "Invite friend",
-                            action: () {
-                              TrxOptionMethod.selectContact(
-                                  context, portfolioList);
-                            }))
-                  ],
-                )
-              ],
-            ),
-          );
-        });
+                  ),
+                  Expanded(
+                    child: MyBottomSheetItem(
+                      icon: "icons/form.svg",
+                      subTitle: "Fill wallet",
+                      action: () {
+                        TrxOptionMethod.navigateFillAddress(
+                          context,
+                          portfolioList,
+                          sdk,
+                          keyring,
+                          sdkModel,
+                        );
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: MyBottomSheetItem(
+                      icon: "icons/contact.svg",
+                      subTitle: "Invite friend",
+                      action: () async {
+                        // TrxOptionMethod.selectContact(
+                        //     context, portfolioList);
+                        await dialog(
+                          context,
+                          Text('Coming Soon !'),
+                          Text('Invite friend'),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<dynamic> notification({BuildContext context}) {

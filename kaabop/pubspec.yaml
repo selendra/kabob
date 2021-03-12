@@ -59,7 +59,7 @@ dependencies:
   qr_code_scanner: ^0.3.4
 
   # Share
-  share_extend: 
+  #share_extend: ^1.1.9
 
   # Chart
   flutter_circular_chart:
@@ -88,7 +88,7 @@ dependencies:
   device_preview:
   store_redirect:
   # fluttercontactpicker: ^3.1.0
-  # share: ^2.0.0
+  share: ^2.0.0
   flutter_sms: ^2.1.1
 
   # Apps Configuration

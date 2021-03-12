@@ -68,7 +68,7 @@ async function callContract(api: ApiPromise) {
 async function initAttendant(api: ApiPromise) {
   return new Promise(async (resolve, reject) => {
 
-    const attendentAddress = '5DjQjeWKfU5u3QC15HaMK8p5iiYEbvBLCaXgPHnqfxgDbAAU';
+    const attendentAddress = '5Cxf3wzQYc68rdatGHJ3QVWkE9hTkwLktwga4g96WstcqMZU';
     const abiJSONobj = (<any>ametadata);
     const abi = new Abi(abiJSONobj);
     const res = new ContractPromise(api, abi, attendentAddress);

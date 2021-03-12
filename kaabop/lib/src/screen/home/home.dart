@@ -175,10 +175,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   void toReceiveToken() async {
     await Navigator.pushNamed(context, ReceiveWallet.route);
-    if (Platform.isAndroid)
-      await AndroidPlatform.resetBrightness();
-    else
-      await IOSPlatform.resetBrightness(IOSPlatform.defaultBrightnessLvl);
+    // if (Platform.isAndroid)
+    //   await AndroidPlatform.resetBrightness();
+    // else
+    //   await IOSPlatform.resetBrightness(IOSPlatform.defaultBrightnessLvl);
   }
 
   void openMyDrawer() {
@@ -267,12 +267,14 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: FloatingActionButton(
           backgroundColor: hexaCodeToColor(AppColors.secondary)
               .withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
-          child: SvgPicture.asset('assets/icons/qr_code.svg',
-              width: 30,
-              height: 30,
-              color: !widget.sdkModel.apiConnected
-                  ? Colors.white.withOpacity(0.2)
-                  : Colors.white),
+          child: SvgPicture.asset(
+            'assets/icons/qr_code.svg',
+            width: 30,
+            height: 30,
+            color: !widget.sdkModel.apiConnected
+                ? Colors.white.withOpacity(0.2)
+                : Colors.white,
+          ),
           onPressed: () async {
             await TrxOptionMethod.scanQR(
               context,

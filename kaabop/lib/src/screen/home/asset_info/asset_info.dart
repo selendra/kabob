@@ -275,7 +275,7 @@ class _AssetInfoState extends State<AssetInfo> {
   @override
   void initState() {
     readTxHistory();
-    
+
     _globalKey = GlobalKey<ScaffoldState>();
     initATD();
     super.initState();
@@ -414,8 +414,8 @@ class _AssetInfoState extends State<AssetInfo> {
                                 context,
                                 widget.sdkModel,
                                 _method,
-                                _globalKey,
-                                _keyQrShare,
+                               // _globalKey,
+                              //  _keyQrShare,
                               );
                             },
                             color: hexaCodeToColor(AppColors.secondary),
@@ -424,7 +424,6 @@ class _AssetInfoState extends State<AssetInfo> {
                             child: MyText(
                               text: 'Recieved',
                               color: '#FFFFFF',
-                              //: FontWeight.bold,
                             ),
                           ),
                         ),

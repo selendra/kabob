@@ -41,7 +41,7 @@ class MyInputField extends StatelessWidget {
       this.icon,
       this.textColor = "#FFFFFF",
       this.validateField,
-      @required this.onChanged,
+       this.onChanged,
       @required this.onSubmit});
 
   Widget build(BuildContext context) {

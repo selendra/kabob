@@ -76,26 +76,31 @@ class AssetInfoC {
     BuildContext context,
     CreateAccModel sdkModel,
     GetWalletMethod _method,
-    GlobalKey<ScaffoldState> _globalKey,
-    GlobalKey _keyQrShare,
+   // GlobalKey<ScaffoldState> _globalKey,
+    // GlobalKey _keyQrShare,
     //GlobalKey<FormState> allowanceKeyForm,
   ) {
     showModalBottomSheet<void>(
       isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
+        final _keyQrShare = GlobalKey();
+        final _globalKey = GlobalKey<ScaffoldState>();
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            padding: const EdgeInsets.only(top: 16.0),
-            color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
-            child: ReceiveWalletBody(
-              name: sdkModel.userModel.username,
-              wallet: sdkModel.userModel.address,
-              method: _method,
-              globalKey: _globalKey,
-              keyQrShare: _keyQrShare,
+          child: Scaffold(
+            key: _globalKey,
+            body: Container(
+              height: MediaQuery.of(context).size.height,
+              padding: const EdgeInsets.only(top: 16.0),
+              color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
+              child: ReceiveWalletBody(
+                name: sdkModel.userModel.username,
+                wallet: sdkModel.userModel.address,
+                method: _method,
+                globalKey: _globalKey,
+                keyQrShare: _keyQrShare,
+              ),
             ),
           ),
         );

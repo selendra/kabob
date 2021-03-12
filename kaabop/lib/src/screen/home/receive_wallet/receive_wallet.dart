@@ -30,22 +30,24 @@ class ReceiveWalletState extends State<ReceiveWallet> {
     wallet = widget.createAccModel.keyring.keyPairs[0].address;
     _globalKey = GlobalKey<ScaffoldState>();
     AppServices.noInternetConnection(_globalKey);
-   // _method.platformChecker(context);
     super.initState();
   }
+    
+
 
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,
       body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: ReceiveWalletBody(
-            keyQrShare: _keyQrShare,
-            globalKey: _globalKey,
-            method: _method,
-            name: name,
-            wallet: wallet,
-          )),
+        height: MediaQuery.of(context).size.height,
+        child: ReceiveWalletBody(
+          keyQrShare: _keyQrShare,
+          globalKey: _globalKey,
+          method: _method,
+          name: name,
+          wallet: wallet,
+        ),
+      ),
     );
   }
 }

@@ -17,29 +17,24 @@ export 'package:connectivity/connectivity.dart';
 export 'package:store_redirect/store_redirect.dart';
 export 'package:shared_preferences/shared_preferences.dart';
 export 'package:package_info/package_info.dart';
-// export 'package:outline_material_icons/outline_material_icons.dart';
 export 'package:pinput/pin_put/pin_put.dart';
-//export 'package:barcode_scan/barcode_scan.dart';
-// export 'package:flutter_circular_chart/flutter_circular_chart.dart';
-//export 'package:image_cropper/image_cropper.dart';
+
 export 'package:autocomplete_textfield/autocomplete_textfield.dart';
-//export 'package:image_picker/image_picker.dart';
+
 export 'package:qr_flutter/qr_flutter.dart';
-// export 'package:firebase_remote_config/firebase_remote_config.dart';
-//export 'package:share/share.dart';
+
 export 'package:flare_flutter/flare_actor.dart';
 export 'package:flare_flutter/flare_controller.dart';
 export 'package:http_parser/http_parser.dart';
-//export 'package:flutter_image_compress/flutter_image_compress.dart';
+
 export 'package:flutter_svg/svg.dart';
 export 'package:flare_flutter/flare_controls.dart';
 export 'package:local_auth/local_auth.dart';
-export 'package:share_extend/share_extend.dart';
+
 export 'package:path_provider/path_provider.dart';
 export 'package:sms_autofill/sms_autofill.dart';
 export 'package:async/async.dart';
-// export 'package:line_icons/line_icons.dart';
-// export 'package:line_awesome_icons/line_awesome_icons.dart';
+
 export 'package:line_awesome_flutter/line_awesome_flutter.dart';
 export 'package:percent_indicator/percent_indicator.dart';
 export 'package:pinput/pin_put/pin_put.dart';
@@ -49,7 +44,7 @@ export 'package:wallet_apps/src/service/services.dart';
 export 'package:wallet_apps/theme/string.dart';
 export 'package:wallet_apps/src/utils/app_utils.dart';
 export 'package:wallet_apps/theme/color.dart';
-//export 'package:wallet_apps/src/bloc/bloc.dart';
+
 
 export 'package:wallet_apps/src/config/app_config.dart';
 export 'package:wallet_apps/src/config/size_config/size_config.dart';
@@ -138,7 +133,6 @@ export 'package:wallet_apps/src/screen/home/menu/add_asset/add_asset_body.dart';
 
 /* Main Screen */
 
-
 export 'package:wallet_apps/src/models/model_user_info.dart';
 export 'package:wallet_apps/src/models/sms_code_model.dart';
 export 'package:wallet_apps/src/models/createAccountM.dart';
@@ -166,7 +160,6 @@ export 'package:wallet_apps/src/models/password_m.dart';
 export 'package:wallet_apps/src/models/asset_m.dart';
 
 // Add Phone
-
 
 export 'package:wallet_apps/src/models/sms_code_model.dart';
 

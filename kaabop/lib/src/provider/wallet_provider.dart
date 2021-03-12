@@ -145,7 +145,7 @@ class WalletProvider with ChangeNotifier {
           } else if (availableToken[i]['symbol'] == 'ATD') {
             percen = temp * 100;
             _portfolioM.add(PortfolioM(
-                color: pieColorList[1],
+                color: pieColorList[2],
                 symbol: 'ATD',
                 percentage: percen.toStringAsFixed(4)));
             dataMap.update('ATD',

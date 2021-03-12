@@ -498,7 +498,6 @@ Widget textDisplay(String text, TextStyle textStyle) {
 
 /* ---------------------------------Camera and Gallery------------------------------------------------ */
 
-
 /* QR Code Generate Function */
 Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
   return Column(

@@ -379,7 +379,6 @@ class MyBottomAppBar extends StatelessWidget {
                         await MyBottomSheet().trxOptions(
                             context: context,
                             portfolioList: homeM.portfolioList,
-                           
                             sdk: sdkModel.sdk,
                             keyring: sdkModel.keyring,
                             sdkModel: sdkModel);
