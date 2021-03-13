@@ -133,12 +133,20 @@ class ServiceKeyring {
     return res;
   }
 
+  Future<Map> aCheckIn(String senderPubKey,String password,String aHash,String location)async{
+    final res = await serviceRoot.webView.evalJavascript('keyring.aCheckIn(aContract,"$senderPubKey","$password","$aHash","$location")');
+    return res;
+  }
+
+  Future<Map> aCheckOut(String senderPubKey,String password,String aHash,String location)async{
+    final res = await serviceRoot.webView.evalJavascript('keyring.aCheckOut(aContract,"$senderPubKey","$password","$aHash","$location")');
+    return res;
+  }
+
   Future<Map> contractTranfer(String senderPubKey, String to, String value,
       String password, String hash) async {
     final res = await serviceRoot.webView.evalJavascript(
         'keyring.contractTransfer(apiContract,"$senderPubKey","$to","$value", "$password","$hash")');
-    
-    // print("service: $value");
 
     if (res != null) {
       return res;

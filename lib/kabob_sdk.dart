@@ -1,7 +1,6 @@
 library polkawallet_sdk;
 
 import 'dart:async';
-
 import 'package:polkawallet_sdk/api/api.dart';
 import 'package:polkawallet_sdk/service/index.dart';
 import 'package:polkawallet_sdk/service/webViewRunner.dart';

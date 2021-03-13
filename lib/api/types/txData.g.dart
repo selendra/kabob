@@ -21,16 +21,16 @@ TxData _$TxDataFromJson(Map<String, dynamic> json) {
     ..success = json['success'] as bool;
 }
 
-Map<String, dynamic> _$TxDataToJson(TxData instance) => <String, dynamic>{
-      'block_num': instance.blockNum,
-      'block_timestamp': instance.blockTimestamp,
-      'account_id': instance.accountId,
-      'call_module': instance.module,
-      'call_module_function': instance.call,
-      'extrinsic_hash': instance.hash,
-      'extrinsic_index': instance.txNumber,
-      'fee': instance.fee,
-      'params': instance.params,
-      'nonce': instance.nonce,
-      'success': instance.success,
-    };
+// Map<String, dynamic> _$TxDataToJson(TxData instance) => <String, dynamic>{
+//       'block_num': instance.blockNum,
+//       'block_timestamp': instance.blockTimestamp,
+//       'account_id': instance.accountId,
+//       'call_module': instance.module,
+//       'call_module_function': instance.call,
+//       'extrinsic_hash': instance.hash,
+//       'extrinsic_index': instance.txNumber,
+//       'fee': instance.fee,
+//       'params': instance.params,
+//       'nonce': instance.nonce,
+//       'success': instance.success,
+//     };
