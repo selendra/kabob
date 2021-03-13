@@ -4,7 +4,7 @@ import 'package:wallet_apps/index.dart';
 class CreateMnemonic extends StatefulWidget {
   final CreateAccModel accModel;
 
-  CreateMnemonic({this.accModel});
+  const CreateMnemonic({this.accModel});
 
   @override
   _CreateMnemonicState createState() => _CreateMnemonicState();
@@ -17,15 +17,16 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
     super.initState();
   }
 
-  void disableScreenShot() async {
+  Future<void> disableScreenShot() async {
     await FlutterScreenshotSwitcher.disableScreenshots();
   }
 
-  void enableScreenShot() async {
+  Future<void> enableScreenShot() async {
     await FlutterScreenshotSwitcher.enableScreenshots();
     Navigator.pop(context);
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BodyScaffold(
@@ -38,7 +39,7 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
               onPressed: enableScreenShot,
             ),
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
                   Align(
@@ -59,23 +60,27 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                   ),
 
                   // Display Mnemonic
-                  widget.accModel.mnemonic == null
-                      ? CircularProgressIndicator(
-                          backgroundColor: Colors.transparent,
-                          valueColor: AlwaysStoppedAnimation(
-                              hexaCodeToColor(AppColors.secondary)),
-                        )
-                      : Card(
-                          child: MyText(
-                              text: widget.accModel.mnemonic ?? '',
-                              textAlign: TextAlign.left,
-                              fontSize: 25,
-                              color: AppColors.secondary_text,
-                              fontWeight: FontWeight.bold,
-                              pLeft: 16,
-                              right: 16,
-                              top: 16,
-                              bottom: 16))
+                  if (widget.accModel.mnemonic == null)
+                    CircularProgressIndicator(
+                      backgroundColor: Colors.transparent,
+                      valueColor: AlwaysStoppedAnimation(
+                        hexaCodeToColor(AppColors.secondary),
+                      ),
+                    )
+                  else
+                    Card(
+                      child: MyText(
+                        text: widget.accModel.mnemonic ?? '',
+                        textAlign: TextAlign.left,
+                        fontSize: 25,
+                        color: AppColors.secondarytext,
+                        fontWeight: FontWeight.bold,
+                        pLeft: 16,
+                        right: 16,
+                        top: 16,
+                        bottom: 16,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -89,16 +94,20 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
               ),
             ),
             MyFlatButton(
-              edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
+              edgeMargin:
+                  const EdgeInsets.only(left: 66, right: 66, bottom: 16),
               textButton: AppText.next,
               action: () async {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ConfirmMnemonic(widget.accModel)));
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ConfirmMnemonic(
+                      widget.accModel,
+                    ),
+                  ),
+                );
               },
-            )
+            ),
           ],
         ),
       ),

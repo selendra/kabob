@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'dart:ui' as ui;
+import 'package:flutter/cupertino.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
 
@@ -27,16 +27,28 @@ Color hexaCodeToColor(String hexaCode) {
 }
 
 /* Transition Animation Fade Up And Down */
-Route transitionRoute(Widget child,
-    {offsetLeft: 0.0, offsetRight: 0.25, sigmaX: 10.0, sigmaY: 10.0}) {
+Route transitionRoute(
+  Widget child,
+  // ignore: type_annotate_public_apis
+  {
+  // ignore: type_annotate_public_apis
+  offsetLeft = 0.0,
+  // ignore: type_annotate_public_apis
+  offsetRight = 0.25,
+  // ignore: type_annotate_public_apis
+  sigmaX = 10.0,
+  // ignore: type_annotate_public_apis
+  sigmaY = 10.0,
+}) {
   return PageRouteBuilder(
       opaque: false,
       pageBuilder: (context, animation, secondaryAnimation) => child,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(offsetLeft, offsetRight);
-        var end = Offset.zero;
-        var curve = Curves.fastOutSlowIn;
-        var tween =
+        final begin = Offset(double.parse(offsetLeft.toString()),
+            double.parse(offsetRight.toString()));
+        final end = Offset.zero;
+        final curve = Curves.fastOutSlowIn;
+        final tween =
             Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         return SlideTransition(
             position: animation.drive(tween),
@@ -46,8 +58,8 @@ Route transitionRoute(Widget child,
                 color: Colors.white.withOpacity(0.1),
                 child: BackdropFilter(
                   filter: ui.ImageFilter.blur(
-                    sigmaX: sigmaX,
-                    sigmaY: sigmaY,
+                    sigmaX: double.parse(sigmaX.toString()),
+                    sigmaY: double.parse(sigmaY.toString()),
                   ),
                   child: child,
                 ),
@@ -60,14 +72,15 @@ Route transitionRoute(Widget child,
 TextField userTextField(
     TextEditingController inputEditor,
     FocusNode node,
-    Function sink,
+    void Function(String) sink,
     AsyncSnapshot snapshot,
+    // ignore: avoid_positional_boolean_parameters
     bool showInput,
     TextInputType inputType,
     TextInputAction inputAction) {
   return TextField(
     controller: inputEditor,
-    style: TextStyle(color: Colors.white),
+    style: const TextStyle(color: Colors.white),
     focusNode: node,
     obscureText: showInput,
     onChanged: sink,
@@ -76,15 +89,16 @@ TextField userTextField(
     decoration: InputDecoration(
       fillColor: Colors.black38,
       filled: true,
-      contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: size10),
-      labelStyle: TextStyle(color: Colors.white),
+      contentPadding:
+          const EdgeInsets.only(top: 15.0, bottom: 15.0, left: size10),
+      labelStyle: const TextStyle(color: Colors.white),
       /* Border side */
       border: errorOutline(),
       enabledBorder: myTextInputBorder(hexaCodeToColor(AppColors.borderColor)),
       focusedBorder: myTextInputBorder(hexaCodeToColor(AppColors.lightBlueSky)),
       /* Error Handler */
       focusedErrorBorder: errorOutline(),
-      errorText: snapshot.hasError ? snapshot.error : null,
+      errorText: snapshot.hasError ? snapshot.error.toString() : null,
     ),
   );
 }
@@ -93,16 +107,13 @@ TextField userTextField(
 
 OutlineInputBorder errorOutline() {
   /* User Error Input Outline Border */
-  return OutlineInputBorder(borderSide: BorderSide(color: Colors.red));
+  return const OutlineInputBorder(borderSide: BorderSide(color: Colors.red));
 }
 
 /* Button shadow */
 BoxShadow shadow(Color hexaCode, double blurRadius, double spreadRadius) {
   return BoxShadow(
-      color: hexaCode,
-      blurRadius: blurRadius,
-      spreadRadius: spreadRadius,
-      offset: Offset(0, 0));
+      color: hexaCode, blurRadius: blurRadius, spreadRadius: spreadRadius);
 }
 
 Widget customFlatButton(
@@ -122,23 +133,24 @@ Widget customFlatButton(
     height: 50.0,
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(size5), boxShadow: [boxShadow]),
+    // ignore: deprecated_member_use
     child: FlatButton(
-        color: hexaCodeToColor(buttonColor),
-        disabledTextColor: Colors.black54,
-        disabledColor: Colors.grey[700],
-        focusColor: hexaCodeToColor("#83B6BD"),
-        textColor: Colors.white,
-        child: Text(
-          textButton,
-          style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
-        ),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(size5)),
-        onPressed: action == null
-            ? null
-            : () {
-                action(context);
-              }),
+      onPressed: action == null
+          ? null
+          : () {
+              action(context);
+            },
+      color: hexaCodeToColor(buttonColor),
+      disabledTextColor: Colors.black54,
+      disabledColor: Colors.grey[700],
+      focusColor: hexaCodeToColor("#83B6BD"),
+      textColor: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(size5)),
+      child: Text(
+        textButton,
+        style: TextStyle(fontSize: fontSize, fontWeight: fontWeight),
+      ),
+    ),
   );
 }
 
@@ -163,9 +175,9 @@ BoxDecoration scaffoldBGColor(String color1, String color2) {
 
 Widget scaffoldBGDecoration(
     {double top = 16.0,
-    double right: 16.0,
-    double bottom: 16.0,
-    double left: 16.0,
+    double right = 16.0,
+    double bottom = 16.0,
+    double left = 16.0,
     Widget child}) {
   return Container(
     width: double.infinity,
@@ -183,7 +195,7 @@ Widget scaffoldBGDecoration(
 final Shader linearGradient = LinearGradient(colors: [
   hexaCodeToColor(AppColors.lightBlueSky),
   hexaCodeToColor(AppColors.greenColor)
-]).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+]).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 
 BoxDecoration signOutColor() {
   return BoxDecoration(
@@ -199,9 +211,10 @@ BoxDecoration signOutColor() {
 /* -----------------------------------Dialog Result--------------------------------------------------- */
 
 /* Dialog of response from server */
-Future dialog(BuildContext context, var text, var title,
+// ignore: type_annotate_public_apis
+Future dialog(BuildContext context, Widget text, Widget title,
     {Widget action, Color bgColor}) async {
-  var result = await showDialog(
+  final result = await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -209,17 +222,17 @@ Future dialog(BuildContext context, var text, var title,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           title: Align(
-            alignment: Alignment.center,
             child: title,
           ),
           content: Padding(
-            padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
             child: text,
           ),
           actions: <Widget>[
+            // ignore: deprecated_member_use
             FlatButton(
-              child: Text('Close'),
               onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
             ),
             action
           ],
@@ -228,9 +241,9 @@ Future dialog(BuildContext context, var text, var title,
   return result;
 }
 
-Future dialogSuccess(BuildContext context, var text, var title,
+Future dialogSuccess(BuildContext context, Widget text, Widget title,
     {Widget action, Color bgColor}) async {
-  var result = await showDialog(
+  final result = await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -239,11 +252,10 @@ Future dialogSuccess(BuildContext context, var text, var title,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           title: Align(
-            alignment: Alignment.center,
             child: title,
           ),
           content: Padding(
-            padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
             child: text,
           ),
           actions: <Widget>[action],
@@ -262,14 +274,13 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
           text: 'Transaction Detail',
           fontWeight: FontWeight.bold,
         )),
-        content: Container(
+        content: SizedBox(
           height: MediaQuery.of(context).size.height / 3,
           width: MediaQuery.of(context).size.width * 0.8,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   MyText(
                     text: 'Date: ',
@@ -277,7 +288,7 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                   ),
                   Expanded(
                       child: MyText(
-                    text: '${txHistory.date}',
+                    text: txHistory.date,
                     textAlign: TextAlign.start,
                     fontSize: 14.0,
                     overflow: TextOverflow.ellipsis,
@@ -285,7 +296,6 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   MyText(
                     text: 'Destination: ',
@@ -293,7 +303,7 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                   ),
                   Expanded(
                       child: MyText(
-                    text: '${txHistory.destination}',
+                    text: txHistory.destination,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
                     fontSize: 14.0,
@@ -301,7 +311,6 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   MyText(
                     text: 'Sender: ',
@@ -309,7 +318,7 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                   ),
                   Expanded(
                       child: MyText(
-                    text: '${txHistory.sender}',
+                    text: txHistory.sender,
                     textAlign: TextAlign.start,
                     fontSize: 14.0,
                     overflow: TextOverflow.ellipsis,
@@ -317,7 +326,6 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   MyText(
                     text: 'Organization: ',
@@ -325,7 +333,7 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                   ),
                   Expanded(
                       child: MyText(
-                    text: '${txHistory.org}',
+                    text: txHistory.org,
                     textAlign: TextAlign.start,
                     fontSize: 14.0,
                     overflow: TextOverflow.ellipsis,
@@ -333,7 +341,6 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   MyText(
                     text: 'Amount: ',
@@ -341,26 +348,13 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
                   ),
                   Expanded(
                       child: MyText(
-                    text: '${txHistory.amount}',
+                    text: txHistory.amount,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
                     fontWeight: FontWeight.bold,
                   )),
                 ],
               ),
-
-              // MyText(
-              //   text: 'Destination ${txHistory.date}',
-              // ),
-              // MyText(
-              //   text: 'Sender ${txHistory.date}',
-              // ),
-              // MyText(
-              //   text: 'Fee ${txHistory.date}',
-              // ),
-              // MyText(
-              //   text: 'Amount ${txHistory.date}',
-              // ),
             ],
           ),
         ),
@@ -369,14 +363,14 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
   );
 }
 
-Widget textMessage({String text: "Message", fontSize: 20.0}) {
+Widget textMessage({String text = "Message", double fontSize = 20.0}) {
   return FittedBox(
     child: Text(text,
         style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w600)),
   );
 }
 
-Widget textAlignCenter({String text: ""}) {
+Widget textAlignCenter({String text = ""}) {
   return Text(text, textAlign: TextAlign.center);
 }
 
@@ -386,19 +380,19 @@ void noInternet(BuildContext context) {
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-            title: Text('No internet'),
-            content: Text("You're not connect to network"),
+            title: const Text('No internet'),
+            content: const Text("You're not connect to network"),
             actions: [
               CupertinoDialogAction(
                 isDefaultAction: true,
-                child: Text('Close'),
                 onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Close'),
               )
             ]);
       });
 }
 
-blurBackgroundDecoration(BuildContext context, dynamic screen) {
+Future<void> blurBackgroundDecoration(BuildContext context, Widget screen) {
   return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -441,11 +435,13 @@ Widget progress({String content}) {
                 backgroundColor: Colors.transparent,
                 valueColor: AlwaysStoppedAnimation(
                     hexaCodeToColor(AppColors.lightBlueSky))),
-            content == null
-                ? Container()
-                : Padding(
-                    child: textScale(text: content, hexaColor: "#FFFFFF"),
-                    padding: EdgeInsets.only(bottom: 10.0, top: 16.0)),
+            if (content == null)
+              Container()
+            else
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0, top: 16.0),
+                child: textScale(text: content, hexaColor: "#FFFFFF"),
+              ),
           ],
         )
       ],
@@ -454,7 +450,7 @@ Widget progress({String content}) {
 }
 
 Future<void> dialogLoading(BuildContext context, {String content}) {
-  showDialog(
+  return showDialog(
       barrierDismissible: false,
       context: context,
       builder: (context) {
@@ -463,8 +459,6 @@ Future<void> dialogLoading(BuildContext context, {String content}) {
           child: progress(content: content),
         );
       });
-
-  return null;
 }
 
 Widget logoSize(
@@ -501,11 +495,10 @@ Widget textDisplay(String text, TextStyle textStyle) {
 /* QR Code Generate Function */
 Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
   return Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
       Container(
-          margin: EdgeInsets.only(bottom: 36.0),
+          margin: const EdgeInsets.only(bottom: 36.0),
           child: MyText(
             text: 'Wallet',
             fontSize: 20.0,
@@ -514,7 +507,7 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
       Container(
           decoration: BoxDecoration(
               border: Border.all(
-                  width: 2, color: hexaCodeToColor(AppColors.secondary_text)),
+                  width: 2, color: hexaCodeToColor(AppColors.secondarytext)),
               borderRadius: BorderRadius.circular(6),
               color: Colors.white),
           width: 300.0,
@@ -524,7 +517,7 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
             foregroundColor: Colors.black,
             embeddedImage: AssetImage(logoName),
             embeddedImageStyle: QrEmbeddedImageStyle(
-              size: Size(70, 70),
+              size: const Size(70, 70),
             ),
             // version: QrVersions.auto,
             data: wallet,
@@ -535,25 +528,39 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
 
 Widget textNotification(String text, BuildContext context) {
   return Align(
-    alignment: Alignment.center,
-    child: Text(text,
-        style: TextStyle(
-            color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.w300)),
+    child: Text(
+      text,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 20.0,
+        fontWeight: FontWeight.w300,
+      ),
+    ),
   );
 }
 
 /*----------------------------------------------- Field Icons trigger Widget ----------------------------------------------------- */
 Widget fieldPicker(BuildContext context, String labelText, String widgetName,
     IconData icons, dynamic _model, dynamic method) {
-  return Container(
-      child: Column(
+  return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       InkWell(
+        onTap: () {
+          if (widgetName == "fillDocsScreen") {
+            method(labelText);
+          } else {
+            method();
+          }
+        },
         /* Text Field*/
         child: Container(
-          padding:
-              EdgeInsets.only(top: 23.0, bottom: 23.0, left: 26.0, right: 26.0),
+          padding: const EdgeInsets.only(
+            top: 23.0,
+            bottom: 23.0,
+            left: 26.0,
+            right: 26.0,
+          ),
           decoration: BoxDecoration(
               color: hexaCodeToColor("#FFFFFF").withOpacity(0.1),
               borderRadius: BorderRadius.circular(size5)),
@@ -562,7 +569,7 @@ Widget fieldPicker(BuildContext context, String labelText, String widgetName,
               Expanded(
                 child: Text(
                   labelText,
-                  style: TextStyle(color: Colors.white, fontSize: 18.0),
+                  style: const TextStyle(color: Colors.white, fontSize: 18.0),
                 ),
               ),
               Icon(
@@ -572,15 +579,9 @@ Widget fieldPicker(BuildContext context, String labelText, String widgetName,
             ],
           ),
         ),
-        onTap: () {
-          if (widgetName == "fillDocsScreen")
-            method(labelText);
-          else
-            method();
-        },
       )
     ],
-  ));
+  );
 }
 
 Widget inputField(
@@ -598,7 +599,7 @@ Widget inputField(
     TextEditingController controller,
     FocusNode focusNode,
     IconButton icon,
-    Function validateField,
+    String Function(String) validateField,
     Function onChanged,
     Function action}) {
   return TextFormField(
@@ -619,7 +620,7 @@ Widget inputField(
                 ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
                 : hexaCodeToColor("#ffffff")),
         prefixText: prefixText,
-        prefixStyle: TextStyle(color: Colors.white, fontSize: 18.0),
+        prefixStyle: const TextStyle(color: Colors.white, fontSize: 18.0),
         /* Prefix Text */
         filled: true,
         fillColor: hexaCodeToColor("#FFFFFF").withOpacity(0.1),
@@ -634,16 +635,18 @@ Widget inputField(
         /* Default Focuse Border Color*/
         focusColor: hexaCodeToColor("#ffffff"),
         /* Border Color When Focusing */
-        contentPadding: EdgeInsets.all(23), // No Content Padding = -10.0 px
+        contentPadding:
+            const EdgeInsets.all(23), // No Content Padding = -10.0 px
         suffixIcon: icon),
     inputFormatters: textInputFormatter,
     /* Limit Length Of Text Input */
     onChanged: (valueChange) {
       if (widgetName == "loginSecondScreen" ||
-          widgetName == "signUpFirstScreen")
+          widgetName == "signUpFirstScreen") {
         onChanged(labelText, valueChange);
-      else
+      } else {
         onChanged(valueChange);
+      }
     },
     onFieldSubmitted: (value) {
       action(context);
@@ -651,20 +654,19 @@ Widget inputField(
   );
 }
 
-Widget customDropDown(String label, List list, dynamic _model,
+Widget customDropDown(String label, List<Map<String,dynamic>> list, dynamic _model,
     Function changeValue, PopupMenuItem Function(Map<String, dynamic>) item) {
   /* Custom DropDown */
   return Container(
-    padding: EdgeInsets.only(top: 11.0, bottom: 11.0, left: 26.0, right: 14.0),
+    padding: const EdgeInsets.only(
+      top: 11.0,
+      bottom: 11.0,
+      left: 26.0,
+      right: 14.0,
+    ),
     decoration: BoxDecoration(
       color: hexaCodeToColor(AppColors.cardColor),
       borderRadius: BorderRadius.circular(size5),
-      // border: Border.all(
-      //     width: 1,
-      //     color: label == "Gender"
-      //         ? Colors.transparent
-      //         : hexaCodeToColor("#FFFFFF")
-      //             .withOpacity(0.3)) /* Control Border Gender Color */
     ),
     child: Row(
       children: <Widget>[
@@ -679,11 +681,11 @@ Widget customDropDown(String label, List list, dynamic _model,
               canvasColor: hexaCodeToColor("#FFFFFF").withOpacity(0.1)),
           child: PopupMenuButton(
             offset: Offset.zero,
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             onSelected: (index) {
               changeValue(index);
             },
-            icon: Icon(
+            icon:const Icon(
               Icons.keyboard_arrow_down,
               color: Colors.white,
             ),
@@ -706,10 +708,11 @@ Widget textButton(
     String textColor,
     String text,
     EdgeInsets padding = const EdgeInsets.all(13),
-    Function onTap,
+    void Function() onTap,
     double fontSize = 18.0,
     FontWeight fontWeight = FontWeight.w400}) {
   return InkWell(
+    onTap: onTap,
     child: Padding(
       padding: padding,
       child: textScale(
@@ -720,7 +723,6 @@ Widget textButton(
           fit: BoxFit.fill,
           fontWeight: fontWeight),
     ),
-    onTap: onTap,
   );
 }
 
@@ -746,7 +748,7 @@ Widget textScale(
 
 Widget textDropDown(String text) {
   /* List Drop Down Text */
-  return Align(alignment: Alignment.center, child: Text(text));
+  return Align( child: Text(text));
 }
 
 Widget drawerText(String text, Color colors, double fontSize) {
@@ -757,7 +759,7 @@ Widget drawerText(String text, Color colors, double fontSize) {
 }
 
 Widget warningTitleDialog() {
-  return Text(
+  return const  Text(
     'Oops...',
     style: TextStyle(fontWeight: FontWeight.bold),
   );

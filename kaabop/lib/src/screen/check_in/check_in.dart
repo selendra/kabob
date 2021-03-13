@@ -14,7 +14,7 @@ import '../../provider/wallet_provider.dart';
 class CheckIn extends StatefulWidget {
   final CreateAccModel sdkModel;
   final String qrRes;
-  CheckIn(this.sdkModel, {this.qrRes = ''});
+  const CheckIn(this.sdkModel, {this.qrRes = ''});
   static const route = '/checkin';
   @override
   _CheckInState createState() => _CheckInState();
@@ -25,7 +25,7 @@ class _CheckInState extends State<CheckIn> {
   FlareControls flareController = FlareControls();
   String _location;
 
-  List list = [
+  List<Map<String, String>> list = [
     {'status': 'Check In'},
     {'status': 'Check Out'}
   ];
@@ -37,7 +37,7 @@ class _CheckInState extends State<CheckIn> {
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            list["status"],
+            list["status"].toString(),
           ),
         ));
   }
@@ -48,16 +48,17 @@ class _CheckInState extends State<CheckIn> {
     });
   }
 
-  void onChanged(String value) {
+  String onChanged(String value) {
     if (_checkInModel.hashNode.hasFocus && value.isNotEmpty) {
       _checkInModel.checkInKey.currentState.validate();
       setState(() {
         _checkInModel.isEnable = true;
       });
     }
+    return null;
   }
 
-  void _getCurrentLocation() async {
+  Future<void> _getCurrentLocation() async {
     final geoLocator = Geolocator()..forceAndroidLocationManager;
     geoLocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
@@ -70,72 +71,21 @@ class _CheckInState extends State<CheckIn> {
         addressName(LatLng(position.latitude, position.longitude));
       }
     });
-
-    // if (_isLive) {
-    //   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
-    //   geolocator
-    //       .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-    //       .then((Position position) {
-    //     if (mounted) {
-    //       setState(() {
-    //         _currentPosition = position;
-    //         animateMove(
-    //             LatLng(_currentPosition.latitude, _currentPosition.longitude),
-    //             kDefaultMaxZoom - 2);
-    //         addressName(
-    //             LatLng(_currentPosition.latitude, _currentPosition.longitude));
-
-    //         markers.add(Marker(
-    //           point:
-    //               LatLng(_currentPosition.latitude, _currentPosition.longitude),
-    //           builder: (context) => Container(
-    //             child: Icon(
-    //               Icons.location_on,
-    //               color: kDefaultColor,
-    //               size: 50,
-    //             ),
-    //           ),
-    //         ));
-    //       });
-    //     }
-    //   }).catchError((e) {});
-    // } else {
-    //   markers.removeLast();
-    //   // _key.currentState.contract();
-    //   animateMove(kDefualtLatLng, kDefaultMapZoom);
-    // }
-    //if (!mounted) return;
   }
 
-  addressName(LatLng place) async {
-    List<Placemark> placemark = await Geolocator()
+  Future<void> addressName(LatLng place) async {
+    final List<Placemark> placemark = await Geolocator()
         .placemarkFromCoordinates(place.latitude, place.longitude);
 
     setState(() {
-      _checkInModel.locationController.text = placemark[0].thoroughfare +
-          ", " +
-          placemark[0].subLocality +
-          ", " +
-          placemark[0].administrativeArea;
+      _checkInModel.locationController.text =
+          "${placemark[0].thoroughfare}, ${placemark[0].subLocality}, ${placemark[0].administrativeArea}";
       if (_checkInModel.hashController.text.isNotEmpty) {
         setState(() {
           _checkInModel.isEnable = true;
         });
       }
     });
-
-    for (var i in placemark) {
-      //print(i.administrativeArea);
-      //print(i.name);
-    }
-    //pattern for saving address throughtfare(st) +
-    //subadministrative(sangkat) + sublocality(khan) + locality(province or city)
-
-    // setState(() {
-    //   animateMove(place, 15.0);
-    //   locate = placemark[0].thoroughfare + placemark[0].subLocality;
-    // });
-    //_key.currentState.expand();
   }
 
   Future enableAnimation() async {
@@ -147,7 +97,7 @@ class _CheckInState extends State<CheckIn> {
     getAStatus();
     setPortfolio();
     flareController.play('Checkmark');
-    Timer(Duration(milliseconds: 2500), () {
+    Timer(const Duration(milliseconds: 2500), () {
       Navigator.pushNamedAndRemoveUntil(
           context, Home.route, ModalRoute.withName('/'));
     });
@@ -155,7 +105,7 @@ class _CheckInState extends State<CheckIn> {
 
   Future<String> dialogBox() async {
     /* Show Pin Code For Fill Out */
-    String _result = await showDialog(
+    final String _result = await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
@@ -167,20 +117,8 @@ class _CheckInState extends State<CheckIn> {
     return _result;
   }
 
-  void mqrRes(String value) {
-    // if (value != null && value != "null") {
-    //   setState(() {
-    //     _checkInModel.hashController.text = value;
-    //     if (_checkInModel.locationController.text.isNotEmpty) {
-    //       setState(() {
-    //         _checkInModel.isEnable = true;
-    //       });
-    //     }
-    //   });
-    // }
-  }
   void setPortfolio() {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
 
     if (widget.sdkModel.contractModel.pHash != '') {
@@ -226,8 +164,8 @@ class _CheckInState extends State<CheckIn> {
       if (res['status'] != null) {
         //print(res['status']);
         enableAnimation();
-      }else{
-         Navigator.pop(context);
+      } else {
+        Navigator.pop(context);
       }
     } catch (e) {
       Navigator.pop(context);
@@ -268,15 +206,15 @@ class _CheckInState extends State<CheckIn> {
 
       if (res['status'] != null) {
         enableAnimation();
-      }else{
-         Navigator.pop(context);
+      } else {
+        Navigator.pop(context);
       }
     } catch (e) {
       Navigator.pop(context);
     }
   }
 
-  void clickSend() async {
+  Future<void> clickSend() async {
     if (_checkInModel.checkInKey.currentState.validate()) {
       await dialogBox().then((value) {
         if (value != null && _location != null) {
@@ -313,32 +251,32 @@ class _CheckInState extends State<CheckIn> {
               onChanged,
               _getCurrentLocation,
               clickSend,
-              mqrRes,
               resetAssetsDropDown,
               list,
               item,
             ),
-            _checkInModel.isSuccess == false
-                ? Container()
-                : BackdropFilter(
-                    // Fill Blur Background
-                    filter: ImageFilter.blur(
-                      sigmaX: 5.0,
-                      sigmaY: 5.0,
+            if (_checkInModel.isSuccess == false)
+              Container()
+            else
+              BackdropFilter(
+                // Fill Blur Background
+                filter: ImageFilter.blur(
+                  sigmaX: 5.0,
+                  sigmaY: 5.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: CustomAnimation.flareAnimation(
+                        flareController,
+                        "assets/animation/check.flr",
+                        "Checkmark",
+                      ),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: CustomAnimation.flareAnimation(
-                            flareController,
-                            "assets/animation/check.flr",
-                            "Checkmark",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),

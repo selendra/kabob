@@ -10,7 +10,7 @@ class AssetItem extends StatelessWidget {
   final Color color;
 
 
-  AssetItem(this.asset,this.tokenSymbol,this.org,this.balance,this.color);
+  const AssetItem(this.asset,this.tokenSymbol,this.org,this.balance,this.color);
   @override
   Widget build(BuildContext context) {
     return rowDecorationStyle(

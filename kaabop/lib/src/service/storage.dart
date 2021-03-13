@@ -1,6 +1,7 @@
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
 
+// ignore: avoid_classes_with_only_static_members
 class StorageServices {
   static String _decode;
   static SharedPreferences _preferences;
@@ -13,20 +14,17 @@ class StorageServices {
   }
 
   static Future<SharedPreferences> addMoreData(
-      dynamic _data, String _path) async {
+      Map<String, dynamic> _data, String _path) async {
     List<Map<String, dynamic>> ls = [];
     _preferences = await SharedPreferences.getInstance();
-    //print(_preferences.containsKey(_path));
     if (_preferences.containsKey(_path)) {
-      var _dataString = _preferences.getString(_path);
-      //print("Get string $_dataString");
-      ls = List<Map<String, dynamic>>.from(jsonDecode(_dataString));
+      final _dataString = _preferences.getString(_path);
+
+      ls = List<Map<String, dynamic>>.from(jsonDecode(_dataString) as List);
       ls.add(_data);
     } else {
       ls.add(_data);
     }
-
-    //print("Contact adding $ls");
 
     _decode = jsonEncode(ls);
     _preferences.setString(_path, _decode);
@@ -35,43 +33,34 @@ class StorageServices {
 
   static Future<SharedPreferences> addTxHistory(
       TxHistory txHistory, String key) async {
-    List<TxHistory> txHistoryList = [];
+    final List<TxHistory> txHistoryList = [];
     _preferences = await SharedPreferences.getInstance();
-    //print(txHistory.symbol);
 
     await StorageServices.fetchData('txhistory').then((value) {
       //print('My value $value');
       if (value != null) {
-        for (var i in value) {
-          //print(i);
+        for (final i in value) {
           txHistoryList.add(TxHistory(
-            date: i['date'],
-            symbol: i['symbol'],
-            destination: i['destination'],
-            sender: i['sender'],
-            amount: i['amount'],
-            org: i['fee'],
+            date: i['date'].toString(),
+            symbol: i['symbol'].toString(),
+            destination: i['destination'].toString(),
+            sender: i['sender'].toString(),
+            amount: i['amount'].toString(),
+            org: i['fee'].toString(),
           ));
         }
         txHistoryList.add(txHistory);
-        //print('1 ${txHistory.symbol}');
       } else {
         txHistoryList.add(txHistory);
-        //print('2 ${txHistory.symbol}');
       }
     });
-
-    //print('3 ${txHistoryList[0].symbol}');
-
-    for (var i in txHistoryList) {
-      //print(i.symbol);
-    }
 
     await _preferences.setString(key, jsonEncode(txHistoryList));
 
     return _preferences;
   }
 
+  // ignore: avoid_positional_boolean_parameters
   static Future<void> saveBool(String key, bool value) async {
     _preferences = await SharedPreferences.getInstance();
     _preferences.setBool(key, value);
@@ -84,6 +73,7 @@ class StorageServices {
     return res ?? false;
   }
 
+  // ignore: avoid_positional_boolean_parameters
   static Future<void> saveBio(bool enable) async {
     _preferences = await SharedPreferences.getInstance();
     _preferences.setBool('bio', enable);
@@ -104,11 +94,11 @@ class StorageServices {
   static Future<dynamic> fetchData(String _path) async {
     _preferences = await SharedPreferences.getInstance();
 
-    var _data = _preferences.getString(_path);
-    // //print("Data $_data");
-    if (_data == null)
+    final _data = _preferences.getString(_path);
+
+    if (_data == null) {
       return null;
-    else {
+    } else {
       return json.decode(_data);
     }
   }
@@ -116,11 +106,5 @@ class StorageServices {
   static Future<void> removeKey(String path) async {
     _preferences = await SharedPreferences.getInstance();
     _preferences.remove(path);
-  }
-
-  static Future<String> fetchId(String _path) async {
-    _preferences = await SharedPreferences.getInstance();
-    _decode = jsonDecode(_preferences.getString(_path));
-    return _decode;
   }
 }

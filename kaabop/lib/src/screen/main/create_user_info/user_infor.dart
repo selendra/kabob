@@ -19,9 +19,9 @@ class MyUserInfo extends StatefulWidget {
 }
 
 class MyUserInfoState extends State<MyUserInfo> {
-  ModelUserInfo _userInfoM = ModelUserInfo();
+  final ModelUserInfo _userInfoM = ModelUserInfo();
 
-  MenuModel _menuModel = MenuModel();
+  final MenuModel _menuModel = MenuModel();
 
   LocalAuthentication _localAuth;
 
@@ -33,7 +33,7 @@ class MyUserInfoState extends State<MyUserInfo> {
     super.initState();
   }
 
-  void enableScreenshot() async {
+  Future<void> enableScreenshot() async {
     await FlutterScreenshotSwitcher.enableScreenshots();
   }
 
@@ -48,25 +48,25 @@ class MyUserInfoState extends State<MyUserInfo> {
   }
 
   Future<void> _subscribeBalance() async {
-    var walletProvider = Provider.of<WalletProvider>(context,listen: false);
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
     final channel = await widget.accModel.sdk.api.account
         .subscribeBalance(widget.accModel.keyring.current.address, (res) {
       widget.accModel.balance = res;
       widget.accModel.nativeBalance =
-          Fmt.balance(widget.accModel.balance.freeBalance, 18);
+          Fmt.balance(widget.accModel.balance.freeBalance.toString(), 18);
       walletProvider.addAvaibleToken({
         'symbol': widget.accModel.nativeSymbol,
         'balance': widget.accModel.nativeBalance,
       });
-        
-      Provider.of<WalletProvider>(context, listen: false).getPortfolio();
 
+      Provider.of<WalletProvider>(context, listen: false).getPortfolio();
     });
 
     widget.accModel.msgChannel = channel;
   }
 
-  void switchBiometric(bool switchValue) async {
+  // ignore: avoid_positional_boolean_parameters
+  Future<void> switchBiometric(bool switchValue) async {
     _localAuth = LocalAuthentication();
 
     await _localAuth.canCheckBiometrics.then((value) async {
@@ -101,7 +101,7 @@ class MyUserInfoState extends State<MyUserInfo> {
     try {
       // Trigger Authentication By Finger Print
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-          localizedReason: '', useErrorDialogs: true, stickyAuth: true);
+          localizedReason: '', stickyAuth: true);
     } on PlatformException catch (e) {}
     return _menuModel.authenticated;
   }
@@ -121,9 +121,10 @@ class MyUserInfoState extends State<MyUserInfo> {
     }
   }
 
-  void onChanged(String value) {
+  String onChanged(String value) {
     _userInfoM.formStateAddUserInfo.currentState.validate();
     validateAll();
+    return null;
   }
 
   String validateFirstName(String value) {
@@ -170,14 +171,15 @@ class MyUserInfoState extends State<MyUserInfo> {
         });
         validateConfirmPassword('not match');
       }
-    } else if (_userInfoM.enable)
+    } else if (_userInfoM.enable) {
       setState(() {
         enableButton(false);
       });
+    }
   }
 
   // Submit Profile User
-  void submitAcc() async {
+  Future<void> submitAcc() async {
     // Show Loading Process
     dialogLoading(context);
 
@@ -195,34 +197,34 @@ class MyUserInfoState extends State<MyUserInfo> {
               keyType: KeyType.mnemonic,
               acc: json,
               password: _userInfoM.confirmPasswordCon.text)
-          .then((value) async {
-        await StorageServices.setData(
-            _userInfoM.confirmPasswordCon.text, 'pass');
+          .then(
+        (value) async {
+          await StorageServices.setData(
+              _userInfoM.confirmPasswordCon.text, 'pass');
 
-        await _subscribeBalance();
+          await _subscribeBalance();
 
-        // if (widget.accModel.keyring.keyPairs.length != 0) {
-        //   await _contractSymbol();
-        //   await _getHashBySymbol().then((value) async {
-        //     await _balanceOf();
-        //   });
-        // }
-
-        // Close Loading Process
-        Navigator.pop(context);
-        enableScreenshot();
-        await dialogSuccess(context, Text("You haved imported successfully"),
-            Text('Congratulation'),
+          // Close Loading Process
+          Navigator.pop(context);
+          enableScreenshot();
+          await dialogSuccess(
+            context,
+            const Text("You haved imported successfully"),
+            const Text('Congratulation'),
+            // ignore: deprecated_member_use
             action: FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Home.route, ModalRoute.withName('/'));
-                },
-                child: Text('Continue')));
-      });
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Home.route, ModalRoute.withName('/'));
+              },
+              child: const Text('Continue'),
+            ),
+          );
+        },
+      );
     } catch (e) {
-      await dialog(context, Text(e.toString()), Text("Message"));
+      await dialog(context, Text(e.toString()), const Text("Message"));
     }
   }
 
@@ -233,8 +235,11 @@ class MyUserInfoState extends State<MyUserInfo> {
     );
   }
 
+  // ignore: avoid_positional_boolean_parameters
+  // ignore: use_setters_to_change_properties
   void enableButton(bool value) => _userInfoM.enable = value;
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _userInfoM.globalKey,

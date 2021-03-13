@@ -24,7 +24,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   LocalAuthentication _localAuth = LocalAuthentication();
 
-  MenuModel _menuModel = MenuModel();
+  final MenuModel _menuModel = MenuModel();
 
   @override
   void initState() {
@@ -34,7 +34,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   @override
   void dispose() {
-    /* Clear Everything When Pop Screen */
     _userInfoM.userNameCon.clear();
     _userInfoM.passwordCon.clear();
     _userInfoM.confirmPasswordCon.clear();
@@ -43,13 +42,13 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<void> _subscribeBalance() async {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
     final channel = await widget.importAccModel.sdk.api.account
         .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
       widget.importAccModel.balance = res;
       widget.importAccModel.nativeBalance =
-          Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
+          Fmt.balance(widget.importAccModel.balance.freeBalance.toString(), 18);
       walletProvider.addAvaibleToken({
         'symbol': widget.importAccModel.nativeSymbol,
         'balance': widget.importAccModel.nativeBalance,
@@ -161,9 +160,10 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     }
   }
 
-  void onChanged(String value) {
+  String onChanged(String value) {
     _userInfoM.formStateAddUserInfo.currentState.validate();
     validateAll();
+    return null;
   }
 
   String validateFirstName(String value) {
@@ -209,10 +209,11 @@ class ImportUserInfoState extends State<ImportUserInfo> {
           enableButton(true);
         });
       }
-    } else if (_userInfoM.enable)
+    } else if (_userInfoM.enable) {
       setState(() {
         enableButton(false);
       });
+    }
   }
 
   // Submit Profile User
@@ -230,26 +231,32 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     );
   }
 
+  // ignore: use_setters_to_change_properties
+  // ignore: avoid_positional_boolean_parameters
+  
   void enableButton(bool value) => _userInfoM.enable = value;
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _userInfoM.globalKey,
       body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: ImportUserInfoBody(
-              modelUserInfo: _userInfoM,
-              onSubmit: onSubmit,
-              onChanged: onChanged,
-              changeGender: changeGender,
-              validateFirstName: validateFirstName,
-              validatepassword: validatePassword,
-              validateConfirmPassword: validateConfirmPassword,
-              submitProfile: submitProfile,
-              popScreen: popScreen,
-              switchBio: switchBiometric,
-              menuModel: _menuModel,
-              item: item)),
+        height: MediaQuery.of(context).size.height,
+        child: ImportUserInfoBody(
+          modelUserInfo: _userInfoM,
+          onSubmit: onSubmit,
+          onChanged: onChanged,
+          changeGender: changeGender,
+          validateFirstName: validateFirstName,
+          validatepassword: validatePassword,
+          validateConfirmPassword: validateConfirmPassword,
+          submitProfile: submitProfile,
+          popScreen: popScreen,
+          switchBio: switchBiometric,
+          menuModel: _menuModel,
+          item: item,
+        ),
+      ),
     );
   }
 }

@@ -10,10 +10,10 @@ class PortfolioBody extends StatelessWidget {
 
   final PortfolioM portfolioM;
 
-  PortfolioBody({@required this.listData, @required this.portfolioM});
+  const PortfolioBody({@required this.listData, @required this.portfolioM});
 
+  @override
   Widget build(BuildContext context) {
-   
     return Column(
       children: [
         MyAppBar(
@@ -28,81 +28,94 @@ class PortfolioBody extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SvgPicture.asset('assets/no_data.svg', height: 200),
-              MyText(text: "There are no portfolio found")
+              const MyText(text: "There are no portfolio found")
             ],
           ))
         else
           Column(
             children: [
               Container(
-                margin:EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 16),
-                padding: EdgeInsets.only(left: 25, top: 25, bottom: 25),
+                margin: const EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  bottom: 16,
+                  top: 16,
+                ),
+                padding: const EdgeInsets.only(
+                  left: 25,
+                  top: 25,
+                  bottom: 25,
+                ),
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
-                    color: hexaCodeToColor(AppColors.cardColor),
-                    borderRadius: BorderRadius.circular(8)),
+                  color: hexaCodeToColor(AppColors.cardColor),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Expanded(
                       child: Align(
-                        alignment: Alignment.center,
                         child: SizedBox(
                           width: 150,
                           height: 150,
                           child: Consumer<WalletProvider>(
-                            builder: (context,value,child){
+                            builder: (context, value, child) {
                               return PieChart(
-                              ringStrokeWidth: 15,
-                              dataMap: value.dataMap,
-                              chartType: ChartType.ring,
-                              colorList: value.pieColorList,
-                              centerText: "100%",
-                              legendOptions: LegendOptions(
-                                showLegends: false,
-                              ),
-                              chartValuesOptions: ChartValuesOptions(
+                                ringStrokeWidth: 15,
+                                dataMap: value.dataMap,
+                                chartType: ChartType.ring,
+                                colorList: value.pieColorList,
+                                centerText: "100%",
+                                legendOptions: const LegendOptions(
+                                  showLegends: false,
+                                ),
+                                chartValuesOptions: ChartValuesOptions(
                                   showChartValues: false,
                                   showChartValueBackground: false,
                                   chartValueStyle: TextStyle(
-                                      color: hexaCodeToColor("#FFFFFF"),
-                                      fontSize: 16)),
+                                    color: hexaCodeToColor("#FFFFFF"),
+                                    fontSize: 16,
+                                  ),
+                                ),
                               );
-                            },                                                  
+                            },
                           ),
                         ),
                       ),
                     ),
                     Expanded(
                       child: Consumer<WalletProvider>(
-                        builder: (context,value,child){
+                        builder: (context, value, child) {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List.generate(value.portfolio.length,(index) {
-                              return MyPieChartRow(
-                                color: value.portfolio[index].color,
-                                centerText: value.portfolio[index].symbol,
-                                endText: value.portfolio[index].percentage,
-                              );
-                            }),
+                            children: List.generate(
+                              value.portfolio.length,
+                              (index) {
+                                return MyPieChartRow(
+                                  color: value.portfolio[index].color,
+                                  centerText: value.portfolio[index].symbol,
+                                  endText: value.portfolio[index].percentage,
+                                );
+                              },
+                            ),
                           );
-                        },                                                 
-                      ))
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
-
               Container(
                 height: 150,
-                margin: EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: 16),
                 child: Row(
                   children: [
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           MyText(bottom: 16, text: "Wallet"),
                           MyPercentText(
@@ -111,10 +124,11 @@ class PortfolioBody extends StatelessWidget {
                           LinearPercentIndicator(
                             alignment: MainAxisAlignment.center,
                             width: 100.0,
-                            lineHeight: 5.0,
                             percent: 0.5,
-                            backgroundColor: hexaCodeToColor(AppColors.cardColor),
-                            progressColor: hexaCodeToColor(AppColors.secondary_text),
+                            backgroundColor:
+                                hexaCodeToColor(AppColors.cardColor),
+                            progressColor:
+                                hexaCodeToColor(AppColors.secondarytext),
                             animation: true,
                           )
                         ],
@@ -127,18 +141,17 @@ class PortfolioBody extends StatelessWidget {
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          MyText(bottom: 16, text: "Market"),
+                          const MyText(bottom: 16, text: "Market"),
                           MyPercentText(
                             value: "0.0",
                           ),
                           LinearPercentIndicator(
                             alignment: MainAxisAlignment.center,
                             width: 100.0,
-                            lineHeight: 5.0,
                             percent: 0.5,
-                            backgroundColor: hexaCodeToColor(AppColors.cardColor),
+                            backgroundColor:
+                                hexaCodeToColor(AppColors.cardColor),
                             progressColor: hexaCodeToColor("#00FFF0"),
                             animation: true,
                           )
@@ -148,15 +161,16 @@ class PortfolioBody extends StatelessWidget {
                   ],
                 ),
               ),
-
               MyRowHeader(),
-
               Container(
-                constraints: BoxConstraints(minHeight: 100, maxHeight: 500),
-                child: MyColumnBuilder(data: listData),
-              )
+                constraints: const BoxConstraints(
+                  minHeight: 100,
+                  maxHeight: 500,
+                ),
+               // child: MyColumnBuilder(data: listData),
+              ),
             ],
-          )
+          ),
       ],
     );
   }

@@ -5,10 +5,9 @@ import 'package:wallet_apps/src/screen/home/contact_book/contact_book_body.dart'
 import 'package:wallet_apps/src/screen/home/contact_book/edit_contact/edit_contact.dart';
 
 class ContactBook extends StatefulWidget {
-
   final CreateAccModel sdkModel;
 
-  ContactBook(this.sdkModel);
+  const ContactBook(this.sdkModel);
 
   static const String route = '/contactList';
 
@@ -17,61 +16,55 @@ class ContactBook extends StatefulWidget {
 }
 
 class _ContactBookState extends State<ContactBook> {
-
-  ContactBookModel _contactBookModel = ContactBookModel();
+  final ContactBookModel _contactBookModel = ContactBookModel();
 
   List<Map<String, dynamic>> contactData = [];
 
   Future<void> getContact() async {
     try {
       _contactBookModel.contactBookList = [];
-      var value = await StorageServices.fetchData('contactList');
+      final value = await StorageServices.fetchData('contactList');
 
-      //print("Get from storage $value");
-      if(value == null) {
+      if (value == null) {
         _contactBookModel.contactBookList = null;
-        //print("My contact");
-      }
-      else {
-        //print("Ke contact");
-        for(var i in value){
+      } else {
+        for (final i in value) {
           _contactBookModel.contactBookList.add(
             ContactBookModel.initList(
-              contactNum: i['phone'], 
-              username: i['username'], 
-              address: i['address'], 
-              memo: i['memo'],
+              contactNum: i['phone'].toString(),
+              username: i['username'].toString(),
+              address: i['address'].toString(),
+              memo: i['memo'].toString(),
             ),
           );
-
-        } 
+        }
       }
       setState(() {});
     } catch (e) {
-      await dialog(context, Text("Cannot add contact"), Text("Message"));
+      await dialog(
+        context,
+        const Text("Cannot add contact"),
+        const Text("Message"),
+      );
     }
   }
 
   Future<void> deleteContact(int index) async {
     _contactBookModel.contactBookList.removeAt(index);
     //print("Empty ${_contactBookModel.contactBookList.isEmpty}");
-    if(_contactBookModel.contactBookList.isEmpty){
+    if (_contactBookModel.contactBookList.isEmpty) {
       await StorageServices.removeKey('contactList');
       _contactBookModel.contactBookList = null;
 
-      setState(() {
-        
-      });
+      setState(() {});
     } else {
-      for (var data in _contactBookModel.contactBookList){
-        contactData.add(
-          {
-            'username': data.userName.text,
-            'phone': data.contactNumber.text,
-            'address': data.address.text,
-            'memo': data.memo.text
-          }
-        );
+      for (final data in _contactBookModel.contactBookList) {
+        contactData.add({
+          'username': data.userName.text,
+          'phone': data.contactNumber.text,
+          'address': data.address.text,
+          'memo': data.memo.text
+        });
       }
       await StorageServices.setData(contactData, 'contactList');
       await getContact();
@@ -80,19 +73,21 @@ class _ContactBookState extends State<ContactBook> {
 
   Future<void> editContact(int index) async {
     await Navigator.push(
-      context, 
+      context,
       MaterialPageRoute(
-        builder: (context) => EditContact(contact: _contactBookModel.contactBookList, index: index)
-      )
+        builder: (context) => EditContact(
+          contact: _contactBookModel.contactBookList,
+          index: index,
+        ),
+      ),
     );
 
     await getContact();
   }
 
   @override
-  initState(){
+  void initState() {
     getContact();
-    // //print(widget.sdkModel.keyring.contacts)
     super.initState();
   }
 
@@ -106,9 +101,9 @@ class _ContactBookState extends State<ContactBook> {
           sdkModel: widget.sdkModel,
           deleteContact: deleteContact,
           editContact: editContact,
-          getContact: getContact
-        )
-      )
+          getContact: getContact,
+        ),
+      ),
     );
   }
 }

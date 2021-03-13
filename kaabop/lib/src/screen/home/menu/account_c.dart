@@ -30,34 +30,35 @@ class AccountC {
                     labelText: 'Old Pin',
                     controller: _oldPinController,
                     focusNode: _oldNode,
-                    onChanged: (value) {},
+               
                     obcureText: true,
-                    validateField: (value) => value.isEmpty || value.lenght < 4
+                    validateField: (value) => value.isEmpty && value.length < 4
                         ? 'Please fill in old 4 digits pin'
                         : null,
                     textInputFormatter: [LengthLimitingTextInputFormatter(4)],
                     onSubmit: onSubmit,
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   MyInputField(
                     labelText: 'New Pin',
                     controller: _newPinController,
                     focusNode: _newNode,
-                    onChanged: (value) {},
+                    
                     obcureText: true,
-                    validateField: (value) => value.isEmpty || value.length < 4
+                    validateField: (value) => value.isEmpty && value.length < 4
                         ? 'Please fill in new 4 digits pin'
                         : null,
                     textInputFormatter: [LengthLimitingTextInputFormatter(4)],
                     onSubmit: onSubmit,
                   ),
-                  SizedBox(height: 25),
+                  const SizedBox(height: 25),
                   MyFlatButton(
                     textButton: "Submit",
-                    buttonColor: AppColors.secondary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: size18,
-                    edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
+                    edgeMargin: const EdgeInsets.only(
+                      top: 40,
+                      left: 66,
+                      right: 66,
+                    ),
                     hasShadow: true,
                     action: () {
                       submitChangePin();
@@ -77,7 +78,7 @@ class AccountC {
       GlobalKey<FormState> _backupKey,
       TextEditingController _pinController,
       FocusNode _pinNode,
-      Function onChanged,
+      String Function(String) onChanged,
       Function onSubmit,
       Function submitBackUpKey) {
     showModalBottomSheet(
@@ -85,7 +86,7 @@ class AccountC {
       context: context,
       builder: (context) {
         return Container(
-          padding: EdgeInsets.all(25.0),
+          padding: const EdgeInsets.all(25.0),
           height: MediaQuery.of(context).size.height / 2,
           color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
           child: Form(
@@ -105,13 +106,14 @@ class AccountC {
                     textInputFormatter: [LengthLimitingTextInputFormatter(4)],
                     onSubmit: onSubmit,
                   ),
-                  SizedBox(height: 25),
+                  const SizedBox(height: 25),
                   MyFlatButton(
                     textButton: "Submit",
-                    buttonColor: AppColors.secondary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: size18,
-                    edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
+                    edgeMargin: const EdgeInsets.only(
+                      top: 40,
+                      left: 66,
+                      right: 67,
+                    ),
                     hasShadow: true,
                     action: () {
                       submitBackUpKey();

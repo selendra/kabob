@@ -6,103 +6,104 @@ class EditContact extends StatefulWidget {
   final List<ContactBookModel> contact;
   final int index;
 
-  EditContact({this.contact, this.index});
+  const EditContact({this.contact, this.index});
 
   @override
   _EditContactState createState() => _EditContactState();
 }
 
 class _EditContactState extends State<EditContact> {
-
   ContactBookModel _addContactModel = ContactBookModel();
 
-  List<Map<String, dynamic>> contactData = List<Map<String, dynamic>>();
+  List<Map<String, dynamic>> contactData = [];
 
   Future<void> submitContact() async {
-
     try {
       // Show Loading
       dialogLoading(context);
 
-      await Future.delayed(Duration(seconds: 1), (){});
+      await Future.delayed(const Duration(seconds: 1), () {});
 
-      var result = await dialog(
-        context,
-        Text("Are you sure to edit this contact?"),
-        Text("Message"),
-        action: FlatButton(
-          child: Text("Yes"),
-          onPressed: () async {
-            widget.contact[widget.index] = _addContactModel;
+      final result = await dialog(
+          context,
+          const Text("Are you sure to edit this contact?"),
+          const Text("Message"),
+          // ignore: deprecated_member_use
+          action: FlatButton(
+            onPressed: () async {
+              widget.contact[widget.index] = _addContactModel;
 
-            for (var data in widget.contact){
-              contactData.add(
-                {
+              for (final data in widget.contact) {
+                contactData.add({
                   'username': data.userName.text,
                   'phone': data.contactNumber.text,
                   'address': data.address.text,
                   'memo': data.memo.text
-                }
-              );
-            }
-            await StorageServices.setData(contactData, 'contactList');
+                });
+              }
+              await StorageServices.setData(contactData, 'contactList');
 
-            Navigator.pop(context, true);
-          },
-        )
-      );
+              Navigator.pop(context, true);
+            },
+            child: const Text("Yes"),
+          ));
 
       // Close Dialog Loading
       Navigator.pop(context);
       //print("Close Dialog");
 
-      if (result) {
-        await dialog(context, Text("Successfully edit contact!\n Please check your contact book"), Text("Congratualtion"));
+      if (result == true) {
+        await dialog(
+          context,
+          const Text(
+              "Successfully edit contact!\n Please check your contact book"),
+          const Text("Congratualtion"),
+        );
         // Close Screen
         Navigator.pop(context, true);
       } else {
         Navigator.pop(context);
       }
-
     } catch (e) {
       // Close Dialog Loading
       Navigator.pop(context);
-      //print("My error $e");
     }
   }
 
-  void onChanged(String value){
+  String onChanged(String value) {
     _addContactModel.formKey.currentState.validate();
     allValidator();
+    return null;
   }
 
-  void onSubmit() async {
-    if (_addContactModel.contactNumberNode.hasFocus){
+  Future<void> onSubmit() async {
+    if (_addContactModel.contactNumberNode.hasFocus) {
       FocusScope.of(context).requestFocus(_addContactModel.userNameNode);
-    } else if (_addContactModel.userNameNode.hasFocus){
+    } else if (_addContactModel.userNameNode.hasFocus) {
       FocusScope.of(context).requestFocus(_addContactModel.addressNode);
-    } else if (_addContactModel.addressNode.hasFocus){
+    } else if (_addContactModel.addressNode.hasFocus) {
       FocusScope.of(context).requestFocus(_addContactModel.memoNode);
     } else {
       if (_addContactModel.enable) await submitContact();
     }
   }
 
-  void allValidator(){
-    //print("1"+_addContactModel.contactNumber.text.isNotEmpty.toString());
-    //print("2"+_addContactModel.userName.text.isNotEmpty.toString());
-    //print("3"+_addContactModel.address.text.isNotEmpty.toString());
-    if (
-      _addContactModel.contactNumber.text.isNotEmpty &&
-      _addContactModel.userName.text.isNotEmpty &&
-      _addContactModel.address.text.isNotEmpty
-    ){
-      setState((){_addContactModel.enable = true;});
-    } else if(_addContactModel.enable) setState((){_addContactModel.enable = false;});
+  void allValidator() {
+    if (_addContactModel.contactNumber.text.isNotEmpty &&
+        _addContactModel.userName.text.isNotEmpty &&
+        _addContactModel.address.text.isNotEmpty) {
+      setState(() {
+        _addContactModel.enable = true;
+      });
+    } else if (_addContactModel.enable) {
+      setState(() {
+        _addContactModel.enable = false;
+      });
+    }
   }
 
-  String validateAddress(String value){
-    if(_addContactModel.addressNode.hasFocus){
+  String validateAddress(String value) {
+    if (_addContactModel.addressNode.hasFocus) {
       if (value.isEmpty) {
         return 'Please fill in address';
       }
@@ -111,7 +112,7 @@ class _EditContactState extends State<EditContact> {
   }
 
   @override
-  initState(){
+  void initState() {
     _addContactModel = widget.contact[widget.index];
     allValidator();
     super.initState();
@@ -127,9 +128,9 @@ class _EditContactState extends State<EditContact> {
           validateAddress: validateAddress,
           onChanged: onChanged,
           onSubmit: onSubmit,
-          submitContact: submitContact
-        )
-      )
+          submitContact: submitContact,
+        ),
+      ),
     );
   }
 }

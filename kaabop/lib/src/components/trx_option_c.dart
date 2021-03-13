@@ -8,11 +8,12 @@ import 'package:wallet_apps/src/models/createAccountM.dart';
 class MyBottomSheetItem extends StatelessWidget {
   final String subTitle;
   final String icon;
-  final Function action;
+  final void Function() action;
 
-  MyBottomSheetItem(
+  const MyBottomSheetItem(
       {@required this.subTitle, @required this.icon, @required this.action});
 
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: action,
@@ -33,8 +34,11 @@ class MyBottomSheetItem extends StatelessWidget {
 /* -------------------------Transaction Method--------------------------- */
 
 class TrxOptionMethod {
-  static void selectContact(BuildContext context, List<dynamic> listPortfolio,
-     ) async {
+  // ignore: avoid_void_async
+  static void selectContact(
+    BuildContext context,
+    List<dynamic> listPortfolio,
+  ) async {
     if (await Permission.contacts.request().isGranted) {
       final PhoneContact _contact =
           await FlutterContactPicker.pickPhoneContact();
@@ -88,6 +92,7 @@ class TrxOptionMethod {
     }
   }
 
+  // ignore: avoid_void_async
   static void navigateFillAddress(
     BuildContext context,
     List<dynamic> portfolioList,
@@ -108,7 +113,8 @@ class TrxOptionMethod {
     List<dynamic> portfolioList,
     CreateAccModel sdkModel,
   ) async {
-    var _response = await Navigator.push(context, transitionRoute(QrScanner()));
+    final String _response = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => QrScanner()));
 
     //print("Scan qr reponse $_response");
     if (_response != null) {

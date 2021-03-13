@@ -13,7 +13,7 @@ class AppColors {
   static const String textColor = "#585D86";
   static const String textBtnColor = "#000000";
   static const String secondary = "#08B952";
-  static const String secondary_text = "#40FF90";
+  static const String secondarytext = "#40FF90";
   static const String selected = "#00642A";
 
   //blue

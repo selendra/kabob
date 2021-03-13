@@ -6,7 +6,7 @@ class Portfolio extends StatefulWidget{
   final List<dynamic> listData;
   // /final List<CircularSegmentEntry> listChart;
 
-  Portfolio({@required this.listData});
+  const Portfolio({@required this.listData});
 
   @override
   State<StatefulWidget> createState() {
@@ -16,7 +16,7 @@ class Portfolio extends StatefulWidget{
 
 class PortfolioState extends State<Portfolio>{
 
-  PortfolioM _portfolioM = PortfolioM();
+  final PortfolioM _portfolioM = PortfolioM();
 
   @override
   void initState(){
@@ -30,6 +30,7 @@ class PortfolioState extends State<Portfolio>{
     // });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BodyScaffold(

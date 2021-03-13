@@ -3,7 +3,7 @@ import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class ContractProvider with ChangeNotifier {
   String _kpiBalance = '';
-  String _totalSupply = '';
+  final String _totalSupply = '';
 
   String get kpiBalance => _kpiBalance;
   String get totalSupply => _totalSupply;
@@ -19,7 +19,7 @@ class ContractProvider with ChangeNotifier {
     final res = await WalletProvider().sdk.api.balanceOf(from, who);
 
     if (res != null) {
-      _kpiBalance = BigInt.parse(res['output']).toString();
+      _kpiBalance = BigInt.parse(res['output'].toString()).toString();
     } else {
      // print('res null');
     }

@@ -28,17 +28,17 @@ class _FingerPrintState extends State<FingerPrint> {
 
     try {
       authenticate = await localAuth.authenticateWithBiometrics(
-          localizedReason: '', useErrorDialogs: true, stickyAuth: true);
+          localizedReason: '', stickyAuth: true);
 
       if (authenticate) {
         Navigator.pushReplacementNamed(context, Home.route);
       }
     } on SocketException catch (e) {
-      await Future.delayed(Duration(milliseconds: 300), () {});
+      await Future.delayed(const Duration(milliseconds: 300), () {});
       AppServices.openSnackBar(globalkey, e.message);
     } catch (e) {
       await dialog(context, Text("${e.message}", textAlign: TextAlign.center),
-          "Message");
+          const Text("Message"));
     }
   }
 

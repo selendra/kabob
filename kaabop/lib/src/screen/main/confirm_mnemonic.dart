@@ -27,7 +27,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
       _wordsLeft.sort();
     }
 
-    List<Widget> rows = <Widget>[];
+    final List<Widget> rows = <Widget>[];
 
     for (var r = 0; r * 3 < _wordsLeft.length; r++) {
       if (_wordsLeft.length > r * 3) {
@@ -42,22 +42,22 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                 (i) => Container(
                   alignment: Alignment.center,
                   color: hexaCodeToColor(AppColors.cardColor),
-                  padding: EdgeInsets.only(left: 4, right: 4, bottom: 4),
-                  margin: EdgeInsets.only(left: 4, right: 4, bottom: 4),
+                  padding: const EdgeInsets.only(left: 4, right: 4, bottom: 4),
+                  margin: const EdgeInsets.only(left: 4, right: 4, bottom: 4),
+                  // ignore: deprecated_member_use
                   child: FlatButton(
-                    child: MyText(
-                      text: i,
-                      fontSize: 18,
-                      color: AppColors.secondary_text,
-                      fontWeight: FontWeight.bold,
-                    ),
                     onPressed: () {
                       setState(() {
                         _wordsLeft.remove(i);
-                        _wordsSelected.add(i);
+                        _wordsSelected.add(i.toString());
                       });
                       if (_wordsLeft.isEmpty) validationMnemonic();
                     },
+                    child: MyText(
+                      text: i.toString(),
+                      color: AppColors.secondarytext,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               )
@@ -66,7 +66,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
       }
     }
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: rows,
       ),
@@ -75,7 +75,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
 
   void setMnemonic() {
     _wordsLeft.clear();
-    for (var i in widget.accModel.mnemonicList) {
+    for (final i in widget.accModel.mnemonicList) {
       _wordsLeft.add(i); // Use For Sort Mnemonic
     }
     _wordsLeft.sort();
@@ -102,98 +102,109 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
   }
 
   @override
-  initState() {
-    _mnemonic = List();
-    _wordsLeft = List();
-    _wordsSelected = List<String>();
-    for (var i in widget.accModel.mnemonicList) {
+  void initState() {
+    _mnemonic = [];
+    _wordsLeft = [];
+    _wordsSelected = [];
+    for (final i in widget.accModel.mnemonicList) {
       _wordsLeft.add(i); // Use For Sort Mnemonic
       _mnemonic.add(i); // Use For Compare
     }
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BodyScaffold(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: [
-          MyAppBar(
-            color: hexaCodeToColor(AppColors.cardColor),
-            title: AppText.createAccTitle,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: MyText(
-                      text: AppText.confirmMnemonic,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.whiteColorHexa,
-                      bottom: 12,
-                    )),
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            MyAppBar(
+              color: hexaCodeToColor(AppColors.cardColor),
+              title: AppText.createAccTitle,
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: MyText(
+                        text: AppText.confirmMnemonic,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.whiteColorHexa,
+                        bottom: 12,
+                      )),
 
-                MyText(
-                  textAlign: TextAlign.left,
-                  text: AppText.clickMnemonic,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.whiteColorHexa,
-                  bottom: 12,
-                ),
+                  MyText(
+                    textAlign: TextAlign.left,
+                    text: AppText.clickMnemonic,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.whiteColorHexa,
+                    bottom: 12,
+                  ),
 
-                InkWell(
+                  InkWell(
                     onTap: () {
                       _wordsSelected = [];
                       setMnemonic();
                     },
                     child: Align(
-                        alignment: Alignment.centerRight,
-                        child: MyText(
-                            text: AppText.reset,
-                            bottom: 16,
-                            color: AppColors.secondary_text))),
+                      alignment: Alignment.centerRight,
+                      child: MyText(
+                          text: AppText.reset,
+                          bottom: 16,
+                          color: AppColors.secondarytext),
+                    ),
+                  ),
 
-                // Field of Mnemonic
-                Container(
-                    height: 80,
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 16),
-                    color: hexaCodeToColor(AppColors.cardColor),
-                    padding: EdgeInsets.all(16),
-                    alignment: Alignment.centerLeft,
-                    child: MyText(
-                      color: AppColors.secondary_text,
-                      fontSize: 18,
-                      textAlign: TextAlign.left,
-                      text: _wordsSelected.join(' '),
-                      fontWeight: FontWeight.bold,
-                    )),
-              ],
+                  // Field of Mnemonic
+                  Container(
+                      height: 80,
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      color: hexaCodeToColor(AppColors.cardColor),
+                      padding: const EdgeInsets.all(16),
+                      alignment: Alignment.centerLeft,
+                      child: MyText(
+                        color: AppColors.secondarytext,
+                        textAlign: TextAlign.left,
+                        text: _wordsSelected.join(' '),
+                        fontWeight: FontWeight.bold,
+                      )),
+                ],
+              ),
             ),
-          ),
-          _buildWordsButtons(),
-          Expanded(
-            child: Container(),
-          ),
-          MyFlatButton(
-            edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-            textButton: AppText.next,
-            action: enable == false
-                ? null
-                : () async {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>MyUserInfo(widget.accModel)));
-                  },
-          )
-        ],
+            _buildWordsButtons(),
+            Expanded(
+              child: Container(),
+            ),
+            MyFlatButton(
+              edgeMargin:
+                  const EdgeInsets.only(left: 66, right: 66, bottom: 16),
+              textButton: AppText.next,
+              action: enable == false
+                  ? null
+                  : () async {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyUserInfo(
+                            widget.accModel,
+                          ),
+                        ),
+                      );
+                    },
+            )
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

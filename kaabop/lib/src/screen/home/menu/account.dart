@@ -12,11 +12,9 @@ import 'package:wallet_apps/src/screen/home/menu/account_c.dart';
 import '../../../../index.dart';
 
 class Account extends StatefulWidget {
-  // final WalletSDK sdk;
-  // final keyring;
   final CreateAccModel sdkModel;
 
-  Account(this.sdkModel);
+  const Account(this.sdkModel);
   static const route = '/account';
   @override
   _AccountState createState() => _AccountState();
@@ -24,16 +22,16 @@ class Account extends StatefulWidget {
 
 class _AccountState extends State<Account> {
   KeyPairData _currentAcc;
-  TextEditingController _pinController = TextEditingController();
-  TextEditingController _oldPinController = TextEditingController();
-  TextEditingController _newPinController = TextEditingController();
+  final TextEditingController _pinController = TextEditingController();
+  final TextEditingController _oldPinController = TextEditingController();
+  final TextEditingController _newPinController = TextEditingController();
 
-  GlobalKey<FormState> _changePinKey = GlobalKey<FormState>();
-  GlobalKey<FormState> _backupKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _changePinKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _backupKey = GlobalKey<FormState>();
 
-  FocusNode _pinNode = FocusNode();
-  FocusNode _oldNode = FocusNode();
-  FocusNode _newNode = FocusNode();
+  final FocusNode _pinNode = FocusNode();
+  final FocusNode _oldNode = FocusNode();
+  final FocusNode _newNode = FocusNode();
   bool _loading = false;
 
   String onChanged(String value) {
@@ -51,13 +49,13 @@ class _AccountState extends State<Account> {
     return value;
   }
 
-  void onSubmit() async {
+  Future<void> onSubmit() async {
     if (_backupKey.currentState.validate()) {
       await getBackupKey(_pinController.text);
     }
   }
 
-  void onSubmitChangePin() async {
+  void onSubmitChangePin() {
     submitChangePin();
   }
 
@@ -73,10 +71,16 @@ class _AccountState extends State<Account> {
     }
   }
 
-  void deleteAccout() async {
-    await dialog(context, Text('Are you sure to delete your account?'),
-        Text('Delete Account'),
-        action: FlatButton(onPressed: _deleteAccount, child: Text('Delete')));
+  Future<void> deleteAccout() async {
+    await dialog(
+      context, const Text('Are you sure to delete your account?'),
+      const Text('Delete Account'),
+      // ignore: deprecated_member_use
+      action: FlatButton(
+        onPressed: _deleteAccount,
+        child: const Text('Delete'),
+      ),
+    );
   }
 
   Future<void> _deleteAccount() async {
@@ -100,24 +104,28 @@ class _AccountState extends State<Account> {
   Future<void> getBackupKey(String pass) async {
     Navigator.pop(context);
     try {
-      final pairs = await KeyringPrivateStore().getDecryptedSeed(
-          '${widget.sdkModel.keyring.keyPairs[0].pubKey}', pass);
+      final pairs = await KeyringPrivateStore()
+          .getDecryptedSeed(widget.sdkModel.keyring.keyPairs[0].pubKey, pass);
       //print(pairs);
 
       if (pairs['seed'] != null) {
         await dialog(
-            context,
-            GestureDetector(
-                onTap: () {
-                  copyToClipBoard(pairs['seed'], context);
-                },
-                child: Text(pairs['seed'])),
-            Text('Backup Key'));
+          context,
+          GestureDetector(
+              onTap: () {
+                copyToClipBoard(pairs['seed'].toString(), context);
+              },
+              child: Text(
+                pairs['seed'].toString(),
+              )),
+          const Text('Backup Key'),
+        );
       } else {
-        await dialog(context, Text('Incorrect Pin'), Text('Backup Key'));
+        await dialog(
+            context, const Text('Incorrect Pin'), const Text('Backup Key'));
       }
     } catch (e) {
-      await dialog(context, Text(e.toString()), Text('Opps'));
+      await dialog(context, Text(e.toString()), const Text('Opps'));
     }
     _pinController.text = '';
   }
@@ -130,9 +138,17 @@ class _AccountState extends State<Account> {
     final res = await widget.sdkModel.sdk.api.keyring
         .changePassword(widget.sdkModel.keyring, oldPass, newPass);
     if (res != null) {
-      await dialog(context, Text('You pin has changed!!'), Text('Change Pin'));
+      await dialog(
+        context,
+        const Text('You pin has changed!!'),
+        const Text('Change Pin'),
+      );
     } else {
-      await dialog(context, Text('Change Failed'), Text('Opps'));
+      await dialog(
+        context,
+        const Text('Change Failed'),
+        const Text('Opps'),
+      );
       setState(() {
         _loading = false;
       });
@@ -150,8 +166,9 @@ class _AccountState extends State<Account> {
         text: text,
       ),
     ).then((value) => {
+          // ignore: deprecated_member_use
           Scaffold.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
               content: Text('Copied to Clipboard'),
               duration: Duration(seconds: 3),
             ),
@@ -171,7 +188,7 @@ class _AccountState extends State<Account> {
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
         child: _loading
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(),
               )
             : Stack(
@@ -196,8 +213,12 @@ class _AccountState extends State<Account> {
                             children: [
                               Container(
                                 width: double.infinity,
-                                padding: EdgeInsets.only(
-                                    left: 20, right: 20, top: 25, bottom: 25),
+                                padding: const EdgeInsets.only(
+                                  left: 20,
+                                  right: 20,
+                                  top: 25,
+                                  bottom: 25,
+                                ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
                                   color: hexaCodeToColor(AppColors.cardColor),
@@ -206,12 +227,12 @@ class _AccountState extends State<Account> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
                                       children: [
                                         Container(
                                           alignment: Alignment.centerLeft,
-                                          margin: EdgeInsets.only(right: 16),
+                                          margin: const EdgeInsets.only(
+                                            right: 16,
+                                          ),
                                           width: 70,
                                           height: 70,
                                           decoration: BoxDecoration(
@@ -226,16 +247,15 @@ class _AccountState extends State<Account> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             MyText(
-                                              text: '${_currentAcc.name}',
+                                              text: _currentAcc.name,
                                               color: "#FFFFFF",
                                               fontSize: 20,
                                             ),
-                                            Container(
+                                            SizedBox(
                                               width: 100,
                                               child: MyText(
                                                 text: "Indracore",
-                                                color: AppColors.secondary_text,
-                                                fontSize: 18,
+                                                color: AppColors.secondarytext,
                                                 textAlign: TextAlign.start,
                                                 fontWeight: FontWeight.bold,
                                                 overflow: TextOverflow.ellipsis,
@@ -251,8 +271,11 @@ class _AccountState extends State<Account> {
                               ),
                               Container(
                                 alignment: Alignment.centerLeft,
-                                margin: EdgeInsets.only(
-                                    right: 16, left: 16, bottom: 16),
+                                margin: const EdgeInsets.only(
+                                  right: 16,
+                                  left: 16,
+                                  bottom: 16,
+                                ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
                                 ),
@@ -270,14 +293,12 @@ class _AccountState extends State<Account> {
                                             MyText(
                                               text: 'Public Key:  ',
                                               color: "#FFFFFF",
-                                              fontSize: 18,
                                             ),
-                                            SizedBox(height: 50),
+                                            const SizedBox(height: 50),
                                             Expanded(
                                               child: MyText(
-                                                text: '${_currentAcc.pubKey}',
+                                                text: _currentAcc.pubKey,
                                                 color: "#FFFFFF",
-                                                fontSize: 18,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
@@ -296,13 +317,11 @@ class _AccountState extends State<Account> {
                                             MyText(
                                               text: 'Address:  ',
                                               color: "#FFFFFF",
-                                              fontSize: 18,
                                             ),
                                             Expanded(
                                               child: MyText(
-                                                text: '${_currentAcc.address}',
+                                                text: _currentAcc.address,
                                                 color: "#FFFFFF",
-                                                fontSize: 18,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
                                             ),
@@ -314,7 +333,7 @@ class _AccountState extends State<Account> {
                                 ),
                                 //child: SvgPicture.asset('assets/male_avatar.svg'),
                               ),
-                              SizedBox(height: 40),
+                              const SizedBox(height: 40),
                               GestureDetector(
                                 onTap: () {
                                   AccountC().showBackup(
@@ -329,7 +348,7 @@ class _AccountState extends State<Account> {
                                 },
                                 child: Container(
                                   alignment: Alignment.center,
-                                  margin: EdgeInsets.only(right: 16),
+                                  margin: const EdgeInsets.only(right: 16),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                   ),
@@ -337,13 +356,11 @@ class _AccountState extends State<Account> {
                                   child: MyText(
                                     text: 'Backup Key',
                                     color: "#FFFFFF",
-                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  //child: SvgPicture.asset('assets/male_avatar.svg'),
                                 ),
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               GestureDetector(
                                 onTap: () {
                                   AccountC().showChangePin(
@@ -360,7 +377,7 @@ class _AccountState extends State<Account> {
                                 },
                                 child: Container(
                                   alignment: Alignment.center,
-                                  margin: EdgeInsets.only(right: 16),
+                                  margin: const EdgeInsets.only(right: 16),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                   ),
@@ -368,18 +385,16 @@ class _AccountState extends State<Account> {
                                   child: MyText(
                                     text: 'Change Pin',
                                     color: "#FFFFFF",
-                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  //child: SvgPicture.asset('assets/male_avatar.svg'),
                                 ),
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               GestureDetector(
                                 onTap: deleteAccout,
                                 child: Container(
                                   alignment: Alignment.center,
-                                  margin: EdgeInsets.only(right: 16),
+                                  margin: const EdgeInsets.only(right: 16),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(5),
                                   ),
@@ -387,10 +402,8 @@ class _AccountState extends State<Account> {
                                   child: MyText(
                                     text: 'Delete Account',
                                     color: "#FF0000",
-                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  //child: SvgPicture.asset('assets/male_avatar.svg'),
                                 ),
                               ),
                             ],
