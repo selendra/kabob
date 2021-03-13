@@ -76,7 +76,7 @@ class AssetInfoC {
     BuildContext context,
     CreateAccModel sdkModel,
     GetWalletMethod _method,
-   // GlobalKey<ScaffoldState> _globalKey,
+    // GlobalKey<ScaffoldState> _globalKey,
     // GlobalKey _keyQrShare,
     //GlobalKey<FormState> allowanceKeyForm,
   ) {
@@ -171,16 +171,16 @@ class AssetInfoC {
                   ),
                   SizedBox(height: 25),
                   MyFlatButton(
-                      textButton: "Submit",
-                      buttonColor: AppColors.secondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: size18,
-                      edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
-                      hasShadow: true,
-                      action: () {
-                        submitApprove();
-                      } //scanPayM.enable == false ? null : clickSend
-                      ),
+                    textButton: "Submit",
+                    buttonColor: AppColors.secondary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: size18,
+                    edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
+                    hasShadow: true,
+                    action: () {
+                      submitApprove();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -216,7 +216,9 @@ class AssetInfoC {
               child: Container(
                 padding: const EdgeInsets.all(25.0),
                 height: MediaQuery.of(context).size.height / 1.5,
-                color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
+                color: Color(
+                  AppUtils.convertHexaColor(AppColors.bgdColor),
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -265,17 +267,16 @@ class AssetInfoC {
                     ),
                     SizedBox(height: 15),
                     MyFlatButton(
-                        textButton: "Submit",
-                        buttonColor: AppColors.secondary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: size18,
-                        edgeMargin:
-                            EdgeInsets.only(top: 40, left: 66, right: 66),
-                        hasShadow: true,
-                        action: () {
-                          submitApprove();
-                        } //scanPayM.enable == false ? null : clickSend
-                        ),
+                      textButton: "Submit",
+                      buttonColor: AppColors.secondary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: size18,
+                      edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
+                      hasShadow: true,
+                      action: () {
+                        submitApprove();
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -321,16 +322,16 @@ class AssetInfoC {
                   ),
                   SizedBox(height: 25),
                   MyFlatButton(
-                      textButton: "Submit",
-                      buttonColor: AppColors.secondary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: size18,
-                      edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
-                      hasShadow: true,
-                      action: () {
-                        submitBalanceOf();
-                      } //scanPayM.enable == false ? null : clickSend
-                      ),
+                    textButton: "Submit",
+                    buttonColor: AppColors.secondary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: size18,
+                    edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
+                    hasShadow: true,
+                    action: () {
+                      submitBalanceOf();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -339,56 +340,4 @@ class AssetInfoC {
       },
     );
   }
-
-  // void transferFrom(
-  //     BuildContext context,
-  //     TextEditingController _ownerController,
-  //     TextEditingController _spenderController,
-  //     FocusNode _ownerNode,
-  //     FocusNode _spenderNode,
-  //     Function onChanged,
-  //     Function onSubmit) {
-  //   showBottomSheet(
-  //     context: context,
-  //     builder: (context) {
-  //       return Padding(
-  //         padding: MediaQuery.of(context).viewInsets,
-  //         child: Container(
-  //           padding: const EdgeInsets.all(25.0),
-  //           height: MediaQuery.of(context).size.height / 2,
-  //           color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
-  //           child: Column(
-  //             children: <Widget>[
-  //               MyInputField(
-  //                 labelText: 'Owner',
-  //                 controller: _ownerController,
-  //                 focusNode: _ownerNode,
-  //                 onChanged: onChanged,
-  //                 onSubmit: onSubmit,
-  //               ),
-  //               SizedBox(height: 16),
-  //               MyInputField(
-  //                 labelText: 'Spender',
-  //                 controller: _spenderController,
-  //                 focusNode: _spenderNode,
-  //                 onChanged: onChanged,
-  //                 onSubmit: onSubmit,
-  //               ),
-  //               SizedBox(height: 25),
-  //               MyFlatButton(
-  //                   textButton: "Submit",
-  //                   buttonColor: AppColors.secondary,
-  //                   fontWeight: FontWeight.bold,
-  //                   fontSize: size18,
-  //                   edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
-  //                   hasShadow: true,
-  //                   action: () {} //scanPayM.enable == false ? null : clickSend
-  //                   ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 }
