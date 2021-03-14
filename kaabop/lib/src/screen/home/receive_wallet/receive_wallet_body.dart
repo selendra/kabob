@@ -33,7 +33,7 @@ class ReceiveWalletBody extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset('assets/no_data.svg', height: 200),
-                MyText(text: "There are no wallet found")
+                const MyText(text: "There are no wallet found")
               ],
             ),
           )
@@ -82,7 +82,7 @@ class ReceiveWalletBody extends StatelessWidget {
                               fontSize: 16,
                               bottom: 16,
                             ),
-                            MyText(
+                            const MyText(
                               text: "Scan the qr code to perform transaction",
                               fontSize: 16,
                             ),
@@ -107,7 +107,7 @@ class ReceiveWalletBody extends StatelessWidget {
                             padding: const EdgeInsets.only(
                               left: 10.0,
                             ),
-                            child: MyText(
+                            child: const MyText(
                               text: "SHARE MY CODE",
                               color: "#FFFFFF",
                             ),
@@ -132,7 +132,7 @@ class ReceiveWalletBody extends StatelessWidget {
                             color: Colors.white, size: 30),
                         Container(
                           padding: const EdgeInsets.only(left: 10.0),
-                          child: MyText(
+                          child: const MyText(
                             text: "COPY ADDRESS",
                             color: "#FFFFFF",
                           ),

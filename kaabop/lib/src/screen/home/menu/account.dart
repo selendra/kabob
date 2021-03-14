@@ -96,7 +96,7 @@ class _AccountState extends State<Account> {
       Navigator.pushAndRemoveUntil(context,
           RouteAnimation(enterPage: Welcome()), ModalRoute.withName('/'));
     } catch (e) {
-      await dialog(context, Text(e.toString()), Text('Opps'));
+      await dialog(context, Text(e.toString()), const Text('Opps'));
     }
   }
 
@@ -250,7 +250,7 @@ class _AccountState extends State<Account> {
                                               color: "#FFFFFF",
                                               fontSize: 20,
                                             ),
-                                            SizedBox(
+                                           const SizedBox(
                                               width: 100,
                                               child: MyText(
                                                 text: "Indracore",
@@ -289,7 +289,7 @@ class _AccountState extends State<Account> {
                                         },
                                         child: Row(
                                           children: [
-                                            MyText(
+                                            const MyText(
                                               text: 'Public Key:  ',
                                               color: "#FFFFFF",
                                             ),
@@ -313,7 +313,7 @@ class _AccountState extends State<Account> {
                                         },
                                         child: Row(
                                           children: [
-                                            MyText(
+                                            const MyText(
                                               text: 'Address:  ',
                                               color: "#FFFFFF",
                                             ),
@@ -352,7 +352,7 @@ class _AccountState extends State<Account> {
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   height: 70,
-                                  child: MyText(
+                                  child: const MyText(
                                     text: 'Backup Key',
                                     color: "#FFFFFF",
                                     fontWeight: FontWeight.bold,
@@ -381,7 +381,7 @@ class _AccountState extends State<Account> {
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   height: 70,
-                                  child: MyText(
+                                  child: const  MyText(
                                     text: 'Change Pin',
                                     color: "#FFFFFF",
                                     fontWeight: FontWeight.bold,
@@ -398,7 +398,7 @@ class _AccountState extends State<Account> {
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   height: 70,
-                                  child: MyText(
+                                  child: const MyText(
                                     text: 'Delete Account',
                                     color: "#FF0000",
                                     fontWeight: FontWeight.bold,

@@ -23,6 +23,6 @@ class GetWalletModel {
   }
 
   BoxConstraints get boxConstraint {
-    return  BoxConstraints(minWidth: 60, minHeight: 80);
+    return const BoxConstraints(minWidth: 60, minHeight: 80);
   }
 }

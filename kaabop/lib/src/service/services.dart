@@ -1,13 +1,14 @@
 import 'package:wallet_apps/index.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: avoid_classes_with_only_static_members
 class AppServices {
 
   static int myNumCount = 0;
 
   static Future noInternetConnection(GlobalKey<ScaffoldState> globalKey) async {
     try {
-      Connectivity _connectivity = new Connectivity();
+      final Connectivity _connectivity =  Connectivity();
 
       final myResult = await _connectivity.checkConnectivity();
       
@@ -16,6 +17,7 @@ class AppServices {
          // print("Open Red snackbar");
           openSnackBar(globalKey, AppText.contentConnection);
         } else {
+          // ignore: deprecated_member_use
           globalKey.currentState.removeCurrentSnackBar();
         }
       });
@@ -27,9 +29,11 @@ class AppServices {
   }
 
   static void openSnackBar(GlobalKey<ScaffoldState> globalKey, String content) {
+    // ignore: deprecated_member_use
     globalKey.currentState.showSnackBar(snackBarBody(content, globalKey));
   }
 
+  // ignore: avoid_void_async
   static void closeSnackBar(GlobalKey<ScaffoldState> globalKey, String content) async { 
     // await globalKey.currentState.showSnackBar(snackBarBody(content, globalKey)).closed.then((value) => 
     //   print("value $value")
@@ -39,10 +43,10 @@ class AppServices {
   static SnackBar snackBarBody(String content, globalKey){
     return SnackBar(
       behavior: SnackBarBehavior.floating,
-      duration: Duration(days: 365),
+      duration: const Duration(days: 365),
       backgroundColor: Colors.red,
       content: Text(content,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.white,
         )
       ),
@@ -56,8 +60,9 @@ class AppServices {
     );
   }
 
+  // ignore: avoid_void_async
   static void clearStorage() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     await sharedPreferences.clear();
   }
 
@@ -67,7 +72,7 @@ class AppServices {
   }
 
   static double getRadienFromDegree(double degree){
-    double unitRadien = 57.295779513;
+    const double unitRadien = 57.295779513;
     return degree / unitRadien;
   }
 
@@ -79,10 +84,13 @@ class AppServices {
     return Map<String, dynamic>.unmodifiable({});
   }
   
+  // ignore: avoid_void_async
   static void timerOutHandler(http.Response res, Function timeCounter) async {
-    Timer.periodic(Duration(seconds: 1), (Timer timer){
-      if (timer.tick <= 10) timeCounter(timer);
-      else if (timer.tick > 10) timer.cancel();
+    Timer.periodic(const Duration(seconds: 1), (Timer timer){
+      if (timer.tick <= 10) {
+        timeCounter(timer);
+      // ignore: invariant_booleans
+      } else if (timer.tick > 10) timer.cancel();
     });
   }
   

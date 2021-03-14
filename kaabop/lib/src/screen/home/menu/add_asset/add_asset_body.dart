@@ -111,7 +111,6 @@ class AddAssetBody extends StatelessWidget {
         ),
         MyFlatButton(
           textButton: "Submit",
-          fontSize: size18,
           edgeMargin: const EdgeInsets.only(left: 66, right: 66),
           hasShadow: true,
           action: assetM.enable ? submitAsset : null,
@@ -174,7 +173,7 @@ class AddAssetBody extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     MyText(
                         width: double.infinity,
                         text: 'Add', //portfolioData[0]["data"]['balance'],

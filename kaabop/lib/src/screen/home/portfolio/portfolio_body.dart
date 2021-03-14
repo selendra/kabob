@@ -117,8 +117,8 @@ class PortfolioBody extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          MyText(bottom: 16, text: "Wallet"),
-                          MyPercentText(
+                         const MyText(bottom: 16, text: "Wallet"),
+                         const MyPercentText(
                             value: "+10.5",
                           ),
                           LinearPercentIndicator(
@@ -143,7 +143,7 @@ class PortfolioBody extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const MyText(bottom: 16, text: "Market"),
-                          MyPercentText(
+                          const MyPercentText(
                             value: "0.0",
                           ),
                           LinearPercentIndicator(

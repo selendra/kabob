@@ -6,12 +6,13 @@ class MyPieChartRow extends StatelessWidget{
   final String centerText;
   final String endText;
 
-  MyPieChartRow({
+  const MyPieChartRow({
     this.color,
     this.centerText,
     this.endText
   });
   
+  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: Row(
@@ -39,7 +40,7 @@ class MyPieChartRow extends StatelessWidget{
 
           Expanded(
             child: MyText(
-              text: endText + " %",
+              text: "$endText %",
               fontSize: 16.0,
             ),
           ),
@@ -53,13 +54,14 @@ class MyPercentText extends StatelessWidget{
 
   final String value;
 
-  MyPercentText({
+  const MyPercentText({
     this.value
   });
 
+  @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -69,7 +71,7 @@ class MyPercentText extends StatelessWidget{
             color: "#FFFFFF",
           ),
 
-          MyText(
+          const MyText(
             text: "%",
             fontSize: 25,
           )

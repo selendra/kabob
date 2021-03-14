@@ -4,11 +4,12 @@ import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 import '../import_account/import_acc.dart';
 
 class WelcomeBody extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 50,
           ),
           Container(
@@ -54,14 +55,16 @@ class WelcomeBody extends StatelessWidget {
           Column(
             children: [
               MyFlatButton(
-                edgeMargin: EdgeInsets.only(left: 42, right: 42, bottom: 16),
+                edgeMargin:
+                    const EdgeInsets.only(left: 42, right: 42, bottom: 16),
                 textButton: AppText.createAccTitle,
                 action: () {
                   Navigator.pushNamed(context, ContentsBackup.route);
                 },
               ),
               MyFlatButton(
-                edgeMargin: EdgeInsets.only(left: 42, right: 42, bottom: 16),
+                edgeMargin:
+                    const EdgeInsets.only(left: 42, right: 42, bottom: 16),
                 textButton: AppText.importAccTitle,
                 action: () {
                   Navigator.pushNamed(context, ImportAcc.route);
@@ -72,37 +75,5 @@ class WelcomeBody extends StatelessWidget {
         ],
       ),
     );
-    // return Stack(
-    //   children: [
-    // Image.asset(
-    //     'assets/kabob_logo.png',
-    //     width: 200,
-    //     height: 200,
-    //   ),
-    //     Positioned(
-    //       bottom: 30,
-    //       width: MediaQuery.of(context).size.width,
-    //       child: Column(
-    //         children: [
-    //           MyFlatButton(
-    //             // width: 100,
-    //             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-    //             textButton: 'Create Account',
-    //             action: () {
-    //               Navigator.pushNamed(context, ContentsBackup.route);
-    //             },
-    //           ),
-    //           MyFlatButton(
-    //             edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-    //             textButton: 'Import Account',
-    //             action: () {
-    //               Navigator.pushNamed(context, ImportAcc.route);
-    //             },
-    //           )
-    //         ],
-    //       ),
-    //     ),
-    //   ],
-    // );
   }
 }
