@@ -115,7 +115,7 @@ class TrxActivityState extends State<TrxActivity> {
       child: Scaffold(
         key: _globalKey,
         appBar: AppBar(
-          title: MyText(
+          title: const MyText(
             text: 'Transaction History',
             fontSize: 22.0,
             color: "#FFFFFF",
@@ -158,7 +158,7 @@ class TrxActivityState extends State<TrxActivity> {
                                           hexaCodeToColor(AppColors.secondary),
                                       borderRadius: BorderRadius.circular(40),
                                     ),
-                                    child: MyLogo(
+                                    child: const MyLogo(
                                       width: 50,
                                       height: 50,
                                       logoPath: "assets/sld_logo.svg",

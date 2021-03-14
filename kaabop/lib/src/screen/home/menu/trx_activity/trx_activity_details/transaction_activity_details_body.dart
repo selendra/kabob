@@ -7,8 +7,8 @@ Widget transactionActivityDetailsBody(
     child: SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          MyAppBar(title: "Activity details"),
+        children: const[
+           MyAppBar(title: "Activity details"),
           // Container( /* Activity Information */
           //   margin: EdgeInsets.only(top: 30.0),
           //   child: Column(

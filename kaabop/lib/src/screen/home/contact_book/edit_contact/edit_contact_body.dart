@@ -110,7 +110,6 @@ class EditContactBody extends StatelessWidget {
         ),
         MyFlatButton(
             textButton: "Edit Contact",
-            fontSize: size18,
             edgeMargin: const EdgeInsets.only(
               top: 40,
               left: 66,

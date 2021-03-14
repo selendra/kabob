@@ -46,7 +46,7 @@ Route transitionRoute(
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         final begin = Offset(double.parse(offsetLeft.toString()),
             double.parse(offsetRight.toString()));
-        final end = Offset.zero;
+        const end = Offset.zero;
         final curve = Curves.fastOutSlowIn;
         final tween =
             Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -269,7 +269,7 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Center(
+        title: const Center(
             child: MyText(
           text: 'Transaction Detail',
           fontWeight: FontWeight.bold,
@@ -282,7 +282,7 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
             children: [
               Row(
                 children: [
-                  MyText(
+                  const MyText(
                     text: 'Date: ',
                     fontSize: 14.0,
                   ),
@@ -297,7 +297,7 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
               ),
               Row(
                 children: [
-                  MyText(
+                  const MyText(
                     text: 'Destination: ',
                     fontSize: 14.0,
                   ),
@@ -312,7 +312,7 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
               ),
               Row(
                 children: [
-                  MyText(
+                  const MyText(
                     text: 'Sender: ',
                     fontSize: 14.0,
                   ),
@@ -327,7 +327,7 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
               ),
               Row(
                 children: [
-                  MyText(
+                  const MyText(
                     text: 'Organization: ',
                     fontSize: 14.0,
                   ),
@@ -342,17 +342,18 @@ Future<void> txDetailDialog(BuildContext context, TxHistory txHistory) async {
               ),
               Row(
                 children: [
-                  MyText(
+                  const MyText(
                     text: 'Amount: ',
                     fontSize: 14.0,
                   ),
                   Expanded(
-                      child: MyText(
-                    text: txHistory.amount,
-                    textAlign: TextAlign.start,
-                    overflow: TextOverflow.ellipsis,
-                    fontWeight: FontWeight.bold,
-                  )),
+                    child: MyText(
+                      text: txHistory.amount,
+                      textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -498,30 +499,35 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
       Container(
-          margin: const EdgeInsets.only(bottom: 36.0),
-          child: MyText(
-            text: 'Wallet',
-            fontSize: 20.0,
-            color: "#FFFFFF",
-          )),
+        margin: const EdgeInsets.only(bottom: 36.0),
+        child: const MyText(
+          text: 'Wallet',
+          fontSize: 20.0,
+          color: "#FFFFFF",
+        ),
+      ),
       Container(
-          decoration: BoxDecoration(
-              border: Border.all(
-                  width: 2, color: hexaCodeToColor(AppColors.secondarytext)),
-              borderRadius: BorderRadius.circular(6),
-              color: Colors.white),
-          width: 300.0,
-          height: 300.0,
-          child: QrImage(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.black,
-            embeddedImage: AssetImage(logoName),
-            embeddedImageStyle: QrEmbeddedImageStyle(
-              size: const Size(70, 70),
-            ),
-            // version: QrVersions.auto,
-            data: wallet,
-          )),
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 2,
+            color: hexaCodeToColor(AppColors.secondarytext),
+          ),
+          borderRadius: BorderRadius.circular(6),
+          color: Colors.white,
+        ),
+        width: 300.0,
+        height: 300.0,
+        child: QrImage(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          embeddedImage: AssetImage(logoName),
+          embeddedImageStyle: QrEmbeddedImageStyle(
+            size: const Size(70, 70),
+          ),
+          // version: QrVersions.auto,
+          data: wallet,
+        ),
+      ),
     ],
   );
 }
@@ -654,8 +660,12 @@ Widget inputField(
   );
 }
 
-Widget customDropDown(String label, List<Map<String,dynamic>> list, dynamic _model,
-    Function changeValue, PopupMenuItem Function(Map<String, dynamic>) item) {
+Widget customDropDown(
+    String label,
+    List<Map<String, dynamic>> list,
+    dynamic _model,
+    Function changeValue,
+    PopupMenuItem Function(Map<String, dynamic>) item) {
   /* Custom DropDown */
   return Container(
     padding: const EdgeInsets.only(
@@ -685,7 +695,7 @@ Widget customDropDown(String label, List<Map<String,dynamic>> list, dynamic _mod
             onSelected: (index) {
               changeValue(index);
             },
-            icon:const Icon(
+            icon: const Icon(
               Icons.keyboard_arrow_down,
               color: Colors.white,
             ),
@@ -748,7 +758,7 @@ Widget textScale(
 
 Widget textDropDown(String text) {
   /* List Drop Down Text */
-  return Align( child: Text(text));
+  return Align(child: Text(text));
 }
 
 Widget drawerText(String text, Color colors, double fontSize) {
@@ -759,7 +769,7 @@ Widget drawerText(String text, Color colors, double fontSize) {
 }
 
 Widget warningTitleDialog() {
-  return const  Text(
+  return const Text(
     'Oops...',
     style: TextStyle(fontWeight: FontWeight.bold),
   );

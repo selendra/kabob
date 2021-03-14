@@ -1,6 +1,6 @@
+import 'dart:ui';
 import 'package:share/share.dart';
 import 'package:wallet_apps/index.dart';
-import 'dart:ui';
 
 class GetWalletMethod {
   void platformChecker(BuildContext context) {

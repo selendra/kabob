@@ -83,7 +83,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                       backgroundColor: Colors.transparent,
                       valueColor: AlwaysStoppedAnimation(
                           hexaCodeToColor(AppColors.secondary))),
-                  Align(
+                  const Align(
                     child: MyText(
                         text: "\nConnecting to Remote Node...",
                         color: "#000000",
@@ -91,8 +91,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   )
                 ],
               ),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              content: const Padding(
+                padding:  EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: MyText(
                   text: "Please wait ! this might take a bit longer",
                   color: "#000000",

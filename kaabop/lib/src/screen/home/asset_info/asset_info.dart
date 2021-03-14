@@ -337,7 +337,7 @@ class _AssetInfoState extends State<AssetInfo> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MyText(
+                          const MyText(
                             text: "Balance",
                             color: "#FFFFFF",
                             fontSize: 20,
@@ -399,7 +399,7 @@ class _AssetInfoState extends State<AssetInfo> {
                             color: hexaCodeToColor(AppColors.secondary),
                             disabledColor: Colors.grey[700],
                             focusColor: hexaCodeToColor(AppColors.secondary),
-                            child: MyText(
+                            child: const MyText(
                               text: 'Transfer',
                               color: '#FFFFFF',
                             ),
@@ -425,7 +425,7 @@ class _AssetInfoState extends State<AssetInfo> {
                             focusColor: hexaCodeToColor(
                               AppColors.secondary,
                             ),
-                            child: MyText(
+                            child: const MyText(
                               text: 'Recieved',
                               color: '#FFFFFF',
                             ),
@@ -452,7 +452,7 @@ class _AssetInfoState extends State<AssetInfo> {
                       ),
                     ),
                   ),
-                  MyText(
+                  const MyText(
                     text: 'Activity',
                     fontSize: 27,
                     color: "#FFFFFF",

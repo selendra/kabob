@@ -67,6 +67,7 @@ class MyFlatButton extends StatelessWidget {
       margin: edgeMargin,
       width: width,
       height: height,
+
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(size5), boxShadow: [
         if (hasShadow)

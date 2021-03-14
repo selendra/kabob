@@ -41,7 +41,6 @@ class AddContactBody extends StatelessWidget {
                     controller: model.contactNumber,
                     focusNode: model.contactNumberNode,
                     enableInput: false,
-
                     onChanged: onChanged,
                     pBottom: 16,
                     onSubmit: onSubmit),
@@ -52,7 +51,6 @@ class AddContactBody extends StatelessWidget {
                     ],
                     controller: model.userName,
                     focusNode: model.userNameNode,
-      
                     onChanged: onChanged,
                     pBottom: 16,
                     onSubmit: onSubmit),
@@ -107,7 +105,6 @@ class AddContactBody extends StatelessWidget {
                   inputAction: TextInputAction.done,
                   controller: model.memo,
                   focusNode: model.memoNode,
-            
                   onChanged: onChanged,
                   pBottom: 16,
                   onSubmit: onSubmit,
@@ -118,7 +115,6 @@ class AddContactBody extends StatelessWidget {
         ),
         MyFlatButton(
           textButton: "Add contact",
-          fontSize: size18,
           edgeMargin: const EdgeInsets.only(
             top: 40,
             left: 66,

@@ -69,7 +69,7 @@ class ContactBookBody extends StatelessWidget {
         ),
         Expanded(
           child: model.contactBookList == null
-              ? Center(
+              ? const Center(
                   child: MyText(
                     text: 'No contact',
                     color: "#FFFFFF",
@@ -212,18 +212,19 @@ class SimpleDialogItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimpleDialogOption(
       onPressed: onPressed,
-      child: Container(
+      child: SizedBox(
         height: 50,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(icon, size: 28.0, color: color),
             Padding(
               padding: const EdgeInsetsDirectional.only(start: 16.0),
               child: Text(
                 text,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.0),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
               ),
             ),
           ],

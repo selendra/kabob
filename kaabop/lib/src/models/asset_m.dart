@@ -15,7 +15,7 @@ class ModelAsset {
   String responseIssuer;
 
   GlobalKey<FormState> formStateAsset = GlobalKey<FormState>();
-  GlobalKey<ScaffoldState> globalKey = new GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
   Map<String, dynamic> result;
 
   TextEditingController controllerAssetCode = TextEditingController();

@@ -4,11 +4,12 @@ import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 
 class ContentsBackup extends StatefulWidget {
-  CreateAccModel createAccM;
+  final CreateAccModel createAccM;
 
-  ContentsBackup(CreateAccModel createAccModel) {
-    this.createAccM = createAccModel;
-  }
+  // ContentsBackup(CreateAccModel createAccModel) {
+  //   this.createAccM = createAccModel;
+  // }
+  const ContentsBackup(this.createAccM);
 
   static const route = '/contentsBackup';
 
@@ -29,97 +30,100 @@ class _ContentsBackupState extends State<ContentsBackup> {
   }
 
   @override
-  initState() {
+  void initState() {
     _generateMnemonic(widget.createAccM.sdk);
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BodyScaffold(
-      height: MediaQuery.of(context).size.height,
-      child: Column(
-        children: [
-          MyAppBar(
-            color: hexaCodeToColor(AppColors.cardColor),
-            title: AppText.createAccTitle,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: MyText(
-                      text: AppText.backup,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.whiteColorHexa,
-                      bottom: bpSize,
-                    )),
-                MyText(
-                  textAlign: TextAlign.left,
-                  text: AppText.getMnemonic,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.whiteColorHexa,
-                  bottom: bpSize,
-                ),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: MyText(
-                      text: AppText.backupMnemonic,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.whiteColorHexa,
-                      bottom: bpSize,
-                    )),
-                MyText(
-                  textAlign: TextAlign.left,
-                  text: AppText.keepMnemonic,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.whiteColorHexa,
-                  bottom: bpSize,
-                ),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: MyText(
-                      text: AppText.offlineStorage,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.whiteColorHexa,
-                      bottom: bpSize,
-                    )),
-                MyText(
-                  textAlign: TextAlign.left,
-                  text: AppText.mnemonicAdvise,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.whiteColorHexa,
-                ),
-              ],
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          children: [
+            MyAppBar(
+              color: hexaCodeToColor(AppColors.cardColor),
+              title: AppText.createAccTitle,
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
-          ),
-          Expanded(
-            child: Container(),
-          ),
-          MyFlatButton(
-            edgeMargin: EdgeInsets.only(left: 66, right: 66, bottom: 16),
-            textButton: AppText.next,
-            action: () async {
-              Navigator.push(
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: MyText(
+                        text: AppText.backup,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.whiteColorHexa,
+                        bottom: bpSize,
+                      )),
+                  MyText(
+                    textAlign: TextAlign.left,
+                    text: AppText.getMnemonic,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.whiteColorHexa,
+                    bottom: bpSize,
+                  ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: MyText(
+                        text: AppText.backupMnemonic,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.whiteColorHexa,
+                        bottom: bpSize,
+                      )),
+                  MyText(
+                    textAlign: TextAlign.left,
+                    text: AppText.keepMnemonic,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.whiteColorHexa,
+                    bottom: bpSize,
+                  ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: MyText(
+                        text: AppText.offlineStorage,
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.whiteColorHexa,
+                        bottom: bpSize,
+                      )),
+                  MyText(
+                    textAlign: TextAlign.left,
+                    text: AppText.mnemonicAdvise,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.whiteColorHexa,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Container(),
+            ),
+            MyFlatButton(
+              edgeMargin:
+                  const EdgeInsets.only(left: 66, right: 66, bottom: 16),
+              textButton: AppText.next,
+              action: () async {
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          CreateMnemonic(accModel: widget.createAccM)));
-            },
-          )
-        ],
+                    builder: (context) => CreateMnemonic(
+                      accModel: widget.createAccM,
+                    ),
+                  ),
+                );
+              },
+            )
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

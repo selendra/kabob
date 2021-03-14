@@ -8,9 +8,9 @@ import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
 
 class MyUserInfo extends StatefulWidget {
-  CreateAccModel accModel;
+  final CreateAccModel accModel;
 
-  MyUserInfo(this.accModel);
+  const MyUserInfo(this.accModel);
 
   @override
   State<StatefulWidget> createState() {
@@ -102,7 +102,8 @@ class MyUserInfoState extends State<MyUserInfo> {
       // Trigger Authentication By Finger Print
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
           localizedReason: '', stickyAuth: true);
-    } on PlatformException catch (e) {}
+    // ignore: empty_catches
+    } on PlatformException {}
     return _menuModel.authenticated;
   }
 

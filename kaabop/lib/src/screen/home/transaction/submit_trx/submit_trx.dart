@@ -62,7 +62,7 @@ class SubmitTrxState extends State<SubmitTrx> {
     {'asset_code': 'KMPI'}
   ];
 
-   List<Map<String, String>>  nativeList = [
+  List<Map<String, String>> nativeList = [
     {'asset_code': 'SEL'},
   ];
 
@@ -92,7 +92,7 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   String onChanged(String value) {
     _scanPayM.formStateKey.currentState.validate();
-    return null;
+    return value;
   }
 
   void onSubmit(BuildContext context) {
@@ -153,8 +153,6 @@ class SubmitTrxState extends State<SubmitTrx> {
       );
 
       if (res['hash'] != null) {
-        // assetbalanceOf(widget.sdkModel.keyring.keyPairs[0].address,
-        //     widget.sdkModel.keyring.keyPairs[0].address);
         await _balanceOfByPartition();
 
         saveTxHistory(TxHistory(

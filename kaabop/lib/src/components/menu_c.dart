@@ -7,43 +7,45 @@ class MenuHeader extends StatelessWidget {
 
   const MenuHeader({this.userInfo});
 
+  @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(left: 16),
       child: SizedBox(
-          height: 138,
-          child: Row(
-            children: [
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    width: 60,
-                    height: 60,
-                    margin: const EdgeInsets.only(right: 5),
-                    decoration: BoxDecoration(
-                      color: hexaCodeToColor(AppColors.cardColor),
-                      borderRadius: BorderRadius.circular(60),
-                    ),
-                    child: SvgPicture.asset('assets/male_avatar.svg'),
-                  )),
-              const SizedBox(width: 5),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  MyText(
-                    text: userInfo['first_name'] == '' &&
-                            userInfo['mid_name'] == '' &&
-                            userInfo['last_name'] == ''
-                        ? 'User name'
-                        : "${userInfo['first_name']}",
-                    color: "#FFFFFF",
-                    fontSize: 16,
+        height: 138,
+        child: Row(
+          children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  width: 60,
+                  height: 60,
+                  margin: const EdgeInsets.only(right: 5),
+                  decoration: BoxDecoration(
+                    color: hexaCodeToColor(AppColors.cardColor),
+                    borderRadius: BorderRadius.circular(60),
                   ),
-                ],
-              )
-            ],
-          )),
+                  child: SvgPicture.asset('assets/male_avatar.svg'),
+                )),
+            const SizedBox(width: 5),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MyText(
+                  text: userInfo['first_name'] == '' &&
+                          userInfo['mid_name'] == '' &&
+                          userInfo['last_name'] == ''
+                      ? 'User name'
+                      : "${userInfo['first_name']}",
+                  color: "#FFFFFF",
+                  fontSize: 16,
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }

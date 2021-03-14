@@ -4,7 +4,7 @@ import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/contact_book.dart';
 
 const fontSizePort = 17.0;
-final fontColorPort = Colors.white;
+const fontColorPort = Colors.white;
 
 List<Color> gradientColors = [
   hexaCodeToColor(AppColors.secondary),
@@ -29,13 +29,10 @@ final portfolioChart = LineChartData(
       );
     },
   ),
-
   titlesData: FlTitlesData(
     show: true,
     bottomTitles: SideTitles(
-      // showTitles: true,
       reservedSize: 6,
-      // textStyle: TextStyle(color: hexaCodeToColor(AppColors.textColor), fontWeight: FontWeight.bold, fontSize: 16),
       getTitles: (value) {
         switch (value.toInt()) {
           case 0:
@@ -56,12 +53,6 @@ final portfolioChart = LineChartData(
       margin: 0,
     ),
     leftTitles: SideTitles(
-      // showTitles: true,
-      // textStyle: TextStyle(
-      //   color: hexaCodeToColor(AppColors.textColor),
-      //   fontWeight: FontWeight.bold,
-      //   fontSize: 15,
-      // ),
       getTitles: (value) {
         switch (value.toInt()) {
           case 0:
@@ -79,7 +70,6 @@ final portfolioChart = LineChartData(
       margin: 0,
     ),
   ),
-  // borderData: FlBorderData(show: true, border: Border.all(color: const Color(0xff37434d), width: 1)),
   minX: 0,
   maxX: 6,
   minY: 0,
@@ -216,32 +206,38 @@ class AddAssetRowButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(context, AddAsset.route);
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (context) => AddAsset()));
-        },
-        child: rowDecorationStyle(
-            child: Row(children: [
-          Container(
+      onTap: () {
+        Navigator.pushNamed(context, AddAsset.route);
+      },
+      child: rowDecorationStyle(
+        child: Row(
+          children: [
+            Container(
               width: 40.0,
               height: 40.0,
               margin: const EdgeInsets.only(right: 10.0),
               decoration: BoxDecoration(
-                  color: hexaCodeToColor(AppColors.secondary),
-                  border: Border.all(width: 1, color: Colors.transparent),
-                  borderRadius: BorderRadius.circular(40.0)),
+                color: hexaCodeToColor(AppColors.secondary),
+                border: Border.all(color: Colors.transparent),
+                borderRadius: BorderRadius.circular(40.0),
+              ),
               alignment: Alignment.center,
               child: const Icon(
                 LineAwesomeIcons.plus,
                 color: Colors.white,
-              )),
-          Text("Add asset",
+              ),
+            ),
+            const Text(
+              "Add asset",
               style: TextStyle(
                 color: fontColorPort,
                 fontSize: fontSizePort,
-              ))
-        ])));
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -285,7 +281,7 @@ Widget portFolioItemRow(
                 text: sdkModel.contractModel.pTokenSymbol,
                 color: "#FFFFFF",
               ),
-              MyText(text: ModelAsset.assetOrganization, fontSize: 15),
+              const MyText(text: ModelAsset.assetOrganization, fontSize: 15),
             ],
           ),
         ),
@@ -313,7 +309,8 @@ Widget portFolioItemRow(
 }
 
 // Portfolow Row Decoration
-Widget rowDecorationStyle({Widget child, double mTop: 0, double mBottom = 16}) {
+Widget rowDecorationStyle(
+    {Widget child, double mTop = 0, double mBottom = 16}) {
   return Container(
       margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
       padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
@@ -467,37 +464,40 @@ class MyHomeAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 65.0,
-        width: MediaQuery.of(context).size.width,
-        margin: margin,
-        padding: const EdgeInsets.only(left: 24, right: 24),
-        child: Row(
-          children: [
-            MyLogo(
-              width: 50,
-              height: 50,
-              logoPath: "assets/sld_logo.svg",
+      height: 65.0,
+      width: MediaQuery.of(context).size.width,
+      margin: margin,
+      padding: const EdgeInsets.only(left: 24, right: 24),
+      child: Row(
+        children: [
+          const MyLogo(
+            width: 50,
+            height: 50,
+            logoPath: "assets/sld_logo.svg",
+          ),
+          MyText(
+            color: "#FFFFFF",
+            text: title,
+            left: 15,
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () {
+                  action();
+                },
+                child: const Icon(
+                  LineAwesomeIcons.bell,
+                  color: Colors.white,
+                  size: 30,
+                ),
+              ),
             ),
-            MyText(
-              color: "#FFFFFF",
-              text: title,
-              left: 15,
-            ),
-            Expanded(
-                child: Align(
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        action();
-                      },
-                      child: const Icon(
-                        LineAwesomeIcons.bell,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    )))
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }
 

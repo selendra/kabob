@@ -24,8 +24,7 @@ class MyBottomSheet {
           height: 153,
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.center,
+              const Align(
                 child: MyText(
                   color: "#FFFFFF",
                   top: 20,
@@ -76,8 +75,8 @@ class MyBottomSheet {
                         //     context, portfolioList);
                         await dialog(
                           context,
-                          Text('Coming Soon !'),
-                          Text('Invite friend'),
+                          const Text('Coming Soon !'),
+                          const Text('Invite friend'),
                         );
                       },
                     ),
@@ -101,8 +100,7 @@ class MyBottomSheet {
           height: MediaQuery.of(context).size.height - 107,
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.center,
+              const Align(
                 child: MyText(
                   color: "#FFFFFF",
                   top: 20,
@@ -111,13 +109,14 @@ class MyBottomSheet {
                 ),
               ),
               Expanded(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset('assets/no_data.svg', height: 200),
-                  MyText(text: "There are no notification found")
-                ],
-              ))
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/no_data.svg', height: 200),
+                    const MyText(text: "There are no notification found")
+                  ],
+                ),
+              )
             ],
           ),
         );

@@ -65,7 +65,7 @@ class ProfileCard extends StatelessWidget {
                 if (!sdkModel.apiConnected)
                   Container()
                 else
-                  Align(
+                 const Align(
                     alignment: Alignment.bottomRight,
                     child: SizedBox(
                       width: 150,

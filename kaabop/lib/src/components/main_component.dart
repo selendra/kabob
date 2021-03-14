@@ -11,12 +11,17 @@ Widget paddingScreenWidget(BuildContext context, Widget child) {
         maxWidth: MediaQuery.of(context).size.width),
     child: Center(
       child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Container(
-            padding:
-                EdgeInsets.only(top: 10, left: 40.0, right: 40, bottom: 10),
-            child: child,
-          )),
+        physics: const BouncingScrollPhysics(),
+        child: Container(
+          padding: const EdgeInsets.only(
+            top: 10,
+            left: 40.0,
+            right: 40,
+            bottom: 10,
+          ),
+          child: child,
+        ),
+      ),
     ),
   );
 }
@@ -32,11 +37,13 @@ Widget forgotPass(BuildContext context, String color,
     child: Padding(
       padding: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: textDisplay(
-          "Forgot Password?",
-          TextStyle(
-              color: hexaCodeToColor(color),
-              fontSize: fontSize,
-              fontWeight: fontWeight)),
+        "Forgot Password?",
+        TextStyle(
+          color: hexaCodeToColor(color),
+          fontSize: fontSize,
+          fontWeight: fontWeight,
+        ),
+      ),
     ),
   );
 }

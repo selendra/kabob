@@ -10,20 +10,19 @@ class PortFolioCus extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-
         Container(
           margin: const EdgeInsets.only(top: 16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 width: 5,
                 height: 40,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: hexaCodeToColor(AppColors.secondary)),
+                  borderRadius: BorderRadius.circular(5),
+                  color: hexaCodeToColor(AppColors.secondary),
+                ),
               ),
-              MyText(
+              const MyText(
                 text: 'Portfolio',
                 fontSize: 27,
                 color: AppColors.whiteColorHexa,
@@ -34,8 +33,8 @@ class PortFolioCus extends StatelessWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(bottom: 16, top: 16),
-          padding: EdgeInsets.only(left: 25, top: 25, bottom: 25),
+          margin: const EdgeInsets.only(bottom: 16, top: 16),
+          padding: const EdgeInsets.only(left: 25, top: 25, bottom: 25),
           width: double.infinity,
           height: 200,
           decoration: BoxDecoration(
@@ -46,7 +45,6 @@ class PortFolioCus extends StatelessWidget {
             children: [
               Expanded(
                 child: Align(
-                  alignment: Alignment.center,
                   child: SizedBox(
                     width: 150,
                     height: 150,
@@ -58,7 +56,7 @@ class PortFolioCus extends StatelessWidget {
                           chartType: ChartType.ring,
                           colorList: value.pieColorList,
                           centerText: "100%",
-                          legendOptions: LegendOptions(
+                          legendOptions: const LegendOptions(
                             showLegends: false,
                           ),
                           chartValuesOptions: ChartValuesOptions(
@@ -81,13 +79,16 @@ class PortFolioCus extends StatelessWidget {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(value.portfolio.length, (index) {
-                        return MyPieChartRow(
-                          color: value.portfolio[index].color,
-                          centerText: value.portfolio[index].symbol,
-                          endText: value.portfolio[index].percentage,
-                        );
-                      }),
+                      children: List.generate(
+                        value.portfolio.length,
+                        (index) {
+                          return MyPieChartRow(
+                            color: value.portfolio[index].color,
+                            centerText: value.portfolio[index].symbol,
+                            endText: value.portfolio[index].percentage,
+                          );
+                        },
+                      ),
                     );
                   },
                 ),

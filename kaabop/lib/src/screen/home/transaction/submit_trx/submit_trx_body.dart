@@ -39,7 +39,7 @@ class SubmitTrxBody extends StatelessWidget {
           validateField: (value) =>
               value == null ? 'Please fill in receiver address' : null,
           onChanged: onChanged,
-          onSubmit: onSubmit),
+          onSubmit: (){}),
       MyInputField(
           pBottom: 16,
           labelText: "Amount",
@@ -49,13 +49,13 @@ class SubmitTrxBody extends StatelessWidget {
           inputType: TextInputType.number,
           controller: scanPayM.controlAmount,
           focusNode: scanPayM.nodeAmount,
-          validateField: (value) => value == null ||
+          validateField: (value) => value == '' ||
                   double.parse(value.toString()) < 0 ||
                   value == '-0'
               ? 'Please fill in positive amount'
               : null,
           onChanged: onChanged,
-          onSubmit: onSubmit),
+          onSubmit: (){}),
       MyInputField(
           pBottom: 16,
           labelText: "Memo",
@@ -65,7 +65,7 @@ class SubmitTrxBody extends StatelessWidget {
           controller: scanPayM.controlMemo,
           focusNode: scanPayM.nodeMemo,
           onChanged: onChanged,
-          onSubmit: onSubmit)
+          onSubmit:    (){})
     ];
 
     return Column(

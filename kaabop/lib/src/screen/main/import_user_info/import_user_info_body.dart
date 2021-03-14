@@ -182,7 +182,7 @@ class ImportUserInfoBody extends StatelessWidget {
                             },
                           ),
                         ),
-                        MyText(
+                        const MyText(
                           text: "Fingerprint",
                           color: "#FFFFFF",
                         ),

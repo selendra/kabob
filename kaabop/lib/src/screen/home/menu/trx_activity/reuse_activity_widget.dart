@@ -24,9 +24,10 @@ Widget buildListBody(
                     padding: const EdgeInsets.only(top: 20.38, bottom: 16.62),
                     decoration: BoxDecoration(
                         border: Border(
-                            bottom: BorderSide(
-                                color: Colors.white.withOpacity(0.2),
-                                width: 1)),
+                          bottom: BorderSide(
+                            color: Colors.white.withOpacity(0.2),
+                          ),
+                        ),
                         borderRadius: BorderRadius.circular(5)),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,7 +77,6 @@ Widget buildListBody(
             )
           : loading() /* Show Loading If History Length = 0 */
       : Align(
-          alignment: Alignment.center,
           child: SvgPicture.asset('assets/no_data.svg'),
         ); /* Show Text (No activity) If Respoonse Length = 0 */
 }
@@ -87,17 +87,24 @@ Widget rowInformation(String title, dynamic _data) {
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
       Container(
-        margin: EdgeInsets.all(20.0),
+        margin: const EdgeInsets.all(20.0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Text("$title",
-                style: TextStyle(fontSize: 18.0, color: Colors.white)),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 18.0,
+                color: Colors.white,
+              ),
+            ),
             /* Title */
             Expanded(
               child: Text(
                 "$_data",
-                style: TextStyle(fontSize: 18.0, color: Colors.white),
+                style: const TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.white,
+                ),
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.right,
               ),

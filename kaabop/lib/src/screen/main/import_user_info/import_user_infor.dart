@@ -11,7 +11,7 @@ class ImportUserInfo extends StatefulWidget {
 
   static const route = '/importUserInfo';
 
-  ImportUserInfo(this.importAccModel);
+  const ImportUserInfo(this.importAccModel);
 
   @override
   State<StatefulWidget> createState() {
@@ -20,7 +20,7 @@ class ImportUserInfo extends StatefulWidget {
 }
 
 class ImportUserInfoState extends State<ImportUserInfo> {
-  ModelUserInfo _userInfoM = ModelUserInfo();
+  final ModelUserInfo _userInfoM = ModelUserInfo();
 
   LocalAuthentication _localAuth = LocalAuthentication();
 
@@ -80,27 +80,33 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         widget.importAccModel.mnemonic = '';
         _subscribeBalance();
 
-        await dialogSuccess(context, Text("You haved imported successfully"),
-            Text('Congratulation'),
-            action: FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Home.route, ModalRoute.withName('/'));
-                },
-                child: Text('Continue')));
+        await dialogSuccess(
+          context,
+          const Text("You haved imported successfully"),
+          const Text('Congratulation'),
+          // ignore: deprecated_member_use
+          action: FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Home.route, ModalRoute.withName('/'));
+            },
+            child: const Text('Continue'),
+          ),
+        );
       }
     } catch (e) {
       // print(e.toString());
       await dialog(
         context,
-        Text("Invalid mnemonic"),
-        Text('Message'),
+        const Text("Invalid mnemonic"),
+        const Text('Message'),
       );
       Navigator.pop(context);
     }
   }
 
+  // ignore: avoid_void_async
   void switchBiometric(bool switchValue) async {
     _localAuth = LocalAuthentication();
 
@@ -133,9 +139,10 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
     // Trigger Authentication By Finger Print
+    // ignore: join_return_with_assignment
     _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
         localizedReason: 'Scan your fingerprint to authenticate',
-        useErrorDialogs: true,
+
         stickyAuth: true);
 
     return _menuModel.authenticated;
@@ -145,10 +152,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     Navigator.pop(context);
   }
 
-  /* Change Select Gender */
-  void changeGender(String gender) async {}
 
-  void onSubmit() async {
+
+  Future<void> onSubmit() async {
     if (_userInfoM.userNameNode.hasFocus) {
       FocusScope.of(context).requestFocus(_userInfoM.passwordNode);
     } else if (_userInfoM.passwordNode.hasFocus) {
@@ -233,7 +239,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   // ignore: use_setters_to_change_properties
   // ignore: avoid_positional_boolean_parameters
-  
   void enableButton(bool value) => _userInfoM.enable = value;
 
   @override
@@ -246,7 +251,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
           modelUserInfo: _userInfoM,
           onSubmit: onSubmit,
           onChanged: onChanged,
-          changeGender: changeGender,
           validateFirstName: validateFirstName,
           validatepassword: validatePassword,
           validateConfirmPassword: validateConfirmPassword,

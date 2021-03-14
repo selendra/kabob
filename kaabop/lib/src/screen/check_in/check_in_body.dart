@@ -100,7 +100,7 @@ class CheckInBody extends StatelessWidget {
         ),
         MyFlatButton(
           textButton: "Submit",
-          fontSize: size18,
+          //fontSize: size18,
           edgeMargin: const EdgeInsets.only(left: 66, right: 66),
           hasShadow: true,
           action: checkinM.isEnable ? clickSend : null,

@@ -2,7 +2,7 @@ import 'package:wallet_apps/index.dart';
 
 class ContactBookModel {
 
-  List<ContactBookModel> contactBookList = List<ContactBookModel>();
+  List<ContactBookModel> contactBookList = [];
   // [
   //   // ContactBookModel.initList(contactNum: '123', address: "1", username: "Daveat", memo: "IT"),
   //   // ContactBookModel.initList(contactNum: '123', address: "2", username: "God", memo: "IT"),
@@ -31,9 +31,9 @@ class ContactBookModel {
   ContactBookModel();
 
   ContactBookModel.initList({String contactNum, String address, String username, String memo}){
-    this.contactNumber.text = contactNum;
+    contactNumber.text = contactNum;
     this.address.text = address;
-    this.userName.text = username;
+    userName.text = username;
     this.memo.text = memo;
   }
 }

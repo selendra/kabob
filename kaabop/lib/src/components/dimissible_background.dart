@@ -4,14 +4,17 @@ class DismissibleBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
+      margin: const EdgeInsets.symmetric(vertical: 5),
       color: Colors.red,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
-        children: [
+        children: const [
           Text(
             'Remove',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           Icon(
             Icons.delete,

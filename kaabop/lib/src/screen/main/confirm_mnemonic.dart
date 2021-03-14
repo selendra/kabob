@@ -5,7 +5,7 @@ import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 class ConfirmMnemonic extends StatefulWidget {
   final CreateAccModel accModel;
 
-  ConfirmMnemonic(this.accModel);
+  const ConfirmMnemonic(this.accModel);
 
   static const route = '/confirmMnemonic';
 
@@ -23,7 +23,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
   List _wordsLeft = [];
 
   Widget _buildWordsButtons() {
-    if (_wordsLeft.length > 0) {
+    if (_wordsLeft.isNotEmpty) {
       _wordsLeft.sort();
     }
 
@@ -144,7 +144,6 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                   MyText(
                     textAlign: TextAlign.left,
                     text: AppText.clickMnemonic,
-                    fontSize: 18,
                     fontWeight: FontWeight.w500,
                     color: AppColors.whiteColorHexa,
                     bottom: 12,
@@ -166,18 +165,19 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
 
                   // Field of Mnemonic
                   Container(
-                      height: 80,
-                      width: double.infinity,
-                      margin: const EdgeInsets.only(bottom: 16),
-                      color: hexaCodeToColor(AppColors.cardColor),
-                      padding: const EdgeInsets.all(16),
-                      alignment: Alignment.centerLeft,
-                      child: MyText(
-                        color: AppColors.secondarytext,
-                        textAlign: TextAlign.left,
-                        text: _wordsSelected.join(' '),
-                        fontWeight: FontWeight.bold,
-                      )),
+                    height: 80,
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 16),
+                    color: hexaCodeToColor(AppColors.cardColor),
+                    padding: const EdgeInsets.all(16),
+                    alignment: Alignment.centerLeft,
+                    child: MyText(
+                      color: AppColors.secondarytext,
+                      textAlign: TextAlign.left,
+                      text: _wordsSelected.join(' '),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),
