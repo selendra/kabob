@@ -109,14 +109,14 @@ final portfolioChart = LineChartData(
 Widget homeAppBar(BuildContext context) {
   return AppBar(
     toolbarHeight: 60,
-    leadingWidth: 110,
+    leadingWidth: 300,
     backgroundColor: hexaCodeToColor(AppColors.bgdColor),
     leading: Padding(
       padding: const EdgeInsets.only(left: 16.0),
       child: Image.asset(
-        'assets/Kabob-1.png',
-        width: 110,
-        height: 110,
+        'assets/bitriel.png',
+        width: 300,
+        height: 300,
       ),
     ),
     actions: [

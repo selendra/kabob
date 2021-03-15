@@ -7,7 +7,7 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in.dart';
 
-void main()  {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -73,6 +73,7 @@ class AppState extends State<App> {
       setState(() {
         _createAccModel.apiConnected = true;
       });
+      getProfileIcon();
       await readContract();
       await readAtd();
       initContract();
@@ -95,6 +96,14 @@ class AppState extends State<App> {
           BigInt.parse(res).toString();
       _createAccModel.atdReady = true;
     });
+  }
+
+  Future<void> getProfileIcon() async {
+    final res = await _createAccModel.sdk.api.account
+        .getPubKeyIcons([_createAccModel.keyring.keyPairs[0].pubKey]);
+        setState(() {
+          _createAccModel.profileIcon = res.toString();
+        });
   }
 
   Future<void> readAtd() async {
@@ -203,7 +212,7 @@ class AppState extends State<App> {
             return MaterialApp(
               initialRoute: '/',
               title: AppText.appName,
-              theme: AppStyle.myTheme(),
+              theme:AppStyle.myTheme(),
               routes: {
                 Home.route: (_) => Home(_createAccModel),
                 CheckIn.route: (_) => CheckIn(_createAccModel),

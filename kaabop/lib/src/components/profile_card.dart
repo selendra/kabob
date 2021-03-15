@@ -35,9 +35,13 @@ class ProfileCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: SvgPicture.asset(
-                    'assets/male_avatar.svg',
-                  ),
+                  child: sdkModel.profileIcon == null
+                      ? Container()
+                      : SvgPicture.string(sdkModel.profileIcon),
+                  // child: SvgPicture.asset(
+                  //   'assets/male_avatar.svg',
+                  //   //color: hexaCodeToColor(AppColors.secondary),
+                  // ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +69,7 @@ class ProfileCard extends StatelessWidget {
                 if (!sdkModel.apiConnected)
                   Container()
                 else
-                 const Align(
+                  const Align(
                     alignment: Alignment.bottomRight,
                     child: SizedBox(
                       width: 150,

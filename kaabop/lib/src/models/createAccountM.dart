@@ -18,6 +18,7 @@ class CreateAccModel {
   String kpiSupply = '';
   String password;
   String mnemonic;
+  String profileIcon;
 
   WalletSDK sdk;
   Keyring keyring;

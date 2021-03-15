@@ -15,9 +15,9 @@ class WalletProvider with ChangeNotifier {
   List<Map<String, String>> availableToken = [];
 
   List<Color> pieColorList = [
-    hexaCodeToColor("#08B952"),
-    hexaCodeToColor("#40FF90"),
-    hexaCodeToColor("#00FFF0"),
+    hexaCodeToColor("#D65B09"),
+    hexaCodeToColor(AppColors.secondary),
+    hexaCodeToColor("#F0C90A"),
   ];
 
   Map<String, double> dataMap = {
@@ -115,7 +115,6 @@ class WalletProvider with ChangeNotifier {
     double temp = 0.0;
 
     await getTotal().then((total) {
-
       double percen = 0.0;
       for (int i = 0; i < availableToken.length; i++) {
         temp = double.parse(availableToken[i]['balance']) / total;
