@@ -10,20 +10,21 @@ class SubmitTrxBody extends StatelessWidget {
   final void Function() clickSend;
   final Function resetAssetsDropDown;
   final CreateAccModel sdkModel;
-  final List<Map<String,String>> list;
+  final List<Map<String, String>> list;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
-  const SubmitTrxBody(
-      {this.enableInput,
-      this.dialog,
-      this.scanPayM,
-      this.onChanged,
-      this.onSubmit,
-      this.clickSend,
-      this.resetAssetsDropDown,
-      this.sdkModel,
-      this.item,
-      this.list});
+  const SubmitTrxBody({
+    this.enableInput,
+    this.dialog,
+    this.scanPayM,
+    this.onChanged,
+    this.onSubmit,
+    this.clickSend,
+    this.resetAssetsDropDown,
+    this.sdkModel,
+    this.item,
+    this.list,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class SubmitTrxBody extends StatelessWidget {
           validateField: (value) =>
               value == null ? 'Please fill in receiver address' : null,
           onChanged: onChanged,
-          onSubmit: (){}),
+          onSubmit: () {}),
       MyInputField(
           pBottom: 16,
           labelText: "Amount",
@@ -49,23 +50,22 @@ class SubmitTrxBody extends StatelessWidget {
           inputType: TextInputType.number,
           controller: scanPayM.controlAmount,
           focusNode: scanPayM.nodeAmount,
-          validateField: (value) => value == '' ||
-                  double.parse(value.toString()) < 0 ||
-                  value == '-0'
-              ? 'Please fill in positive amount'
-              : null,
+          validateField: (value) =>
+              value == '' || double.parse(value.toString()) < 0 || value == '-0'
+                  ? 'Please fill in positive amount'
+                  : null,
           onChanged: onChanged,
-          onSubmit: (){}),
-      MyInputField(
-          pBottom: 16,
-          labelText: "Memo",
-          textInputFormatter: [
-            LengthLimitingTextInputFormatter(TextField.noMaxLength)
-          ],
-          controller: scanPayM.controlMemo,
-          focusNode: scanPayM.nodeMemo,
-          onChanged: onChanged,
-          onSubmit:    (){})
+          onSubmit: () {}),
+      // MyInputField(
+      //     pBottom: 16,
+      //     labelText: "Memo",
+      //     textInputFormatter: [
+      //       LengthLimitingTextInputFormatter(TextField.noMaxLength)
+      //     ],
+      //     controller: scanPayM.controlMemo,
+      //     focusNode: scanPayM.nodeMemo,
+      //     onChanged: onChanged,
+      //     onSubmit: () {})
     ];
 
     return Column(
@@ -99,7 +99,7 @@ class SubmitTrxBody extends StatelessWidget {
                   ),
                 ),
                 listInput[1],
-                listInput[2],
+                //listInput[2],
                 MyFlatButton(
                   textButton: "Request code",
                   edgeMargin: const EdgeInsets.only(
@@ -108,7 +108,7 @@ class SubmitTrxBody extends StatelessWidget {
                     right: 66,
                   ),
                   hasShadow: true,
-                  action: clickSend,
+                  action: scanPayM.enable ? clickSend : null,
                 ),
               ],
             ),

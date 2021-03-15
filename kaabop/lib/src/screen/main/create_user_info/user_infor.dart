@@ -102,7 +102,7 @@ class MyUserInfoState extends State<MyUserInfo> {
       // Trigger Authentication By Finger Print
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
           localizedReason: '', stickyAuth: true);
-    // ignore: empty_catches
+      // ignore: empty_catches
     } on PlatformException {}
     return _menuModel.authenticated;
   }
@@ -139,8 +139,8 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   String validatePassword(String value) {
     if (_userInfoM.passwordNode.hasFocus) {
-      if (value.isEmpty) {
-        return 'Please fill in password';
+      if (value.isEmpty || value.length < 4) {
+        return 'Please fill in 4-digits password';
       }
     }
     return _userInfoM.responseMidname;
@@ -148,8 +148,8 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   String validateConfirmPassword(String value) {
     if (_userInfoM.confirmPasswordNode.hasFocus) {
-      if (value.isEmpty) {
-        return 'Please fill in confirm password';
+      if (value.isEmpty || value.length < 4) {
+        return 'Please fill in 4-digits confirm password';
       } else if (_userInfoM.confirmPasswordCon.text !=
           _userInfoM.passwordCon.text) {
         return 'Password does not matched';

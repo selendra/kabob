@@ -46,13 +46,11 @@ class SubmitTrxState extends State<SubmitTrx> {
     widget.asset != null
         ? _scanPayM.asset = widget.asset
         : _scanPayM.asset = "SEL";
-    // print(c.transferFrom);
 
     AppServices.noInternetConnection(_scanPayM.globalKey);
 
     _scanPayM.controlReceiverAddress.text = widget._walletKey;
     _scanPayM.portfolio = widget._listPortfolio;
-    // print(widget.sdkModel.contractModel.pHash);
 
     super.initState();
   }
@@ -91,7 +89,18 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   String onChanged(String value) {
-    _scanPayM.formStateKey.currentState.validate();
+    if (_scanPayM.nodeReceiverAddress.hasFocus) {
+     // FocusScope.of(context).requestFocus(_scanPayM.nodeAmount);
+    } else if (_scanPayM.nodeAmount.hasFocus) {
+      _scanPayM.formStateKey.currentState.validate();
+      if (_scanPayM.formStateKey.currentState.validate()) {
+        enableButton();
+      }else{
+        setState(() {
+          _scanPayM.enable = false;
+        });
+      }
+    }
     return value;
   }
 

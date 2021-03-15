@@ -186,8 +186,8 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validatePassword(String value) {
     if (_userInfoM.passwordNode.hasFocus) {
-      if (value.isEmpty) {
-        return 'Please fill in password';
+      if (value.isEmpty || value.length<4) {
+        return 'Please fill in 4-digits password';
       }
     }
     return _userInfoM.responseMidname;
@@ -195,8 +195,8 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validateConfirmPassword(String value) {
     if (_userInfoM.confirmPasswordNode.hasFocus) {
-      if (value.isEmpty) {
-        return 'Please fill in confirm pin';
+      if (value.isEmpty||value.length<4) {
+        return 'Please fill in 4-digits confirm pin';
       } else if (_userInfoM.confirmPasswordCon.text !=
           _userInfoM.passwordCon.text) {
         return 'Pin does not matched';
