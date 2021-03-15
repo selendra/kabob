@@ -7,7 +7,7 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -33,7 +33,7 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
-  CreateAccModel _createAccModel = CreateAccModel();
+  final _createAccModel = CreateAccModel();
 
   @override
   void initState() {
@@ -73,6 +73,7 @@ class AppState extends State<App> {
       setState(() {
         _createAccModel.apiConnected = true;
       });
+      getProfileIcon();
       await readContract();
       await readAtd();
       initContract();
@@ -97,6 +98,14 @@ class AppState extends State<App> {
     });
   }
 
+  Future<void> getProfileIcon() async {
+    final res = await _createAccModel.sdk.api.account
+        .getPubKeyIcons([_createAccModel.keyring.keyPairs[0].pubKey]);
+        setState(() {
+          _createAccModel.profileIcon = res.toString();
+        });
+  }
+
   Future<void> readAtd() async {
     await StorageServices.readBool(
       _createAccModel.contractModel.attendantM.aSymbol,
@@ -114,15 +123,14 @@ class AppState extends State<App> {
   }
 
   Future<void> _subscribeBalance() async {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
     if (_createAccModel.keyring.keyPairs.isNotEmpty) {
       final channel = await _createAccModel.sdk.api.account
           .subscribeBalance(_createAccModel.keyring.current.address, (res) {
         setState(() {
-          _createAccModel.balance = res;
           _createAccModel.nativeBalance = Fmt.balance(
-            _createAccModel.balance.freeBalance,
+            res.freeBalance.toString(),
             18,
           );
           _createAccModel.dataReady = true;
@@ -143,7 +151,6 @@ class AppState extends State<App> {
         });
       }
     });
-  
   }
 
   Future<void> initContract() async {
@@ -161,44 +168,38 @@ class AppState extends State<App> {
   }
 
   Future<void> _contractSymbol() async {
-    try {
-      final res = await _createAccModel.sdk.api
-          .contractSymbol(_createAccModel.keyring.keyPairs[0].address);
-      if (res != null) {
-        setState(() {
-          _createAccModel.contractModel.pTokenSymbol = res[0];
-        });
-      }
-    } catch (e) {}
+    final res = await _createAccModel.sdk.api
+        .contractSymbol(_createAccModel.keyring.keyPairs[0].address);
+    if (res != null) {
+      setState(() {
+        _createAccModel.contractModel.pTokenSymbol = res[0].toString();
+      });
+    }
   }
 
   Future<void> _getHashBySymbol() async {
-    try {
-      final res = await _createAccModel.sdk.api.getHashBySymbol(
-        _createAccModel.keyring.keyPairs[0].address,
-        _createAccModel.contractModel.pTokenSymbol,
-      );
+    final res = await _createAccModel.sdk.api.getHashBySymbol(
+      _createAccModel.keyring.keyPairs[0].address,
+      _createAccModel.contractModel.pTokenSymbol,
+    );
 
-      if (res != null) {
-        _createAccModel.contractModel.pHash = res;
-      }
-    } catch (e) {}
+    if (res != null) {
+      _createAccModel.contractModel.pHash = res;
+    }
   }
 
   Future<void> _balanceOfByPartition() async {
-    try {
-      final res = await _createAccModel.sdk.api.balanceOfByPartition(
-        _createAccModel.keyring.keyPairs[0].address,
-        _createAccModel.keyring.keyPairs[0].address,
-        _createAccModel.contractModel.pHash,
-      );
+    final res = await _createAccModel.sdk.api.balanceOfByPartition(
+      _createAccModel.keyring.keyPairs[0].address,
+      _createAccModel.keyring.keyPairs[0].address,
+      _createAccModel.contractModel.pHash,
+    );
 
-      setState(() {
-        _createAccModel.contractModel.pBalance =
-            BigInt.parse(res['output']).toString();
-        _createAccModel.kmpiReady = true;
-      });
-    } catch (e) {}
+    setState(() {
+      _createAccModel.contractModel.pBalance =
+          BigInt.parse(res['output'].toString()).toString();
+      _createAccModel.kmpiReady = true;
+    });
   }
 
   @override
@@ -211,7 +212,7 @@ class AppState extends State<App> {
             return MaterialApp(
               initialRoute: '/',
               title: AppText.appName,
-              theme: AppStyle.myTheme(),
+              theme:AppStyle.myTheme(),
               routes: {
                 Home.route: (_) => Home(_createAccModel),
                 CheckIn.route: (_) => CheckIn(_createAccModel),
@@ -227,13 +228,14 @@ class AppState extends State<App> {
               builder: (context, widget) => ResponsiveWrapper.builder(
                 BouncingScrollWrapper.builder(context, widget),
                 maxWidth: 1200,
+                // ignore: avoid_redundant_argument_values
                 minWidth: 450,
                 defaultScale: true,
                 breakpoints: [
-                  ResponsiveBreakpoint.autoScale(480, name: MOBILE),
-                  ResponsiveBreakpoint.autoScale(800, name: TABLET),
-                  ResponsiveBreakpoint.resize(1000, name: DESKTOP),
-                  ResponsiveBreakpoint.autoScale(2460, name: '4K'),
+                  const ResponsiveBreakpoint.autoScale(480, name: MOBILE),
+                  const ResponsiveBreakpoint.autoScale(800, name: TABLET),
+                  const ResponsiveBreakpoint.resize(1000, name: DESKTOP),
+                  const ResponsiveBreakpoint.autoScale(2460, name: '4K'),
                 ],
               ),
             );

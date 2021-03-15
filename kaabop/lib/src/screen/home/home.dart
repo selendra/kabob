@@ -8,10 +8,11 @@ import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class Home extends StatefulWidget {
   final CreateAccModel sdkModel;
-  Home(this.sdkModel);
+  const Home(this.sdkModel);
 
   static const route = '/home';
 
+  @override
   State<StatefulWidget> createState() {
     return HomeState();
   }
@@ -20,8 +21,8 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> with TickerProviderStateMixin {
   // GlobalKey<AnimatedCircularChartState> chartKey = GlobalKey<AnimatedCircularChartState>();
   MenuModel menuModel = MenuModel();
-  HomeModel _homeM = HomeModel();
-  PortfolioM _portfolioM = PortfolioM();
+  final HomeModel _homeM = HomeModel();
+  final PortfolioM _portfolioM = PortfolioM();
   BuildContext dialogContext;
   String action = "no_action";
   String status = '';
@@ -40,7 +41,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   @override
-  initState() {
+  void initState() {
     _homeM.portfolioList = null;
     _portfolioM.list = [];
     if (mounted) {
@@ -64,8 +65,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     super.initState();
   }
 
-  void startNode() async {
-    await Future.delayed(Duration(milliseconds: 50), () {
+  Future<void> startNode() async {
+    await Future.delayed(const Duration(milliseconds: 50), () {
       showDialog(
           barrierDismissible: false,
           context: context,
@@ -82,8 +83,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                       backgroundColor: Colors.transparent,
                       valueColor: AlwaysStoppedAnimation(
                           hexaCodeToColor(AppColors.secondary))),
-                  Align(
-                    alignment: Alignment.center,
+                  const Align(
                     child: MyText(
                         text: "\nConnecting to Remote Node...",
                         color: "#000000",
@@ -91,8 +91,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   )
                 ],
               ),
-              content: Padding(
-                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              content: const Padding(
+                padding:  EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: MyText(
                   text: "Please wait ! this might take a bit longer",
                   color: "#000000",
@@ -103,20 +103,21 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
-  void handleConnectNode() async {
+  Future<void> handleConnectNode() async {
     if (widget.sdkModel.contractModel.isContain &&
         widget.sdkModel.contractModel.attendantM.isAContain) {
       if (widget.sdkModel.apiConnected &&
           widget.sdkModel.dataReady &&
           widget.sdkModel.kmpiReady &&
           widget.sdkModel.atdReady) {
-        await Future.delayed(Duration(milliseconds: 200), () {
+        await Future.delayed(const Duration(milliseconds: 200), () {
           status = null;
         });
 
         Navigator.of(dialogContext).pop();
         setPortfolio();
       }
+      // ignore: invariant_booleans
     } else if (widget.sdkModel.contractModel.isContain ||
         widget.sdkModel.contractModel.attendantM.isAContain) {
       if (widget.sdkModel.apiConnected &&
@@ -125,7 +126,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           widget.sdkModel.apiConnected &&
               widget.sdkModel.dataReady &&
               widget.sdkModel.atdReady) {
-        await Future.delayed(Duration(milliseconds: 200), () {
+        await Future.delayed(const Duration(milliseconds: 200), () {
           status = null;
         });
 
@@ -134,7 +135,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       }
     } else {
       if (widget.sdkModel.apiConnected && widget.sdkModel.dataReady) {
-        await Future.delayed(Duration(milliseconds: 200), () {
+        await Future.delayed(const Duration(milliseconds: 200), () {
           status = null;
         });
 
@@ -144,6 +145,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     }
   }
 
+  // ignore: avoid_positional_boolean_parameters
   void opacityController(bool visible) {
     if (mounted) {
       setState(() {
@@ -166,19 +168,15 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
       setState(() {
         widget.sdkModel.contractModel.pBalance =
-            BigInt.parse(res['output']).toString();
+            BigInt.parse(res['output'].toString()).toString();
       });
     } catch (e) {
       // print(e.toString());
     }
   }
 
-  void toReceiveToken() async {
+  Future<void> toReceiveToken() async {
     await Navigator.pushNamed(context, ReceiveWallet.route);
-    // if (Platform.isAndroid)
-    //   await AndroidPlatform.resetBrightness();
-    // else
-    //   await IOSPlatform.resetBrightness(IOSPlatform.defaultBrightnessLvl);
   }
 
   void openMyDrawer() {
@@ -186,7 +184,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> onRefresh() async {
-    await Future.delayed(Duration(milliseconds: 300)).then((value) {
+    await Future.delayed(const Duration(milliseconds: 300)).then((value) {
       setPortfolio();
       if (widget.sdkModel.contractModel.pHash != '') {
         _balanceOf();
@@ -195,7 +193,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void setPortfolio() {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
 
     if (widget.sdkModel.contractModel.pHash != '') {
@@ -225,7 +223,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
-  void onDismiss() async {
+  Future<void> onDismiss() async {
     widget.sdkModel.contractModel.isContain = false;
     widget.sdkModel.contractModel.pHash = '';
     setPortfolio();
@@ -233,7 +231,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     await StorageServices.removeKey('KMPI');
   }
 
-  void onDismissATT() async {
+  Future<void> onDismissATT() async {
     widget.sdkModel.contractModel.attendantM = AttendantModel();
     setPortfolio();
     await StorageServices.removeKey('ATD');
@@ -248,7 +246,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
         child: Menu(_homeM.userData),
       ),
-      appBar: homeAppBar(context),
+      appBar: homeAppBar(context) as PreferredSizeWidget,
       body: RefreshIndicator(
         onRefresh: onRefresh,
         child: BodyScaffold(
@@ -267,6 +265,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: FloatingActionButton(
           backgroundColor: hexaCodeToColor(AppColors.secondary)
               .withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
+          onPressed: () async {
+            await TrxOptionMethod.scanQR(
+              context,
+              _homeM.portfolioList,
+              widget.sdkModel,
+            );
+          },
           child: SvgPicture.asset(
             'assets/icons/qr_code.svg',
             width: 30,
@@ -275,13 +280,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 ? Colors.white.withOpacity(0.2)
                 : Colors.white,
           ),
-          onPressed: () async {
-            await TrxOptionMethod.scanQR(
-              context,
-              _homeM.portfolioList,
-              widget.sdkModel,
-            );
-          },
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -289,7 +287,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         apiStatus: widget.sdkModel.apiConnected,
         homeM: _homeM,
         portfolioM: _portfolioM,
-        scanReceipt: null, // Bottom Center Button
+        // Bottom Center Button
         toReceiveToken: toReceiveToken,
         opacityController: opacityController,
         openDrawer: openMyDrawer,

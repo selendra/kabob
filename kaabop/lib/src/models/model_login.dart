@@ -9,9 +9,9 @@ class ModelLogin {
 
   String token; String phoneNumber = "", prefixText = "+855", label;
 
-  var colorSubmitted = Colors.transparent;
+  Color colorSubmitted = Colors.transparent;
 
-  var responseEmailPhone, responsePassword;
+  //var responseEmailPhone, responsePassword;
 
   int myNumCount = 0;
 

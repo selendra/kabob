@@ -7,7 +7,7 @@ import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.d
 class ImportAcc extends StatefulWidget {
   final CreateAccModel importAccModel;
 
-  ImportAcc(this.importAccModel);
+  const ImportAcc(this.importAccModel);
   static const route = '/import';
 
   @override
@@ -19,9 +19,7 @@ class ImportAcc extends StatefulWidget {
 class ImportAccState extends State<ImportAcc> {
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
 
-  ImportAccModel _importAccModel = ImportAccModel();
-
-
+  final ImportAccModel _importAccModel = ImportAccModel();
 
   bool status;
   int currentVersion;
@@ -30,7 +28,7 @@ class ImportAccState extends State<ImportAcc> {
 
   String tempMnemonic;
 
-  var snackBar;
+  
 
   @override
   void initState() {
@@ -44,6 +42,7 @@ class ImportAccState extends State<ImportAcc> {
         enable = value;
       });
     });
+    return null;
   }
 
   Future<bool> validateMnemonic(String mnemonic) async {
@@ -59,7 +58,7 @@ class ImportAccState extends State<ImportAcc> {
     });
   }
 
-  void onSubmit() async => await submit();
+  Future<void> onSubmit() async => submit();
 
   Future<void> submit() async {
     validateMnemonic(_importAccModel.mnemonicCon.text).then((value) async {
@@ -73,6 +72,7 @@ class ImportAccState extends State<ImportAcc> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: globalKey,

@@ -4,8 +4,14 @@ import '../../../../index.dart';
 class AttActivity extends StatelessWidget {
   final List<Map> _checkAll;
   final CreateAccModel sdkModel;
-  final Function _onRefresh;
-  AttActivity(this._checkAll, this.sdkModel, this._onRefresh);
+  final Future<void> Function() _onRefresh;
+
+  const AttActivity(
+    this._checkAll,
+    this.sdkModel,
+    this._onRefresh,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -25,16 +31,25 @@ class AttActivity extends StatelessWidget {
                   itemCount: _checkAll.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: EdgeInsets.only(
-                          top: 0, left: 16, right: 16, bottom: 16),
-                      padding: EdgeInsets.fromLTRB(15, 9, 15, 9),
+                      margin: const EdgeInsets.only(
+                        left: 16,
+                        right: 16,
+                        bottom: 16,
+                      ),
+                      padding: const EdgeInsets.fromLTRB(
+                        15,
+                        9,
+                        15,
+                        9,
+                      ),
                       height: 90,
                       decoration: BoxDecoration(
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 2.0,
-                              offset: Offset(1.0, 1.0))
+                            color: Colors.black12,
+                            blurRadius: 2.0,
+                            offset: Offset(1.0, 1.0),
+                          )
                         ],
                         color: hexaCodeToColor(AppColors.cardColor),
                         borderRadius: BorderRadius.circular(8),
@@ -44,13 +59,15 @@ class AttActivity extends StatelessWidget {
                           Container(
                             width: 50,
                             height: 50,
-                            padding: EdgeInsets.all(6),
-                            margin: EdgeInsets.only(right: 20),
+                            padding: const EdgeInsets.all(6),
+                            margin: const EdgeInsets.only(right: 20),
                             decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(40)),
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(40),
+                            ),
                             child: Image.asset(
-                                sdkModel.contractModel.attendantM.attLogo),
+                              sdkModel.contractModel.attendantM.attLogo,
+                            ),
                           ),
                           Expanded(
                             child: Container(
@@ -63,25 +80,30 @@ class AttActivity extends StatelessWidget {
                                     text: sdkModel
                                         .contractModel.attendantM.aSymbol,
                                     color: "#FFFFFF",
-                                    fontSize: 18,
                                   ),
                                   MyText(
-                                      textAlign: TextAlign.start,
-                                      text: _checkAll[index]['location'],
-                                      fontSize: 14),
+                                    textAlign: TextAlign.start,
+                                    text:
+                                        _checkAll[index]['location'].toString(),
+                                    fontSize: 14,
+                                  ),
                                 ],
                               ),
                             ),
                           ),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(right: 16, top: 10),
+                              margin: const EdgeInsets.only(
+                                right: 16,
+                                top: 10,
+                              ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   MyText(
                                     width: double.infinity,
-                                    text: _checkAll[index]['time'] ?? "",
+                                    text: _checkAll[index]['time'].toString() ??
+                                        "",
                                     color: "#FFFFFF",
                                     fontSize: 12,
                                     textAlign: TextAlign.right,
@@ -95,10 +117,12 @@ class AttActivity extends StatelessWidget {
                                         width: 10,
                                         decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: _checkAll[index]['status']
-                                              ? hexaCodeToColor(
-                                                  AppColors.secondary)
-                                              : Colors.red,
+                                          color:
+                                              _checkAll[index]['status'] == true
+                                                  ? hexaCodeToColor(
+                                                      AppColors.secondary,
+                                                    )
+                                                  : Colors.red,
                                         ),
                                       ),
                                     ),

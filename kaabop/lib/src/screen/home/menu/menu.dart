@@ -3,8 +3,9 @@ import 'package:wallet_apps/index.dart';
 class Menu extends StatefulWidget {
   final Map<String, dynamic> _userData;
 
-
-  Menu(this._userData, );
+  const Menu(
+    this._userData,
+  );
 
   @override
   State<StatefulWidget> createState() {
@@ -13,9 +14,7 @@ class Menu extends StatefulWidget {
 }
 
 class MenuState extends State<Menu> {
- 
-
-  MenuModel _menuModel = MenuModel();
+  final MenuModel _menuModel = MenuModel();
 
   LocalAuthentication _localAuth;
 
@@ -26,14 +25,12 @@ class MenuState extends State<Menu> {
       isSuccessPin = false,
       isHaveWallet = false;
 
-
-
   /* InitState */
   @override
   void initState() {
     _menuModel.globalKey = GlobalKey<ScaffoldState>();
     //AppServices.noInternetConnection(_menuModel.globalKey);
-  
+
     readBio();
     checkAvailableBio();
     super.initState();
@@ -44,20 +41,21 @@ class MenuState extends State<Menu> {
     super.dispose();
   }
 
- 
-  void checkAvailableBio() async {
-    await StorageServices.fetchData('biometric').then((value) {
-      if (value != null) {
-        if (value['bio'] == true) {
-          setState(() {
-            _menuModel.switchBio = value['bio'];
-          });
+  Future<void> checkAvailableBio() async {
+    await StorageServices.fetchData('biometric').then(
+      (value) {
+        if (value != null) {
+          if (value['bio'] == true) {
+            setState(() {
+              _menuModel.switchBio = value['bio'] as bool;
+            });
+          }
         }
-      }
-    });
+      },
+    );
   }
 
-  void readBio() async {
+  Future<void> readBio() async {
     await StorageServices.readSaveBio().then((value) {
       setState(() {
         _menuModel.switchBio = value;
@@ -65,12 +63,9 @@ class MenuState extends State<Menu> {
     });
   }
 
-  void switchBiometric(bool switchValue) async {
-    //print(switchValue);
-
-    // setState(() {
-    //   _menuModel.switchBio = switchValue;
-    // });
+  // ignore: avoid_positional_boolean_parameters
+  Future<void> switchBiometric(bool switchValue) async {
+    
     _localAuth = LocalAuthentication();
 
     await _localAuth.canCheckBiometrics.then((value) async {
@@ -99,20 +94,21 @@ class MenuState extends State<Menu> {
         }
       }
     });
-
   }
 
   Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
     try {
       // Trigger Authentication By Finger Print
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-          localizedReason: '', useErrorDialogs: true, stickyAuth: true);
-    } on PlatformException catch (e) {}
+          localizedReason: '',  stickyAuth: true);
+    // ignore: empty_catches
+    } on PlatformException {}
     return _menuModel.authenticated;
   }
 
   /* ----------------------Side Bar -------------------------*/
 
+  @override
   Widget build(BuildContext context) {
     return Drawer(
       key: _menuModel.globalKey,

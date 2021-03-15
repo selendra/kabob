@@ -3,7 +3,7 @@ import 'package:wallet_apps/index.dart';
 
 class ProfileCard extends StatelessWidget {
   final CreateAccModel sdkModel;
-  ProfileCard(this.sdkModel);
+  const ProfileCard(this.sdkModel);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -26,7 +26,6 @@ class ProfileCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   alignment: Alignment.centerLeft,
@@ -36,9 +35,13 @@ class ProfileCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: SvgPicture.asset(
-                    'assets/male_avatar.svg',
-                  ),
+                  child: sdkModel.profileIcon == null
+                      ? Container()
+                      : SvgPicture.string(sdkModel.profileIcon),
+                  // child: SvgPicture.asset(
+                  //   'assets/male_avatar.svg',
+                  //   //color: hexaCodeToColor(AppColors.secondary),
+                  // ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,14 +51,13 @@ class ProfileCard extends StatelessWidget {
                       color: "#FFFFFF",
                       fontSize: 20,
                     ),
-                    Container(
+                    SizedBox(
                       width: 100,
                       child: MyText(
                         text: !sdkModel.apiConnected
                             ? "Connecting to Remote Node"
                             : "Indracore",
-                        color: AppColors.secondary_text,
-                        fontSize: 18,
+                        color: AppColors.secondarytext,
                         textAlign: TextAlign.start,
                         fontWeight: FontWeight.bold,
                         overflow: TextOverflow.ellipsis,
@@ -64,21 +66,22 @@ class ProfileCard extends StatelessWidget {
                   ],
                 ),
                 Expanded(child: Container()),
-                !sdkModel.apiConnected
-                    ? Container()
-                    : Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          width: 150,
-                          child: MyText(
-                            text: '', //sdkModel.nativeBalance,
-                            fontSize: 30,
-                            color: AppColors.secondary_text,
-                            fontWeight: FontWeight.bold,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      )
+                if (!sdkModel.apiConnected)
+                  Container()
+                else
+                  const Align(
+                    alignment: Alignment.bottomRight,
+                    child: SizedBox(
+                      width: 150,
+                      child: MyText(
+                        text: '', //sdkModel.nativeBalance,
+                        fontSize: 30,
+                        color: AppColors.secondarytext,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  )
               ],
             ),
             GestureDetector(
@@ -86,8 +89,12 @@ class ProfileCard extends StatelessWidget {
                 Clipboard.setData(
                         ClipboardData(text: sdkModel.userModel.address))
                     .then((value) => {
+                          // ignore: deprecated_member_use
                           Scaffold.of(context).showSnackBar(
-                              SnackBar(content: Text('Copied to Clipboard')))
+                            const SnackBar(
+                              content: Text('Copied to Clipboard'),
+                            ),
+                          )
                         });
               },
               child: MyText(

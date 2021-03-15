@@ -6,7 +6,7 @@ class MenuModel {
 
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
 
-  Map result = Map();
+  Map result = {};
 
   static const List listTile = [
     {

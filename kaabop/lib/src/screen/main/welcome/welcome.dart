@@ -13,7 +13,7 @@ class WelcomeState extends State<Welcome> {
   bool status;
   int currentVersion;
 
-  var snackBar;
+  //var snackBar;
 
   @override
   void initState() {
@@ -21,12 +21,14 @@ class WelcomeState extends State<Welcome> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: globalKey,
-        body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: WelcomeBody(),
-        ));
+      key: globalKey,
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: WelcomeBody(),
+      ),
+    );
   }
 }

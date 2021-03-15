@@ -11,7 +11,7 @@ class Fmt {
     if (value == null) {
       return '~';
     }
-    NumberFormat f =
+   final NumberFormat f =
         NumberFormat(",##0${length > 0 ? '.' : ''}${'#' * length}", "en_US");
     return f.format(value);
   }
@@ -21,7 +21,7 @@ class Fmt {
     int decimals, {
     int length = 4,
   }) {
-    if (raw == null || raw.length == 0) {
+    if (raw == null || raw.isEmpty) {
       return '~';
     }
     return doubleFormat(bigIntToDouble(balanceInt(raw), decimals),
@@ -40,7 +40,7 @@ class Fmt {
   }
 
   static BigInt balanceInt(String raw) {
-    if (raw == null || raw.length == 0) {
+    if (raw == null || raw.isEmpty) {
       return BigInt.zero;
     }
     if (raw.contains(',') || raw.contains('.')) {
@@ -57,12 +57,13 @@ class Fmt {
     double v = 0;
     try {
       if (value.contains(',') || value.contains('.')) {
-        v = NumberFormat(",##0.${"0" * decimals}").parse(value);
+        v = NumberFormat(",##0.${"0" * decimals}").parse(value).toDouble();
       } else {
         v = double.parse(value);
       }
+    // ignore: empty_catches
     } catch (err) {
-     // print('Fmt.tokenInt() error: ${err.toString()}');
+
     }
     return BigInt.from(v * pow(10, decimals));
   }

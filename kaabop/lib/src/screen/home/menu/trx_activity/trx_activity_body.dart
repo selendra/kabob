@@ -3,13 +3,14 @@ import 'package:wallet_apps/index.dart';
 class TrxActivityBody extends StatelessWidget{
 
   final List<dynamic> activityList;
-  final Function popScreen;
+  final void Function() popScreen;
 
-  TrxActivityBody({
+  const TrxActivityBody({
     this.activityList,
     this.popScreen
   });
 
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[

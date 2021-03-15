@@ -5,9 +5,9 @@ import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class MySplashScreen extends StatefulWidget {
-  CreateAccModel accModel;
+  final CreateAccModel accModel;
 
-  MySplashScreen(this.accModel);
+  const MySplashScreen(this.accModel);
 
   static const route = '/';
   @override
@@ -22,8 +22,8 @@ class MySplashScreenState extends State<MySplashScreen>
   AnimationController controller;
   Animation<double> animation;
 
-  void getCurrentAccount() async {
-    await Future.delayed(Duration(seconds: 1), () {
+  Future<void> getCurrentAccount() async {
+    await Future.delayed(const Duration(seconds: 1), () {
       final List<KeyPairData> ls = WalletProvider().keyring.keyPairs.toList();
 
       if (ls.isEmpty) {
@@ -35,7 +35,7 @@ class MySplashScreenState extends State<MySplashScreen>
     });
   }
 
-  void checkBiometric() async {
+  Future<void> checkBiometric() async {
     await StorageServices.readSaveBio().then((value) {
       if (value) {
         Navigator.pushReplacement(
@@ -49,7 +49,7 @@ class MySplashScreenState extends State<MySplashScreen>
   @override
   void initState() {
     controller = AnimationController(
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
       vsync: this,
     );
 
@@ -76,12 +76,12 @@ class MySplashScreenState extends State<MySplashScreen>
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,
       backgroundColor: hexaCodeToColor(AppColors.bgdColor),
       body: Align(
-        alignment: Alignment.center,
         child: FadeTransition(
           opacity: animation,
           child: Image.asset(

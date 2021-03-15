@@ -6,18 +6,18 @@ import 'package:wallet_apps/src/models/fmt.dart';
 import '../../index.dart';
 
 class WalletProvider with ChangeNotifier {
-  WalletSDK _sdk = WalletSDK();
-  Keyring _keyring = Keyring();
+  final WalletSDK _sdk = WalletSDK();
+  final Keyring _keyring = Keyring();
   String _nativeBalance = '';
   bool _isApiConnected = false;
   bool _isSdkReady = false;
-  List<PortfolioM> _portfolioM = [];
+  final List<PortfolioM> _portfolioM = [];
   List<Map<String, String>> availableToken = [];
 
   List<Color> pieColorList = [
-    hexaCodeToColor("#08B952"),
-    hexaCodeToColor("#40FF90"),
-    hexaCodeToColor("#00FFF0"),
+    hexaCodeToColor("#D65B09"),
+    hexaCodeToColor(AppColors.secondary),
+    hexaCodeToColor("#F0C90A"),
   ];
 
   Map<String, double> dataMap = {
@@ -36,6 +36,7 @@ class WalletProvider with ChangeNotifier {
     await keyring.init();
     await sdk.init(keyring);
 
+    // ignore: join_return_with_assignment
     _isSdkReady = true;
     return _isSdkReady;
   }
@@ -59,7 +60,7 @@ class WalletProvider with ChangeNotifier {
   Future<void> subscribeBalance() async {
     await sdk.api.account.subscribeBalance(keyring.current.address, (res) {
       if (res != null) {
-        _nativeBalance = Fmt.balance(res.freeBalance, 18);
+        _nativeBalance = Fmt.balance(res.freeBalance.toString(), 18);
       }
     });
     notifyListeners();
@@ -108,13 +109,12 @@ class WalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void getPortfolio() async {
+  Future<void> getPortfolio() async {
     _portfolioM.clear();
 
     double temp = 0.0;
 
     await getTotal().then((total) {
-
       double percen = 0.0;
       for (int i = 0; i < availableToken.length; i++) {
         temp = double.parse(availableToken[i]['balance']) / total;

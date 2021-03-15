@@ -5,48 +5,45 @@ class SubmitTrxBody extends StatelessWidget {
   final bool enableInput;
   final dynamic dialog;
   final ModelScanPay scanPayM;
-  final Function onChanged;
+  final String Function(String) onChanged;
   final Function onSubmit;
-  final Function validateInput;
-  final Function clickSend;
+  final void Function() clickSend;
   final Function resetAssetsDropDown;
   final CreateAccModel sdkModel;
-  final List list;
+  final List<Map<String, String>> list;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
-  SubmitTrxBody(
-      {this.enableInput,
-      this.dialog,
-      this.scanPayM,
-      this.onChanged,
-      this.onSubmit,
-      this.validateInput,
-      this.clickSend,
-      this.resetAssetsDropDown,
-      this.sdkModel,
-      this.item,
-      this.list});
+  const SubmitTrxBody({
+    this.enableInput,
+    this.dialog,
+    this.scanPayM,
+    this.onChanged,
+    this.onSubmit,
+    this.clickSend,
+    this.resetAssetsDropDown,
+    this.sdkModel,
+    this.item,
+    this.list,
+  });
 
+  @override
   Widget build(BuildContext context) {
-    List<MyInputField> listInput = [
+    final List<MyInputField> listInput = [
       MyInputField(
           pBottom: 16,
           labelText: "Receiver address",
-          prefixText: null,
           textInputFormatter: [
             LengthLimitingTextInputFormatter(TextField.noMaxLength),
           ],
-          inputType: TextInputType.text,
           controller: scanPayM.controlReceiverAddress,
           focusNode: scanPayM.nodeReceiverAddress,
           validateField: (value) =>
-              value.isEmpty ? 'Please fill in receiver address' : null,
+              value == null ? 'Please fill in receiver address' : null,
           onChanged: onChanged,
-          onSubmit: onSubmit),
+          onSubmit: () {}),
       MyInputField(
           pBottom: 16,
           labelText: "Amount",
-          prefixText: null,
           textInputFormatter: [
             LengthLimitingTextInputFormatter(TextField.noMaxLength)
           ],
@@ -54,23 +51,21 @@ class SubmitTrxBody extends StatelessWidget {
           controller: scanPayM.controlAmount,
           focusNode: scanPayM.nodeAmount,
           validateField: (value) =>
-              value.isEmpty || double.parse(value) < 0 || value == '-0'
+              value == '' || double.parse(value.toString()) < 0 || value == '-0'
                   ? 'Please fill in positive amount'
                   : null,
           onChanged: onChanged,
-          onSubmit: onSubmit),
-      MyInputField(
-          pBottom: 16,
-          labelText: "Memo",
-          prefixText: null,
-          textInputFormatter: [
-            LengthLimitingTextInputFormatter(TextField.noMaxLength)
-          ],
-          inputType: TextInputType.text,
-          controller: scanPayM.controlMemo,
-          focusNode: scanPayM.nodeMemo,
-          onChanged: onChanged,
-          onSubmit: onSubmit)
+          onSubmit: () {}),
+      // MyInputField(
+      //     pBottom: 16,
+      //     labelText: "Memo",
+      //     textInputFormatter: [
+      //       LengthLimitingTextInputFormatter(TextField.noMaxLength)
+      //     ],
+      //     controller: scanPayM.controlMemo,
+      //     focusNode: scanPayM.nodeMemo,
+      //     onChanged: onChanged,
+      //     onSubmit: () {})
     ];
 
     return Column(
@@ -90,28 +85,31 @@ class SubmitTrxBody extends StatelessWidget {
                 listInput[0],
                 Container(
                   /* Type of payment */
-                  margin: EdgeInsets.only(bottom: 16.0, left: 16, right: 16),
+                  margin: const EdgeInsets.only(
+                    bottom: 16.0,
+                    left: 16,
+                    right: 16,
+                  ),
                   child: customDropDown(
-                      scanPayM.asset != null ? scanPayM.asset : "Asset name",
-                      list,
-                      scanPayM,
-                      resetAssetsDropDown,
-                      item),
-
-                  // child: customDropDown(label, list, _model, changeValue, item),
+                    scanPayM.asset ?? "Asset name",
+                    list,
+                    scanPayM,
+                    resetAssetsDropDown,
+                    item,
+                  ),
                 ),
                 listInput[1],
-                listInput[2],
+                //listInput[2],
                 MyFlatButton(
-                    textButton: "Request code",
-                    buttonColor: AppColors.secondary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: size18,
-                    edgeMargin: EdgeInsets.only(top: 40, left: 66, right: 66),
-                    hasShadow: true,
-                    action:
-                        clickSend //scanPayM.enable == false ? null : clickSend
-                    ),
+                  textButton: "Request code",
+                  edgeMargin: const EdgeInsets.only(
+                    top: 40,
+                    left: 66,
+                    right: 66,
+                  ),
+                  hasShadow: true,
+                  action: scanPayM.enable ? clickSend : null,
+                ),
               ],
             ),
           ),

@@ -1,6 +1,6 @@
+import 'dart:ui';
 import 'package:share/share.dart';
 import 'package:wallet_apps/index.dart';
-import 'dart:ui';
 
 class GetWalletMethod {
   void platformChecker(BuildContext context) {
@@ -55,25 +55,22 @@ class GetWalletMethod {
   //   } on PlatformException catch (e) {}
   // }
 
-  void qrShare(GlobalKey globalKey, String _wallet) async {
+  Future<void> qrShare(GlobalKey globalKey, String _wallet) async {
     try {
-      RenderRepaintBoundary boundary =
-          globalKey.currentContext.findRenderObject();
+      final RenderRepaintBoundary boundary =
+          globalKey.currentContext.findRenderObject() as RenderRepaintBoundary;
 
-      var image = await boundary.toImage(pixelRatio: 5.0);
-      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
-      Uint8List pngBytes = byteData.buffer.asUint8List();
+      final image = await boundary.toImage(pixelRatio: 5.0);
+      final ByteData byteData =
+          await image.toByteData(format: ImageByteFormat.png);
+      final Uint8List pngBytes = byteData.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
       final file = await File("${tempDir.path}/selendra.png").create();
       await file.writeAsBytes(pngBytes);
-      // ShareExtend.share(
-      //   file.path,
-      //   "image",
-      //   subject: _wallet,
-      // );
+
       Share.shareFiles([file.path], subject: _wallet);
     } catch (e) {
-      print(e.toString());
+      //print(e.toString());
     }
   }
 
@@ -86,6 +83,7 @@ class GetWalletMethod {
     final snackbar = SnackBar(
       content: Text(contents),
     );
+    // ignore: deprecated_member_use
     _globalKey.currentState.showSnackBar(snackbar);
   }
 }

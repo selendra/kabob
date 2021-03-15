@@ -12,13 +12,14 @@ class HomeBody extends StatelessWidget {
   final Function onDismiss;
   final Function onDismissATT;
 
-  HomeBody({
+  const HomeBody({
     this.sdkModel,
     this.balanceOf,
     this.onDismiss,
     this.onDismissATT,
   });
 
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -29,9 +30,8 @@ class HomeBody extends StatelessWidget {
               ProfileCard(sdkModel),
               PortFolioCus(),
               Container(
-                margin: EdgeInsets.only(top: 16),
+                margin: const EdgeInsets.only(top: 16),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
                       width: 5,
@@ -40,7 +40,7 @@ class HomeBody extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                           color: hexaCodeToColor(AppColors.secondary)),
                     ),
-                    MyText(
+                    const MyText(
                       text: 'Assets',
                       fontSize: 27,
                       color: AppColors.whiteColorHexa,
@@ -52,14 +52,12 @@ class HomeBody extends StatelessWidget {
                         onTap: () {
                           Navigator.pushNamed(context, AddAsset.route);
                         },
-                        child: Container(
-                          child: Align(
-                            alignment: Alignment.bottomRight,
-                            child: Icon(
-                              Icons.add_circle_outline,
-                              color: Colors.white,
-                              size: 30,
-                            ),
+                        child: const Align(
+                          alignment: Alignment.bottomRight,
+                          child: Icon(
+                            Icons.add_circle_outline,
+                            color: Colors.white,
+                            size: 30,
                           ),
                         ),
                       ),
@@ -71,13 +69,12 @@ class HomeBody extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Container(
+          child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.3,
             child: ListView(
               children: [
                 GestureDetector(
                   onTap: () {
-                    
                     Navigator.push(
                       context,
                       RouteAnimation(
@@ -93,73 +90,74 @@ class HomeBody extends StatelessWidget {
                   child: AssetItem(sdkModel.nativeToken, sdkModel.nativeSymbol,
                       sdkModel.nativeOrg, sdkModel.nativeBalance, Colors.white),
                 ),
-                sdkModel.contractModel.isContain
-                    ? Dismissible(
-                        key: Key(sdkModel.nativeSymbol),
-                        direction: DismissDirection.endToStart,
-                        background: DismissibleBackground(),
-                        onDismissed: (direct) {
-                          onDismiss();
-                        },
-                        child: GestureDetector(
-                          onTap: () {
-                            balanceOf();
-                            Navigator.push(
-                              context,
-                              RouteAnimation(
-                                enterPage: AssetInfo(
-                                  sdkModel: sdkModel,
-                                  assetLogo: sdkModel.contractModel.ptLogo,
-                                  balance: sdkModel.contractModel.pBalance,
-                                  tokenSymbol:
-                                      sdkModel.contractModel.pTokenSymbol,
-                                ),
-                              ),
-                            );
-                          },
-                          child: AssetItem(
-                              sdkModel.contractModel.ptLogo,
-                              sdkModel.contractModel.pTokenSymbol,
-                              sdkModel.contractModel.pOrg,
-                              sdkModel.contractModel.pBalance,
-                              Colors.black),
-                        ),
-                      )
-                    : Container(),
-                sdkModel.contractModel.attendantM.isAContain
-                    ? Dismissible(
-                        key: UniqueKey(),
-                        direction: DismissDirection.endToStart,
-                        background: DismissibleBackground(),
-                        onDismissed: (direct) {
-                          onDismissATT();
-                        },
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              RouteAnimation(
-                                enterPage: AssetInfo(
-                                  sdkModel: sdkModel,
-                                  assetLogo:
-                                      sdkModel.contractModel.attendantM.attLogo,
-                                  balance: sdkModel
-                                      .contractModel.attendantM.aBalance,
-                                  tokenSymbol:
-                                      sdkModel.contractModel.attendantM.aSymbol,
-                                ),
-                              ),
-                            );
-                          },
-                          child: AssetItem(
-                              sdkModel.contractModel.attendantM.attLogo,
-                              sdkModel.contractModel.attendantM.aSymbol,
-                              sdkModel.contractModel.attendantM.aOrg,
-                              sdkModel.contractModel.attendantM.aBalance,
-                              Colors.black),
-                        ),
-                      )
-                    : Container(),
+                if (sdkModel.contractModel.isContain)
+                  Dismissible(
+                    key: Key(sdkModel.nativeSymbol),
+                    direction: DismissDirection.endToStart,
+                    background: DismissibleBackground(),
+                    onDismissed: (direct) {
+                      onDismiss();
+                    },
+                    child: GestureDetector(
+                      onTap: () {
+                        balanceOf();
+                        Navigator.push(
+                          context,
+                          RouteAnimation(
+                            enterPage: AssetInfo(
+                              sdkModel: sdkModel,
+                              assetLogo: sdkModel.contractModel.ptLogo,
+                              balance: sdkModel.contractModel.pBalance,
+                              tokenSymbol: sdkModel.contractModel.pTokenSymbol,
+                            ),
+                          ),
+                        );
+                      },
+                      child: AssetItem(
+                          sdkModel.contractModel.ptLogo,
+                          sdkModel.contractModel.pTokenSymbol,
+                          sdkModel.contractModel.pOrg,
+                          sdkModel.contractModel.pBalance,
+                          Colors.black),
+                    ),
+                  )
+                else
+                  Container(),
+                if (sdkModel.contractModel.attendantM.isAContain)
+                  Dismissible(
+                    key: UniqueKey(),
+                    direction: DismissDirection.endToStart,
+                    background: DismissibleBackground(),
+                    onDismissed: (direct) {
+                      onDismissATT();
+                    },
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          RouteAnimation(
+                            enterPage: AssetInfo(
+                              sdkModel: sdkModel,
+                              assetLogo:
+                                  sdkModel.contractModel.attendantM.attLogo,
+                              balance:
+                                  sdkModel.contractModel.attendantM.aBalance,
+                              tokenSymbol:
+                                  sdkModel.contractModel.attendantM.aSymbol,
+                            ),
+                          ),
+                        );
+                      },
+                      child: AssetItem(
+                          sdkModel.contractModel.attendantM.attLogo,
+                          sdkModel.contractModel.attendantM.aSymbol,
+                          sdkModel.contractModel.attendantM.aOrg,
+                          sdkModel.contractModel.attendantM.aBalance,
+                          Colors.black),
+                    ),
+                  )
+                else
+                  Container(),
               ],
             ),
           ),

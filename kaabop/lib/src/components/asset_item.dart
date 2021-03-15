@@ -10,7 +10,7 @@ class AssetItem extends StatelessWidget {
   final Color color;
 
 
-  AssetItem(this.asset,this.tokenSymbol,this.org,this.balance,this.color);
+  const AssetItem(this.asset,this.tokenSymbol,this.org,this.balance,this.color);
   @override
   Widget build(BuildContext context) {
     return rowDecorationStyle(
@@ -19,8 +19,8 @@ class AssetItem extends StatelessWidget {
         Container(
           width: 50,
           height: 50,
-          padding: EdgeInsets.all(6),
-          margin: EdgeInsets.only(right: 20),
+          padding: const  EdgeInsets.all(6),
+          margin: const EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
               color: color, borderRadius: BorderRadius.circular(40)),
           child: Image.asset(asset),
@@ -35,7 +35,7 @@ class AssetItem extends StatelessWidget {
                 MyText(
                   text: tokenSymbol,
                   color: "#FFFFFF",
-                  fontSize: 18,
+            
                 ),
                 MyText(text: org, fontSize: 15),
               ],
@@ -44,7 +44,7 @@ class AssetItem extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            margin: EdgeInsets.only(right: 16),
+            margin: const EdgeInsets.only(right: 16),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +53,7 @@ class AssetItem extends StatelessWidget {
                     width: double.infinity,
                     text: balance, //portfolioData[0]["data"]['balance'],
                     color: "#FFFFFF",
-                    fontSize: 18,
+
                     textAlign: TextAlign.right,
                     overflow: TextOverflow.ellipsis),
               ],
@@ -67,13 +67,13 @@ class AssetItem extends StatelessWidget {
   }
 
    Widget rowDecorationStyle(
-      {Widget child, double mTop: 0, double mBottom = 16}) {
+      {Widget child, double mTop= 0, double mBottom = 16}) {
     return Container(
         margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
-        padding: EdgeInsets.fromLTRB(15, 9, 15, 9),
+        padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
         height: 90,
         decoration: BoxDecoration(
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
                 color: Colors.black12,
                 blurRadius: 2.0,

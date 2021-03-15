@@ -12,8 +12,8 @@ class AppColors {
   static const String cardColor = "#181C35";
   static const String textColor = "#585D86";
   static const String textBtnColor = "#000000";
-  static const String secondary = "#08B952";
-  static const String secondary_text = "#40FF90";
+  static const String secondary ="#F39D0C";// "#08B952";
+  static const String secondarytext ="#F39D0C"; //"#40FF90";
   static const String selected = "#00642A";
 
   //blue

@@ -11,7 +11,7 @@ class ImportUserInfo extends StatefulWidget {
 
   static const route = '/importUserInfo';
 
-  ImportUserInfo(this.importAccModel);
+  const ImportUserInfo(this.importAccModel);
 
   @override
   State<StatefulWidget> createState() {
@@ -20,11 +20,11 @@ class ImportUserInfo extends StatefulWidget {
 }
 
 class ImportUserInfoState extends State<ImportUserInfo> {
-  ModelUserInfo _userInfoM = ModelUserInfo();
+  final ModelUserInfo _userInfoM = ModelUserInfo();
 
   LocalAuthentication _localAuth = LocalAuthentication();
 
-  MenuModel _menuModel = MenuModel();
+  final MenuModel _menuModel = MenuModel();
 
   @override
   void initState() {
@@ -34,7 +34,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   @override
   void dispose() {
-    /* Clear Everything When Pop Screen */
     _userInfoM.userNameCon.clear();
     _userInfoM.passwordCon.clear();
     _userInfoM.confirmPasswordCon.clear();
@@ -43,13 +42,13 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<void> _subscribeBalance() async {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
     final channel = await widget.importAccModel.sdk.api.account
         .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
       widget.importAccModel.balance = res;
       widget.importAccModel.nativeBalance =
-          Fmt.balance(widget.importAccModel.balance.freeBalance, 18);
+          Fmt.balance(widget.importAccModel.balance.freeBalance.toString(), 18);
       walletProvider.addAvaibleToken({
         'symbol': widget.importAccModel.nativeSymbol,
         'balance': widget.importAccModel.nativeBalance,
@@ -81,27 +80,33 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         widget.importAccModel.mnemonic = '';
         _subscribeBalance();
 
-        await dialogSuccess(context, Text("You haved imported successfully"),
-            Text('Congratulation'),
-            action: FlatButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Home.route, ModalRoute.withName('/'));
-                },
-                child: Text('Continue')));
+        await dialogSuccess(
+          context,
+          const Text("You haved imported successfully"),
+          const Text('Congratulation'),
+          // ignore: deprecated_member_use
+          action: FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Home.route, ModalRoute.withName('/'));
+            },
+            child: const Text('Continue'),
+          ),
+        );
       }
     } catch (e) {
       // print(e.toString());
       await dialog(
         context,
-        Text("Invalid mnemonic"),
-        Text('Message'),
+        const Text("Invalid mnemonic"),
+        const Text('Message'),
       );
       Navigator.pop(context);
     }
   }
 
+  // ignore: avoid_void_async
   void switchBiometric(bool switchValue) async {
     _localAuth = LocalAuthentication();
 
@@ -134,9 +139,10 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
     // Trigger Authentication By Finger Print
+    // ignore: join_return_with_assignment
     _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
         localizedReason: 'Scan your fingerprint to authenticate',
-        useErrorDialogs: true,
+
         stickyAuth: true);
 
     return _menuModel.authenticated;
@@ -146,10 +152,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     Navigator.pop(context);
   }
 
-  /* Change Select Gender */
-  void changeGender(String gender) async {}
 
-  void onSubmit() async {
+
+  Future<void> onSubmit() async {
     if (_userInfoM.userNameNode.hasFocus) {
       FocusScope.of(context).requestFocus(_userInfoM.passwordNode);
     } else if (_userInfoM.passwordNode.hasFocus) {
@@ -161,9 +166,10 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     }
   }
 
-  void onChanged(String value) {
+  String onChanged(String value) {
     _userInfoM.formStateAddUserInfo.currentState.validate();
     validateAll();
+    return null;
   }
 
   String validateFirstName(String value) {
@@ -180,8 +186,8 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validatePassword(String value) {
     if (_userInfoM.passwordNode.hasFocus) {
-      if (value.isEmpty) {
-        return 'Please fill in password';
+      if (value.isEmpty || value.length<4) {
+        return 'Please fill in 4-digits password';
       }
     }
     return _userInfoM.responseMidname;
@@ -189,8 +195,8 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validateConfirmPassword(String value) {
     if (_userInfoM.confirmPasswordNode.hasFocus) {
-      if (value.isEmpty) {
-        return 'Please fill in confirm pin';
+      if (value.isEmpty||value.length<4) {
+        return 'Please fill in 4-digits confirm pin';
       } else if (_userInfoM.confirmPasswordCon.text !=
           _userInfoM.passwordCon.text) {
         return 'Pin does not matched';
@@ -209,10 +215,11 @@ class ImportUserInfoState extends State<ImportUserInfo> {
           enableButton(true);
         });
       }
-    } else if (_userInfoM.enable)
+    } else if (_userInfoM.enable) {
       setState(() {
         enableButton(false);
       });
+    }
   }
 
   // Submit Profile User
@@ -230,26 +237,30 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     );
   }
 
+  // ignore: use_setters_to_change_properties
+  // ignore: avoid_positional_boolean_parameters
   void enableButton(bool value) => _userInfoM.enable = value;
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _userInfoM.globalKey,
       body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: ImportUserInfoBody(
-              modelUserInfo: _userInfoM,
-              onSubmit: onSubmit,
-              onChanged: onChanged,
-              changeGender: changeGender,
-              validateFirstName: validateFirstName,
-              validatepassword: validatePassword,
-              validateConfirmPassword: validateConfirmPassword,
-              submitProfile: submitProfile,
-              popScreen: popScreen,
-              switchBio: switchBiometric,
-              menuModel: _menuModel,
-              item: item)),
+        height: MediaQuery.of(context).size.height,
+        child: ImportUserInfoBody(
+          modelUserInfo: _userInfoM,
+          onSubmit: onSubmit,
+          onChanged: onChanged,
+          validateFirstName: validateFirstName,
+          validatepassword: validatePassword,
+          validateConfirmPassword: validateConfirmPassword,
+          submitProfile: submitProfile,
+          popScreen: popScreen,
+          switchBio: switchBiometric,
+          menuModel: _menuModel,
+          item: item,
+        ),
+      ),
     );
   }
 }

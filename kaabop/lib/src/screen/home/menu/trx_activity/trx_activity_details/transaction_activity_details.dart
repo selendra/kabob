@@ -4,7 +4,7 @@ import 'package:wallet_apps/index.dart';
 class TransactionActivityDetails extends StatefulWidget {
   final Map<String, dynamic> _trxInfo;
 
-  TransactionActivityDetails(this._trxInfo);
+  const TransactionActivityDetails(this._trxInfo);
 
   @override
   State<StatefulWidget> createState() {
@@ -16,7 +16,7 @@ class MyActivityDetailsState extends State<TransactionActivityDetails> {
 
   // final RefreshController _refreshController = RefreshController();
   
-  GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   bool isProgress = true;
   bool isLogout = false;
@@ -37,6 +37,7 @@ class MyActivityDetailsState extends State<TransactionActivityDetails> {
 
   void popScreen() => Navigator.pop(context);
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,

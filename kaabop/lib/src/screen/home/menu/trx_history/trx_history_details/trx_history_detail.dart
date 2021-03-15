@@ -6,7 +6,7 @@ class TrxHistoryDetails extends StatefulWidget {
   final String _title;
   final Map<String, dynamic> _trxInfo;
 
-  TrxHistoryDetails(this._trxInfo, this._title);
+  const TrxHistoryDetails(this._trxInfo, this._title);
 
   @override
   State<StatefulWidget> createState() {
@@ -16,7 +16,7 @@ class TrxHistoryDetails extends StatefulWidget {
 
 class TrxHistoryDetailsState extends State<TrxHistoryDetails> {
 
-  GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   // final RefreshController _refreshController = RefreshController();
 
@@ -39,6 +39,7 @@ class TrxHistoryDetailsState extends State<TrxHistoryDetails> {
 
   void popScreen() => Navigator.pop(context);
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,

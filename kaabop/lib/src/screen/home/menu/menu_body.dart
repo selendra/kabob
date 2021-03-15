@@ -8,18 +8,19 @@ class MenuBody extends StatelessWidget {
   final MenuModel model;
   final Function switchBio;
 
-  MenuBody({
+  const MenuBody({
     this.userInfo,
     this.model,
     this.switchBio,
   });
 
+  @override
   Widget build(BuildContext context) {
     return Column(children: [
       MenuHeader(userInfo: userInfo),
 
       // History
-      MenuSubTitle(index: 0),
+      const MenuSubTitle(index: 0),
 
       MyListTile(
         index: 0,
@@ -41,7 +42,7 @@ class MenuBody extends StatelessWidget {
       // ),
 
       // Wallet
-      MenuSubTitle(index: 1),
+      const MenuSubTitle(index: 1),
 
       MyListTile(
         index: 1,
@@ -67,7 +68,7 @@ class MenuBody extends StatelessWidget {
       ),
 
       // Security
-      MenuSubTitle(index: 2),
+      const MenuSubTitle(index: 2),
 
       MyListTile(
         enable: false,
@@ -83,7 +84,7 @@ class MenuBody extends StatelessWidget {
       ),
 
       // Account
-      MenuSubTitle(index: 3),
+      const MenuSubTitle(index: 3),
 
       MyListTile(
         index: 3,

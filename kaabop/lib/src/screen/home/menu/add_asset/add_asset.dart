@@ -7,7 +7,7 @@ import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class AddAsset extends StatefulWidget {
   final CreateAccModel sdkModel;
-  AddAsset(this.sdkModel);
+  const AddAsset(this.sdkModel);
   static const route = '/addasset';
   @override
   State<StatefulWidget> createState() {
@@ -16,12 +16,12 @@ class AddAsset extends StatefulWidget {
 }
 
 class AddAssetState extends State<AddAsset> {
-  ModelAsset _modelAsset = ModelAsset();
+  final ModelAsset _modelAsset = ModelAsset();
 
-  FlareControls _flareController = FlareControls();
+  final FlareControls _flareController = FlareControls();
 
-  GlobalKey<ScaffoldState> globalKey = new GlobalKey<ScaffoldState>();
-  List<TokenModel> _token = [];
+  GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
+  final List<TokenModel> _token = [];
 
   @override
   void initState() {
@@ -43,30 +43,34 @@ class AddAssetState extends State<AddAsset> {
     if (_modelAsset.controllerAssetCode.text.isNotEmpty &&
         _modelAsset.controllerIssuer.text.isNotEmpty) {
       validateAllFieldNoError();
-    } else if (_modelAsset.enable)
-      enableButton(false); // Disable Button If All Field Not Empty
+    } else if (_modelAsset.enable) {
+      enableButton(false);
+    } // Disable Button If All Field Not Empty
   }
 
   void validateAllFieldNoError() {
     if (_modelAsset.responseAssetCode == null &&
         _modelAsset.responseIssuer == null) {
       enableButton(true); // Enable Button If All Field Not Empty
-    } else if (_modelAsset.enable)
-      enableButton(false); // Disable Button If All Field Not Empty
+    } else if (_modelAsset.enable) {
+      enableButton(false);
+    } // Disable Button If All Field Not Empty
   }
 
+  // ignore: avoid_positional_boolean_parameters
   void enableButton(bool enable) {
     setState(() {
       _modelAsset.enable = enable;
     });
   }
 
-  void onChanged(String textChange) {
+  String onChanged(String textChange) {
     _modelAsset.formStateAsset.currentState.validate();
     enableButton(true);
+    return null;
   }
 
-  void listToken() async {
+  Future<void> listToken() async {
     _token.add(TokenModel(
       logo: widget.sdkModel.contractModel.ptLogo,
       symbol: widget.sdkModel.contractModel.pTokenSymbol,
@@ -81,7 +85,7 @@ class AddAssetState extends State<AddAsset> {
     ));
   }
 
-  void addAsset(String symbol) async {
+  Future<void> addAsset(String symbol) async {
     dialogLoading(context);
     setState(() {
       widget.sdkModel.contractModel.isContain = true;
@@ -94,7 +98,7 @@ class AddAssetState extends State<AddAsset> {
     enableAnimation();
   }
 
-  void addAssetInSearch(String symbol) async {
+  Future<void> addAssetInSearch(String symbol) async {
     if (symbol == 'KMPI') {
       widget.sdkModel.contractModel.isContain = true;
       await _contractSymbol();
@@ -139,7 +143,7 @@ class AddAssetState extends State<AddAsset> {
           .contractSymbol(widget.sdkModel.keyring.keyPairs[0].address);
       if (res != null) {
         setState(() {
-          widget.sdkModel.contractModel.pTokenSymbol = res[0];
+          widget.sdkModel.contractModel.pTokenSymbol = res[0].toString();
         });
       }
     } catch (e) {
@@ -171,7 +175,8 @@ class AddAssetState extends State<AddAsset> {
       );
 
       widget.sdkModel.contractModel.pBalance =
-          BigInt.parse(res['output']).toString();
+          BigInt.parse(res['output'].toString()).toString();
+      // ignore: empty_catches
     } catch (e) {}
   }
 
@@ -183,7 +188,7 @@ class AddAssetState extends State<AddAsset> {
   }
 
   void addATT() {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
     walletProvider.addAvaibleToken({
       'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
@@ -194,7 +199,7 @@ class AddAssetState extends State<AddAsset> {
   }
 
   void setPortfolio() {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
     walletProvider.addAvaibleToken({
       'symbol': widget.sdkModel.contractModel.pTokenSymbol,
@@ -210,19 +215,22 @@ class AddAssetState extends State<AddAsset> {
       _modelAsset.added = true;
     });
     _flareController.play('Checkmark');
-    Timer(Duration(milliseconds: 2500), () {
+    Timer(const Duration(milliseconds: 2500), () {
       Navigator.pop(context);
     });
   }
 
-  void submitSearch(String symbol) async {
+  Future<void> submitSearch(String symbol) async {
     if (symbol == 'KMPI') {
       await StorageServices.readBool('KMPI').then((value) async {
         if (!value) {
           addAssetInSearch(symbol);
         } else {
-          await dialog(context, Text('This asset is already added!'),
-              Text('Asset Added'));
+          await dialog(
+            context,
+            const Text('This asset is already added!'),
+            const Text('Asset Added'),
+          );
         }
       });
     } else if (symbol == 'ATD') {
@@ -230,14 +238,17 @@ class AddAssetState extends State<AddAsset> {
         if (!value) {
           addAssetInSearch(symbol);
         } else {
-          await dialog(context, Text('This asset is already added!'),
-              Text('Asset Added'));
+          await dialog(
+            context,
+            const Text('This asset is already added!'),
+            const Text('Asset Added'),
+          );
         }
       });
     }
   }
 
-  void submitAsset() async {
+  Future<void> submitAsset() async {
     setState(() {
       _modelAsset.loading = true;
     });
@@ -258,15 +269,21 @@ class AddAssetState extends State<AddAsset> {
                 _modelAsset.loading = false;
                 _modelAsset.controllerAssetCode.text = '';
               });
-              await dialog(context, Text('Failed to find asset by address.'),
-                  Text('Asset not found'));
+              await dialog(
+                context,
+                const Text('Failed to find asset by address.'),
+                const Text('Asset not found'),
+              );
             }
           } else {
             setState(() {
               _modelAsset.loading = false;
             });
-            await dialog(context, Text('Please fill in a valid address!'),
-                Text('Invalid Address'));
+            await dialog(
+              context,
+              const Text('Please fill in a valid address!'),
+              const Text('Invalid Address'),
+            );
           }
         });
       } else {
@@ -274,7 +291,10 @@ class AddAssetState extends State<AddAsset> {
           _modelAsset.loading = false;
         });
         await dialog(
-            context, Text('This asset is already added!'), Text('Asset Added'));
+          context,
+          const Text('This asset is already added!'),
+          const Text('Asset Added'),
+        );
       }
     });
   }
@@ -292,6 +312,7 @@ class AddAssetState extends State<AddAsset> {
     Navigator.pop(context, {});
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: globalKey,
@@ -303,7 +324,6 @@ class AddAssetState extends State<AddAsset> {
               assetM: _modelAsset,
               popScreen: popScreen,
               onChanged: onChanged,
-              onSubmit: null,
               submitAsset: submitAsset,
               addAsset: addAsset,
               submitSearch: submitSearch,
@@ -311,26 +331,25 @@ class AddAssetState extends State<AddAsset> {
               sdkModel: widget.sdkModel,
               qrRes: qrRes,
             ),
-            _modelAsset.added == false
-                ? Container()
-                : BackdropFilter(
-                    // Fill Blur Background
-                    filter: ImageFilter.blur(
-                      sigmaX: 5.0,
-                      sigmaY: 5.0,
+            if (_modelAsset.added == false)
+              Container()
+            else
+              BackdropFilter(
+                // Fill Blur Background
+                filter: ImageFilter.blur(
+                  sigmaX: 5.0,
+                  sigmaY: 5.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: CustomAnimation.flareAnimation(_flareController,
+                          "assets/animation/check.flr", "Checkmark"),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Expanded(
-                          child: CustomAnimation.flareAnimation(
-                              _flareController,
-                              "assets/animation/check.flr",
-                              "Checkmark"),
-                        ),
-                      ],
-                    ),
-                  ),
+                  ],
+                ),
+              ),
           ],
         ),
       ),

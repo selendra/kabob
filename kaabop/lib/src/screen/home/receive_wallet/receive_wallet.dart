@@ -4,7 +4,7 @@ import 'package:wallet_apps/src/models/createAccountM.dart';
 class ReceiveWallet extends StatefulWidget {
   final CreateAccModel createAccModel;
 
-  ReceiveWallet(this.createAccModel);
+  const ReceiveWallet(this.createAccModel);
 
   static const route = '/recievewallet';
 
@@ -16,11 +16,11 @@ class ReceiveWallet extends StatefulWidget {
 
 class ReceiveWalletState extends State<ReceiveWallet> {
   GlobalKey<ScaffoldState> _globalKey;
-  GlobalKey _keyQrShare = GlobalKey();
+  final GlobalKey _keyQrShare = GlobalKey();
 
   dynamic result;
 
-  GetWalletMethod _method = GetWalletMethod();
+  final GetWalletMethod _method = GetWalletMethod();
   String name = 'username';
   String wallet = 'wallet address';
 
@@ -35,6 +35,7 @@ class ReceiveWalletState extends State<ReceiveWallet> {
     
 
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,

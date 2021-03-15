@@ -11,61 +11,56 @@ class TrxActivity extends StatefulWidget {
 }
 
 class TrxActivityState extends State<TrxActivity> {
-  // final RefreshController _refreshController = RefreshController();
-
-  GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   bool isProgress = true;
   bool isLogout = false;
 
-  TxHistory _txHistoryModel = TxHistory();
+  final TxHistory _txHistoryModel = TxHistory();
 
   @override
   void initState() {
     AppServices.noInternetConnection(_globalKey);
     readTxHistory();
-    // fetchHistoryUser();
+
     super.initState();
   }
 
   Future<List<TxHistory>> readTxHistory() async {
     await StorageServices.fetchData('txhistory').then((value) {
-      // print('My value $value');
-
       if (value != null) {
-        _txHistoryModel.txHistoryList = value;
-        for (var i in value) {
+        _txHistoryModel.txHistoryList = value as List;
+        for (final i in value) {
+          // ignore: unnecessary_parenthesis
           if ((i['symbol'] == 'SEL')) {
             _txHistoryModel.tx.add(TxHistory(
-              date: i['date'],
-              symbol: i['symbol'],
-              destination: i['destination'],
-              sender: i['sender'],
-              amount: i['amount'],
-              org: i['fee'],
+              date: i['date'].toString(),
+              symbol: i['symbol'].toString(),
+              destination: i['destination'].toString(),
+              sender: i['sender'].toString(),
+              amount: i['amount'].toString(),
+              org: i['fee'].toString(),
             ));
           } else {
             _txHistoryModel.txKpi.add(TxHistory(
-              date: i['date'],
-              symbol: i['symbol'],
-              destination: i['destination'],
-              sender: i['sender'],
-              amount: i['amount'],
-              org: i['fee'],
+              date: i['date'].toString(),
+              symbol: i['symbol'].toString(),
+              destination: i['destination'].toString(),
+              sender: i['sender'].toString(),
+              amount: i['amount'].toString(),
+              org: i['fee'].toString(),
             ));
           }
         }
       }
-      //var responseJson = json.decode(value);
-      //print(responseJson);
     });
     setState(() {});
     return _txHistoryModel.tx;
   }
 
   Future<void> _deleteHistory(int index, String symbol) async {
-    SharedPreferences _preferences = await SharedPreferences.getInstance();
-    //var newgfgList = new List.from(gfg1)..addAll(gfg2);
+    final SharedPreferences _preferences =
+        await SharedPreferences.getInstance();
 
     if (symbol == 'SEL') {
       _txHistoryModel.tx.removeAt(index);
@@ -73,12 +68,11 @@ class TrxActivityState extends State<TrxActivity> {
       _txHistoryModel.txKpi.removeAt(index);
     }
 
-    var newTxList = new List.from(_txHistoryModel.tx)
+    final newTxList = List.from(_txHistoryModel.tx)
       ..addAll(_txHistoryModel.txKpi);
 
     await clearOldHistory().then((value) async {
       await _preferences.setString('txhistory', jsonEncode(newTxList));
-      //await StorageServices.addTxHistory(txHistory, '');
     });
   }
 
@@ -86,7 +80,7 @@ class TrxActivityState extends State<TrxActivity> {
     await StorageServices.removeKey('txhistory');
   }
 
-  void showDetailDialog(TxHistory txHistory) async {
+  Future<void> showDetailDialog(TxHistory txHistory) async {
     await txDetailDialog(context, txHistory);
   }
 
@@ -95,7 +89,7 @@ class TrxActivityState extends State<TrxActivity> {
     /* Loading */
     dialogLoading(context);
     AppServices.clearStorage();
-    Timer(Duration(seconds: 1), () {
+    Timer(const Duration(seconds: 1), () {
       Navigator.pushReplacementNamed(context, '/');
     });
   }
@@ -108,19 +102,20 @@ class TrxActivityState extends State<TrxActivity> {
   }
 
   final List<Tab> myTabs = <Tab>[
-    Tab(text: 'SEL'),
-    Tab(text: 'KMPI'),
+    const Tab(text: 'SEL'),
+    const Tab(text: 'KMPI'),
   ];
 
   void popScreen() => Navigator.pop(context);
 
+  @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: myTabs.length,
       child: Scaffold(
         key: _globalKey,
         appBar: AppBar(
-          title: MyText(
+          title: const MyText(
             text: 'Transaction History',
             fontSize: 22.0,
             color: "#FFFFFF",
@@ -131,7 +126,7 @@ class TrxActivityState extends State<TrxActivity> {
         ),
         body: TabBarView(
           children: [
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height,
               child: _txHistoryModel.tx == null
                   ? Container()
@@ -139,31 +134,31 @@ class TrxActivityState extends State<TrxActivity> {
                       itemCount: _txHistoryModel.tx.length,
                       itemBuilder: (context, index) {
                         return Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.endToStart,
-                            background: DismissibleBackground(),
-                            onDismissed: (direction) {
-                              _deleteHistory(
-                                  index, _txHistoryModel.tx[index].symbol);
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
+                          background: DismissibleBackground(),
+                          onDismissed: (direction) {
+                            _deleteHistory(
+                                index, _txHistoryModel.tx[index].symbol);
+                          },
+                          child: GestureDetector(
+                            onTap: () {
+                              showDetailDialog(_txHistoryModel.tx[index]);
                             },
-                            child: GestureDetector(
-                              onTap: () {
-                                showDetailDialog(_txHistoryModel.tx[index]);
-                              },
-                              child: rowDecorationStyle(
-                                  child: Row(
+                            child: rowDecorationStyle(
+                              child: Row(
                                 children: [
                                   Container(
                                     width: 50,
                                     height: 50,
-                                    padding: EdgeInsets.all(6),
-                                    margin: EdgeInsets.only(right: 20),
+                                    padding: const EdgeInsets.all(6),
+                                    margin: const EdgeInsets.only(right: 20),
                                     decoration: BoxDecoration(
                                       color:
                                           hexaCodeToColor(AppColors.secondary),
                                       borderRadius: BorderRadius.circular(40),
                                     ),
-                                    child: MyLogo(
+                                    child: const MyLogo(
                                       width: 50,
                                       height: 50,
                                       logoPath: "assets/sld_logo.svg",
@@ -181,7 +176,6 @@ class TrxActivityState extends State<TrxActivity> {
                                           text:
                                               _txHistoryModel.tx[index].symbol,
                                           color: "#FFFFFF",
-                                          fontSize: 18,
                                         ),
                                         MyText(
                                             text: _txHistoryModel.tx[index].org,
@@ -190,36 +184,39 @@ class TrxActivityState extends State<TrxActivity> {
                                     ),
                                   ),
                                   Expanded(
-                                      child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        MyText(
-                                          text: _txHistoryModel.tx[index].date,
-                                          fontSize: 12,
-                                        ),
-                                        SizedBox(height: 5.0),
-                                        MyText(
-                                          text:
-                                              '-${_txHistoryModel.tx[index].amount}',
-                                          color: AppColors.secondary_text,
-                                          fontSize: 18,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ],
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          MyText(
+                                            text:
+                                                _txHistoryModel.tx[index].date,
+                                            fontSize: 12,
+                                          ),
+                                          const SizedBox(height: 5.0),
+                                          MyText(
+                                            text:
+                                                '-${_txHistoryModel.tx[index].amount}',
+                                            color: AppColors.secondarytext,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ))
+                                  ),
                                 ],
-                              )),
-                            ));
+                              ),
+                            ),
+                          ),
+                        );
                       },
                     ),
             ),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height,
               child: _txHistoryModel.txKpi == null
                   ? Container()
@@ -227,84 +224,83 @@ class TrxActivityState extends State<TrxActivity> {
                       itemCount: _txHistoryModel.txKpi.length,
                       itemBuilder: (context, index) {
                         return Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.endToStart,
-                            background: DismissibleBackground(),
-                            onDismissed: (direction) {
-                              _deleteHistory(
-                                  index, _txHistoryModel.txKpi[index].symbol);
+                          key: UniqueKey(),
+                          direction: DismissDirection.endToStart,
+                          background: DismissibleBackground(),
+                          onDismissed: (direction) {
+                            _deleteHistory(
+                                index, _txHistoryModel.txKpi[index].symbol);
+                          },
+                          child: GestureDetector(
+                            onTap: () {
+                              showDetailDialog(_txHistoryModel.txKpi[index]);
                             },
-                            child: GestureDetector(
-                              onTap: () {
-                                showDetailDialog(_txHistoryModel.txKpi[index]);
-                              },
-                              child: rowDecorationStyle(
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      padding: EdgeInsets.all(6),
-                                      margin: EdgeInsets.only(right: 20),
-                                      decoration: BoxDecoration(
-                                          color: hexaCodeToColor(
-                                              AppColors.secondary),
-                                          borderRadius:
-                                              BorderRadius.circular(40)),
-                                      child: Image.asset(
-                                          'assets/koompi_white_logo.png'),
+                            child: rowDecorationStyle(
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    padding: const EdgeInsets.all(6),
+                                    margin: const EdgeInsets.only(right: 20),
+                                    decoration: BoxDecoration(
+                                        color: hexaCodeToColor(
+                                            AppColors.secondary),
+                                        borderRadius:
+                                            BorderRadius.circular(40)),
+                                    child: Image.asset(
+                                        'assets/koompi_white_logo.png'),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.only(right: 16),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        MyText(
+                                          text: _txHistoryModel
+                                              .txKpi[index].symbol,
+                                          color: "#FFFFFF",
+                                        ),
+                                        MyText(
+                                            text: _txHistoryModel
+                                                .txKpi[index].org,
+                                            fontSize: 15),
+                                      ],
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.only(right: 16),
+                                  ),
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
                                       child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.end,
                                         children: [
                                           MyText(
                                             text: _txHistoryModel
-                                                .txKpi[index].symbol,
-                                            color: "#FFFFFF",
-                                            fontSize: 18,
+                                                .txKpi[index].date,
+                                            fontSize: 12,
                                           ),
+                                          const SizedBox(height: 5.0),
                                           MyText(
-                                              text: _txHistoryModel
-                                                  .txKpi[index].org,
-                                              fontSize: 15),
+                                            text:
+                                                '-${_txHistoryModel.txKpi[index].amount}',
+                                            color: AppColors.secondarytext,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: [
-                                            MyText(
-                                              text: _txHistoryModel
-                                                  .txKpi[index].date,
-                                              fontSize: 12,
-                                            ),
-                                            SizedBox(height: 5.0),
-                                            MyText(
-                                              text:
-                                                  '-${_txHistoryModel.txKpi[index].amount}',
-                                              color: AppColors.secondary_text,
-                                              fontSize: 18,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ));
+                            ),
+                          ),
+                        );
                       },
                     ),
             ),

@@ -34,7 +34,7 @@ class AppConfig {
 
   /* Zeetomic api user data*/
   // Main Net API
-  static final url = "https://testnet-api.selendra.com/pub/v1";
+  static const url = "https://testnet-api.selendra.com/pub/v1";
 
 
   static const nodeName = 'Indranet hosted By Selendra';

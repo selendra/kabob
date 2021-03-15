@@ -8,22 +8,22 @@ class AddContact extends StatefulWidget {
   final PhoneContact contact;
   final CreateAccModel sdkModel;
 
-  AddContact({this.contact, this.sdkModel});
+  const AddContact({this.contact, this.sdkModel});
 
   @override
   _AddContactState createState() => _AddContactState();
 }
 
 class _AddContactState extends State<AddContact> {
-  ContactBookModel _addContactModel = ContactBookModel();
+  final ContactBookModel _addContactModel = ContactBookModel();
 
   Future<void> submitContact() async {
     try {
       // Show Loading
       dialogLoading(context);
 
-      await Future.delayed(Duration(seconds: 1), () {});
-      Map<String, dynamic> contactData = {
+      await Future.delayed(const Duration(seconds: 1), () {});
+      final Map<String, dynamic> contactData = {
         'username': _addContactModel.userName.text,
         'phone': _addContactModel.contactNumber.text,
         'address': _addContactModel.address.text,
@@ -38,9 +38,9 @@ class _AddContactState extends State<AddContact> {
 
       await dialog(
           context,
-          Text(
+          const Text(
               "Successfully add new contact!\n Please check your contact book"),
-          Text("Congratualtion"));
+          const Text("Congratualtion"));
       // Close Screen
       Navigator.pop(context, true);
     } catch (e) {
@@ -48,19 +48,12 @@ class _AddContactState extends State<AddContact> {
       Navigator.pop(context);
       //print("My error $e");
     }
-    // await validateAddressF(_addContactModel.address.text).then((value) async {
-    //   if (value) {
-
-    //   } else {
-    //     await dialog(context, Text('Please fill in a valid address'),
-    //         Text('Invalid Address'));
-    //   }
-    // });
   }
 
-  void onChanged(String value) {
+  String onChanged(String value) {
     _addContactModel.formKey.currentState.validate();
     allValidator();
+    return null;
   }
 
   Future<bool> validateAddressF(String address) async {
@@ -68,7 +61,7 @@ class _AddContactState extends State<AddContact> {
     return res;
   }
 
-  void onSubmit() async {
+  Future<void> onSubmit() async {
     if (_addContactModel.contactNumberNode.hasFocus) {
       FocusScope.of(context).requestFocus(_addContactModel.userNameNode);
     } else if (_addContactModel.userNameNode.hasFocus) {
@@ -87,25 +80,20 @@ class _AddContactState extends State<AddContact> {
       setState(() {
         _addContactModel.enable = true;
       });
-    } else if (_addContactModel.enable)
+    } else if (_addContactModel.enable) {
       setState(() {
         _addContactModel.enable = false;
       });
+    }
   }
 
-  // String validateAddress(String value) {
-  //   _addContactModel.addressValidator = instanceValidate.validateAsset(value);
-  //   if (_addContactModel.addressValidator != null)
-  //     return _addContactModel.addressValidator + ' address';
-  //   return _addContactModel.addressValidator;
-  // }
 
   String validateAddress(String value) {
     return null;
   }
 
   @override
-  initState() {
+  void initState() {
     _addContactModel.contactNumber.text = widget.contact.phoneNumber.number;
     _addContactModel.userName.text = widget.contact.fullName;
     super.initState();
@@ -114,13 +102,16 @@ class _AddContactState extends State<AddContact> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BodyScaffold(
-            height: MediaQuery.of(context).size.height,
-            child: AddContactBody(
-                model: _addContactModel,
-                validateAddress: validateAddress,
-                onChanged: onChanged,
-                onSubmit: onSubmit,
-                submitContact: submitContact)));
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: AddContactBody(
+          model: _addContactModel,
+          validateAddress: validateAddress,
+          onChanged: onChanged,
+          onSubmit: onSubmit,
+          submitContact: submitContact,
+        ),
+      ),
+    );
   }
 }

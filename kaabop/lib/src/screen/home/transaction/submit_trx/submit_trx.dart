@@ -17,8 +17,13 @@ class SubmitTrx extends StatefulWidget {
   final bool enableInput;
   final CreateAccModel sdkModel;
 
-  SubmitTrx(
-      this._walletKey, this.enableInput, this._listPortfolio, this.sdkModel,
+  const SubmitTrx(
+      // ignore: avoid_positional_boolean_parameters
+      this._walletKey,
+      // ignore: avoid_positional_boolean_parameters
+      this.enableInput,
+      this._listPortfolio,
+      this.sdkModel,
       {this.asset});
   @override
   State<StatefulWidget> createState() {
@@ -27,66 +32,46 @@ class SubmitTrx extends StatefulWidget {
 }
 
 class SubmitTrxState extends State<SubmitTrx> {
-  ModelScanPay _scanPayM = ModelScanPay();
+  final ModelScanPay _scanPayM = ModelScanPay();
 
   FlareControls flareController = FlareControls();
 
   AssetInfoC c = AssetInfoC();
 
   bool disable = false;
-  bool _loading = false;
+  final bool _loading = false;
 
   @override
   void initState() {
     widget.asset != null
         ? _scanPayM.asset = widget.asset
         : _scanPayM.asset = "SEL";
-    // print(c.transferFrom);
 
     AppServices.noInternetConnection(_scanPayM.globalKey);
 
     _scanPayM.controlReceiverAddress.text = widget._walletKey;
     _scanPayM.portfolio = widget._listPortfolio;
-    // print(widget.sdkModel.contractModel.pHash);
 
     super.initState();
   }
 
-  List list = [
+  List<Map<String, String>> list = [
     {'asset_code': 'SEL'},
     {'asset_code': 'KMPI'}
   ];
 
-  List nativeList = [
+  List<Map<String, String>> nativeList = [
     {'asset_code': 'SEL'},
   ];
-
-  void fetchIDs() async {
-    setState(() {});
-  }
 
   void removeAllFocus() {
     _scanPayM.nodeAmount.unfocus();
     _scanPayM.nodeMemo.unfocus();
   }
 
-  Future<bool> validateInput() {
-    /* Check User Fill Out ALL */
-    if (_scanPayM.controlAmount.text != null &&
-        _scanPayM.controlAmount.text != "" &&
-        _scanPayM.controlReceiverAddress != null &&
-        _scanPayM.controlReceiverAddress.text.isNotEmpty &&
-        _scanPayM.asset != null) {
-      return Future.delayed(Duration(milliseconds: 50), () {
-        return true;
-      });
-    }
-    return null;
-  }
-
   Future<String> dialogBox() async {
     /* Show Pin Code For Fill Out */
-    String _result = await showDialog(
+    final String _result = await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
@@ -103,8 +88,20 @@ class SubmitTrxState extends State<SubmitTrx> {
     return res;
   }
 
-  void onChanged(String value) {
-    _scanPayM.formStateKey.currentState.validate();
+  String onChanged(String value) {
+    if (_scanPayM.nodeReceiverAddress.hasFocus) {
+     // FocusScope.of(context).requestFocus(_scanPayM.nodeAmount);
+    } else if (_scanPayM.nodeAmount.hasFocus) {
+      _scanPayM.formStateKey.currentState.validate();
+      if (_scanPayM.formStateKey.currentState.validate()) {
+        enableButton();
+      }else{
+        setState(() {
+          _scanPayM.enable = false;
+        });
+      }
+    }
+    return value;
   }
 
   void onSubmit(BuildContext context) {
@@ -118,9 +115,11 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   void enableButton() {
-    if (_scanPayM.controlAmount.text != '' && _scanPayM.asset != null)
+    if (_scanPayM.controlAmount.text != '' && _scanPayM.asset != null) {
       setState(() => _scanPayM.enable = true);
-    else if (_scanPayM.enable == true) setState(() => _scanPayM.enable = false);
+    } else if (_scanPayM.enable) {
+      setState(() => _scanPayM.enable = false);
+    }
   }
 
   Future enableAnimation() async {
@@ -131,29 +130,10 @@ class SubmitTrxState extends State<SubmitTrx> {
     });
     flareController.play('Checkmark');
     setPortfolio();
-    Timer(Duration(milliseconds: 2500), () {
+    Timer(const Duration(milliseconds: 2500), () {
       Navigator.pushNamedAndRemoveUntil(
           context, Home.route, ModalRoute.withName('/'));
     });
-  }
-
-  void processingSubmit() async {
-    /* Loading Processing Animation */
-    int perioud = 500;
-    while (_scanPayM.isPay == true) {
-      await Future.delayed(Duration(milliseconds: perioud), () {
-        if (this.mounted) setState(() => _scanPayM.loadingDot = ".");
-        perioud = 300;
-      });
-      await Future.delayed(Duration(milliseconds: perioud), () {
-        if (this.mounted) setState(() => _scanPayM.loadingDot = ". .");
-        perioud = 300;
-      });
-      await Future.delayed(Duration(milliseconds: perioud), () {
-        if (this.mounted) setState(() => _scanPayM.loadingDot = ". . .");
-        perioud = 300;
-      });
-    }
   }
 
   void popScreen() {
@@ -182,8 +162,6 @@ class SubmitTrxState extends State<SubmitTrx> {
       );
 
       if (res['hash'] != null) {
-        // assetbalanceOf(widget.sdkModel.keyring.keyPairs[0].address,
-        //     widget.sdkModel.keyring.keyPairs[0].address);
         await _balanceOfByPartition();
 
         saveTxHistory(TxHistory(
@@ -199,7 +177,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       }
     } catch (e) {
       Navigator.pop(context);
-      await dialog(context, Text(e.message), Text('Opps!!'));
+      await dialog(context, Text(e.message.toString()), const Text('Opps!!'));
     }
   }
 
@@ -216,16 +194,12 @@ class SubmitTrxState extends State<SubmitTrx> {
       final hash = await widget.sdkModel.sdk.api.tx.signAndSend(
           txInfo,
           [
-            // params.to
-            // _testAddressGav,
             target,
-            // params.amount
             Fmt.tokenInt(amount.trim(), int.parse(widget.sdkModel.chainDecimal))
                 .toString(),
           ],
-          pin, onStatusChange: (status) async {
-        // print(status);
-      });
+          pin,
+          onStatusChange: (status) async {});
 
       if (hash != null) {
         saveTxHistory(TxHistory(
@@ -242,15 +216,14 @@ class SubmitTrxState extends State<SubmitTrx> {
     } catch (e) {
       // print(e.message);
       Navigator.pop(context);
-      await dialog(context, Text(e.message), Text("Opps"));
+      await dialog(context, Text(e.message.toString()), const Text("Opps"));
     }
 
     return mhash;
   }
 
-  
   void setPortfolio() {
-    var walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
 
     if (widget.sdkModel.contractModel.pHash != '') {
@@ -280,7 +253,6 @@ class SubmitTrxState extends State<SubmitTrx> {
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
-
   Future<void> _balanceOfByPartition() async {
     try {
       final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
@@ -290,19 +262,19 @@ class SubmitTrxState extends State<SubmitTrx> {
       );
 
       widget.sdkModel.contractModel.pBalance =
-          BigInt.parse(res['output']).toString();
+          BigInt.parse(res['output'].toString()).toString();
     } catch (e) {
       // print(e.toString());
     }
   }
 
-  void clickSend() async {
+  Future<void> clickSend() async {
     String pin;
 
     if (_scanPayM.formStateKey.currentState.validate()) {
       /* Send payment */
       // Navigator.push(context, MaterialPageRoute(builder: (contxt) => FillPin()));
-      await Future.delayed(Duration(milliseconds: 100), () {
+      await Future.delayed(const Duration(milliseconds: 100), () {
         // Unfocus All Field Input
         unFocusAllField();
       });
@@ -323,9 +295,9 @@ class SubmitTrxState extends State<SubmitTrx> {
                     double.parse(_scanPayM.controlAmount.text)) {
                   await dialog(
                       context,
-                      Text(
+                      const Text(
                           'Sorry, You do not have enough balance to make transaction '),
-                      Text('Insufficient Balance'));
+                      const Text('Insufficient Balance'));
                 } else {
                   transfer(_scanPayM.controlReceiverAddress.text, pin,
                       _scanPayM.controlAmount.text);
@@ -336,14 +308,17 @@ class SubmitTrxState extends State<SubmitTrx> {
             }
           });
         } else {
-          await dialog(context, Text('Please fill in a valid address'),
-              Text('Invalid Address'));
+          await dialog(
+            context,
+            const Text('Please fill in a valid address'),
+            const Text('Invalid Address'),
+          );
         }
       });
     }
   }
 
-  void saveTxHistory(TxHistory txHistory) async {
+  Future<void> saveTxHistory(TxHistory txHistory) async {
     await StorageServices.addTxHistory(txHistory, 'txhistory');
   }
 
@@ -358,18 +333,18 @@ class SubmitTrxState extends State<SubmitTrx> {
     return PopupMenuItem(
         value: list["asset_code"],
         child: Align(
-          alignment: Alignment.center,
           child: Text(
-            list["asset_code"],
+            list["asset_code"].toString(),
           ),
         ));
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scanPayM.globalKey,
       body: _loading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : BodyScaffold(
@@ -382,7 +357,6 @@ class SubmitTrxState extends State<SubmitTrx> {
                     scanPayM: _scanPayM,
                     onChanged: onChanged,
                     onSubmit: onSubmit,
-                    validateInput: validateInput,
                     clickSend: clickSend,
                     resetAssetsDropDown: resetAssetsDropDown,
                     sdkModel: widget.sdkModel,
@@ -391,26 +365,28 @@ class SubmitTrxState extends State<SubmitTrx> {
                         ? list
                         : nativeList,
                   ),
-                  _scanPayM.isPay == false
-                      ? Container()
-                      : BackdropFilter(
-                          // Fill Blur Background
-                          filter: ImageFilter.blur(
-                            sigmaX: 5.0,
-                            sigmaY: 5.0,
+                  if (_scanPayM.isPay == false)
+                    Container()
+                  else
+                    BackdropFilter(
+                      // Fill Blur Background
+                      filter: ImageFilter.blur(
+                        sigmaX: 5.0,
+                        sigmaY: 5.0,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Expanded(
+                            child: CustomAnimation.flareAnimation(
+                              flareController,
+                              "assets/animation/check.flr",
+                              "Checkmark",
+                            ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: CustomAnimation.flareAnimation(
-                                    flareController,
-                                    "assets/animation/check.flr",
-                                    "Checkmark"),
-                              ),
-                            ],
-                          ),
-                        ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
