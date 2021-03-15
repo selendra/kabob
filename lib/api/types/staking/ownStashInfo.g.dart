@@ -34,27 +34,27 @@ OwnStashInfoData _$OwnStashInfoDataFromJson(Map<String, dynamic> json) {
     ..unbondings = json['unbondings'] as Map<String, dynamic>;
 }
 
-Map<String, dynamic> _$OwnStashInfoDataToJson(OwnStashInfoData instance) =>
-    <String, dynamic>{
-      'account': instance.account,
-      'controllerId': instance.controllerId,
-      'destination': instance.destination,
-      'destinationId': instance.destinationId,
-      'exposure': instance.exposure,
-      'hexSessionIdNext': instance.hexSessionIdNext,
-      'hexSessionIdQueue': instance.hexSessionIdQueue,
-      'isOwnController': instance.isOwnController,
-      'isOwnStash': instance.isOwnStash,
-      'isStashNominating': instance.isStashNominating,
-      'isStashValidating': instance.isStashValidating,
-      'nominating': instance.nominating,
-      'sessionIds': instance.sessionIds,
-      'stakingLedger': instance.stakingLedger,
-      'stashId': instance.stashId,
-      'validatorPrefs': instance.validatorPrefs,
-      'inactives': instance.inactives,
-      'unbondings': instance.unbondings,
-    };
+// Map<String, dynamic> _$OwnStashInfoDataToJson(OwnStashInfoData instance) =>
+//     <String, dynamic>{
+//       'account': instance.account,
+//       'controllerId': instance.controllerId,
+//       'destination': instance.destination,
+//       'destinationId': instance.destinationId,
+//       'exposure': instance.exposure,
+//       'hexSessionIdNext': instance.hexSessionIdNext,
+//       'hexSessionIdQueue': instance.hexSessionIdQueue,
+//       'isOwnController': instance.isOwnController,
+//       'isOwnStash': instance.isOwnStash,
+//       'isStashNominating': instance.isStashNominating,
+//       'isStashValidating': instance.isStashValidating,
+//       'nominating': instance.nominating,
+//       'sessionIds': instance.sessionIds,
+//       'stakingLedger': instance.stakingLedger,
+//       'stashId': instance.stashId,
+//       'validatorPrefs': instance.validatorPrefs,
+//       'inactives': instance.inactives,
+//       'unbondings': instance.unbondings,
+//     };
 
 NomineesInfoData _$NomineesInfoDataFromJson(Map<String, dynamic> json) {
   return NomineesInfoData()
@@ -69,14 +69,14 @@ NomineesInfoData _$NomineesInfoDataFromJson(Map<String, dynamic> json) {
         (json['nomsWaiting'] as List)?.map((e) => e as String)?.toList();
 }
 
-Map<String, dynamic> _$NomineesInfoDataToJson(NomineesInfoData instance) =>
-    <String, dynamic>{
-      'nomsActive': instance.nomsActive,
-      'nomsChilled': instance.nomsChilled,
-      'nomsInactive': instance.nomsInactive,
-      'nomsOver': instance.nomsOver,
-      'nomsWaiting': instance.nomsWaiting,
-    };
+// Map<String, dynamic> _$NomineesInfoDataToJson(NomineesInfoData instance) =>
+//     <String, dynamic>{
+//       'nomsActive': instance.nomsActive,
+//       'nomsChilled': instance.nomsChilled,
+//       'nomsInactive': instance.nomsInactive,
+//       'nomsOver': instance.nomsOver,
+//       'nomsWaiting': instance.nomsWaiting,
+//     };
 
 LedgerInfoData _$LedgerInfoDataFromJson(Map<String, dynamic> json) {
   return LedgerInfoData()
@@ -89,16 +89,16 @@ LedgerInfoData _$LedgerInfoDataFromJson(Map<String, dynamic> json) {
     ..redeemable = json['redeemable'];
 }
 
-Map<String, dynamic> _$LedgerInfoDataToJson(LedgerInfoData instance) =>
-    <String, dynamic>{
-      'accountId': instance.accountId,
-      'controllerId': instance.controllerId,
-      'stashId': instance.stashId,
-      'exposure': instance.exposure,
-      'stakingLedger': instance.stakingLedger,
-      'validatorPrefs': instance.validatorPrefs,
-      'redeemable': instance.redeemable,
-    };
+// Map<String, dynamic> _$LedgerInfoDataToJson(LedgerInfoData instance) =>
+//     <String, dynamic>{
+//       'accountId': instance.accountId,
+//       'controllerId': instance.controllerId,
+//       'stashId': instance.stashId,
+//       'exposure': instance.exposure,
+//       'stakingLedger': instance.stakingLedger,
+//       'validatorPrefs': instance.validatorPrefs,
+//       'redeemable': instance.redeemable,
+//     };
 
 UnbondingInfoData _$UnbondingInfoDataFromJson(Map<String, dynamic> json) {
   return UnbondingInfoData()
@@ -106,8 +106,8 @@ UnbondingInfoData _$UnbondingInfoDataFromJson(Map<String, dynamic> json) {
     ..total = json['total'];
 }
 
-Map<String, dynamic> _$UnbondingInfoDataToJson(UnbondingInfoData instance) =>
-    <String, dynamic>{
-      'mapped': instance.mapped,
-      'total': instance.total,
-    };
+// Map<String, dynamic> _$UnbondingInfoDataToJson(UnbondingInfoData instance) =>
+//     <String, dynamic>{
+//       'mapped': instance.mapped,
+//       'total': instance.total,
+//     };
