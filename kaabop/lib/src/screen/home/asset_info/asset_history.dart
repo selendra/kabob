@@ -26,9 +26,9 @@ class AssetHistory extends StatelessWidget {
           const SizedBox(height: 16),
           if (_txHistoryModel.isEmpty)
             SvgPicture.asset(
-              'assets/no_data.svg',
-              width: 250,
-              height: 250,
+              'assets/icons/no_data.svg',
+              width: 180,
+              height: 180,
             )
           else
             Expanded(

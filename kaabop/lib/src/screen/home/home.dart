@@ -46,39 +46,36 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   void initState() {
     menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
 
-    SchedulerBinding.instance.addPostFrameCallback((_) {
-      handleDialog();
-      setPortfolio();
-    });
+    //print(ApiProvider().isConnected);
+
+    if (widget.sdkModel.apiConnected) {
+      status = null;
+    }
+
+    if (!widget.sdkModel.apiConnected) {
+      startNode();
+    }
 
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  // }
 
-    //handleDialog();
-  }
-
-  @override
-  void didUpdateWidget(Home oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (Provider.of<ApiProvider>(context, listen: false).isConnected) {
-      Navigator.of(dialogContext).pop();
-    }
-
-    //handleDialog();
-  }
+  // @override
+  // void didUpdateWidget(Home oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (widget.sdkModel.apiConnected != oldWidget.sdkModel.apiConnected) {
+  //     handle();
+  //   }
+  // }
 
   Future<void> handleDialog() async {
     if (!Provider.of<ApiProvider>(context, listen: false).isConnected) {
       startNode();
     }
-    // if (Provider.of<ApiProvider>(context).isConnected) {
-    //   Navigator.of(dialogContext).pop();
-    // }
   }
 
   Future<void> startNode() async {
@@ -153,16 +150,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         Navigator.of(dialogContext).pop();
         setPortfolio();
       }
-    } else {
-      if (widget.sdkModel.apiConnected && widget.sdkModel.dataReady) {
-        await Future.delayed(const Duration(milliseconds: 200), () {
-          status = null;
-        });
-
-        Navigator.of(dialogContext).pop();
-        setPortfolio();
-      }
-    }
+    } else {}
   }
 
   // ignore: avoid_positional_boolean_parameters
@@ -257,9 +245,20 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     await StorageServices.removeKey('ATD');
   }
 
+  Future<void> handle() async {
+    if (widget.sdkModel.apiConnected) {
+      await Future.delayed(const Duration(milliseconds: 200), () {
+        status = null;
+      });
+
+      Navigator.of(dialogContext).pop();
+      setPortfolio();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    //if (status != null) handleConnectNode();
+    if (status != null) handle();
     return Scaffold(
       key: _homeM.globalKey,
       drawer: Theme(

@@ -69,11 +69,11 @@ class ContactBookBody extends StatelessWidget {
         ),
         Expanded(
           child: model.contactBookList == null
-              ? const Center(
-                  child: MyText(
-                    text: 'No contact',
-                    color: "#FFFFFF",
-                    fontSize: 25,
+              ? Center(
+                  child: SvgPicture.asset(
+                    'assets/icons/no_data.svg',
+                    width: 180,
+                    height: 180,
                   ),
                 )
               : model.contactBookList.isEmpty

@@ -4,12 +4,18 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/account.m.dart';
+import 'package:wallet_apps/src/models/native.m.dart';
 
 class ApiProvider with ChangeNotifier {
   WalletSDK sdk = WalletSDK();
   Keyring keyring = Keyring();
 
   AccountM accountM = AccountM();
+  NativeM nativeM = NativeM(
+    logo: 'assets/native_token.png',
+    symbol: 'SEL',
+    org: 'SELENDRA',
+  );
 
   bool _isConnected = false;
 
@@ -17,7 +23,6 @@ class ApiProvider with ChangeNotifier {
 
   Future<void> initApi() async {
     await keyring.init();
-    await FlutterWebviewPlugin().reload();
     await sdk.init(keyring);
     getCurrentAccount();
   }
@@ -38,19 +43,24 @@ class ApiProvider with ChangeNotifier {
     notifyListeners();
 
     return res;
+  }
 
-    // setState(() {});
-    // if (res != null) {
-    //   setState(() {
-    //     _createAccModel.apiConnected = true;
-    //   });
-    //   getProfileIcon();
-    //   await readContract();
-    //   await readAtd();
-    //   initContract();
-    //   getChainDecimal();
-    //   _subscribeBalance();
-    // }
+  Future<void> getChainDecimal() async {
+    final res = await sdk.api.getChainDecimal();
+    nativeM.chainDecimal = res.toString();
+    subscribeBalance();
+    notifyListeners();
+  }
+
+  Future<void> subscribeBalance() async {
+    await sdk.api.account.subscribeBalance(keyring.current.address, (res) {
+      nativeM.balance = Fmt.balance(
+        res.freeBalance.toString(),
+        int.parse(nativeM.chainDecimal),
+      );
+
+      notifyListeners();
+    });
   }
 
   Future<void> getAddressIcon() async {

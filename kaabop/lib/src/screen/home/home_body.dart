@@ -1,9 +1,11 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/asset_item.dart';
 import 'package:wallet_apps/src/components/portfolio_cus.dart';
 import 'package:wallet_apps/src/components/profile_card.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'asset_info/asset_info.dart';
 
 class HomeBody extends StatelessWidget {
@@ -37,8 +39,9 @@ class HomeBody extends StatelessWidget {
                       width: 5,
                       height: 40,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: hexaCodeToColor(AppColors.secondary)),
+                        borderRadius: BorderRadius.circular(8),
+                        color: hexaCodeToColor(AppColors.secondary),
+                      ),
                     ),
                     const MyText(
                       text: 'Assets',
@@ -73,23 +76,30 @@ class HomeBody extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.3,
             child: ListView(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      RouteAnimation(
-                        enterPage: AssetInfo(
-                          sdkModel: sdkModel,
-                          assetLogo: sdkModel.nativeToken,
-                          balance: sdkModel.nativeBalance,
-                          tokenSymbol: sdkModel.nativeSymbol,
+                Consumer<ApiProvider>(builder: (context, value, child) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        RouteAnimation(
+                          enterPage: AssetInfo(
+                            sdkModel: sdkModel,
+                            assetLogo: value.nativeM.logo,
+                            balance: value.nativeM.balance,
+                            tokenSymbol: value.nativeM.symbol,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  child: AssetItem(sdkModel.nativeToken, sdkModel.nativeSymbol,
-                      sdkModel.nativeOrg, sdkModel.nativeBalance, Colors.white),
-                ),
+                      );
+                    },
+                    child: AssetItem(
+                      value.nativeM.logo,
+                      value.nativeM.symbol,
+                      value.nativeM.org,
+                      value.nativeM.balance,
+                      Colors.white,
+                    ),
+                  );
+                }),
                 if (sdkModel.contractModel.isContain)
                   Dismissible(
                     key: Key(sdkModel.nativeSymbol),

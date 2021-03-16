@@ -4,7 +4,7 @@ import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/provider/account_provider.dart';
+
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in.dart';
@@ -56,11 +56,10 @@ class AppState extends State<App> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    init(); 
+    init();
   }
 
   Future<void> init() async {
-    
     Provider.of<ApiProvider>(context, listen: false).initApi().then((value) {
       Provider.of<ApiProvider>(context, listen: false)
           .connectNode()
@@ -70,6 +69,7 @@ class AppState extends State<App> {
             _createAccModel.apiConnected = true;
           });
           Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
+          Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         }
       });
     });
