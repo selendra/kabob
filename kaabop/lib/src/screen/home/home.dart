@@ -50,6 +50,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       _homeM.total = 0;
       _homeM.userData = {};
       getCurrentAccount();
+      
     }
 
     menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});

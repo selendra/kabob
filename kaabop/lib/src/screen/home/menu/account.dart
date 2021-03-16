@@ -238,8 +238,12 @@ class _AccountState extends State<Account> {
                                             borderRadius:
                                                 BorderRadius.circular(5),
                                           ),
-                                          child: SvgPicture.asset(
-                                              'assets/male_avatar.svg'),
+                                          child: widget.sdkModel.profileIcon ==
+                                                  null
+                                              ? Container()
+                                              : SvgPicture.string(
+                                                  widget.sdkModel.profileIcon,
+                                                ),
                                         ),
                                         Column(
                                           crossAxisAlignment:
@@ -250,7 +254,7 @@ class _AccountState extends State<Account> {
                                               color: "#FFFFFF",
                                               fontSize: 20,
                                             ),
-                                           const SizedBox(
+                                            const SizedBox(
                                               width: 100,
                                               child: MyText(
                                                 text: "Indracore",
@@ -381,7 +385,7 @@ class _AccountState extends State<Account> {
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   height: 70,
-                                  child: const  MyText(
+                                  child: const MyText(
                                     text: 'Change Pin',
                                     color: "#FFFFFF",
                                     fontWeight: FontWeight.bold,
