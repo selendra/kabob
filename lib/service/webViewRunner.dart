@@ -155,10 +155,33 @@ class WebViewRunner {
     final res = await evalJavascript('settings.callContract(api)');
     return res;
   }
+  Future<String> initAttendant() async{
+    final res = await evalJavascript('settings.initAttendant(api)');
+    return res;
+  }
+  
+  Future<String> getAToken(String attendent) async{
+    final res = await evalJavascript('settings.getAToken(aContract,"$attendent")');
+    return res.toString();
+  }
+
+  Future<bool> getAStatus(String attendent) async{
+    final res = await evalJavascript('settings.getAStatus(aContract,"$attendent")');
+    return res;
+  }
+
+  Future<List> getCheckInList(String attendent)async{
+    final res = await evalJavascript('settings.getCheckInList(aContract,"$attendent")');
+    return res;
+  }
+
+  Future<List> getCheckOutList(String attendent)async{
+    final res = await evalJavascript('settings.getCheckOutList(aContract,"$attendent")');
+    return res;
+  }
 
   Future<List> contractSymbol(String from) async {
-    final res =
-        await evalJavascript('settings.contractSymbol(apiContract,"$from")');
+    final res = await evalJavascript('settings.contractSymbol(apiContract,"$from")');
     // print('contract res $res');
     return res;
   }

@@ -79,6 +79,33 @@ class KabobApi {
     return res;
   }
 
+  Future<String> initAttendant() async {
+    final res = await service.webView.initAttendant();
+    return res;
+  }
+
+  Future<String> getAToken(String attender) async{
+    final res = await service.webView.getAToken(attender);
+    return res;
+  }
+
+  Future<bool> getAStatus(String attender) async{
+    final res = await service.webView.getAStatus(attender);
+    return res;
+  }
+
+  Future<List> getCheckInList(String attender) async {
+    final res = await service.webView.getCheckInList(attender);
+    return res;
+  }
+
+  Future<List> getCheckOutList(String attender) async {
+    final res = await service.webView.getCheckOutList(attender);
+    return res;
+  }
+
+
+
   Future<List> contractSymbol(String from) async {
     final res = await service.webView.contractSymbol(from);
     return res;

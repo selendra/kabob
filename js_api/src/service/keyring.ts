@@ -260,6 +260,50 @@ function sendTx(api: ApiPromise, txInfo: any, paramList: any[], password: string
   });
 }
 
+
+async function aCheckIn(aContract: ContractPromise, senderPubKey: string, password: string, attendantHash: string, location: string) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const keyPair = keyring.getPair(hexToU8a(senderPubKey));
+      try {
+        keyPair.decodePkcs8(password);
+      } catch (err) {
+        resolve({ error: "PIN verification failed" });
+      }
+
+      await aContract.tx.checkedIn(0, -1, attendantHash, location).signAndSend(keyPair, ({ events = [], status }) => {
+        if (status.isInBlock) {
+          resolve({ status: "In Block" });
+        }
+      });
+
+    } catch (e) {
+      resolve({ err: e.message });
+    }
+  });
+}
+
+async function aCheckOut(aContract: ContractPromise, senderPubKey: string, password: string, attendantHash: string, location: string) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const keyPair = keyring.getPair(hexToU8a(senderPubKey));
+      try {
+        keyPair.decodePkcs8(password);
+      } catch (err) {
+        resolve({ error: "PIN verification failed" });
+      }
+
+      await aContract.tx.checkedOut(0, -1, attendantHash, location).signAndSend(keyPair, ({ events = [], status }) => {
+        if (status.isInBlock) {
+          resolve({ status: "In Block" });
+        }
+      });
+    } catch (e) {
+      resolve({ err: e.message });
+    }
+  });
+}
+
 async function contractTransfer(apiContract: ContractPromise, senderPubKey: string, to: string, value: string, password: string, hash: string) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -509,9 +553,11 @@ export default {
   recover,
   txFeeEstimate,
   sendTx,
+  aCheckIn,
+  aCheckOut,
   contractTransfer,
   contractTransferFrom,
-  approve,
+  //approve,
   checkPassword,
   changePassword,
   checkDerivePath,
@@ -519,7 +565,7 @@ export default {
   signAsync,
   makeTx,
   addSignatureAndSend,
-  signTxAsExtension,
-  signBytesAsExtension,
-  verifySignature,
+  //signTxAsExtension,
+  //signBytesAsExtension,
+  //verifySignature,
 };
