@@ -1,6 +1,8 @@
 /* The components file has custom widgets which are used by multiple different screens */
 
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 
 class MenuHeader extends StatelessWidget {
   final Map<String, dynamic> userInfo;
@@ -13,37 +15,38 @@ class MenuHeader extends StatelessWidget {
       margin: const EdgeInsets.only(left: 16),
       child: SizedBox(
         height: 138,
-        child: Row(
-          children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: 60,
-                  height: 60,
-                  margin: const EdgeInsets.only(right: 5),
-                  decoration: BoxDecoration(
-                    color: hexaCodeToColor(AppColors.cardColor),
-                    borderRadius: BorderRadius.circular(60),
-                  ),
-                  child: SvgPicture.asset('assets/male_avatar.svg'),
-                )),
-            const SizedBox(width: 5),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
+        child: Consumer<ApiProvider>(
+          builder: (context, value, child) {
+            return Row(
               children: [
-                MyText(
-                  text: userInfo['first_name'] == '' &&
-                          userInfo['mid_name'] == '' &&
-                          userInfo['last_name'] == ''
-                      ? 'User name'
-                      : "${userInfo['first_name']}",
-                  color: "#FFFFFF",
-                  fontSize: 16,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    margin: const EdgeInsets.only(right: 5),
+                    decoration: BoxDecoration(
+                      color: hexaCodeToColor(AppColors.cardColor),
+                      borderRadius: BorderRadius.circular(60),
+                    ),
+                    child: SvgPicture.string(value.accountM.addressIcon),
+                  ),
                 ),
+                const SizedBox(width: 5),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    MyText(
+                      text: value.accountM.name,
+                      color: "#FFFFFF",
+                      fontSize: 16,
+                    ),
+                  ],
+                )
               ],
-            )
-          ],
+            );
+          },
         ),
       ),
     );

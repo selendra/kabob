@@ -2,7 +2,6 @@ import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class MySplashScreen extends StatefulWidget {
   final CreateAccModel accModel;
@@ -24,7 +23,7 @@ class MySplashScreenState extends State<MySplashScreen>
 
   Future<void> getCurrentAccount() async {
     await Future.delayed(const Duration(seconds: 1), () {
-      final List<KeyPairData> ls = WalletProvider().keyring.keyPairs.toList();
+      final List<KeyPairData> ls = widget.accModel.keyring.keyPairs.toList();
 
       if (ls.isEmpty) {
         Navigator.pushReplacement(

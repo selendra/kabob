@@ -6,6 +6,7 @@ import 'package:wallet_apps/src/components/component.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/contract.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/home/menu/account_c.dart';
 import '../../../../index.dart';
@@ -227,23 +228,24 @@ class _AccountState extends State<Account> {
                                   children: [
                                     Row(
                                       children: [
-                                        Container(
-                                          alignment: Alignment.centerLeft,
-                                          margin: const EdgeInsets.only(
-                                            right: 16,
-                                          ),
-                                          width: 70,
-                                          height: 70,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: widget.sdkModel.profileIcon ==
-                                                  null
-                                              ? Container()
-                                              : SvgPicture.string(
-                                                  widget.sdkModel.profileIcon,
-                                                ),
+                                        Consumer<ApiProvider>(
+                                          builder: (context, value, child) {
+                                            return Container(
+                                              alignment: Alignment.centerLeft,
+                                              margin: const EdgeInsets.only(
+                                                right: 16,
+                                              ),
+                                              width: 70,
+                                              height: 70,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: SvgPicture.string(
+                                                value.accountM.addressIcon,
+                                              ),
+                                            );
+                                          },
                                         ),
                                         Column(
                                           crossAxisAlignment:

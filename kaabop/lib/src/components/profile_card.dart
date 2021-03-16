@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 
 class ProfileCard extends StatelessWidget {
   final CreateAccModel sdkModel;
   const ProfileCard(this.sdkModel);
   @override
   Widget build(BuildContext context) {
+    final acc = Provider.of<ApiProvider>(context);
+
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, Account.route);
@@ -35,23 +39,22 @@ class ProfileCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: sdkModel.profileIcon == null
+                  child: acc.accountM.addressIcon == null
                       ? const CircularProgressIndicator()
-                      : SvgPicture.string(sdkModel.profileIcon),
-             
+                      : SvgPicture.string(acc.accountM.addressIcon),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     MyText(
-                      text: sdkModel.userModel.username,
+                      text: acc.accountM.name??'name',
                       color: "#FFFFFF",
                       fontSize: 20,
                     ),
                     SizedBox(
                       width: 100,
                       child: MyText(
-                        text: !sdkModel.apiConnected
+                        text: !acc.isConnected
                             ? "Connecting to Remote Node"
                             : "Indracore",
                         color: AppColors.secondarytext,
@@ -63,7 +66,7 @@ class ProfileCard extends StatelessWidget {
                   ],
                 ),
                 Expanded(child: Container()),
-                if (!sdkModel.apiConnected)
+                if (!acc.isConnected)
                   Container()
                 else
                   const Align(
@@ -83,8 +86,7 @@ class ProfileCard extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                Clipboard.setData(
-                        ClipboardData(text: sdkModel.userModel.address))
+                Clipboard.setData(ClipboardData(text: acc.accountM.address))
                     .then((value) => {
                           // ignore: deprecated_member_use
                           Scaffold.of(context).showSnackBar(
@@ -97,7 +99,7 @@ class ProfileCard extends StatelessWidget {
               child: MyText(
                 top: 16,
                 width: 300,
-                text: sdkModel.userModel.address ?? "address",
+                text: acc.accountM.address ?? "address",
                 overflow: TextOverflow.ellipsis,
               ),
             ),

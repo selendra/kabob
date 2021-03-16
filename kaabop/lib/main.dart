@@ -4,6 +4,8 @@ import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/provider/account_provider.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in.dart';
 
@@ -18,11 +20,19 @@ void main() {
     if (kReleaseMode) exit(1);
   };
 
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider<WalletProvider>(
-      create: (context) => WalletProvider(),
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<WalletProvider>(
+          create: (context) => WalletProvider(),
+        ),
+        ChangeNotifierProvider<ApiProvider>(
+          create: (context) => ApiProvider(),
+        ),
+      ],
+      child: App(),
     ),
-  ], child: App()));
+  );
 }
 
 class App extends StatefulWidget {
@@ -39,9 +49,30 @@ class AppState extends State<App> {
   void initState() {
     _createAccModel.sdk = WalletSDK();
     _createAccModel.keyring = Keyring();
-    _initApi();
 
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    init(); 
+  }
+
+  Future<void> init() async {
+    
+    Provider.of<ApiProvider>(context, listen: false).initApi().then((value) {
+      Provider.of<ApiProvider>(context, listen: false)
+          .connectNode()
+          .then((value) {
+        if (value != null) {
+          setState(() {
+            _createAccModel.apiConnected = true;
+          });
+          Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
+        }
+      });
+    });
   }
 
   Future<void> _initApi() async {
@@ -101,9 +132,9 @@ class AppState extends State<App> {
   Future<void> getProfileIcon() async {
     final res = await _createAccModel.sdk.api.account
         .getPubKeyIcons([_createAccModel.keyring.keyPairs[0].pubKey]);
-        setState(() {
-          _createAccModel.profileIcon = res.toString();
-        });
+    setState(() {
+      _createAccModel.profileIcon = res.toString();
+    });
   }
 
   Future<void> readAtd() async {
@@ -123,8 +154,8 @@ class AppState extends State<App> {
   }
 
   Future<void> _subscribeBalance() async {
-    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    walletProvider.clearPortfolio();
+    //final walletProvider = Provider.of<WalletProvider>(context, listen: false);
+    //  walletProvider.clearPortfolio();
     if (_createAccModel.keyring.keyPairs.isNotEmpty) {
       final channel = await _createAccModel.sdk.api.account
           .subscribeBalance(_createAccModel.keyring.current.address, (res) {
@@ -212,9 +243,9 @@ class AppState extends State<App> {
             return MaterialApp(
               initialRoute: '/',
               title: AppText.appName,
-              theme:AppStyle.myTheme(),
+              theme: AppStyle.myTheme(),
               routes: {
-                Home.route: (_) => Home(_createAccModel),
+                Home.route: (_) => Home(sdkModel: _createAccModel),
                 CheckIn.route: (_) => CheckIn(_createAccModel),
                 Account.route: (_) => Account(_createAccModel),
                 AddAsset.route: (_) => AddAsset(_createAccModel),

@@ -1,14 +1,16 @@
 import 'dart:ui';
+import 'package:flutter/scheduler.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/attendant.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class Home extends StatefulWidget {
   final CreateAccModel sdkModel;
-  const Home(this.sdkModel);
+  const Home({this.sdkModel});
 
   static const route = '/home';
 
@@ -42,30 +44,42 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _homeM.portfolioList = null;
-    _portfolioM.list = [];
-    if (mounted) {
-      _homeM.result = {};
-      _homeM.globalKey = GlobalKey<ScaffoldState>();
-      _homeM.total = 0;
-      _homeM.userData = {};
-      getCurrentAccount();
-      
-    }
-
     menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
 
-    if (widget.sdkModel.apiConnected) {
-      status = null;
-    }
-
-    if (!widget.sdkModel.apiConnected) {
-      startNode();
-    }
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      handleDialog();
+      setPortfolio();
+    });
 
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    //handleDialog();
+  }
+
+  @override
+  void didUpdateWidget(Home oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (Provider.of<ApiProvider>(context, listen: false).isConnected) {
+      Navigator.of(dialogContext).pop();
+    }
+
+    //handleDialog();
+  }
+
+  Future<void> handleDialog() async {
+    if (!Provider.of<ApiProvider>(context, listen: false).isConnected) {
+      startNode();
+    }
+    // if (Provider.of<ApiProvider>(context).isConnected) {
+    //   Navigator.of(dialogContext).pop();
+    // }
+  }
 
   Future<void> startNode() async {
     await Future.delayed(const Duration(milliseconds: 50), () {
@@ -74,33 +88,37 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           context: context,
           builder: (context) {
             dialogContext = context;
-            return disableNativePopBackButton(AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              title: Column(
-                children: [
-                  CircularProgressIndicator(
+            return disableNativePopBackButton(
+              AlertDialog(
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                title: Column(
+                  children: [
+                    CircularProgressIndicator(
                       backgroundColor: Colors.transparent,
                       valueColor: AlwaysStoppedAnimation(
-                          hexaCodeToColor(AppColors.secondary))),
-                  const Align(
-                    child: MyText(
-                        text: "\nConnecting to Remote Node...",
-                        color: "#000000",
-                        fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-              content: const Padding(
-                padding:  EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: MyText(
-                  text: "Please wait ! this might take a bit longer",
-                  color: "#000000",
+                        hexaCodeToColor(AppColors.secondary),
+                      ),
+                    ),
+                    const Align(
+                      child: MyText(
+                          text: "\nConnecting to Remote Node...",
+                          color: "#000000",
+                          fontWeight: FontWeight.bold),
+                    )
+                  ],
+                ),
+                content: const Padding(
+                  padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                  child: MyText(
+                    text: "Please wait ! this might take a bit longer",
+                    color: "#000000",
+                  ),
                 ),
               ),
-            ));
+            );
           });
     });
   }
@@ -241,7 +259,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (status != null) handleConnectNode();
+    //if (status != null) handleConnectNode();
     return Scaffold(
       key: _homeM.globalKey,
       drawer: Theme(
