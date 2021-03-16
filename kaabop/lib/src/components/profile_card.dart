@@ -36,12 +36,9 @@ class ProfileCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: sdkModel.profileIcon == null
-                      ? Container()
+                      ? const CircularProgressIndicator()
                       : SvgPicture.string(sdkModel.profileIcon),
-                  // child: SvgPicture.asset(
-                  //   'assets/male_avatar.svg',
-                  //   //color: hexaCodeToColor(AppColors.secondary),
-                  // ),
+             
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

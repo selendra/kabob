@@ -49,7 +49,7 @@ class MySplashScreenState extends State<MySplashScreen>
   @override
   void initState() {
     controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(milliseconds: 200),
       vsync: this,
     );
 
@@ -85,9 +85,9 @@ class MySplashScreenState extends State<MySplashScreen>
         child: FadeTransition(
           opacity: animation,
           child: Image.asset(
-            'assets/kabob_logo.png',
-            width: 200,
-            height: 200,
+            'assets/group.png',
+            width: 150,
+            height: 150,
           ),
         ),
       ),
