@@ -1,15 +1,32 @@
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/account.m.dart';
 import 'package:wallet_apps/src/models/native.m.dart';
+import 'package:wallet_apps/src/models/token.m.dart';
+import 'package:wallet_apps/src/provider/contract_provider.dart';
 
 class ApiProvider with ChangeNotifier {
-  WalletSDK sdk = WalletSDK();
-  Keyring keyring = Keyring();
+  static WalletSDK sdk = WalletSDK();
+  static Keyring keyring = Keyring();
 
+  static List<TokenModel> listToken = [
+    TokenModel(
+      logo: 'assets/FingerPrint1.png',
+      symbol: 'ATD',
+      org: 'KOOMPI',
+      color: Colors.black,
+    ),
+    TokenModel(
+      logo: 'assets/koompi_white_logo.png',
+      symbol: 'KMPI',
+      org: 'KOOMPI',
+      color: Colors.transparent,
+    ),
+  ];
+
+  ContractProvider contractProvider;
   AccountM accountM = AccountM();
   NativeM nativeM = NativeM(
     logo: 'assets/native_token.png',
@@ -24,7 +41,8 @@ class ApiProvider with ChangeNotifier {
   Future<void> initApi() async {
     await keyring.init();
     await sdk.init(keyring);
-    getCurrentAccount();
+
+    //contractProvider = ContractProvider(sdk1: sdk,keyring: keyring);
   }
 
   Future<NetworkParams> connectNode() async {
@@ -42,6 +60,11 @@ class ApiProvider with ChangeNotifier {
 
     notifyListeners();
 
+    return res;
+  }
+
+  Future<bool> validateAddress(String address) async {
+    final res = await sdk.api.keyring.validateAddress(address);
     return res;
   }
 
@@ -73,8 +96,8 @@ class ApiProvider with ChangeNotifier {
   }
 
   Future<void> getCurrentAccount() async {
-    accountM.address = keyring.keyPairs[0].address;
-    accountM.name = keyring.keyPairs[0].name;
+    accountM.address = keyring.current.address;
+    accountM.name = keyring.current.name;
     notifyListeners();
   }
 }

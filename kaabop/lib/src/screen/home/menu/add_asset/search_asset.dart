@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/reuse_widget.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/token.m.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
+import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'package:wallet_apps/theme/color.dart';
 
 class SearchAsset extends SearchDelegate {
@@ -57,7 +60,7 @@ class SearchAsset extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     final List<TokenModel> searchProducts = query.isEmpty
         ? []
-        : token
+        : ApiProvider.listToken
             .where(
               (element) => element.symbol.toLowerCase().startsWith(
                     query.toLowerCase(),
@@ -70,7 +73,9 @@ class SearchAsset extends SearchDelegate {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  added(searchProducts[index].symbol);
+                  // added(searchProducts[index].symbol);
+                  Provider.of<ContractProvider>(context, listen: false)
+                      .addToken(searchProducts[index].symbol, context);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
@@ -91,7 +96,7 @@ class SearchAsset extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     final List<TokenModel> searchProducts = query.isEmpty
         ? []
-        : token
+        : ApiProvider.listToken
             .where(
               (element) => element.symbol.toLowerCase().startsWith(
                     query.toLowerCase(),
@@ -104,7 +109,9 @@ class SearchAsset extends SearchDelegate {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () {
-                  added(searchProducts[index].symbol);
+                  // added(searchProducts[index].symbol);
+                  Provider.of<ContractProvider>(context, listen: false)
+                      .addToken(searchProducts[index].symbol, context);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),

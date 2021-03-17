@@ -90,12 +90,12 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   String onChanged(String value) {
     if (_scanPayM.nodeReceiverAddress.hasFocus) {
-     // FocusScope.of(context).requestFocus(_scanPayM.nodeAmount);
+      // FocusScope.of(context).requestFocus(_scanPayM.nodeAmount);
     } else if (_scanPayM.nodeAmount.hasFocus) {
       _scanPayM.formStateKey.currentState.validate();
       if (_scanPayM.formStateKey.currentState.validate()) {
         enableButton();
-      }else{
+      } else {
         setState(() {
           _scanPayM.enable = false;
         });
@@ -294,10 +294,11 @@ class SubmitTrxState extends State<SubmitTrx> {
                 if (double.parse(widget.sdkModel.contractModel.pBalance) <
                     double.parse(_scanPayM.controlAmount.text)) {
                   await dialog(
-                      context,
-                      const Text(
-                          'Sorry, You do not have enough balance to make transaction '),
-                      const Text('Insufficient Balance'));
+                    context,
+                    const Text(
+                        'Sorry, You do not have enough balance to make transaction '),
+                    const Text('Insufficient Balance'),
+                  );
                 } else {
                   transfer(_scanPayM.controlReceiverAddress.text, pin,
                       _scanPayM.controlAmount.text);
@@ -331,12 +332,13 @@ class SubmitTrxState extends State<SubmitTrx> {
   PopupMenuItem item(Map<String, dynamic> list) {
     /* Display Drop Down List */
     return PopupMenuItem(
-        value: list["asset_code"],
-        child: Align(
-          child: Text(
-            list["asset_code"].toString(),
-          ),
-        ));
+      value: list["asset_code"],
+      child: Align(
+        child: Text(
+          list["asset_code"].toString(),
+        ),
+      ),
+    );
   }
 
   @override

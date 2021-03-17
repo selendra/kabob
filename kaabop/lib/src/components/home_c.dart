@@ -107,30 +107,34 @@ final portfolioChart = LineChartData(
 );
 
 Widget homeAppBar(BuildContext context) {
-  return AppBar(
-    toolbarHeight: 60,
-    leadingWidth: 300,
-    backgroundColor: hexaCodeToColor(AppColors.bgdColor),
-    leading: Padding(
-      padding: const EdgeInsets.only(left: 16.0),
-      child: Image.asset(
-        'assets/bitriel.png',
-        width: 300,
-        height: 300,
-      ),
-    ),
-    actions: [
-      Align(
-        alignment: Alignment.centerRight,
-        child: IconButton(
-          iconSize: 30,
-          icon: const Icon(LineAwesomeIcons.bell),
-          onPressed: () async {
-            await MyBottomSheet().notification(context: context);
-          },
+  return Container(
+    height: 70,
+    padding: const EdgeInsets.only(top: 8.0),
+    color: hexaCodeToColor(AppColors.bgdColor),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Image.asset(
+            'assets/bitriel.png',
+            width: 160,
+            height: 160,
+          ),
         ),
-      ),
-    ],
+        Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: IconButton(
+            iconSize: 30,
+            color: Colors.white,
+            icon: const Icon(LineAwesomeIcons.bell),
+            onPressed: () async {
+              await MyBottomSheet().notification(context: context);
+            },
+          ),
+        ),
+      ],
+    ),
   );
 }
 
@@ -331,9 +335,7 @@ class MyBottomAppBar extends StatelessWidget {
   final HomeModel homeM;
   final PortfolioM portfolioM;
   final Function scanReceipt;
-
   final Function toReceiveToken;
-  final Function opacityController;
   final Function fillAddress;
   final Function contactPiker;
   final void Function() openDrawer;
@@ -345,7 +347,6 @@ class MyBottomAppBar extends StatelessWidget {
     this.portfolioM,
     this.scanReceipt,
     this.toReceiveToken,
-    this.opacityController,
     this.fillAddress,
     this.contactPiker,
     this.openDrawer,
@@ -392,18 +393,21 @@ class MyBottomAppBar extends StatelessWidget {
               )),
               Expanded(child: Container()),
               Expanded(
-                  child: MyIconButton(
-                icon: 'contact_list.svg',
-                iconSize: 25,
-                onPressed: !apiStatus
-                    ? null
-                    : () async {
-                        Navigator.push(
+                child: MyIconButton(
+                  icon: 'contact_list.svg',
+                  iconSize: 25,
+                  onPressed: !apiStatus
+                      ? null
+                      : () async {
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ContactBook(sdkModel)));
-                      },
-              )),
+                              builder: (context) => ContactBook(sdkModel),
+                            ),
+                          );
+                        },
+                ),
+              ),
               Expanded(
                 child: MyIconButton(
                   icon: 'menu.svg',

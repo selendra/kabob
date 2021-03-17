@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/screen/home/menu/account.dart';
 
+import 'add_asset/search_asset.dart';
+
 class MenuBody extends StatelessWidget {
   final Map<String, dynamic> userInfo;
   final MenuModel model;
@@ -58,7 +60,12 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 1,
         onTap: () {
-          Navigator.pushNamed(context, AddAsset.route);
+          //Navigator.pushNamed(context, AddAsset.route);
+        //  Navigator.pop(context);
+          showSearch(
+            context: context,
+            delegate: SearchAsset(),
+          );
           // Navigator.push(
           //     context,
           //     MaterialPageRoute(

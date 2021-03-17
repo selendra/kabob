@@ -1,5 +1,7 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 
 class ReceiveWallet extends StatefulWidget {
   final CreateAccModel createAccModel;
@@ -18,7 +20,6 @@ class ReceiveWalletState extends State<ReceiveWallet> {
   GlobalKey<ScaffoldState> _globalKey;
   final GlobalKey _keyQrShare = GlobalKey();
 
-  dynamic result;
 
   final GetWalletMethod _method = GetWalletMethod();
   String name = 'username';
@@ -32,8 +33,6 @@ class ReceiveWalletState extends State<ReceiveWallet> {
     AppServices.noInternetConnection(_globalKey);
     super.initState();
   }
-    
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +40,16 @@ class ReceiveWalletState extends State<ReceiveWallet> {
       key: _globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
-        child: ReceiveWalletBody(
-          keyQrShare: _keyQrShare,
-          globalKey: _globalKey,
-          method: _method,
-          name: name,
-          wallet: wallet,
+        child: Consumer<ApiProvider>(
+          builder: (context, value, child) {
+            return ReceiveWalletBody(
+              keyQrShare: _keyQrShare,
+              globalKey: _globalKey,
+              method: _method,
+              name: value.accountM.name,
+              wallet: value.accountM.address,
+            );
+          },
         ),
       ),
     );

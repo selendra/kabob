@@ -1,11 +1,9 @@
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-
 import 'package:wallet_apps/src/provider/api_provider.dart';
+import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in.dart';
 
@@ -28,6 +26,9 @@ void main() {
         ),
         ChangeNotifierProvider<ApiProvider>(
           create: (context) => ApiProvider(),
+        ),
+        ChangeNotifierProvider<ContractProvider>(
+          create: (context) => ContractProvider(),
         ),
       ],
       child: App(),
@@ -56,10 +57,10 @@ class AppState extends State<App> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    init();
+    initApi();
   }
 
-  Future<void> init() async {
+  Future<void> initApi() async {
     Provider.of<ApiProvider>(context, listen: false).initApi().then((value) {
       Provider.of<ApiProvider>(context, listen: false)
           .connectNode()
@@ -68,6 +69,8 @@ class AppState extends State<App> {
           setState(() {
             _createAccModel.apiConnected = true;
           });
+          initContract();
+          Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
           Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
           Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         }
@@ -75,161 +78,17 @@ class AppState extends State<App> {
     });
   }
 
-  Future<void> _initApi() async {
-    await _createAccModel.keyring.init();
-    await FlutterWebviewPlugin().reload();
-    await _createAccModel.sdk.init(_createAccModel.keyring);
-
-    _createAccModel.sdkReady = true;
-
-    if (_createAccModel.sdkReady) {
-      connectNode();
-    }
-  }
-
-  Future<void> connectNode() async {
-    final node = NetworkParams();
-
-    node.name = AppConfig.nodeName;
-    node.endpoint = AppConfig.nodeEndpoint;
-    node.ss58 = AppConfig.ss58;
-
-    final res = await _createAccModel.sdk.api.connectNode(
-      _createAccModel.keyring,
-      [node],
-    );
-
-    setState(() {});
-    if (res != null) {
-      setState(() {
-        _createAccModel.apiConnected = true;
-      });
-      getProfileIcon();
-      await readContract();
-      await readAtd();
-      initContract();
-      getChainDecimal();
-      _subscribeBalance();
-    }
-  }
-
-  Future<void> initAttendant() async {
-    await _createAccModel.sdk.api.initAttendant();
-    getToken();
-  }
-
-  Future<void> getToken() async {
-    final res = await _createAccModel.sdk.api
-        .getAToken(_createAccModel.keyring.keyPairs[0].address);
-
-    setState(() {
-      _createAccModel.contractModel.attendantM.aBalance =
-          BigInt.parse(res).toString();
-      _createAccModel.atdReady = true;
-    });
-  }
-
-  Future<void> getProfileIcon() async {
-    final res = await _createAccModel.sdk.api.account
-        .getPubKeyIcons([_createAccModel.keyring.keyPairs[0].pubKey]);
-    setState(() {
-      _createAccModel.profileIcon = res.toString();
-    });
-  }
-
-  Future<void> readAtd() async {
-    await StorageServices.readBool(
-      _createAccModel.contractModel.attendantM.aSymbol,
-    ).then((value) async {
-      if (value) {
-        _createAccModel.contractModel.attendantM.isAContain = value;
-        initAttendant();
-      }
-    });
-  }
-
-  Future<void> getChainDecimal() async {
-    final res = await _createAccModel.sdk.api.getChainDecimal();
-    _createAccModel.chainDecimal = res.toString();
-  }
-
-  Future<void> _subscribeBalance() async {
-    //final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    //  walletProvider.clearPortfolio();
-    if (_createAccModel.keyring.keyPairs.isNotEmpty) {
-      final channel = await _createAccModel.sdk.api.account
-          .subscribeBalance(_createAccModel.keyring.current.address, (res) {
-        setState(() {
-          _createAccModel.nativeBalance = Fmt.balance(
-            res.freeBalance.toString(),
-            18,
-          );
-          _createAccModel.dataReady = true;
-        });
-      });
-      setState(() {
-        _createAccModel.msgChannel = channel;
-      });
-    }
-  }
-
-  Future<void> readContract() async {
-    await StorageServices.readBool(_createAccModel.contractModel.pTokenSymbol)
-        .then((value) async {
-      if (value) {
-        setState(() {
-          _createAccModel.contractModel.isContain = value;
-        });
-      }
-    });
-  }
-
   Future<void> initContract() async {
-    if (_createAccModel.contractModel.isContain) {
-      await _createAccModel.sdk.api.callContract().then((value) {
-        _createAccModel.contractModel.pContractAddress = value;
-      });
-      if (_createAccModel.keyring.keyPairs.isNotEmpty) {
-        await _contractSymbol();
-        await _getHashBySymbol().then((value) async {
-          _balanceOfByPartition();
-        });
+    await StorageServices.readBool('KMPI').then((value) {
+      if (value) {
+        Provider.of<ContractProvider>(context, listen: false).initKmpi();
       }
-    }
-  }
+    });
 
-  Future<void> _contractSymbol() async {
-    final res = await _createAccModel.sdk.api
-        .contractSymbol(_createAccModel.keyring.keyPairs[0].address);
-    if (res != null) {
-      setState(() {
-        _createAccModel.contractModel.pTokenSymbol = res[0].toString();
-      });
-    }
-  }
-
-  Future<void> _getHashBySymbol() async {
-    final res = await _createAccModel.sdk.api.getHashBySymbol(
-      _createAccModel.keyring.keyPairs[0].address,
-      _createAccModel.contractModel.pTokenSymbol,
-    );
-
-    if (res != null) {
-      _createAccModel.contractModel.pHash = res;
-    }
-  }
-
-  Future<void> _balanceOfByPartition() async {
-    final res = await _createAccModel.sdk.api.balanceOfByPartition(
-      _createAccModel.keyring.keyPairs[0].address,
-      _createAccModel.keyring.keyPairs[0].address,
-      _createAccModel.contractModel.pHash,
-    );
-
-    setState(() {
-      _createAccModel.contractModel.pBalance =
-          BigInt.parse(res['output'].toString()).toString();
-      _createAccModel.kmpiReady = true;
+    await StorageServices.readBool('ATD').then((value) {
+      if (value) {
+        Provider.of<ContractProvider>(context, listen: false).initAtd();
+      }
     });
   }
 

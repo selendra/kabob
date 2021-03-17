@@ -1,9 +1,6 @@
 import 'dart:ui';
-import 'package:flutter/scheduler.dart';
-import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/attendant.m.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
@@ -21,32 +18,16 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
-  // GlobalKey<AnimatedCircularChartState> chartKey = GlobalKey<AnimatedCircularChartState>();
   MenuModel menuModel = MenuModel();
   final HomeModel _homeM = HomeModel();
   final PortfolioM _portfolioM = PortfolioM();
   BuildContext dialogContext;
-  String action = "no_action";
+
   String status = '';
-
-  Future<void> getCurrentAccount() async {
-    final List<KeyPairData> ls = widget.sdkModel.keyring.keyPairs;
-    setState(() {
-      widget.sdkModel.userModel.username =
-          widget.sdkModel.keyring.keyPairs[0].name;
-      widget.sdkModel.userModel.address =
-          widget.sdkModel.keyring.keyPairs[0].address;
-
-      _homeM.userData['first_name'] = ls[0].name;
-      _homeM.userData['wallet'] = ls[0].address;
-    });
-  }
 
   @override
   void initState() {
-    menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
-
-    //print(ApiProvider().isConnected);
+    // menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
 
     if (widget.sdkModel.apiConnected) {
       status = null;
@@ -59,19 +40,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     super.initState();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  // }
-
-  // @override
-  // void didUpdateWidget(Home oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   if (widget.sdkModel.apiConnected != oldWidget.sdkModel.apiConnected) {
-  //     handle();
-  //   }
-  // }
-
   Future<void> handleDialog() async {
     if (!Provider.of<ApiProvider>(context, listen: false).isConnected) {
       startNode();
@@ -79,8 +47,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> startNode() async {
-    await Future.delayed(const Duration(milliseconds: 50), () {
-      showDialog(
+    await Future.delayed(
+      const Duration(milliseconds: 50),
+      () {
+        showDialog(
           barrierDismissible: false,
           context: context,
           builder: (context) {
@@ -96,14 +66,17 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     CircularProgressIndicator(
                       backgroundColor: Colors.transparent,
                       valueColor: AlwaysStoppedAnimation(
-                        hexaCodeToColor(AppColors.secondary),
+                        hexaCodeToColor(
+                          AppColors.secondary,
+                        ),
                       ),
                     ),
                     const Align(
                       child: MyText(
-                          text: "\nConnecting to Remote Node...",
-                          color: "#000000",
-                          fontWeight: FontWeight.bold),
+                        text: "\nConnecting to Remote Node...",
+                        color: "#000000",
+                        fontWeight: FontWeight.bold,
+                      ),
                     )
                   ],
                 ),
@@ -116,71 +89,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                 ),
               ),
             );
-          });
-    });
-  }
-
-  Future<void> handleConnectNode() async {
-    if (widget.sdkModel.contractModel.isContain &&
-        widget.sdkModel.contractModel.attendantM.isAContain) {
-      if (widget.sdkModel.apiConnected &&
-          widget.sdkModel.dataReady &&
-          widget.sdkModel.kmpiReady &&
-          widget.sdkModel.atdReady) {
-        await Future.delayed(const Duration(milliseconds: 200), () {
-          status = null;
-        });
-
-        Navigator.of(dialogContext).pop();
-        setPortfolio();
-      }
-      // ignore: invariant_booleans
-    } else if (widget.sdkModel.contractModel.isContain ||
-        widget.sdkModel.contractModel.attendantM.isAContain) {
-      if (widget.sdkModel.apiConnected &&
-              widget.sdkModel.dataReady &&
-              widget.sdkModel.kmpiReady ||
-          widget.sdkModel.apiConnected &&
-              widget.sdkModel.dataReady &&
-              widget.sdkModel.atdReady) {
-        await Future.delayed(const Duration(milliseconds: 200), () {
-          status = null;
-        });
-
-        Navigator.of(dialogContext).pop();
-        setPortfolio();
-      }
-    } else {}
-  }
-
-  // ignore: avoid_positional_boolean_parameters
-  void opacityController(bool visible) {
-    if (mounted) {
-      setState(() {
-        if (visible) {
-          _homeM.visible = false;
-        } else if (visible == false) {
-          _homeM.visible = true;
-        }
-      });
-    }
-  }
-
-  Future<void> _balanceOf() async {
-    try {
-      final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
-        widget.sdkModel.keyring.keyPairs[0].address,
-        widget.sdkModel.keyring.keyPairs[0].address,
-        widget.sdkModel.contractModel.pHash,
-      );
-
-      setState(() {
-        widget.sdkModel.contractModel.pBalance =
-            BigInt.parse(res['output'].toString()).toString();
-      });
-    } catch (e) {
-      // print(e.toString());
-    }
+          },
+        );
+      },
+    );
   }
 
   Future<void> toReceiveToken() async {
@@ -194,9 +106,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   Future<void> onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 300)).then((value) {
       setPortfolio();
-      if (widget.sdkModel.contractModel.pHash != '') {
-        _balanceOf();
-      }
     });
   }
 
@@ -231,20 +140,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
-  Future<void> onDismiss() async {
-    widget.sdkModel.contractModel.isContain = false;
-    widget.sdkModel.contractModel.pHash = '';
-    setPortfolio();
-
-    await StorageServices.removeKey('KMPI');
-  }
-
-  Future<void> onDismissATT() async {
-    widget.sdkModel.contractModel.attendantM = AttendantModel();
-    setPortfolio();
-    await StorageServices.removeKey('ATD');
-  }
-
   Future<void> handle() async {
     if (widget.sdkModel.apiConnected) {
       await Future.delayed(const Duration(milliseconds: 200), () {
@@ -265,16 +160,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
         child: Menu(_homeM.userData),
       ),
-      appBar: homeAppBar(context) as PreferredSizeWidget,
       body: RefreshIndicator(
         onRefresh: onRefresh,
         child: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: HomeBody(
             sdkModel: widget.sdkModel,
-            balanceOf: _balanceOf,
-            onDismiss: onDismiss,
-            onDismissATT: onDismissATT,
           ),
         ),
       ),
@@ -308,7 +199,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         portfolioM: _portfolioM,
         // Bottom Center Button
         toReceiveToken: toReceiveToken,
-        opacityController: opacityController,
         openDrawer: openMyDrawer,
         sdkModel: widget.sdkModel,
       ),

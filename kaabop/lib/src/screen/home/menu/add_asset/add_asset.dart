@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/token.m.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class AddAsset extends StatefulWidget {
@@ -22,6 +23,7 @@ class AddAssetState extends State<AddAsset> {
 
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
   final List<TokenModel> _token = [];
+  String _address = '';
 
   @override
   void initState() {
@@ -132,8 +134,9 @@ class AddAssetState extends State<AddAsset> {
   }
 
   Future<void> initContract() async {
-    await widget.sdkModel.sdk.api.callContract().then((value) {
-      widget.sdkModel.contractModel.pContractAddress = value;
+    final res = await ApiProvider.sdk.api.callContract();
+    setState(() {
+      _address = res.toString();
     });
   }
 

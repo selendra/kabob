@@ -15,12 +15,13 @@ class ContactBookBody extends StatelessWidget {
 
   final Function editContact;
 
-  const ContactBookBody(
-      {this.model,
-      this.getContact,
-      this.sdkModel,
-      this.deleteContact,
-      this.editContact});
+  const ContactBookBody({
+    this.model,
+    this.getContact,
+    this.sdkModel,
+    this.deleteContact,
+    this.editContact,
+  });
 
   @override
   Widget build(BuildContext context) {

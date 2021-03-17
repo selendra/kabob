@@ -6,7 +6,9 @@ import 'package:wallet_apps/src/components/profile_card.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
+import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'asset_info/asset_info.dart';
+import 'menu/add_asset/search_asset.dart';
 
 class HomeBody extends StatelessWidget {
   final CreateAccModel sdkModel;
@@ -25,6 +27,7 @@ class HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        homeAppBar(context),
         Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -53,14 +56,19 @@ class HomeBody extends StatelessWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, AddAsset.route);
+                          showSearch(
+                            context: context,
+                            delegate: SearchAsset(
+                              sdkModel: sdkModel,
+                            ),
+                          );
                         },
                         child: const Align(
                           alignment: Alignment.bottomRight,
                           child: Icon(
                             Icons.add_circle_outline,
                             color: Colors.white,
-                            size: 30,
+                            size: 32,
                           ),
                         ),
                       ),
@@ -100,74 +108,82 @@ class HomeBody extends StatelessWidget {
                     ),
                   );
                 }),
-                if (sdkModel.contractModel.isContain)
-                  Dismissible(
-                    key: Key(sdkModel.nativeSymbol),
-                    direction: DismissDirection.endToStart,
-                    background: DismissibleBackground(),
-                    onDismissed: (direct) {
-                      onDismiss();
-                    },
-                    child: GestureDetector(
-                      onTap: () {
-                        balanceOf();
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                              sdkModel: sdkModel,
-                              assetLogo: sdkModel.contractModel.ptLogo,
-                              balance: sdkModel.contractModel.pBalance,
-                              tokenSymbol: sdkModel.contractModel.pTokenSymbol,
+                Consumer<ContractProvider>(
+                  builder: (context, value, child) {
+                    return value.kmpi.isContain
+                        ? Dismissible(
+                            key: Key(sdkModel.nativeSymbol),
+                            direction: DismissDirection.endToStart,
+                            background: DismissibleBackground(),
+                            onDismissed: (direct) {
+                              value.removeToken(value.kmpi.symbol);
+                            },
+                            child: Consumer<ContractProvider>(
+                              builder: (context, value, child) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      RouteAnimation(
+                                        enterPage: AssetInfo(
+                                          sdkModel: sdkModel,
+                                          assetLogo: value.kmpi.logo,
+                                          balance: value.kmpi.balance,
+                                          tokenSymbol: value.kmpi.symbol,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: AssetItem(
+                                    value.kmpi.logo,
+                                    value.kmpi.symbol,
+                                    value.kmpi.org,
+                                    value.kmpi.balance,
+                                    Colors.black,
+                                  ),
+                                );
+                              },
                             ),
-                          ),
-                        );
-                      },
-                      child: AssetItem(
-                          sdkModel.contractModel.ptLogo,
-                          sdkModel.contractModel.pTokenSymbol,
-                          sdkModel.contractModel.pOrg,
-                          sdkModel.contractModel.pBalance,
-                          Colors.black),
-                    ),
-                  )
-                else
-                  Container(),
-                if (sdkModel.contractModel.attendantM.isAContain)
-                  Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    background: DismissibleBackground(),
-                    onDismissed: (direct) {
-                      onDismissATT();
-                    },
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                              sdkModel: sdkModel,
-                              assetLogo:
-                                  sdkModel.contractModel.attendantM.attLogo,
-                              balance:
-                                  sdkModel.contractModel.attendantM.aBalance,
-                              tokenSymbol:
-                                  sdkModel.contractModel.attendantM.aSymbol,
+                          )
+                        : Container();
+                  },
+                ),
+                Consumer<ContractProvider>(
+                  builder: (coontext, value, child) {
+                    return value.atd.isContain
+                        ? Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.endToStart,
+                            background: DismissibleBackground(),
+                            onDismissed: (direct) {
+                              value.removeToken(value.atd.symbol);
+                            },
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  RouteAnimation(
+                                    enterPage: AssetInfo(
+                                      sdkModel: sdkModel,
+                                      assetLogo: value.atd.logo,
+                                      balance: value.atd.balance,
+                                      tokenSymbol: value.atd.symbol,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: AssetItem(
+                                value.atd.logo,
+                                value.atd.symbol,
+                                value.atd.org,
+                                value.atd.balance,
+                                Colors.black,
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                      child: AssetItem(
-                          sdkModel.contractModel.attendantM.attLogo,
-                          sdkModel.contractModel.attendantM.aSymbol,
-                          sdkModel.contractModel.attendantM.aOrg,
-                          sdkModel.contractModel.attendantM.aBalance,
-                          Colors.black),
-                    ),
-                  )
-                else
-                  Container(),
+                          )
+                        : Container();
+                  },
+                )
               ],
             ),
           ),
