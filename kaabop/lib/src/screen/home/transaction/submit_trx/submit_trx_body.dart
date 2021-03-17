@@ -9,7 +9,7 @@ class SubmitTrxBody extends StatelessWidget {
   final Function onSubmit;
   final void Function() clickSend;
   final Function resetAssetsDropDown;
-  final CreateAccModel sdkModel;
+
   final List<Map<String, String>> list;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
@@ -21,7 +21,6 @@ class SubmitTrxBody extends StatelessWidget {
     this.onSubmit,
     this.clickSend,
     this.resetAssetsDropDown,
-    this.sdkModel,
     this.item,
     this.list,
   });

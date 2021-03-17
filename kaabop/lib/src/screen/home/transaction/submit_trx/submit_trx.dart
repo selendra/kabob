@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
+import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
@@ -15,7 +15,7 @@ class SubmitTrx extends StatefulWidget {
   final String asset;
   final List<dynamic> _listPortfolio;
   final bool enableInput;
-  final CreateAccModel sdkModel;
+  //final CreateAccModel sdkModel;
 
   const SubmitTrx(
       // ignore: avoid_positional_boolean_parameters
@@ -23,7 +23,7 @@ class SubmitTrx extends StatefulWidget {
       // ignore: avoid_positional_boolean_parameters
       this.enableInput,
       this._listPortfolio,
-      this.sdkModel,
+      //this.sdkModel,
       {this.asset});
   @override
   State<StatefulWidget> createState() {
@@ -84,7 +84,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future<bool> validateAddress(String address) async {
-    final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
+    final res = await ApiProvider.sdk.api.keyring.validateAddress(address);
     return res;
   }
 
@@ -129,7 +129,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       disable = true;
     });
     flareController.play('Checkmark');
-    setPortfolio();
+
     Timer(const Duration(milliseconds: 2500), () {
       Navigator.pushNamedAndRemoveUntil(
           context, Home.route, ModalRoute.withName('/'));
@@ -149,26 +149,29 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future<void> transfer(String to, String pass, String value) async {
-    dialogLoading(context,
-        content: 'Please wait! This might take a little bit longer');
+    dialogLoading(
+      context,
+      content: 'Please wait! This might take a little bit longer',
+    );
 
     try {
-      final res = await widget.sdkModel.sdk.api.keyring.contractTransfer(
-        widget.sdkModel.keyring.keyPairs[0].pubKey,
+      final res = await ApiProvider.sdk.api.keyring.contractTransfer(
+        ApiProvider.keyring.keyPairs[0].pubKey,
         to,
         value,
         pass,
-        widget.sdkModel.contractModel.pHash,
+        Provider.of<ContractProvider>(context, listen: false).kmpi.hash,
       );
 
       if (res['hash'] != null) {
-        await _balanceOfByPartition();
+        Provider.of<ContractProvider>(context, listen: false)
+            .fetchKmpiBalance();
 
         saveTxHistory(TxHistory(
           date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
           symbol: 'KMPI',
           destination: to,
-          sender: widget.sdkModel.keyring.current.address,
+          sender: ApiProvider.keyring.current.address,
           org: 'KOOMPI',
           amount: value.trim(),
         ));
@@ -185,18 +188,21 @@ class SubmitTrxState extends State<SubmitTrx> {
     dialogLoading(context);
     String mhash;
     final sender = TxSenderData(
-      widget.sdkModel.keyring.current.address,
-      widget.sdkModel.keyring.current.pubKey,
+      ApiProvider.keyring.current.address,
+      ApiProvider.keyring.current.pubKey,
     );
     final txInfo = TxInfoData('balances', 'transfer', sender);
-
+    final chainDecimal =
+        Provider.of<ApiProvider>(context, listen: false).nativeM.chainDecimal;
     try {
-      final hash = await widget.sdkModel.sdk.api.tx.signAndSend(
+      final hash = await ApiProvider.sdk.api.tx.signAndSend(
           txInfo,
           [
             target,
-            Fmt.tokenInt(amount.trim(), int.parse(widget.sdkModel.chainDecimal))
-                .toString(),
+            Fmt.tokenInt(
+              amount.trim(),
+              int.parse(chainDecimal),
+            ).toString(),
           ],
           pin,
           onStatusChange: (status) async {});
@@ -206,7 +212,7 @@ class SubmitTrxState extends State<SubmitTrx> {
           date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
           symbol: 'SEL',
           destination: target,
-          sender: widget.sdkModel.keyring.current.address,
+          sender: ApiProvider.keyring.current.address,
           org: 'SELENDRA',
           amount: amount.trim(),
         ));
@@ -222,51 +228,51 @@ class SubmitTrxState extends State<SubmitTrx> {
     return mhash;
   }
 
-  void setPortfolio() {
-    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    walletProvider.clearPortfolio();
+  // void setPortfolio() {
+  //   final walletProvider = Provider.of<WalletProvider>(context, listen: false);
+  //   walletProvider.clearPortfolio();
 
-    if (widget.sdkModel.contractModel.pHash != '') {
-      walletProvider.addAvaibleToken({
-        'symbol': widget.sdkModel.contractModel.pTokenSymbol,
-        'balance': widget.sdkModel.contractModel.pBalance,
-      });
-    }
+  //   if (ApiProvider.contractModel.pHash != '') {
+  //     walletProvider.addAvaibleToken({
+  //       'symbol': widget.sdkModel.contractModel.pTokenSymbol,
+  //       'balance': widget.sdkModel.contractModel.pBalance,
+  //     });
+  //   }
 
-    if (widget.sdkModel.contractModel.attendantM.isAContain) {
-      walletProvider.addAvaibleToken({
-        'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
-        'balance': widget.sdkModel.contractModel.attendantM.aBalance,
-      });
-    }
+  //   if (widget.sdkModel.contractModel.attendantM.isAContain) {
+  //     walletProvider.addAvaibleToken({
+  //       'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
+  //       'balance': widget.sdkModel.contractModel.attendantM.aBalance,
+  //     });
+  //   }
 
-    walletProvider.availableToken.add({
-      'symbol': widget.sdkModel.nativeSymbol,
-      'balance': widget.sdkModel.nativeBalance,
-    });
+  //   walletProvider.availableToken.add({
+  //     'symbol': widget.sdkModel.nativeSymbol,
+  //     'balance': widget.sdkModel.nativeBalance,
+  //   });
 
-    if (!widget.sdkModel.contractModel.isContain &&
-        !widget.sdkModel.contractModel.attendantM.isAContain) {
-      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
-    }
+  //   if (!widget.sdkModel.contractModel.isContain &&
+  //       !widget.sdkModel.contractModel.attendantM.isAContain) {
+  //     Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+  //   }
 
-    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-  }
+  //   Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  // }
 
-  Future<void> _balanceOfByPartition() async {
-    try {
-      final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
-        widget.sdkModel.keyring.keyPairs[0].address,
-        widget.sdkModel.keyring.keyPairs[0].address,
-        widget.sdkModel.contractModel.pHash,
-      );
+  // Future<void> _balanceOfByPartition() async {
+  //   try {
+  //     final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
+  //       widget.sdkModel.keyring.keyPairs[0].address,
+  //       widget.sdkModel.keyring.keyPairs[0].address,
+  //       widget.sdkModel.contractModel.pHash,
+  //     );
 
-      widget.sdkModel.contractModel.pBalance =
-          BigInt.parse(res['output'].toString()).toString();
-    } catch (e) {
-      // print(e.toString());
-    }
-  }
+  //     widget.sdkModel.contractModel.pBalance =
+  //         BigInt.parse(res['output'].toString()).toString();
+  //   } catch (e) {
+  //     // print(e.toString());
+  //   }
+  // }
 
   Future<void> clickSend() async {
     String pin;
@@ -291,7 +297,10 @@ class SubmitTrxState extends State<SubmitTrx> {
                 sendTx(_scanPayM.controlReceiverAddress.text,
                     _scanPayM.controlAmount.text, pin);
               } else {
-                if (double.parse(widget.sdkModel.contractModel.pBalance) <
+                if (double.parse(
+                        Provider.of<ContractProvider>(context, listen: false)
+                            .kmpi
+                            .balance) <
                     double.parse(_scanPayM.controlAmount.text)) {
                   await dialog(
                     context,
@@ -343,6 +352,7 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   @override
   Widget build(BuildContext context) {
+    final contract = Provider.of<ContractProvider>(context);
     return Scaffold(
       key: _scanPayM.globalKey,
       body: _loading
@@ -361,11 +371,8 @@ class SubmitTrxState extends State<SubmitTrx> {
                     onSubmit: onSubmit,
                     clickSend: clickSend,
                     resetAssetsDropDown: resetAssetsDropDown,
-                    sdkModel: widget.sdkModel,
                     item: item,
-                    list: widget.sdkModel.contractModel.pHash != ''
-                        ? list
-                        : nativeList,
+                    list: contract.kmpi.isContain ? list : nativeList,
                   ),
                   if (_scanPayM.isPay == false)
                     Container()

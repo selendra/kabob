@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:latlong/latlong.dart';
 import 'package:wallet_apps/src/models/checkin.m.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
+import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in_body.dart';
 
@@ -93,9 +95,9 @@ class _CheckInState extends State<CheckIn> {
     setState(() {
       _checkInModel.isSuccess = true;
     });
-    getToken();
-    getAStatus();
-    setPortfolio();
+    Provider.of<ContractProvider>(context, listen: false).fetchAtdBalance();
+    Provider.of<ContractProvider>(context, listen: false).getAStatus();
+
     flareController.play('Checkmark');
     Timer(const Duration(milliseconds: 2500), () {
       Navigator.pushNamedAndRemoveUntil(
@@ -153,9 +155,8 @@ class _CheckInState extends State<CheckIn> {
         content: 'Please wait! This might take a little bit longer');
 
     try {
-      //print('res');
-      final res = await widget.sdkModel.sdk.api.keyring.aCheckIn(
-        widget.sdkModel.keyring.keyPairs[0].pubKey,
+      final res = await ApiProvider.sdk.api.keyring.aCheckIn(
+        ApiProvider.keyring.keyPairs[0].pubKey,
         password,
         aHash,
         location,
@@ -197,8 +198,8 @@ class _CheckInState extends State<CheckIn> {
     dialogLoading(context,
         content: 'Please wait! This might take a little bit longer');
     try {
-      final res = await widget.sdkModel.sdk.api.keyring.aCheckOut(
-        widget.sdkModel.keyring.keyPairs[0].pubKey,
+      final res = await ApiProvider.sdk.api.keyring.aCheckOut(
+        ApiProvider.keyring.keyPairs[0].pubKey,
         password,
         aHash,
         location,

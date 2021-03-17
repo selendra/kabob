@@ -128,7 +128,7 @@ class HomeBody extends StatelessWidget {
                                         enterPage: AssetInfo(
                                           sdkModel: sdkModel,
                                           assetLogo: value.kmpi.logo,
-                                          balance: value.kmpi.balance,
+                                          balance: value.kmpi.balance ?? '0',
                                           tokenSymbol: value.kmpi.symbol,
                                         ),
                                       ),
@@ -166,7 +166,7 @@ class HomeBody extends StatelessWidget {
                                     enterPage: AssetInfo(
                                       sdkModel: sdkModel,
                                       assetLogo: value.atd.logo,
-                                      balance: value.atd.balance,
+                                      balance: value.atd.balance ?? '0',
                                       tokenSymbol: value.atd.symbol,
                                     ),
                                   ),

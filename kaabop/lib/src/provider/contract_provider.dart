@@ -88,4 +88,10 @@ class ContractProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future<void> getAStatus() async {
+    final res = await sdk.api.getAStatus(keyring.keyPairs[0].address);
+    atd.status = res;
+    notifyListeners();
+  }
 }

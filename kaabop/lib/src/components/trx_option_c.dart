@@ -104,7 +104,7 @@ class TrxOptionMethod {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                SubmitTrx("", true, portfolioList, sdkModel)));
+                SubmitTrx("", true, portfolioList)));
   }
 
   /* Scan QR Code */
@@ -122,7 +122,7 @@ class TrxOptionMethod {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  SubmitTrx(_response, false, portfolioList, sdkModel)));
+                  SubmitTrx(_response, false, portfolioList)));
     }
   }
 }

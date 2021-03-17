@@ -104,7 +104,6 @@ class ContactBookBody extends StatelessWidget {
                                                       .address.text,
                                                   false,
                                                   const [],
-                                                  sdkModel,
                                                 ),
                                               ),
                                             );

@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong/latlong.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/src/components/component.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/model_asset_info.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
+import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'package:wallet_apps/src/screen/check_in/check_in.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_history.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
@@ -113,7 +116,7 @@ class _AssetInfoState extends State<AssetInfo> {
   Future<void> _refresh() async {
     await Future.delayed(const Duration(seconds: 3)).then((value) {
       if (widget.tokenSymbol == "ATD") {
-        getAStatus();
+        Provider.of<ContractProvider>(context, listen: false).getAStatus();
         getCheckInList();
         getCheckOutList();
         sortList();
@@ -122,8 +125,8 @@ class _AssetInfoState extends State<AssetInfo> {
   }
 
   Future<void> getCheckInList() async {
-    final res = await widget.sdkModel.sdk.api
-        .getCheckInList(widget.sdkModel.keyring.keyPairs[0].address);
+    final res = await ApiProvider.sdk.api
+        .getCheckInList(ApiProvider.keyring.keyPairs[0].address);
 
     setState(() {
       _checkInList.clear();
@@ -149,8 +152,8 @@ class _AssetInfoState extends State<AssetInfo> {
   }
 
   Future<void> getCheckOutList() async {
-    final res = await widget.sdkModel.sdk.api
-        .getCheckOutList(widget.sdkModel.keyring.keyPairs[0].address);
+    final res = await ApiProvider.sdk.api
+        .getCheckOutList(ApiProvider.keyring.keyPairs[0].address);
 
     setState(() {
       _checkOutList.clear();
@@ -178,7 +181,7 @@ class _AssetInfoState extends State<AssetInfo> {
 
   Future<void> initATD() async {
     if (widget.tokenSymbol == "ATD") {
-      getAStatus();
+      Provider.of<ContractProvider>(context, listen: false).getAStatus();
       await getCheckInList();
       await getCheckOutList();
       sortList();
@@ -204,23 +207,23 @@ class _AssetInfoState extends State<AssetInfo> {
 
   Future<void> sortList() async {
     _checkAll = List.from(_checkInList)..addAll(_checkOutList);
-    _checkAll.sort((a, b) => int.parse(a['time'].toString())
-        .compareTo(int.parse(b['time'].toString())));
-    setState(() {});
-    if (!mounted) return;
+    // _checkAll.sort((a, b) => int.parse(a['time'].toString())
+    //     .compareTo(int.parse(b['time'].toString())));
+    // setState(() {});
+    // if (!mounted) return;
   }
 
-  Future<void> getAStatus() async {
-    final res = await widget.sdkModel.sdk.api
-        .getAStatus(widget.sdkModel.keyring.keyPairs[0].address);
-    if (res) {
-      setState(() {
-        widget.sdkModel.contractModel.attendantM.aStatus = true;
-      });
-    } else {
-      widget.sdkModel.contractModel.attendantM.aStatus = false;
-    }
-  }
+  // Future<void> getAStatus() async {
+  //   final res = await ApiProvider.sdk.api
+  //       .getAStatus(ApiProvider.keyring.keyPairs[0].address);
+  //   if (res) {
+  //     setState(() {
+  //       widget.sdkModel.contractModel.attendantM.aStatus = true;
+  //     });
+  //   } else {
+  //     widget.sdkModel.contractModel.attendantM.aStatus = false;
+  //   }
+  // }
 
   String onChangedTransferFrom(String value) {
     _modelAssetInfo.formTransferFrom.currentState.validate();
@@ -360,13 +363,16 @@ class _AssetInfoState extends State<AssetInfo> {
                       Expanded(
                         child: Align(
                           alignment: Alignment.bottomRight,
-                          child: MyText(
-                            textAlign: TextAlign.right,
-                            text:
-                                widget.sdkModel.contractModel.attendantM.aStatus
+                          child: Consumer<ContractProvider>(
+                            builder: (context, value, child) {
+                              return MyText(
+                                textAlign: TextAlign.right,
+                                text: value.atd.status
                                     ? 'Status: Check-In'
                                     : 'Status: Check-out',
-                            fontSize: 14.0,
+                                fontSize: 14.0,
+                              );
+                            },
                           ),
                         ),
                       ),

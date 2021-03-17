@@ -22,9 +22,9 @@ class AttActivity extends StatelessWidget {
           child: _checkAll.isEmpty
               ? Center(
                   child: SvgPicture.asset(
-                    'assets/no_data.svg',
-                    width: 250,
-                    height: 250,
+                    'assets/icons/no_data.svg',
+                    width: 180,
+                    height: 180,
                   ),
                 )
               : ListView.builder(

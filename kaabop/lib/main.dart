@@ -88,6 +88,7 @@ class AppState extends State<App> {
     await StorageServices.readBool('ATD').then((value) {
       if (value) {
         Provider.of<ContractProvider>(context, listen: false).initAtd();
+        Provider.of<ContractProvider>(context, listen: false).fetchAtdBalance();
       }
     });
   }
@@ -106,7 +107,7 @@ class AppState extends State<App> {
               routes: {
                 Home.route: (_) => Home(sdkModel: _createAccModel),
                 CheckIn.route: (_) => CheckIn(_createAccModel),
-                Account.route: (_) => Account(_createAccModel),
+                Account.route: (_) => Account(),
                 AddAsset.route: (_) => AddAsset(_createAccModel),
                 ImportAcc.route: (_) => ImportAcc(_createAccModel),
                 ReceiveWallet.route: (_) => ReceiveWallet(_createAccModel),
