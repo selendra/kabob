@@ -1,6 +1,6 @@
 class AppText{
 
-  static String appName = "KABOB";
+  static String appName = "BITRIEL";
   static String contentConnection = "Something wrong with your connection ";
   static String backupMnemonic = "Backup mnemonic";
   static String screenshotNote = "Note: Do not take screenshot, someone will have fully access to your assets, if they get your mnemonic! Please write down your mnemonic, then store it at a safe place.";

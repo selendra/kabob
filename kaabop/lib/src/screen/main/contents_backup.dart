@@ -1,6 +1,7 @@
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 
 class ContentsBackup extends StatefulWidget {
@@ -31,7 +32,7 @@ class _ContentsBackupState extends State<ContentsBackup> {
 
   @override
   void initState() {
-    _generateMnemonic(widget.createAccM.sdk);
+    _generateMnemonic(ApiProvider.sdk);
     super.initState();
   }
 

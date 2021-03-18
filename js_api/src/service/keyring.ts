@@ -317,7 +317,7 @@ async function contractTransfer(apiContract: ContractPromise, senderPubKey: stri
 
       await apiContract.tx.transfer(0, -1, to, hash, Number(value)).signAndSend(keyPair, ({ events = [], status }) => {
         if (status.isInBlock) {
-
+          resolve({status: 'In Block'})
         } else if (status.isFinalized) {
 
           resolve({ hash: status.asFinalized });

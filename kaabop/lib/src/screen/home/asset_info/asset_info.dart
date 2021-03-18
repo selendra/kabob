@@ -33,8 +33,6 @@ class AssetInfo extends StatefulWidget {
 }
 
 class _AssetInfoState extends State<AssetInfo> {
-  final ModelAssetInfo _modelAssetInfo = ModelAssetInfo();
-
   final FlareControls _flareController = FlareControls();
   final ModelScanPay _scanPayM = ModelScanPay();
   final GetWalletMethod _method = GetWalletMethod();
@@ -207,42 +205,14 @@ class _AssetInfoState extends State<AssetInfo> {
 
   Future<void> sortList() async {
     _checkAll = List.from(_checkInList)..addAll(_checkOutList);
-    // _checkAll.sort((a, b) => int.parse(a['time'].toString())
-    //     .compareTo(int.parse(b['time'].toString())));
-    // setState(() {});
-    // if (!mounted) return;
-  }
 
-  // Future<void> getAStatus() async {
-  //   final res = await ApiProvider.sdk.api
-  //       .getAStatus(ApiProvider.keyring.keyPairs[0].address);
-  //   if (res) {
-  //     setState(() {
-  //       widget.sdkModel.contractModel.attendantM.aStatus = true;
-  //     });
-  //   } else {
-  //     widget.sdkModel.contractModel.attendantM.aStatus = false;
-  //   }
-  // }
-
-  String onChangedTransferFrom(String value) {
-    _modelAssetInfo.formTransferFrom.currentState.validate();
-    return value;
-  }
-
-  String onChangedBalancOf(String value) {
-    _modelAssetInfo.formBalanceOf.currentState.validate();
-    return value;
-  }
-
-  String onChangedApprove(String value) {
-    _modelAssetInfo.formApprove.currentState.validate();
-    return value;
-  }
-
-  String onChangedAllow(String value) {
-    _modelAssetInfo.formAllowance.currentState.validate();
-    return value;
+    _checkAll.sort(
+      (a, b) => a['time'].toString().compareTo(
+            b['time'].toString(),
+          ),
+    );
+    setState(() {});
+    if (!mounted) return;
   }
 
   String onSubmit(String value) {
@@ -420,7 +390,7 @@ class _AssetInfoState extends State<AssetInfo> {
                             onPressed: () {
                               AssetInfoC().showRecieved(
                                 context,
-                                widget.sdkModel,
+                               
                                 _method,
                               );
                             },
@@ -473,6 +443,7 @@ class _AssetInfoState extends State<AssetInfo> {
                 _txHistoryModel.tx,
                 _flareController,
                 _scanPayM.isPay,
+                widget.assetLogo,
                 _deleteHistory,
                 showDetailDialog,
               )
@@ -483,6 +454,7 @@ class _AssetInfoState extends State<AssetInfo> {
                 _txHistoryModel.txKpi,
                 _flareController,
                 _scanPayM.isPay,
+                widget.assetLogo,
                 _deleteHistory,
                 showDetailDialog,
               )

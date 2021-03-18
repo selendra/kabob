@@ -163,7 +163,7 @@ class SubmitTrxState extends State<SubmitTrx> {
         Provider.of<ContractProvider>(context, listen: false).kmpi.hash,
       );
 
-      if (res['hash'] != null) {
+      if (res['status'] != null) {
         Provider.of<ContractProvider>(context, listen: false)
             .fetchKmpiBalance();
 
@@ -297,11 +297,12 @@ class SubmitTrxState extends State<SubmitTrx> {
                 sendTx(_scanPayM.controlReceiverAddress.text,
                     _scanPayM.controlAmount.text, pin);
               } else {
-                if (double.parse(
-                        Provider.of<ContractProvider>(context, listen: false)
+                if (double.parse(Provider.of<ContractProvider>(context,
+                                listen: false)
                             .kmpi
                             .balance) <
-                    double.parse(_scanPayM.controlAmount.text)) {
+                        double.parse(_scanPayM.controlAmount.text) ||
+                    double.parse(_scanPayM.controlAmount.text) == 0) {
                   await dialog(
                     context,
                     const Text(

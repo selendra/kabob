@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
 
@@ -47,23 +48,23 @@ class MyUserInfoState extends State<MyUserInfo> {
     super.dispose();
   }
 
-  Future<void> _subscribeBalance() async {
-    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    final channel = await widget.accModel.sdk.api.account
-        .subscribeBalance(widget.accModel.keyring.current.address, (res) {
-      widget.accModel.balance = res;
-      widget.accModel.nativeBalance =
-          Fmt.balance(widget.accModel.balance.freeBalance.toString(), 18);
-      walletProvider.addAvaibleToken({
-        'symbol': widget.accModel.nativeSymbol,
-        'balance': widget.accModel.nativeBalance,
-      });
+  // Future<void> _subscribeBalance() async {
+  //   final walletProvider = Provider.of<WalletProvider>(context, listen: false);
+  //   final channel = await widget.accModel.sdk.api.account
+  //       .subscribeBalance(widget.accModel.keyring.current.address, (res) {
+  //     widget.accModel.balance = res;
+  //     widget.accModel.nativeBalance =
+  //         Fmt.balance(widget.accModel.balance.freeBalance.toString(), 18);
+  //     walletProvider.addAvaibleToken({
+  //       'symbol': widget.accModel.nativeSymbol,
+  //       'balance': widget.accModel.nativeBalance,
+  //     });
 
-      Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-    });
+  //     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  //   });
 
-    widget.accModel.msgChannel = channel;
-  }
+  //   widget.accModel.msgChannel = channel;
+  // }
 
   // ignore: avoid_positional_boolean_parameters
   Future<void> switchBiometric(bool switchValue) async {
@@ -185,15 +186,15 @@ class MyUserInfoState extends State<MyUserInfo> {
     dialogLoading(context);
 
     try {
-      final json = await widget.accModel.sdk.api.keyring.importAccount(
-        widget.accModel.keyring,
+      final json = await ApiProvider.sdk.api.keyring.importAccount(
+        ApiProvider.keyring,
         keyType: KeyType.mnemonic,
         key: widget.accModel.mnemonic,
         name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
 
-      widget.accModel.sdk.api.keyring
+      ApiProvider.sdk.api.keyring
           .addAccount(widget.accModel.keyring,
               keyType: KeyType.mnemonic,
               acc: json,
@@ -203,7 +204,17 @@ class MyUserInfoState extends State<MyUserInfo> {
           await StorageServices.setData(
               _userInfoM.confirmPasswordCon.text, 'pass');
 
-          await _subscribeBalance();
+          Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
+          Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
+          Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
+          Provider.of<WalletProvider>(context, listen: false).addAvaibleToken({
+            'symbol':
+                Provider.of<ApiProvider>(context, listen: false).nativeM.symbol,
+            'balance': Provider.of<ApiProvider>(context, listen: false)
+                    .nativeM
+                    .balance ??
+                '0',
+          });
 
           // Close Loading Process
           Navigator.pop(context);

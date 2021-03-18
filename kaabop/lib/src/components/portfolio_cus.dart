@@ -76,20 +76,27 @@ class PortFolioCus extends StatelessWidget {
               Expanded(
                 child: Consumer<WalletProvider>(
                   builder: (context, value, child) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: List.generate(
-                        value.portfolio.length,
-                        (index) {
-                          return MyPieChartRow(
-                            color: value.portfolio[index].color,
-                            centerText: value.portfolio[index].symbol,
-                            endText: value.portfolio[index].percentage,
+                    return value.portfolio.isEmpty
+                        ? const Center(
+                            child: MyText(
+                              text: "Portfolio...",
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: List.generate(
+                              value.portfolio.length,
+                              (index) {
+                                return MyPieChartRow(
+                                  color: value.portfolio[index].color,
+                                  centerText: value.portfolio[index].symbol,
+                                  endText: value.portfolio[index].percentage,
+                                );
+                              },
+                            ),
                           );
-                        },
-                      ),
-                    );
                   },
                 ),
               ),

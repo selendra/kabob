@@ -34,15 +34,7 @@ class MenuBody extends StatelessWidget {
         },
       ),
 
-      // MyListTile(
-      //   index: 0,
-      //   subIndex: 1,
-      //   onTap: () {
-      //     // callBack(_result);
-      //     Navigator.pop(context, '');
-      //   },
-      // ),
-
+ 
       // Wallet
       const MenuSubTitle(index: 1),
 
@@ -50,9 +42,9 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 0,
         onTap: () {
-          //  Navigator.pop(context);
+
           Navigator.pushNamed(context, ReceiveWallet.route);
-          //createPin(context);
+      
         },
       ),
 
@@ -60,17 +52,12 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 1,
         onTap: () {
-          //Navigator.pushNamed(context, AddAsset.route);
-        //  Navigator.pop(context);
+     
           showSearch(
             context: context,
             delegate: SearchAsset(),
           );
-          // Navigator.push(
-          //     context,
-          //     MaterialPageRoute(
-          //       builder: (context) => AddAsset(),
-          //     ));
+ 
         },
       ),
 
@@ -84,6 +71,7 @@ class MenuBody extends StatelessWidget {
         trailing: Switch(
           value: model.switchBio,
           onChanged: (value) {
+         
             switchBio(value);
           },
         ),

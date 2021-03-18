@@ -2,7 +2,6 @@ import 'package:local_auth/local_auth.dart';
 import 'package:wallet_apps/index.dart';
 
 class FingerPrint extends StatefulWidget {
-
   @override
   _FingerPrintState createState() => _FingerPrintState();
 }
@@ -59,11 +58,17 @@ class _FingerPrintState extends State<FingerPrint> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const MyText(
-                  text: 'Kabob Locked',
+                  text: 'Bitriel Locked',
                   fontSize: 27.0,
                   fontWeight: FontWeight.bold),
-              SvgPicture.asset("assets/finger_print.svg",
-                  width: 300, height: 300),
+              const SizedBox(
+                height: 40.0,
+              ),
+              SvgPicture.asset("assets/undraw_secure.svg",
+                  width: 200, height: 200),
+              const SizedBox(
+                height: 40.0,
+              ),
               const MyText(top: 19.0, text: 'Authentication Required'),
             ],
           ),

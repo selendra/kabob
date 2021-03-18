@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 
 class ProfileCard extends StatelessWidget {
-  final CreateAccModel sdkModel;
-  const ProfileCard(this.sdkModel);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -40,7 +39,20 @@ class ProfileCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(5),
                       ),
                       child: value.accountM.addressIcon == null
-                          ? Container()
+                          ? Shimmer.fromColors(
+                              baseColor: Colors.grey[300],
+                              highlightColor: Colors.grey[100],
+                              child: Container(
+                                width: 70,
+                                height: 70,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: hexaCodeToColor(
+                                    AppColors.bgdColor,
+                                  ),
+                                ),
+                              ),
+                            )
                           : SvgPicture.string(
                               value.accountM.addressIcon,
                             ),
@@ -49,14 +61,15 @@ class ProfileCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         MyText(
-                          text: value.accountM.name ?? '',
+                          text: value.accountM.name ?? 'Username',
                           color: "#FFFFFF",
                           fontSize: 20,
                         ),
                         SizedBox(
                           width: 100,
                           child: MyText(
-                            text: !value.isConnected ? "" : "Indracore",
+                            text:
+                                !value.isConnected ? "Connecting" : "Indracore",
                             color: AppColors.secondarytext,
                             textAlign: TextAlign.start,
                             fontWeight: FontWeight.bold,
@@ -103,6 +116,7 @@ class ProfileCard extends StatelessWidget {
                     top: 16,
                     width: 300,
                     text: value.accountM.address ?? "",
+                    textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

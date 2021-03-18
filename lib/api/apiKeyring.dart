@@ -280,7 +280,6 @@ class ApiKeyring {
 
   Future<dynamic> contractTransfer(String senderPubKey, String to, String value,
       String password, String hash) async {
-    print(hash);
 
     final res =
         await service.contractTranfer(senderPubKey, to, value, password, hash);

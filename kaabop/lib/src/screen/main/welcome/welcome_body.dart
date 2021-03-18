@@ -45,7 +45,7 @@ class WelcomeBody extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.2,
           ),
           SvgPicture.asset(
-            'assets/undraw_wallet.svg',
+            'assets/undraw_bear_market_ania.svg',
             height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.width * 0.2,
           ),

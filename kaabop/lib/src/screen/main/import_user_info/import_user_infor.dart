@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/fmt.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
@@ -41,36 +42,36 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     super.dispose();
   }
 
-  Future<void> _subscribeBalance() async {
-    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
+  // Future<void> _subscribeBalance() async {
+  //   final walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
-    final channel = await widget.importAccModel.sdk.api.account
-        .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
-      widget.importAccModel.balance = res;
-      widget.importAccModel.nativeBalance =
-          Fmt.balance(widget.importAccModel.balance.freeBalance.toString(), 18);
-      walletProvider.addAvaibleToken({
-        'symbol': widget.importAccModel.nativeSymbol,
-        'balance': widget.importAccModel.nativeBalance,
-      });
+  //   final channel = await widget.importAccModel.sdk.api.account
+  //       .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
+  //     widget.importAccModel.balance = res;
+  //     widget.importAccModel.nativeBalance =
+  //         Fmt.balance(widget.importAccModel.balance.freeBalance.toString(), 18);
+  //     walletProvider.addAvaibleToken({
+  //       'symbol': widget.importAccModel.nativeSymbol,
+  //       'balance': widget.importAccModel.nativeBalance,
+  //     });
 
-      Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-    });
-    widget.importAccModel.msgChannel = channel;
-  }
+  //     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  //   });
+  //   widget.importAccModel.msgChannel = channel;
+  // }
 
   Future<void> _importFromMnemonic() async {
     try {
-      final json = await widget.importAccModel.sdk.api.keyring.importAccount(
-        widget.importAccModel.keyring,
+      final json = await ApiProvider.sdk.api.keyring.importAccount(
+        ApiProvider.keyring,
         keyType: KeyType.mnemonic,
         key: widget.importAccModel.mnemonic,
         name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
 
-      final acc = await widget.importAccModel.sdk.api.keyring.addAccount(
-        widget.importAccModel.keyring,
+      final acc = await ApiProvider.sdk.api.keyring.addAccount(
+        ApiProvider.keyring,
         keyType: KeyType.mnemonic,
         acc: json,
         password: _userInfoM.confirmPasswordCon.text,
@@ -78,7 +79,17 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
       if (acc != null) {
         widget.importAccModel.mnemonic = '';
-        _subscribeBalance();
+        Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
+        Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
+        Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
+        Provider.of<WalletProvider>(context, listen: false).addAvaibleToken({
+          'symbol':
+              Provider.of<ApiProvider>(context, listen: false).nativeM.symbol,
+          'balance': Provider.of<ApiProvider>(context, listen: false)
+                  .nativeM
+                  .balance ??
+              '0',
+        });
 
         await dialogSuccess(
           context,
@@ -141,9 +152,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     // Trigger Authentication By Finger Print
     // ignore: join_return_with_assignment
     _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-        localizedReason: 'Scan your fingerprint to authenticate',
-
-        stickyAuth: true);
+      localizedReason: '',
+      stickyAuth: true,
+    );
 
     return _menuModel.authenticated;
   }
@@ -151,8 +162,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   void popScreen() {
     Navigator.pop(context);
   }
-
-
 
   Future<void> onSubmit() async {
     if (_userInfoM.userNameNode.hasFocus) {
@@ -186,7 +195,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validatePassword(String value) {
     if (_userInfoM.passwordNode.hasFocus) {
-      if (value.isEmpty || value.length<4) {
+      if (value.isEmpty || value.length < 4) {
         return 'Please fill in 4-digits password';
       }
     }
@@ -195,7 +204,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validateConfirmPassword(String value) {
     if (_userInfoM.confirmPasswordNode.hasFocus) {
-      if (value.isEmpty||value.length<4) {
+      if (value.isEmpty || value.length < 4) {
         return 'Please fill in 4-digits confirm pin';
       } else if (_userInfoM.confirmPasswordCon.text !=
           _userInfoM.passwordCon.text) {

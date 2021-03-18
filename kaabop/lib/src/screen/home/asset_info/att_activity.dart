@@ -119,9 +119,7 @@ class AttActivity extends StatelessWidget {
                                           shape: BoxShape.circle,
                                           color:
                                               _checkAll[index]['status'] == true
-                                                  ? hexaCodeToColor(
-                                                      AppColors.secondary,
-                                                    )
+                                                  ? Colors.green
                                                   : Colors.red,
                                         ),
                                       ),

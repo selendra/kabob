@@ -1,8 +1,10 @@
 import 'dart:ui';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
+import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class Home extends StatefulWidget {
@@ -27,10 +29,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
-
     if (widget.sdkModel.apiConnected) {
       status = null;
+      Timer(const Duration(seconds: 3), () {
+        setPortfolio();
+      });
     }
 
     if (!widget.sdkModel.apiConnected) {
@@ -71,11 +74,15 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    const Align(
-                      child: MyText(
-                        text: "\nConnecting to Remote Node...",
-                        color: "#000000",
-                        fontWeight: FontWeight.bold,
+                    Shimmer.fromColors(
+                      baseColor: Colors.red,
+                      highlightColor: Colors.yellow,
+                      child: const Align(
+                        child: MyText(
+                          text: "\nConnecting to Remote Node...",
+                          color: "#000000",
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     )
                   ],
@@ -113,27 +120,29 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     final walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
 
-    if (widget.sdkModel.contractModel.pHash != '') {
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+
+    final api = Provider.of<ApiProvider>(context, listen: false);
+    if (contract.kmpi.isContain) {
       walletProvider.addAvaibleToken({
-        'symbol': widget.sdkModel.contractModel.pTokenSymbol,
-        'balance': widget.sdkModel.contractModel.pBalance,
+        'symbol': contract.kmpi.symbol,
+        'balance': contract.kmpi.balance,
       });
     }
 
-    if (widget.sdkModel.contractModel.attendantM.isAContain) {
+    if (contract.atd.isContain) {
       walletProvider.addAvaibleToken({
-        'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
-        'balance': widget.sdkModel.contractModel.attendantM.aBalance,
+        'symbol': contract.atd.symbol,
+        'balance': contract.atd.balance,
       });
     }
 
-    walletProvider.availableToken.add({
-      'symbol': widget.sdkModel.nativeSymbol,
-      'balance': widget.sdkModel.nativeBalance,
+    walletProvider.addAvaibleToken({
+      'symbol': api.nativeM.symbol,
+      'balance': api.nativeM.balance,
     });
 
-    if (!widget.sdkModel.contractModel.isContain &&
-        !widget.sdkModel.contractModel.attendantM.isAContain) {
+    if (!contract.kmpi.isContain && !contract.atd.isContain) {
       Provider.of<WalletProvider>(context, listen: false).resetDatamap();
     }
 
@@ -147,7 +156,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       });
 
       Navigator.of(dialogContext).pop();
-      setPortfolio();
+      Timer(const Duration(seconds: 3), () {
+        setPortfolio();
+      });
     }
   }
 
@@ -166,6 +177,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           height: MediaQuery.of(context).size.height,
           child: HomeBody(
             sdkModel: widget.sdkModel,
+            setPortfolio: setPortfolio,
           ),
         ),
       ),

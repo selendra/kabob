@@ -16,7 +16,7 @@ class Menu extends StatefulWidget {
 class MenuState extends State<Menu> {
   final MenuModel _menuModel = MenuModel();
 
-  LocalAuthentication _localAuth;
+  LocalAuthentication _localAuth = LocalAuthentication();
 
   /* Login Inside Dialog */
   bool isProgress = false,
@@ -63,46 +63,88 @@ class MenuState extends State<Menu> {
     });
   }
 
-  // ignore: avoid_positional_boolean_parameters
-  Future<void> switchBiometric(bool switchValue) async {
-    
-    _localAuth = LocalAuthentication();
+  Future<bool> _checkBiometrics() async {
+    bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await _localAuth.canCheckBiometrics;
+      // ignore: unused_catch_clause
+    } on PlatformException catch (e) {
+      canCheckBiometrics = false;
+    }
 
-    await _localAuth.canCheckBiometrics.then((value) async {
-      if (value == false) {
-        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
-      } else {
-        if (switchValue) {
-          await authenticateBiometric(_localAuth).then((values) async {
-            //print('value 1: $values');
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.saveBio(_menuModel.switchBio);
-            }
-          });
-        } else {
-          await authenticateBiometric(_localAuth).then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.removeKey('bio');
-            }
-          });
-        }
-      }
-    });
+    return canCheckBiometrics;
   }
 
-  Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
+  // ignore: avoid_positional_boolean_parameters
+  Future<void> switchBiometric(bool switchValue) async {
+    final canCheck = await _checkBiometrics();
+
+    if (canCheck == false) {
+      snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
+    } else {
+      if (switchValue) {
+        await authenticateBiometric().then((values) async {
+          //print('value 1: $values');
+          if (_menuModel.authenticated) {
+            setState(() {
+              _menuModel.switchBio = switchValue;
+            });
+            await StorageServices.saveBio(_menuModel.switchBio);
+          }
+        });
+      } else {
+        await authenticateBiometric().then((values) async {
+          if (_menuModel.authenticated) {
+            setState(() {
+              _menuModel.switchBio = switchValue;
+            });
+            await StorageServices.removeKey('bio');
+          }
+        });
+      }
+    }
+
+    // await _localAuth.canCheckBiometrics.then((value) async {
+    //   print(' valu: $value');
+    //   // if (value == false) {
+    //   //   snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
+    //   // } else {
+    //   //   if (switchValue) {
+    //   //     await authenticateBiometric(_localAuth).then((values) async {
+    //   //       //print('value 1: $values');
+    //   //       if (_menuModel.authenticated) {
+    //   //         setState(() {
+    //   //           _menuModel.switchBio = switchValue;
+    //   //         });
+    //   //         await StorageServices.saveBio(_menuModel.switchBio);
+    //   //       }
+    //   //     });
+    //   //   } else {
+    //   //     await authenticateBiometric(_localAuth).then((values) async {
+    //   //       if (_menuModel.authenticated) {
+    //   //         setState(() {
+    //   //           _menuModel.switchBio = switchValue;
+    //   //         });
+    //   //         await StorageServices.removeKey('bio');
+    //   //       }
+    //   //     });
+    //   //   }
+    //   // }
+    // });
+  }
+
+  Future<bool> authenticateBiometric() async {
     try {
       // Trigger Authentication By Finger Print
+      // ignore: deprecated_member_use
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-          localizedReason: '',  stickyAuth: true);
-    // ignore: empty_catches
+        localizedReason: '',
+        stickyAuth: true,
+      );
+
+      // ignore: empty_catches
     } on PlatformException {}
+
     return _menuModel.authenticated;
   }
 

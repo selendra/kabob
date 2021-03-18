@@ -6,6 +6,7 @@ import 'package:wallet_apps/src/models/account.m.dart';
 import 'package:wallet_apps/src/models/native.m.dart';
 import 'package:wallet_apps/src/models/token.m.dart';
 import 'package:wallet_apps/src/provider/contract_provider.dart';
+import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class ApiProvider with ChangeNotifier {
   static WalletSDK sdk = WalletSDK();
@@ -32,6 +33,7 @@ class ApiProvider with ChangeNotifier {
     logo: 'assets/native_token.png',
     symbol: 'SEL',
     org: 'SELENDRA',
+    balanceReady: false,
   );
 
   bool _isConnected = false;
@@ -41,8 +43,6 @@ class ApiProvider with ChangeNotifier {
   Future<void> initApi() async {
     await keyring.init();
     await sdk.init(keyring);
-
-    //contractProvider = ContractProvider(sdk1: sdk,keyring: keyring);
   }
 
   Future<NetworkParams> connectNode() async {
@@ -51,6 +51,7 @@ class ApiProvider with ChangeNotifier {
     node.name = AppConfig.nodeName;
     node.endpoint = AppConfig.nodeEndpoint;
     node.ss58 = AppConfig.ss58;
+    
 
     final res = await sdk.api.connectNode(keyring, [node]);
 
@@ -81,6 +82,7 @@ class ApiProvider with ChangeNotifier {
         res.freeBalance.toString(),
         int.parse(nativeM.chainDecimal),
       );
+      nativeM.balanceReady = true;
 
       notifyListeners();
     });

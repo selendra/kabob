@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../../index.dart';
+
 
 class WalletProvider with ChangeNotifier {
   final List<PortfolioM> _portfolioM = [];
@@ -17,6 +20,11 @@ class WalletProvider with ChangeNotifier {
     'ATD': 0.0,
   };
   List<PortfolioM> get portfolio => _portfolioM;
+
+  void setProfolio() {
+    clearPortfolio();
+    getPortfolio();
+  }
 
   void addAvaibleToken(Map<String, String> token) {
     availableToken.add(token);
@@ -37,6 +45,12 @@ class WalletProvider with ChangeNotifier {
   void removeAvailableToken(Map<String, String> token) {
     availableToken.remove(token);
     notifyListeners();
+  }
+
+  void setPortfolio(BuildContext context) {
+    clearPortfolio();
+
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
   void clearPortfolio() {

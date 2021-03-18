@@ -72,10 +72,20 @@ class SearchAsset extends SearchDelegate {
             itemCount: searchProducts.length,
             itemBuilder: (context, index) {
               return GestureDetector(
-                onTap: () {
-                  // added(searchProducts[index].symbol);
-                  Provider.of<ContractProvider>(context, listen: false)
-                      .addToken(searchProducts[index].symbol, context);
+                onTap: () async {
+                  await StorageServices.readBool(searchProducts[index].symbol)
+                      .then((value) async {
+                    if (!value) {
+                      Provider.of<ContractProvider>(context, listen: false)
+                          .addToken(searchProducts[index].symbol, context);
+                    } else {
+                      await dialog(
+                        context,
+                        const Text('This asset is already added!'),
+                        const Text('Asset Added'),
+                      );
+                    }
+                  });
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
@@ -108,10 +118,20 @@ class SearchAsset extends SearchDelegate {
             itemCount: searchProducts.length,
             itemBuilder: (context, index) {
               return GestureDetector(
-                onTap: () {
-                  // added(searchProducts[index].symbol);
-                  Provider.of<ContractProvider>(context, listen: false)
-                      .addToken(searchProducts[index].symbol, context);
+                onTap: () async {
+                  await StorageServices.readBool(searchProducts[index].symbol)
+                      .then((value) async {
+                    if (!value) {
+                      Provider.of<ContractProvider>(context, listen: false)
+                          .addToken(searchProducts[index].symbol, context);
+                    } else {
+                      await dialog(
+                        context,
+                        const Text('This asset is already added!'),
+                        const Text('Asset Added'),
+                      );
+                    }
+                  });
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),

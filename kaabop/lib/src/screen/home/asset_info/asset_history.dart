@@ -10,13 +10,20 @@ import '../../../../index.dart';
 
 class AssetHistory extends StatelessWidget {
   final List<TxHistory> _txHistoryModel;
+  final String logo;
   final FlareControls _flareController;
   final bool isPay;
   final Function _deleteHistory;
   final Function showDetailDialog;
   // ignore: avoid_positional_boolean_parameters
-  const AssetHistory(this._txHistoryModel, this._flareController, this.isPay,
-      this._deleteHistory, this.showDetailDialog);
+  const AssetHistory(
+    this._txHistoryModel,
+    this._flareController,
+    this.isPay,
+    this.logo,
+    this._deleteHistory,
+    this.showDetailDialog,
+  );
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -62,8 +69,7 @@ class AssetHistory extends StatelessWidget {
                                           hexaCodeToColor(AppColors.secondary),
                                       borderRadius: BorderRadius.circular(40),
                                     ),
-                                    child: Image.asset(
-                                        'assets/koompi_white_logo.png'),
+                                    child: Image.asset(logo),
                                   ),
                                   Expanded(
                                     child: Container(

@@ -1,6 +1,7 @@
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/m_import_acc.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
@@ -47,7 +48,7 @@ class ImportAccState extends State<ImportAcc> {
 
   Future<bool> validateMnemonic(String mnemonic) async {
     final res =
-        await widget.importAccModel.sdk.api.keyring.validateMnemonic(mnemonic);
+        await ApiProvider.sdk.api.keyring.validateMnemonic(mnemonic);
     return res;
   }
 

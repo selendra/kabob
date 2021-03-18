@@ -13,15 +13,9 @@ import 'menu/add_asset/search_asset.dart';
 class HomeBody extends StatelessWidget {
   final CreateAccModel sdkModel;
   final Function balanceOf;
-  final Function onDismiss;
-  final Function onDismissATT;
+  final Function setPortfolio;
 
-  const HomeBody({
-    this.sdkModel,
-    this.balanceOf,
-    this.onDismiss,
-    this.onDismissATT,
-  });
+  const HomeBody({this.sdkModel, this.balanceOf, this.setPortfolio});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +26,7 @@ class HomeBody extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              ProfileCard(sdkModel),
+              ProfileCard(),
               PortFolioCus(),
               Container(
                 margin: const EdgeInsets.only(top: 16),
@@ -117,11 +111,15 @@ class HomeBody extends StatelessWidget {
                             background: DismissibleBackground(),
                             onDismissed: (direct) {
                               value.removeToken(value.kmpi.symbol);
+                              setPortfolio();
                             },
                             child: Consumer<ContractProvider>(
                               builder: (context, value, child) {
                                 return GestureDetector(
                                   onTap: () {
+                                    Provider.of<ContractProvider>(context,
+                                            listen: false)
+                                        .fetchKmpiBalance();
                                     Navigator.push(
                                       context,
                                       RouteAnimation(
@@ -157,6 +155,7 @@ class HomeBody extends StatelessWidget {
                             background: DismissibleBackground(),
                             onDismissed: (direct) {
                               value.removeToken(value.atd.symbol);
+                              setPortfolio();
                             },
                             child: GestureDetector(
                               onTap: () {

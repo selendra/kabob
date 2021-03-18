@@ -69,10 +69,13 @@ class AppState extends State<App> {
           setState(() {
             _createAccModel.apiConnected = true;
           });
-          initContract();
-          Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
-          Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
-          Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
+          if (ApiProvider.keyring.keyPairs.isNotEmpty) {
+            initContract();
+            Provider.of<ApiProvider>(context, listen: false)
+                .getCurrentAccount();
+            Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
+            Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
+          }
         }
       });
     });
