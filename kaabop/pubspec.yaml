@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.7.9+1
+version: 2.0.9+9
 #6 feature
 #8 debug
 #1 refactor
@@ -127,6 +127,7 @@ dependencies:
   responsive_framework: ^0.0.8
 
   circular_check_box: ^1.0.4
+
 
 
 dev_dependencies:

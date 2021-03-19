@@ -145,8 +145,17 @@ class WebViewRunner {
     }
     return null;
   }
+  Future<NetworkParams> connectNon(List<NetworkParams> nodes) async {
+    final String res = await evalJavascript(
+        'settings.connectNon(${jsonEncode(nodes.map((e) => e.endpoint).toList())})');
+    if (res != null) {
+      final node = nodes.firstWhere((e) => e.endpoint == res);
+      return node;
+    }
+    return null;
+  }
 
-  Future<int> getChainDecimal() async {
+  Future<List> getChainDecimal() async {
     final res = await evalJavascript('settings.getChainDecimal(api)');
     return res;
   }

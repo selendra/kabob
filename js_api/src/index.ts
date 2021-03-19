@@ -45,6 +45,27 @@ async function connect(nodes: string[]) {
   });
 }
 
+async function connectNon(nodes: string[]) {
+  return new Promise(async (resolve, reject) => {
+    const wsProvider = new WsProvider(nodes);
+    try {
+      const res = await ApiPromise.create({
+        provider: wsProvider,
+      });
+      (<any>window).apiNon = res;
+      const url = nodes[(<any>res)._options.provider.__private_9_endpointIndex];
+      send("log", `${url} wss connected success`);
+      resolve(url);
+    } catch (err) {
+      send("log", `connect failed`);
+      wsProvider.disconnect();
+      resolve(null);
+    }
+  });
+}
+
+
+
 
 async function getChainDecimal(api: ApiPromise) {
   return new Promise(async (resolve, reject) => {
@@ -255,6 +276,7 @@ const test = async () => {
 const settings = {
   test,
   connect,
+  connectNon,
   getChainDecimal,
   callContract,
   initAttendant,

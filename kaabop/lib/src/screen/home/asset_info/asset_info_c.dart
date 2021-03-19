@@ -25,7 +25,7 @@ class AssetInfoC {
             key: _globalKey,
             body: Container(
                 height: MediaQuery.of(context).size.height,
-                padding: const EdgeInsets.only(top: 16.0),
+                padding: const EdgeInsets.only(top: 27.0),
                 color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
                 child: Consumer<ApiProvider>(
                   builder: (context, value, child) {

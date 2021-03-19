@@ -6,7 +6,6 @@ import 'package:wallet_apps/src/models/account.m.dart';
 import 'package:wallet_apps/src/models/native.m.dart';
 import 'package:wallet_apps/src/models/token.m.dart';
 import 'package:wallet_apps/src/provider/contract_provider.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class ApiProvider with ChangeNotifier {
   static WalletSDK sdk = WalletSDK();
@@ -35,6 +34,9 @@ class ApiProvider with ChangeNotifier {
     org: 'SELENDRA',
     balanceReady: false,
   );
+  NativeM dot = NativeM(
+    
+  );
 
   bool _isConnected = false;
 
@@ -51,12 +53,32 @@ class ApiProvider with ChangeNotifier {
     node.name = AppConfig.nodeName;
     node.endpoint = AppConfig.nodeEndpoint;
     node.ss58 = AppConfig.ss58;
-    
 
     final res = await sdk.api.connectNode(keyring, [node]);
 
     if (res != null) {
       _isConnected = true;
+    }
+
+    connectPolNon();
+    notifyListeners();
+
+    return res;
+  }
+
+  Future<NetworkParams> connectPolNon() async {
+    final node = NetworkParams();
+
+    node.name = AppConfig.nodeName;
+    node.endpoint = 'wss://westend-rpc.polkadot.io';
+    node.ss58 = 0;
+
+    final res = await sdk.api.connectNon(keyring, [node]);
+
+    if (res != null) {
+      _isConnected = true;
+      print(res.endpoint);
+      subscribeNBalance();
     }
 
     notifyListeners();
@@ -71,7 +93,7 @@ class ApiProvider with ChangeNotifier {
 
   Future<void> getChainDecimal() async {
     final res = await sdk.api.getChainDecimal();
-    nativeM.chainDecimal = res.toString();
+    nativeM.chainDecimal = res[0].toString();
     subscribeBalance();
     notifyListeners();
   }
@@ -82,6 +104,19 @@ class ApiProvider with ChangeNotifier {
         res.freeBalance.toString(),
         int.parse(nativeM.chainDecimal),
       );
+      nativeM.balanceReady = true;
+
+      notifyListeners();
+    });
+  }
+
+  Future<void> subscribeNBalance() async {
+    await sdk.api.account.subscribeNBalance(keyring.current.address, (res) {
+      dot.balance = Fmt.balance(
+        res.freeBalance.toString(),
+        int.parse('12'),
+      );
+      //print(res.freeBalance);
       nativeM.balanceReady = true;
 
       notifyListeners();

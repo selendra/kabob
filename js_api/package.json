@@ -28,7 +28,7 @@
     "@polkadot/keyring": "^5.2.3"
   },
   "dependencies": {
-    "@polkadot/api": "^3.3.2-1",
+    "@polkadot/api": "^4.1.1",
     "@polkadot/api-contract": "^3.7.2",
     "@polkadot/keyring": "^5.2.3",
     "@polkadot/ui-shared": "0.65.2-0",

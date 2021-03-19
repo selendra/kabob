@@ -86,7 +86,6 @@ class _AccountState extends State<Account> {
       );
       Navigator.pop(context);
       AppServices.clearStorage();
-      //widget.sdkModel.contractModel = ContractModel();
       Provider.of<WalletProvider>(context, listen: false).resetDatamap();
       Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
       Navigator.pushAndRemoveUntil(context,

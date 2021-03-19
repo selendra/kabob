@@ -11,42 +11,47 @@ class MenuHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 16),
-      child: SizedBox(
-        height: 138,
-        child: Consumer<ApiProvider>(
-          builder: (context, value, child) {
-            return Row(
-              children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Container(
-                    width: 60,
-                    height: 60,
-                    margin: const EdgeInsets.only(right: 5),
-                    decoration: BoxDecoration(
-                      color: hexaCodeToColor(AppColors.cardColor),
-                      borderRadius: BorderRadius.circular(60),
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, Account.route);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(left: 16),
+        child: SizedBox(
+          height: 138,
+          child: Consumer<ApiProvider>(
+            builder: (context, value, child) {
+              return Row(
+                children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      width: 60,
+                      height: 60,
+                      margin: const EdgeInsets.only(right: 5),
+                      decoration: BoxDecoration(
+                        color: hexaCodeToColor(AppColors.cardColor),
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      child: SvgPicture.string(value.accountM.addressIcon),
                     ),
-                    child: SvgPicture.string(value.accountM.addressIcon),
                   ),
-                ),
-                const SizedBox(width: 5),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    MyText(
-                      text: value.accountM.name,
-                      color: "#FFFFFF",
-                      fontSize: 16,
-                    ),
-                  ],
-                )
-              ],
-            );
-          },
+                  const SizedBox(width: 5),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MyText(
+                        text: value.accountM.name,
+                        color: "#FFFFFF",
+                        fontSize: 16,
+                      ),
+                    ],
+                  )
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

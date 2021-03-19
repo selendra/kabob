@@ -42,6 +42,16 @@ class ApiAccount {
         code, msgChannel, (data) => onUpdate(BalanceData.fromJson(data)));
     return msgChannel;
   }
+  Future<String> subscribeNBalance(
+    String address,
+    Function(BalanceData) onUpdate,
+  ) async {
+    final msgChannel = 'Balance';
+    final code = 'account.getBalance(apiNon, "$address", "$msgChannel")';
+    await apiRoot.service.webView.subscribeMessage(
+        code, msgChannel, (data) => onUpdate(BalanceData.fromJson(data)));
+    return msgChannel;
+  }
 
   /// unsubscribe balance
   void unsubscribeBalance() {

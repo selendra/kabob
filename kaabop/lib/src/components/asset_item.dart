@@ -35,7 +35,7 @@ class AssetItem extends StatelessWidget {
                   text: tokenSymbol,
                   color: "#FFFFFF",
                 ),
-                MyText(text: org, fontSize: 15),
+                if (org == '') Container() else MyText(text: org, fontSize: 15),
               ],
             ),
           ),

@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/asset_item.dart';
 import 'package:wallet_apps/src/components/portfolio_cus.dart';
-import 'package:wallet_apps/src/components/profile_card.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
@@ -22,61 +21,62 @@ class HomeBody extends StatelessWidget {
     return Column(
       children: [
         homeAppBar(context),
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              ProfileCard(),
-              PortFolioCus(),
-              Container(
-                margin: const EdgeInsets.only(top: 16),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 5,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: hexaCodeToColor(AppColors.secondary),
+        SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                PortFolioCus(),
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 5,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: hexaCodeToColor(AppColors.secondary),
+                        ),
                       ),
-                    ),
-                    const MyText(
-                      text: 'Assets',
-                      fontSize: 27,
-                      color: AppColors.whiteColorHexa,
-                      left: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          showSearch(
-                            context: context,
-                            delegate: SearchAsset(
-                              sdkModel: sdkModel,
+                      const MyText(
+                        text: 'Assets',
+                        fontSize: 27,
+                        color: AppColors.whiteColorHexa,
+                        left: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            showSearch(
+                              context: context,
+                              delegate: SearchAsset(
+                                sdkModel: sdkModel,
+                              ),
+                            );
+                          },
+                          child: const Align(
+                            alignment: Alignment.bottomRight,
+                            child: Icon(
+                              Icons.add_circle_outline,
+                              color: Colors.white,
+                              size: 32,
                             ),
-                          );
-                        },
-                        child: const Align(
-                          alignment: Alignment.bottomRight,
-                          child: Icon(
-                            Icons.add_circle_outline,
-                            color: Colors.white,
-                            size: 32,
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         Expanded(
           child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.3,
-            child: ListView(
+            child: Column(
               children: [
                 Consumer<ApiProvider>(builder: (context, value, child) {
                   return GestureDetector(
@@ -182,7 +182,71 @@ class HomeBody extends StatelessWidget {
                           )
                         : Container();
                   },
-                )
+                ),
+                Consumer<ApiProvider>(builder: (context, value, child) {
+                  return Dismissible(
+                    key: UniqueKey(),
+                    direction: DismissDirection.endToStart,
+                    background: DismissibleBackground(),
+                    onDismissed: (direct) {
+                      setPortfolio();
+                    },
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          RouteAnimation(
+                            enterPage: AssetInfo(
+                              sdkModel: sdkModel,
+                              assetLogo: 'assets/icons/polkadot.png',
+                              balance: value.dot.balance ?? '0',
+                              tokenSymbol: 'DOT',
+                            ),
+                          ),
+                        );
+                      },
+                      child: AssetItem(
+                        'assets/icons/polkadot.png',
+                        'DOT',
+                        'testnet',
+                        value.dot.balance ?? '0',
+                        Colors.black,
+                      ),
+                    ),
+                  );
+                })
+
+                // Dismissible(
+                //   key: UniqueKey(),
+                //   direction: DismissDirection.endToStart,
+                //   background: DismissibleBackground(),
+                //   onDismissed: (direct) {
+                //     setPortfolio();
+                //   },
+                //   child: GestureDetector(
+                //     onTap: () {
+                //       Navigator.push(
+                //         context,
+                //         RouteAnimation(
+                //           enterPage: AssetInfo(
+                //             sdkModel: sdkModel,
+                //             assetLogo: 'assets/icons/kusama.png',
+                //             balance: '0',
+                //             tokenSymbol: 'KSM',
+                //           ),
+                //         ),
+                //       );
+                //     },
+                //     child: const AssetItem(
+                //       'assets/icons/kusama.png',
+                //       'KSM',
+                //       '',
+                //       '0',
+                //       Colors.black,
+                //     ),
+                //   ),
+
+                // )
               ],
             ),
           ),
