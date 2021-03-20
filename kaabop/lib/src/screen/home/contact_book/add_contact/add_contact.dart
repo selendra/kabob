@@ -57,7 +57,7 @@ class _AddContactState extends State<AddContact> {
   }
 
   Future<bool> validateAddressF(String address) async {
-    final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
+    final res = await ApiProvider.sdk.api.keyring.validateAddress(address);
     return res;
   }
 

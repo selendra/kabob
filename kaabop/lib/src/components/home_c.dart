@@ -211,7 +211,7 @@ class AddAssetRowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, AddAsset.route);
+        //Navigator.pushNamed(context, AddAsset.route);
       },
       child: rowDecorationStyle(
         child: Row(
@@ -245,72 +245,72 @@ class AddAssetRowButton extends StatelessWidget {
   }
 }
 
-/* Build Portfolio If Have List Of Portfolio */
-Widget buildRowList(
-    List<dynamic> portfolioData, int rate, CreateAccModel sdkModel) {
-  return ListView.builder(
-    shrinkWrap: true,
-    itemCount: 1,
-    physics: const BouncingScrollPhysics(),
-    itemBuilder: (BuildContext context, int index) {
-      return portFolioItemRow(portfolioData, index, rate, sdkModel);
-    },
-  );
-}
+// /* Build Portfolio If Have List Of Portfolio */
+// Widget buildRowList(
+//     List<dynamic> portfolioData, int rate, CreateAccModel sdkModel) {
+//   return ListView.builder(
+//     shrinkWrap: true,
+//     itemCount: 1,
+//     physics: const BouncingScrollPhysics(),
+//     itemBuilder: (BuildContext context, int index) {
+//       return portFolioItemRow(portfolioData, index, rate, sdkModel);
+//     },
+//   );
+// }
 
-Widget portFolioItemRow(
-    List<dynamic> portfolioData, int index, int rate, CreateAccModel sdkModel) {
-  // print(rate.isEven);
-  return rowDecorationStyle(
-      child: Row(
-    children: <Widget>[
-      Container(
-        width: 50,
-        height: 50,
-        padding: const EdgeInsets.all(6),
-        margin: const EdgeInsets.only(right: 20),
-        decoration: BoxDecoration(
-            color: hexaCodeToColor(AppColors.secondary),
-            borderRadius: BorderRadius.circular(40)),
-        child: Image.asset('assets/koompi_white_logo.png'),
-      ),
-      Expanded(
-        child: Container(
-          margin: const EdgeInsets.only(right: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MyText(
-                text: sdkModel.contractModel.pTokenSymbol,
-                color: "#FFFFFF",
-              ),
-              const MyText(text: ModelAsset.assetOrganization, fontSize: 15),
-            ],
-          ),
-        ),
-      ),
-      Expanded(
-        child: Container(
-          margin: const EdgeInsets.only(right: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MyText(
-                  width: double.infinity,
-                  text: sdkModel.contractModel
-                      .pBalance, //portfolioData[0]["data"]['balance'],
-                  color: "#FFFFFF",
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis),
-            ],
-          ),
-        ),
-      ),
-    ],
-  ));
-}
+// Widget portFolioItemRow(
+//     List<dynamic> portfolioData, int index, int rate, CreateAccModel sdkModel) {
+//   // print(rate.isEven);
+//   return rowDecorationStyle(
+//       child: Row(
+//     children: <Widget>[
+//       Container(
+//         width: 50,
+//         height: 50,
+//         padding: const EdgeInsets.all(6),
+//         margin: const EdgeInsets.only(right: 20),
+//         decoration: BoxDecoration(
+//             color: hexaCodeToColor(AppColors.secondary),
+//             borderRadius: BorderRadius.circular(40)),
+//         child: Image.asset('assets/koompi_white_logo.png'),
+//       ),
+//       Expanded(
+//         child: Container(
+//           margin: const EdgeInsets.only(right: 16),
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               MyText(
+//                 text: sdkModel.contractModel.pTokenSymbol,
+//                 color: "#FFFFFF",
+//               ),
+//               const MyText(text: ModelAsset.assetOrganization, fontSize: 15),
+//             ],
+//           ),
+//         ),
+//       ),
+//       Expanded(
+//         child: Container(
+//           margin: const EdgeInsets.only(right: 16),
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               MyText(
+//                   width: double.infinity,
+//                   text: sdkModel.contractModel
+//                       .pBalance, //portfolioData[0]["data"]['balance'],
+//                   color: "#FFFFFF",
+//                   textAlign: TextAlign.right,
+//                   overflow: TextOverflow.ellipsis),
+//             ],
+//           ),
+//         ),
+//       ),
+//     ],
+//   ));
+// }
 
 // Portfolow Row Decoration
 Widget rowDecorationStyle(
@@ -376,8 +376,6 @@ class MyBottomAppBar extends StatelessWidget {
                         await MyBottomSheet().trxOptions(
                             context: context,
                             portfolioList: homeM.portfolioList,
-                            sdk: sdkModel.sdk,
-                            keyring: sdkModel.keyring,
                             sdkModel: sdkModel);
                       },
               )),

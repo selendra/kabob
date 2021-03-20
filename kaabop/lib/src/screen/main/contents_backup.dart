@@ -20,13 +20,12 @@ class ContentsBackup extends StatefulWidget {
 
 class _ContentsBackupState extends State<ContentsBackup> {
   final double bpSize = 16.0;
+  String _passPhrase = '';
+  List _passPhraseList = [];
 
   Future<void> _generateMnemonic(WalletSDK sdk) async {
-    widget.createAccM.mnemonic = '';
-    widget.createAccM.mnemonicList = [];
-
-    widget.createAccM.mnemonic = await sdk.api.keyring.generateMnemonic();
-    widget.createAccM.mnemonicList = widget.createAccM.mnemonic.split(' ');
+    _passPhrase = await sdk.api.keyring.generateMnemonic();
+    _passPhraseList = _passPhrase.split(' ');
     setState(() {});
   }
 
@@ -73,18 +72,22 @@ class _ContentsBackupState extends State<ContentsBackup> {
                   Align(
                       alignment: Alignment.centerLeft,
                       child: MyText(
-                        text: AppText.backupMnemonic,
+                        text: 'Backup passphrase',
+                        textAlign: TextAlign.left,
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
                         color: AppColors.whiteColorHexa,
                         bottom: bpSize,
                       )),
-                  MyText(
-                    textAlign: TextAlign.left,
-                    text: AppText.keepMnemonic,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.whiteColorHexa,
-                    bottom: bpSize,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: MyText(
+                      textAlign: TextAlign.left,
+                      text: AppText.keepMnemonic,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.whiteColorHexa,
+                      bottom: bpSize,
+                    ),
                   ),
                   Align(
                       alignment: Alignment.centerLeft,
@@ -116,7 +119,8 @@ class _ContentsBackupState extends State<ContentsBackup> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => CreateMnemonic(
-                      accModel: widget.createAccM,
+                      _passPhrase,
+                      _passPhraseList,
                     ),
                   ),
                 );

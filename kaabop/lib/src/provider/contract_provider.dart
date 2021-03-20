@@ -4,8 +4,6 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/src/models/atd.dart';
 import 'package:wallet_apps/src/models/kmpi.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
-
 import '../../index.dart';
 
 class ContractProvider with ChangeNotifier {
@@ -101,83 +99,4 @@ class ContractProvider with ChangeNotifier {
     atd.status = res;
     notifyListeners();
   }
-  //  Future<void> getCheckInList() async {
-  //   final res = await ApiProvider.sdk.api
-  //       .getCheckInList(ApiProvider.keyring.keyPairs[0].address);
-
-  //   setState(() {
-  //     _checkInList.clear();
-  //   });
-  //   for (final i in res) {
-  //     final String latlong = i['location'].toString();
-
-  //     await addressName(LatLng(double.parse(latlong.split(',')[0]),
-  //             double.parse(latlong.split(',')[1])))
-  //         .then((value) async {
-  //       if (value != null) {
-  //         await dateConvert(int.parse(i['time'].toString())).then((time) {
-  //           setState(() {
-  //             _checkInList
-  //                 .add({'time': time, 'location': value, 'status': true});
-  //           });
-  //         });
-  //       }
-  //     });
-  //   }
-  //   if (!mounted) return;
-  //   return res;
-  // }
-
-  // Future<void> getCheckOutList() async {
-  //   final res = await ApiProvider.sdk.api
-  //       .getCheckOutList(widget.sdkModel.keyring.keyPairs[0].address);
-
-  //   setState(() {
-  //     _checkOutList.clear();
-  //   });
-
-  //   for (final i in res) {
-  //     final String latlong = i['location'].toString();
-
-  //     await addressName(LatLng(double.parse(latlong.split(',')[0]),
-  //             double.parse(latlong.split(',')[1])))
-  //         .then((value) async {
-  //       if (value != null) {
-  //         await dateConvert(int.parse(i['time'].toString())).then((time) {
-  //           setState(() {
-  //             _checkOutList
-  //                 .add({'time': time, 'location': value, 'status': false});
-  //           });
-  //         });
-  //       }
-  //     });
-  //   }
-  //   if (!mounted) return;
-  //   return res;
-  // }
-
-  // Future<String> addressName(LatLng place) async {
-  //   final List<Placemark> placemark = await Geolocator()
-  //       .placemarkFromCoordinates(place.latitude, place.longitude);
-
-  //   return placemark[0].thoroughfare ??
-  //       '' + ", " + placemark[0].subLocality ??
-  //       '' + ", " + placemark[0].administrativeArea ??
-  //       '';
-  // }
-
-  // Future<String> dateConvert(int millisecond) async {
-  //   final df = DateFormat('dd-MM-yyyy hh:mm a');
-  //   final DateTime date = DateTime.fromMillisecondsSinceEpoch(millisecond);
-
-  //   return df.format(date);
-  // }
-
-  // Future<void> sortList() async {
-  //   _checkAll = List.from(_checkInList)..addAll(_checkOutList);
-  //   _checkAll.sort((a, b) => int.parse(a['time'].toString())
-  //       .compareTo(int.parse(b['time'].toString())));
-  //   setState(() {});
-  //   if (!mounted) return;
-  // }
 }

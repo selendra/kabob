@@ -29,8 +29,6 @@ class ImportAccState extends State<ImportAcc> {
 
   String tempMnemonic;
 
-  
-
   @override
   void initState() {
     AppServices.noInternetConnection(globalKey);
@@ -47,8 +45,7 @@ class ImportAccState extends State<ImportAcc> {
   }
 
   Future<bool> validateMnemonic(String mnemonic) async {
-    final res =
-        await ApiProvider.sdk.api.keyring.validateMnemonic(mnemonic);
+    final res = await ApiProvider.sdk.api.keyring.validateMnemonic(mnemonic);
     return res;
   }
 
@@ -64,11 +61,16 @@ class ImportAccState extends State<ImportAcc> {
   Future<void> submit() async {
     validateMnemonic(_importAccModel.mnemonicCon.text).then((value) async {
       if (value) {
-        setState(() {
-          widget.importAccModel.mnemonic = _importAccModel.mnemonicCon.text;
-        });
-        await Navigator.pushNamed(context, ImportUserInfo.route);
-        clearInput();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ImportUserInfo(
+              _importAccModel.mnemonicCon.text,
+            ),
+          ),
+        );
+
+    
       }
     });
   }

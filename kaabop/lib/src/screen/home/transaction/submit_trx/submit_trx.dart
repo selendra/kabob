@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:intl/intl.dart';
@@ -57,11 +58,13 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   List<Map<String, String>> list = [
     {'asset_code': 'SEL'},
+    {'asset_code': 'DOT'},
     {'asset_code': 'KMPI'}
   ];
 
   List<Map<String, String>> nativeList = [
     {'asset_code': 'SEL'},
+    {'asset_code': 'DOT'},
   ];
 
   void removeAllFocus() {
@@ -228,58 +231,53 @@ class SubmitTrxState extends State<SubmitTrx> {
     return mhash;
   }
 
-  // void setPortfolio() {
-  //   final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-  //   walletProvider.clearPortfolio();
+  Future<String> sendTxDot(String target, String amount, String pin) async {
+    dialogLoading(context);
+    String mhash;
+    final sender = TxSenderData(
+      ApiProvider.keyring.current.address,
+      ApiProvider.keyring.current.pubKey,
+    );
+    final txInfo = TxInfoData('balances', 'transfer', sender);
 
-  //   if (ApiProvider.contractModel.pHash != '') {
-  //     walletProvider.addAvaibleToken({
-  //       'symbol': widget.sdkModel.contractModel.pTokenSymbol,
-  //       'balance': widget.sdkModel.contractModel.pBalance,
-  //     });
-  //   }
+    try {
+      final hash = await ApiProvider.sdk.api.tx.signAndSendDot(
+          txInfo,
+          [
+            target,
+            pow(double.parse(amount.trim()), 10)
+          
+          ],
+          pin,
+          onStatusChange: (status) async {});
 
-  //   if (widget.sdkModel.contractModel.attendantM.isAContain) {
-  //     walletProvider.addAvaibleToken({
-  //       'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
-  //       'balance': widget.sdkModel.contractModel.attendantM.aBalance,
-  //     });
-  //   }
+      if (hash != null) {
+        // saveTxHistory(TxHistory(
+        //   date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
+        //   symbol: 'SEL',
+        //   destination: target,
+        //   sender: ApiProvider.keyring.current.address,
+        //   org: 'SELENDRA',
+        //   amount: amount.trim(),
+        // ));
 
-  //   walletProvider.availableToken.add({
-  //     'symbol': widget.sdkModel.nativeSymbol,
-  //     'balance': widget.sdkModel.nativeBalance,
-  //   });
+        await enableAnimation();
+      }
+    } catch (e) {
+      // print(e.message);
+      Navigator.pop(context);
+      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+    }
 
-  //   if (!widget.sdkModel.contractModel.isContain &&
-  //       !widget.sdkModel.contractModel.attendantM.isAContain) {
-  //     Provider.of<WalletProvider>(context, listen: false).resetDatamap();
-  //   }
-
-  //   Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-  // }
-
-  // Future<void> _balanceOfByPartition() async {
-  //   try {
-  //     final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
-  //       widget.sdkModel.keyring.keyPairs[0].address,
-  //       widget.sdkModel.keyring.keyPairs[0].address,
-  //       widget.sdkModel.contractModel.pHash,
-  //     );
-
-  //     widget.sdkModel.contractModel.pBalance =
-  //         BigInt.parse(res['output'].toString()).toString();
-  //   } catch (e) {
-  //     // print(e.toString());
-  //   }
-  // }
+    return mhash;
+  }
 
   Future<void> clickSend() async {
     String pin;
 
     if (_scanPayM.formStateKey.currentState.validate()) {
       /* Send payment */
-      // Navigator.push(context, MaterialPageRoute(builder: (contxt) => FillPin()));
+
       await Future.delayed(const Duration(milliseconds: 100), () {
         // Unfocus All Field Input
         unFocusAllField();
@@ -296,7 +294,7 @@ class SubmitTrxState extends State<SubmitTrx> {
               if (_scanPayM.asset == 'SEL') {
                 sendTx(_scanPayM.controlReceiverAddress.text,
                     _scanPayM.controlAmount.text, pin);
-              } else {
+              } else if (_scanPayM.asset == 'KMPI') {
                 if (double.parse(Provider.of<ContractProvider>(context,
                                 listen: false)
                             .kmpi
@@ -306,16 +304,18 @@ class SubmitTrxState extends State<SubmitTrx> {
                   await dialog(
                     context,
                     const Text(
-                        'Sorry, You do not have enough balance to make transaction '),
+                      'Sorry, You do not have enough balance to make transaction ',
+                    ),
                     const Text('Insufficient Balance'),
                   );
                 } else {
                   transfer(_scanPayM.controlReceiverAddress.text, pin,
                       _scanPayM.controlAmount.text);
                 }
+              } else {
+                sendTxDot(_scanPayM.controlReceiverAddress.text,
+                    _scanPayM.controlAmount.text, pin);
               }
-            } else {
-              // print('amount is null');
             }
           });
         } else {

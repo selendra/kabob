@@ -1,29 +1,19 @@
 import 'dart:ui';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:latlong/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/src/components/component.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/models/model_asset_info.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/contract_provider.dart';
-import 'package:wallet_apps/src/screen/check_in/check_in.dart';
-import 'package:wallet_apps/src/screen/home/asset_info/asset_history.dart';
-import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
-import 'package:wallet_apps/src/screen/home/asset_info/att_activity.dart';
 import '../../../../index.dart';
 
 class AssetInfo extends StatefulWidget {
-  final CreateAccModel sdkModel;
   final String assetLogo;
   final String balance;
   final String tokenSymbol;
 
   const AssetInfo({
-    this.sdkModel,
     this.assetLogo,
     this.balance,
     this.tokenSymbol,
@@ -232,7 +222,6 @@ class _AssetInfoState extends State<AssetInfo> {
         context,
         MaterialPageRoute(
           builder: (context) => CheckIn(
-            widget.sdkModel,
             qrRes: _response.toString(),
           ),
         ),
@@ -367,9 +356,6 @@ class _AssetInfoState extends State<AssetInfo> {
                             onPressed: () {
                               MyBottomSheet().trxOptions(
                                 context: context,
-                                sdk: widget.sdkModel.sdk,
-                                keyring: widget.sdkModel.keyring,
-                                sdkModel: widget.sdkModel,
                               );
                             },
                             color: hexaCodeToColor(AppColors.secondary),
@@ -390,7 +376,6 @@ class _AssetInfoState extends State<AssetInfo> {
                             onPressed: () {
                               AssetInfoC().showRecieved(
                                 context,
-                               
                                 _method,
                               );
                             },
@@ -463,7 +448,6 @@ class _AssetInfoState extends State<AssetInfo> {
             if (widget.tokenSymbol == 'ATD')
               AttActivity(
                 _checkAll.reversed.toList(),
-                widget.sdkModel,
                 _refresh,
               )
             else

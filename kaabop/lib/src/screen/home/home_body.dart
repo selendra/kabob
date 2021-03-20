@@ -10,11 +10,10 @@ import 'asset_info/asset_info.dart';
 import 'menu/add_asset/search_asset.dart';
 
 class HomeBody extends StatelessWidget {
-  final CreateAccModel sdkModel;
   final Function balanceOf;
   final Function setPortfolio;
 
-  const HomeBody({this.sdkModel, this.balanceOf, this.setPortfolio});
+  const HomeBody({this.balanceOf, this.setPortfolio});
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +50,7 @@ class HomeBody extends StatelessWidget {
                           onTap: () {
                             showSearch(
                               context: context,
-                              delegate: SearchAsset(
-                                sdkModel: sdkModel,
-                              ),
+                              delegate: SearchAsset(),
                             );
                           },
                           child: const Align(
@@ -85,7 +82,7 @@ class HomeBody extends StatelessWidget {
                         context,
                         RouteAnimation(
                           enterPage: AssetInfo(
-                            sdkModel: sdkModel,
+                       
                             assetLogo: value.nativeM.logo,
                             balance: value.nativeM.balance,
                             tokenSymbol: value.nativeM.symbol,
@@ -106,7 +103,7 @@ class HomeBody extends StatelessWidget {
                   builder: (context, value, child) {
                     return value.kmpi.isContain
                         ? Dismissible(
-                            key: Key(sdkModel.nativeSymbol),
+                            key: UniqueKey(),
                             direction: DismissDirection.endToStart,
                             background: DismissibleBackground(),
                             onDismissed: (direct) {
@@ -124,7 +121,7 @@ class HomeBody extends StatelessWidget {
                                       context,
                                       RouteAnimation(
                                         enterPage: AssetInfo(
-                                          sdkModel: sdkModel,
+                                        
                                           assetLogo: value.kmpi.logo,
                                           balance: value.kmpi.balance ?? '0',
                                           tokenSymbol: value.kmpi.symbol,
@@ -163,7 +160,7 @@ class HomeBody extends StatelessWidget {
                                   context,
                                   RouteAnimation(
                                     enterPage: AssetInfo(
-                                      sdkModel: sdkModel,
+                            
                                       assetLogo: value.atd.logo,
                                       balance: value.atd.balance ?? '0',
                                       tokenSymbol: value.atd.symbol,
@@ -197,7 +194,7 @@ class HomeBody extends StatelessWidget {
                           context,
                           RouteAnimation(
                             enterPage: AssetInfo(
-                              sdkModel: sdkModel,
+                       
                               assetLogo: 'assets/icons/polkadot.png',
                               balance: value.dot.balance ?? '0',
                               tokenSymbol: 'DOT',

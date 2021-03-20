@@ -34,9 +34,7 @@ class ApiProvider with ChangeNotifier {
     org: 'SELENDRA',
     balanceReady: false,
   );
-  NativeM dot = NativeM(
-    
-  );
+  NativeM dot = NativeM();
 
   bool _isConnected = false;
 
@@ -77,7 +75,7 @@ class ApiProvider with ChangeNotifier {
 
     if (res != null) {
       _isConnected = true;
-      print(res.endpoint);
+
       subscribeNBalance();
     }
 
@@ -116,7 +114,7 @@ class ApiProvider with ChangeNotifier {
         res.freeBalance.toString(),
         int.parse('12'),
       );
-      //print(res.freeBalance);
+      
       nativeM.balanceReady = true;
 
       notifyListeners();

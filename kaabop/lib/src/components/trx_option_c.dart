@@ -111,7 +111,7 @@ class TrxOptionMethod {
   static Future scanQR(
     BuildContext context,
     List<dynamic> portfolioList,
-    CreateAccModel sdkModel,
+  
   ) async {
     final String _response = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => QrScanner()));

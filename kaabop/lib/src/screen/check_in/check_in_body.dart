@@ -9,7 +9,7 @@ class CheckInBody extends StatelessWidget {
   final Function getLocation;
   final void Function() clickSend;
   final Function resetAssetsDropDown;
-  final  List<Map<String, String>>  list;
+  final List<Map<String, String>> list;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
   const CheckInBody(
@@ -61,25 +61,20 @@ class CheckInBody extends StatelessWidget {
                     onChanged: onChanged,
                     onSubmit: null,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      // getLocation();
-                    },
-                    child: MyInputField(
-                      pBottom: 16.0,
-                      enableInput: false,
-                      labelText: "Current Location",
-                      textInputFormatter: [
-                        LengthLimitingTextInputFormatter(TextField.noMaxLength)
-                      ],
-                      controller: checkinM.locationController,
-                      focusNode: checkinM.locationNode,
-                      maxLine: 2,
-                      validateField: (value) =>
-                          value == '' ? 'Please fill in your location' : null,
-                      onChanged: onChanged,
-                      onSubmit: null,
-                    ),
+                  MyInputField(
+                    pBottom: 16.0,
+                    enableInput: false,
+                    labelText: "Current Location",
+                    textInputFormatter: [
+                      LengthLimitingTextInputFormatter(TextField.noMaxLength)
+                    ],
+                    controller: checkinM.locationController,
+                    focusNode: checkinM.locationNode,
+                    maxLine: 2,
+                    validateField: (value) =>
+                        value == '' ? 'Please fill in your location' : null,
+                    onChanged: onChanged,
+                    onSubmit: null,
                   ),
                   Container(
                     /* Type of payment */
@@ -90,8 +85,6 @@ class CheckInBody extends StatelessWidget {
                     ),
                     child: customDropDown(checkinM.status ?? "Asset name", list,
                         checkinM, resetAssetsDropDown, item),
-
-                    // child: customDropDown(label, list, _model, changeValue, item),
                   ),
                 ],
               ),
@@ -100,7 +93,6 @@ class CheckInBody extends StatelessWidget {
         ),
         MyFlatButton(
           textButton: "Submit",
-          //fontSize: size18,
           edgeMargin: const EdgeInsets.only(left: 66, right: 66),
           hasShadow: true,
           action: checkinM.isEnable ? clickSend : null,

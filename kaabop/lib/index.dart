@@ -30,7 +30,6 @@ export 'package:pinput/pin_put/pin_put.dart';
 export 'package:qr_flutter/qr_flutter.dart';
 export 'package:responsive_framework/responsive_framework.dart';
 export 'package:shared_preferences/shared_preferences.dart';
-export 'package:sms_autofill/sms_autofill.dart';
 export 'package:store_redirect/store_redirect.dart';
 //Component
 export 'package:wallet_apps/src/components/animation.dart';
@@ -74,13 +73,14 @@ export 'package:wallet_apps/src/models/pin_m.dart';
 /* Home Screen */
 export 'package:wallet_apps/src/models/portfolio_m.dart';
 export 'package:wallet_apps/src/models/portfolio_rate_m.dart';
-export 'package:wallet_apps/src/models/sms_code_model.dart';
 // Add Phone
-
+export 'package:wallet_apps/src/models/sms_code_model.dart';
 export 'package:wallet_apps/src/models/sms_code_model.dart';
 export 'package:wallet_apps/src/route.dart';
-export 'package:wallet_apps/src/screen/home/home.dart';
+//Check In 
+export 'package:wallet_apps/src/screen/check_in/check_in.dart';
 /* Home Screen */
+export 'package:wallet_apps/src/screen/home/home.dart';
 export 'package:wallet_apps/src/screen/home/home.dart';
 export 'package:wallet_apps/src/screen/home/home_body.dart';
 export 'package:wallet_apps/src/screen/home/home_body.dart';
@@ -117,7 +117,6 @@ export 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 export 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 export 'package:wallet_apps/src/screen/main/local_auth/finger_print.dart';
 // Finger Print
-
 export 'package:wallet_apps/src/screen/main/splash_screen/splash_screen.dart';
 // Main Screeen
 export 'package:wallet_apps/src/screen/main/welcome/welcome.dart';
@@ -133,3 +132,14 @@ export 'package:wallet_apps/src/utils/instance_trx_order.dart';
 export 'package:wallet_apps/theme/color.dart';
 export 'package:wallet_apps/theme/string.dart';
 export 'package:wallet_apps/theme/style.dart';
+
+
+//Provider
+export 'src/provider/api_provider.dart';
+export 'src/provider/contract_provider.dart';
+// Asset Info
+export 'src/screen/home/asset_info/asset_checkin.dart';
+export 'src/screen/home/asset_info/asset_history.dart';
+export 'src/screen/home/asset_info/asset_info.dart';
+export 'src/screen/home/asset_info/asset_info_c.dart';
+export 'src/screen/home/asset_info/att_activity.dart';

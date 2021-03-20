@@ -2,16 +2,13 @@ import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
 
 class MyUserInfo extends StatefulWidget {
-  final CreateAccModel accModel;
-
-  const MyUserInfo(this.accModel);
+  final String passPhrase;
+  const MyUserInfo(this.passPhrase);
 
   @override
   State<StatefulWidget> createState() {
@@ -189,16 +186,18 @@ class MyUserInfoState extends State<MyUserInfo> {
       final json = await ApiProvider.sdk.api.keyring.importAccount(
         ApiProvider.keyring,
         keyType: KeyType.mnemonic,
-        key: widget.accModel.mnemonic,
+        key: widget.passPhrase,
         name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
 
       ApiProvider.sdk.api.keyring
-          .addAccount(widget.accModel.keyring,
-              keyType: KeyType.mnemonic,
-              acc: json,
-              password: _userInfoM.confirmPasswordCon.text)
+          .addAccount(
+        ApiProvider.keyring,
+        keyType: KeyType.mnemonic,
+        acc: json,
+        password: _userInfoM.confirmPasswordCon.text,
+      )
           .then(
         (value) async {
           await StorageServices.setData(

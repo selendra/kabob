@@ -27,8 +27,7 @@ class ReceiveWalletState extends State<ReceiveWallet> {
 
   @override
   void initState() {
-    name = widget.createAccModel.keyring.keyPairs[0].name;
-    wallet = widget.createAccModel.keyring.keyPairs[0].address;
+
     _globalKey = GlobalKey<ScaffoldState>();
     AppServices.noInternetConnection(_globalKey);
     super.initState();

@@ -2,14 +2,14 @@ import 'dart:ui';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class Home extends StatefulWidget {
-  final CreateAccModel sdkModel;
-  const Home({this.sdkModel});
+  final bool apiConnected;
+  // ignore: avoid_positional_boolean_parameters
+  const Home(this.apiConnected);
 
   static const route = '/home';
 
@@ -29,14 +29,14 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    if (widget.sdkModel.apiConnected) {
+    if (widget.apiConnected) {
       status = null;
       Timer(const Duration(seconds: 3), () {
         setPortfolio();
       });
     }
 
-    if (!widget.sdkModel.apiConnected) {
+    if (!widget.apiConnected) {
       startNode();
     }
 
@@ -150,7 +150,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> handle() async {
-    if (widget.sdkModel.apiConnected) {
+    if (widget.apiConnected) {
       await Future.delayed(const Duration(milliseconds: 200), () {
         status = null;
       });
@@ -176,7 +176,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: HomeBody(
-            sdkModel: widget.sdkModel,
+    
             setPortfolio: setPortfolio,
           ),
         ),
@@ -186,19 +186,19 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         height: 64,
         child: FloatingActionButton(
           backgroundColor: hexaCodeToColor(AppColors.secondary)
-              .withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
+              .withOpacity(!widget.apiConnected ? 0.3 : 1.0),
           onPressed: () async {
             await TrxOptionMethod.scanQR(
               context,
               _homeM.portfolioList,
-              widget.sdkModel,
+             
             );
           },
           child: SvgPicture.asset(
             'assets/icons/qr_code.svg',
             width: 30,
             height: 30,
-            color: !widget.sdkModel.apiConnected
+            color: !widget.apiConnected
                 ? Colors.white.withOpacity(0.2)
                 : Colors.white,
           ),
@@ -206,13 +206,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(
-        apiStatus: widget.sdkModel.apiConnected,
+        apiStatus: widget.apiConnected,
         homeM: _homeM,
         portfolioM: _portfolioM,
-        // Bottom Center Button
         toReceiveToken: toReceiveToken,
         openDrawer: openMyDrawer,
-        sdkModel: widget.sdkModel,
+       
       ),
     );
   }

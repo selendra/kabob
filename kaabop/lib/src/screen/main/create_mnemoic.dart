@@ -2,9 +2,9 @@ import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
 import 'package:wallet_apps/index.dart';
 
 class CreateMnemonic extends StatefulWidget {
-  final CreateAccModel accModel;
-
-  const CreateMnemonic({this.accModel});
+  final String passPhrase;
+  final List passPhraseList;
+  const CreateMnemonic(this.passPhrase, this.passPhraseList);
 
   @override
   _CreateMnemonicState createState() => _CreateMnemonicState();
@@ -51,16 +51,19 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                         color: AppColors.whiteColorHexa,
                         bottom: 12,
                       )),
-                  MyText(
-                    textAlign: TextAlign.left,
-                    text: AppText.keepMnemonic,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.whiteColorHexa,
-                    bottom: 12,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: MyText(
+                      textAlign: TextAlign.left,
+                      text: AppText.keepMnemonic,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.whiteColorHexa,
+                      bottom: 12,
+                    ),
                   ),
 
                   // Display Mnemonic
-                  if (widget.accModel.mnemonic == null)
+                  if (widget.passPhrase == null)
                     CircularProgressIndicator(
                       backgroundColor: Colors.transparent,
                       valueColor: AlwaysStoppedAnimation(
@@ -70,7 +73,7 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                   else
                     Card(
                       child: MyText(
-                        text: widget.accModel.mnemonic ?? '',
+                        text: widget.passPhrase ?? '',
                         textAlign: TextAlign.left,
                         fontSize: 25,
                         color: AppColors.secondarytext,
@@ -102,8 +105,7 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ConfirmMnemonic(
-                      widget.accModel,
-                    ),
+                        widget.passPhrase, widget.passPhraseList),
                   ),
                 );
               },

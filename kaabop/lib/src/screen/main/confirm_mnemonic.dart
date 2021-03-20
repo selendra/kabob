@@ -1,11 +1,11 @@
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
+
 import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
 
 class ConfirmMnemonic extends StatefulWidget {
-  final CreateAccModel accModel;
-
-  const ConfirmMnemonic(this.accModel);
+  final String passPhrase;
+  final List passPhraseList;
+  const ConfirmMnemonic(this.passPhrase, this.passPhraseList);
 
   static const route = '/confirmMnemonic';
 
@@ -75,7 +75,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
 
   void setMnemonic() {
     _wordsLeft.clear();
-    for (final i in widget.accModel.mnemonicList) {
+    for (final i in widget.passPhraseList) {
       _wordsLeft.add(i); // Use For Sort Mnemonic
     }
     _wordsLeft.sort();
@@ -90,6 +90,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
       if (_mnemonic[i] != _wordsSelected[i]) break;
       i++;
     }
+
     if (i == _mnemonic.length) {
       setState(() {
         enable = true;
@@ -106,7 +107,8 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
     _mnemonic = [];
     _wordsLeft = [];
     _wordsSelected = [];
-    for (final i in widget.accModel.mnemonicList) {
+
+    for (final i in widget.passPhraseList) {
       _wordsLeft.add(i); // Use For Sort Mnemonic
       _mnemonic.add(i); // Use For Compare
     }
@@ -196,7 +198,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => MyUserInfo(
-                            widget.accModel,
+                            widget.passPhrase,
                           ),
                         ),
                       );

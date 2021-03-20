@@ -8,12 +8,12 @@ class AppColors {
   static const String darkGrey = "#302f34";
 
   /* Background Color */
-  static const String bgdColor = AppConfig.bgdColor;
+  static const String bgdColor = "#090D28"; //AppConfig.bgdColor;
   static const String cardColor = "#181C35";
   static const String textColor = "#585D86";
   static const String textBtnColor = "#000000";
-  static const String secondary ="#F39D0C";// "#08B952";
-  static const String secondarytext ="#F39D0C"; //"#40FF90";
+  static const String secondary = "#F39D0C"; // "#08B952";
+  static const String secondarytext = "#F39D0C"; //"#40FF90";
   static const String selected = "#00642A";
 
   //blue
@@ -26,8 +26,6 @@ class AppColors {
 
   /* Color Black 38 */
   static const Color black38 = Colors.black38;
-
-  
 
   /* White Color */
   static const String whiteColorHexa = "#FFFFFF";

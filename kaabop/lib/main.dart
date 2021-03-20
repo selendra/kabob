@@ -1,5 +1,4 @@
-import 'package:polkawallet_sdk/kabob_sdk.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
+
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
@@ -44,13 +43,11 @@ class App extends StatefulWidget {
 }
 
 class AppState extends State<App> {
+  bool _apiConnected = false;
   final _createAccModel = CreateAccModel();
 
   @override
   void initState() {
-    _createAccModel.sdk = WalletSDK();
-    _createAccModel.keyring = Keyring();
-
     super.initState();
   }
 
@@ -67,7 +64,7 @@ class AppState extends State<App> {
           .then((value) {
         if (value != null) {
           setState(() {
-            _createAccModel.apiConnected = true;
+            _apiConnected = true;
           });
           if (ApiProvider.keyring.keyPairs.isNotEmpty) {
             initContract();
@@ -108,16 +105,13 @@ class AppState extends State<App> {
               title: AppText.appName,
               theme: AppStyle.myTheme(),
               routes: {
-                Home.route: (_) => Home(sdkModel: _createAccModel),
-                CheckIn.route: (_) => CheckIn(_createAccModel),
+                Home.route: (_) => Home(_apiConnected),
+                CheckIn.route: (_) => const CheckIn(),
                 Account.route: (_) => Account(),
-                AddAsset.route: (_) => AddAsset(_createAccModel),
                 ImportAcc.route: (_) => ImportAcc(_createAccModel),
                 ReceiveWallet.route: (_) => ReceiveWallet(_createAccModel),
                 MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
                 ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
-                ImportUserInfo.route: (_) => ImportUserInfo(_createAccModel),
-                ConfirmMnemonic.route: (_) => ConfirmMnemonic(_createAccModel),
               },
               builder: (context, widget) => ResponsiveWrapper.builder(
                 BouncingScrollWrapper.builder(context, widget),

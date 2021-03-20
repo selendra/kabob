@@ -23,7 +23,7 @@ class MySplashScreenState extends State<MySplashScreen>
 
   Future<void> getCurrentAccount() async {
     await Future.delayed(const Duration(seconds: 1), () {
-      final List<KeyPairData> ls = widget.accModel.keyring.keyPairs.toList();
+      final List<KeyPairData> ls = ApiProvider.keyring.keyPairs.toList();
 
       if (ls.isEmpty) {
         Navigator.pushReplacement(

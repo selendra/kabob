@@ -2,17 +2,17 @@ import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
-  final CreateAccModel importAccModel;
+  
+  final String passPhrase;
 
   static const route = '/importUserInfo';
 
-  const ImportUserInfo(this.importAccModel);
+  const ImportUserInfo( this.passPhrase);
 
   @override
   State<StatefulWidget> createState() {
@@ -42,30 +42,12 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     super.dispose();
   }
 
-  // Future<void> _subscribeBalance() async {
-  //   final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-
-  //   final channel = await widget.importAccModel.sdk.api.account
-  //       .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
-  //     widget.importAccModel.balance = res;
-  //     widget.importAccModel.nativeBalance =
-  //         Fmt.balance(widget.importAccModel.balance.freeBalance.toString(), 18);
-  //     walletProvider.addAvaibleToken({
-  //       'symbol': widget.importAccModel.nativeSymbol,
-  //       'balance': widget.importAccModel.nativeBalance,
-  //     });
-
-  //     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-  //   });
-  //   widget.importAccModel.msgChannel = channel;
-  // }
-
   Future<void> _importFromMnemonic() async {
     try {
       final json = await ApiProvider.sdk.api.keyring.importAccount(
         ApiProvider.keyring,
         keyType: KeyType.mnemonic,
-        key: widget.importAccModel.mnemonic,
+        key: widget.passPhrase,
         name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
@@ -78,7 +60,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       );
 
       if (acc != null) {
-        widget.importAccModel.mnemonic = '';
         Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
         Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
@@ -107,10 +88,10 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         );
       }
     } catch (e) {
-      // print(e.toString());
+
       await dialog(
         context,
-        const Text("Invalid mnemonic"),
+        Text(e.message.toString()),
         const Text('Message'),
       );
       Navigator.pop(context);
