@@ -54,7 +54,7 @@ class AppState extends State<App> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-   // initApi();
+   initApi();
   }
 
   Future<void> initApi() async {
@@ -66,6 +66,7 @@ class AppState extends State<App> {
           setState(() {
             _apiConnected = true;
           });
+          print(_apiConnected);
           if (ApiProvider.keyring.keyPairs.isNotEmpty) {
             initContract();
             Provider.of<ApiProvider>(context, listen: false)

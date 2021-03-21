@@ -192,7 +192,9 @@ class ApiKeyring {
 
   /// check password of account
   Future<bool> checkPassword(KeyPairData account, String pass) async {
+    print(account.pubKey);
     final res = await service.checkPassword(account.pubKey, pass);
+    print(res);
     return res;
   }
 

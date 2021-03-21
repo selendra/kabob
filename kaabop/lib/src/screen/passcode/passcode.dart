@@ -1,4 +1,5 @@
 import 'package:wallet_apps/index.dart';
+import 'package:vibration/vibration.dart';
 
 class Passcode extends StatelessWidget {
   static const route = '/';
@@ -34,7 +35,7 @@ class Passcode extends StatelessWidget {
                   height: MediaQuery.of(context).size.height * 0.1,
                 ),
                 const Text(
-                  'Enter 6-digits Code',
+                  'Enter 6-Digits Code',
                   style: TextStyle(
                     fontSize: 26.0,
                     fontWeight: FontWeight.bold,
@@ -73,9 +74,9 @@ class Passcode extends StatelessWidget {
   }
 
   void clearPin() {
-    if (pinIndex == 0)
+    if (pinIndex == 0) {
       pinIndex = 0;
-    else if (pinIndex == 6) {
+    } else if (pinIndex == 6) {
       setPin(pinIndex, "");
       pinIndex--;
     } else {
@@ -86,9 +87,9 @@ class Passcode extends StatelessWidget {
   }
 
   void pinIndexSetup(String text) {
-    if (pinIndex == 0)
+    if (pinIndex == 0) {
       pinIndex = 1;
-    else if (pinIndex < 6) {
+    } else if (pinIndex < 6) {
       pinIndex++;
     }
     setPin(pinIndex, text);
@@ -100,7 +101,22 @@ class Passcode extends StatelessWidget {
     });
     if (pinIndex == 6) {
       print(strPin);
+      verifyPin(strPin);
       //checkVerify(strPin);
+    }
+  }
+
+  Future<void> verifyPin(String pin) async {
+    final res = await ApiProvider.sdk.api.keyring
+        .checkPassword(ApiProvider.keyring.current, pin);
+
+    if (res) {
+      //correct pasword
+    } else {
+      for (int i = 0; i < 6; i++) {
+        clearPin();
+      }
+      Vibration.vibrate(amplitude: 500);
     }
   }
 

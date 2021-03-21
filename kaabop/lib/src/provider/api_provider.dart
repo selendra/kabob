@@ -58,7 +58,7 @@ class ApiProvider with ChangeNotifier {
       _isConnected = true;
     }
 
-    connectPolNon();
+   // connectPolNon();
     notifyListeners();
 
     return res;
@@ -133,6 +133,7 @@ class ApiProvider with ChangeNotifier {
   Future<void> getCurrentAccount() async {
     accountM.address = keyring.current.address;
     accountM.name = keyring.current.name;
+    print(keyring.current.pubKey);
     notifyListeners();
   }
 }
