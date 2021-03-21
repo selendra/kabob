@@ -8,7 +8,7 @@ class MySplashScreen extends StatefulWidget {
 
   const MySplashScreen(this.accModel);
 
-  static const route = '/';
+  //static const route = '/';
   @override
   State<StatefulWidget> createState() {
     return MySplashScreenState();
@@ -84,9 +84,9 @@ class MySplashScreenState extends State<MySplashScreen>
         child: FadeTransition(
           opacity: animation,
           child: Image.asset(
-            'assets/group.png',
-            width: 150,
-            height: 150,
+            'assets/bitriel_t1.png',
+            width: 350,
+            height: 350,
           ),
         ),
       ),

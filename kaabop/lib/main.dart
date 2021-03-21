@@ -54,7 +54,7 @@ class AppState extends State<App> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    initApi();
+   // initApi();
   }
 
   Future<void> initApi() async {
@@ -102,15 +102,17 @@ class AppState extends State<App> {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
               initialRoute: '/',
+             // home: Passcode(),
               title: AppText.appName,
               theme: AppStyle.myTheme(),
               routes: {
                 Home.route: (_) => Home(_apiConnected),
                 CheckIn.route: (_) => const CheckIn(),
                 Account.route: (_) => Account(),
+                Passcode.route:(_) => Passcode(),
                 ImportAcc.route: (_) => ImportAcc(_createAccModel),
                 ReceiveWallet.route: (_) => ReceiveWallet(_createAccModel),
-                MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
+                //MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
                 ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
               },
               builder: (context, widget) => ResponsiveWrapper.builder(

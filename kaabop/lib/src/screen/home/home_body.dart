@@ -3,7 +3,6 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/asset_item.dart';
 import 'package:wallet_apps/src/components/portfolio_cus.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'asset_info/asset_info.dart';

@@ -1,7 +1,7 @@
 // ignore: avoid_classes_with_only_static_members
 class AppText{
 
-  static String appName = "BITRIEL";
+  static String appName = "Bitriel";
   static String contentConnection = "Something wrong with your connection ";
   static String backupMnemonic = "Backup Passphrase";
   static String screenshotNote = "Note: Do not take screenshot, someone will have fully access to your assets, if they get your passphrase! Please write down your passphrase, then store it at a safe place.";

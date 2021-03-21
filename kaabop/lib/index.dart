@@ -77,7 +77,7 @@ export 'package:wallet_apps/src/models/portfolio_rate_m.dart';
 export 'package:wallet_apps/src/models/sms_code_model.dart';
 export 'package:wallet_apps/src/models/sms_code_model.dart';
 export 'package:wallet_apps/src/route.dart';
-//Check In 
+//Check In
 export 'package:wallet_apps/src/screen/check_in/check_in.dart';
 /* Home Screen */
 export 'package:wallet_apps/src/screen/home/home.dart';
@@ -133,7 +133,6 @@ export 'package:wallet_apps/theme/color.dart';
 export 'package:wallet_apps/theme/string.dart';
 export 'package:wallet_apps/theme/style.dart';
 
-
 //Provider
 export 'src/provider/api_provider.dart';
 export 'src/provider/contract_provider.dart';
@@ -143,3 +142,4 @@ export 'src/screen/home/asset_info/asset_history.dart';
 export 'src/screen/home/asset_info/asset_info.dart';
 export 'src/screen/home/asset_info/asset_info_c.dart';
 export 'src/screen/home/asset_info/att_activity.dart';
+export 'src/screen/passcode/passcode.dart';

@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
    <application
-        android:label="BITRIEL"
+        android:label="Bitriel"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

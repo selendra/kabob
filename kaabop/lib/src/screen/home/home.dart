@@ -176,7 +176,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: HomeBody(
-    
             setPortfolio: setPortfolio,
           ),
         ),

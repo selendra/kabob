@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.9+9
+version: 2.0.9+10
 #6 feature
 #8 debug
 #1 refactor
@@ -72,7 +72,7 @@ dependencies:
   transparent_image: 
   autocomplete_textfield:
   date_format:
-  flutter_launcher_icons: ^0.8.0
+ 
   device_preview:
   store_redirect:
   share: ^2.0.0
@@ -110,9 +110,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   lint: ^1.0.0
+  flutter_launcher_icons: ^0.8.0
 
 flutter_icons:
-  image_path: "assets/kabob.png"
+  image_path: "assets/bitriel-3.png"
   ios: true
   android: true
 

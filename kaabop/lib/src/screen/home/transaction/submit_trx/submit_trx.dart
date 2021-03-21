@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:intl/intl.dart';
@@ -245,8 +244,7 @@ class SubmitTrxState extends State<SubmitTrx> {
           txInfo,
           [
             target,
-            pow(double.parse(amount.trim()), 10)
-          
+            10000000000
           ],
           pin,
           onStatusChange: (status) async {});
