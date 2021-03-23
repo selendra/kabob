@@ -16,7 +16,7 @@ class Menu extends StatefulWidget {
 class MenuState extends State<Menu> {
   final MenuModel _menuModel = MenuModel();
 
-  LocalAuthentication _localAuth = LocalAuthentication();
+  final LocalAuthentication _localAuth = LocalAuthentication();
 
   /* Login Inside Dialog */
   bool isProgress = false,
@@ -29,7 +29,7 @@ class MenuState extends State<Menu> {
   @override
   void initState() {
     _menuModel.globalKey = GlobalKey<ScaffoldState>();
-    //AppServices.noInternetConnection(_menuModel.globalKey);
+
 
     readBio();
     checkAvailableBio();
@@ -39,6 +39,11 @@ class MenuState extends State<Menu> {
   @override
   void dispose() {
     super.dispose();
+  }
+
+
+  Future<void> switchPasscode() async{
+    
   }
 
   Future<void> checkAvailableBio() async {
@@ -103,34 +108,6 @@ class MenuState extends State<Menu> {
         });
       }
     }
-
-    // await _localAuth.canCheckBiometrics.then((value) async {
-    //   print(' valu: $value');
-    //   // if (value == false) {
-    //   //   snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
-    //   // } else {
-    //   //   if (switchValue) {
-    //   //     await authenticateBiometric(_localAuth).then((values) async {
-    //   //       //print('value 1: $values');
-    //   //       if (_menuModel.authenticated) {
-    //   //         setState(() {
-    //   //           _menuModel.switchBio = switchValue;
-    //   //         });
-    //   //         await StorageServices.saveBio(_menuModel.switchBio);
-    //   //       }
-    //   //     });
-    //   //   } else {
-    //   //     await authenticateBiometric(_localAuth).then((values) async {
-    //   //       if (_menuModel.authenticated) {
-    //   //         setState(() {
-    //   //           _menuModel.switchBio = switchValue;
-    //   //         });
-    //   //         await StorageServices.removeKey('bio');
-    //   //       }
-    //   //     });
-    //   //   }
-    //   // }
-    // });
   }
 
   Future<bool> authenticateBiometric() async {
@@ -156,13 +133,15 @@ class MenuState extends State<Menu> {
       key: _menuModel.globalKey,
       child: SafeArea(
         child: Container(
-            color: hexaCodeToColor(AppColors.bgdColor),
-            child: SingleChildScrollView(
-                child: MenuBody(
+          color: hexaCodeToColor(AppColors.bgdColor),
+          child: SingleChildScrollView(
+            child: MenuBody(
               userInfo: widget._userData,
               model: _menuModel,
               switchBio: switchBiometric,
-            ))),
+            ),
+          ),
+        ),
       ),
     );
   }

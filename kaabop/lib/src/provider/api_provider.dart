@@ -58,7 +58,7 @@ class ApiProvider with ChangeNotifier {
       _isConnected = true;
     }
 
-   // connectPolNon();
+    connectPolNon();
     notifyListeners();
 
     return res;

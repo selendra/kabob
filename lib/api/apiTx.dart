@@ -65,7 +65,7 @@ class ApiTx {
     final param = rawParam != null ? rawParam : jsonEncode(params);
     final Map tx = txInfo.toJson();
 
-    final res = await service.signAndSend(
+    final res = await service.signAndSendDot(
       tx,
       param,
       password,

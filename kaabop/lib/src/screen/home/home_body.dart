@@ -81,7 +81,6 @@ class HomeBody extends StatelessWidget {
                         context,
                         RouteAnimation(
                           enterPage: AssetInfo(
-                       
                             assetLogo: value.nativeM.logo,
                             balance: value.nativeM.balance,
                             tokenSymbol: value.nativeM.symbol,
@@ -120,7 +119,6 @@ class HomeBody extends StatelessWidget {
                                       context,
                                       RouteAnimation(
                                         enterPage: AssetInfo(
-                                        
                                           assetLogo: value.kmpi.logo,
                                           balance: value.kmpi.balance ?? '0',
                                           tokenSymbol: value.kmpi.symbol,
@@ -159,7 +157,6 @@ class HomeBody extends StatelessWidget {
                                   context,
                                   RouteAnimation(
                                     enterPage: AssetInfo(
-                            
                                       assetLogo: value.atd.logo,
                                       balance: value.atd.balance ?? '0',
                                       tokenSymbol: value.atd.symbol,
@@ -179,70 +176,68 @@ class HomeBody extends StatelessWidget {
                         : Container();
                   },
                 ),
-                Consumer<ApiProvider>(builder: (context, value, child) {
-                  return Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    background: DismissibleBackground(),
-                    onDismissed: (direct) {
-                      setPortfolio();
-                    },
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                       
-                              assetLogo: 'assets/icons/polkadot.png',
-                              balance: value.dot.balance ?? '0',
-                              tokenSymbol: 'DOT',
-                            ),
-                          ),
-                        );
+                Consumer<ApiProvider>(
+                  builder: (context, value, child) {
+                    return Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.endToStart,
+                      background: DismissibleBackground(),
+                      onDismissed: (direct) {
+                        setPortfolio();
                       },
-                      child: AssetItem(
-                        'assets/icons/polkadot.png',
-                        'DOT',
-                        'testnet',
-                        value.dot.balance ?? '0',
-                        Colors.black,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            RouteAnimation(
+                              enterPage: AssetInfo(
+                                assetLogo: 'assets/icons/polkadot.png',
+                                balance: value.dot.balance ?? '0',
+                                tokenSymbol: 'DOT',
+                              ),
+                            ),
+                          );
+                        },
+                        child: AssetItem(
+                          'assets/icons/polkadot.png',
+                          'DOT',
+                          'testnet',
+                          value.dot.balance ?? '0',
+                          Colors.black,
+                        ),
                       ),
+                    );
+                  },
+                ),
+                Dismissible(
+                  key: UniqueKey(),
+                  direction: DismissDirection.endToStart,
+                  background: DismissibleBackground(),
+                  onDismissed: (direct) {
+                    setPortfolio();
+                  },
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        RouteAnimation(
+                          enterPage: const AssetInfo(
+                            assetLogo: 'assets/icons/kusama.png',
+                            balance: '0',
+                            tokenSymbol: 'AYC',
+                          ),
+                        ),
+                      );
+                    },
+                    child: const AssetItem(
+                      'assets/icons/kusama.png',
+                      'AYC',
+                      '',
+                      '0',
+                      Colors.black,
                     ),
-                  );
-                })
-
-                // Dismissible(
-                //   key: UniqueKey(),
-                //   direction: DismissDirection.endToStart,
-                //   background: DismissibleBackground(),
-                //   onDismissed: (direct) {
-                //     setPortfolio();
-                //   },
-                //   child: GestureDetector(
-                //     onTap: () {
-                //       Navigator.push(
-                //         context,
-                //         RouteAnimation(
-                //           enterPage: AssetInfo(
-                //             sdkModel: sdkModel,
-                //             assetLogo: 'assets/icons/kusama.png',
-                //             balance: '0',
-                //             tokenSymbol: 'KSM',
-                //           ),
-                //         ),
-                //       );
-                //     },
-                //     child: const AssetItem(
-                //       'assets/icons/kusama.png',
-                //       'KSM',
-                //       '',
-                //       '0',
-                //       Colors.black,
-                //     ),
-                //   ),
-
-                // )
+                  ),
+                )
               ],
             ),
           ),

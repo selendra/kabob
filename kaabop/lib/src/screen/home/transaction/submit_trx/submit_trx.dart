@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:intl/intl.dart';
@@ -244,7 +245,7 @@ class SubmitTrxState extends State<SubmitTrx> {
           txInfo,
           [
             target,
-            10000000000
+            pow(double.parse(amount)*10,12)
           ],
           pin,
           onStatusChange: (status) async {});
@@ -302,7 +303,7 @@ class SubmitTrxState extends State<SubmitTrx> {
                   await dialog(
                     context,
                     const Text(
-                      'Sorry, You do not have enough balance to make transaction ',
+                      'You do not have enough balance to make transaction',
                     ),
                     const Text('Insufficient Balance'),
                   );

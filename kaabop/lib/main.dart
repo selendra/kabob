@@ -1,4 +1,3 @@
-
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
@@ -54,29 +53,33 @@ class AppState extends State<App> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-   initApi();
+    initApi();
   }
 
   Future<void> initApi() async {
-    Provider.of<ApiProvider>(context, listen: false).initApi().then((value) {
-      Provider.of<ApiProvider>(context, listen: false)
-          .connectNode()
-          .then((value) {
-        if (value != null) {
-          setState(() {
-            _apiConnected = true;
-          });
-          print(_apiConnected);
-          if (ApiProvider.keyring.keyPairs.isNotEmpty) {
-            initContract();
-            Provider.of<ApiProvider>(context, listen: false)
-                .getCurrentAccount();
-            Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
-            Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
-          }
-        }
-      });
-    });
+    Provider.of<ApiProvider>(context, listen: false).initApi().then(
+      (value) {
+        Provider.of<ApiProvider>(context, listen: false).connectNode().then(
+          (value) {
+            if (value != null) {
+              setState(() {
+                _apiConnected = true;
+              });
+
+              if (ApiProvider.keyring.keyPairs.isNotEmpty) {
+                initContract();
+                Provider.of<ApiProvider>(context, listen: false)
+                    .getCurrentAccount();
+                Provider.of<ApiProvider>(context, listen: false)
+                    .getAddressIcon();
+                Provider.of<ApiProvider>(context, listen: false)
+                    .getChainDecimal();
+              }
+            }
+          },
+        );
+      },
+    );
   }
 
   Future<void> initContract() async {
@@ -86,12 +89,15 @@ class AppState extends State<App> {
       }
     });
 
-    await StorageServices.readBool('ATD').then((value) {
-      if (value) {
-        Provider.of<ContractProvider>(context, listen: false).initAtd();
-        Provider.of<ContractProvider>(context, listen: false).fetchAtdBalance();
-      }
-    });
+    await StorageServices.readBool('ATD').then(
+      (value) {
+        if (value) {
+          Provider.of<ContractProvider>(context, listen: false).initAtd();
+          Provider.of<ContractProvider>(context, listen: false)
+              .fetchAtdBalance();
+        }
+      },
+    );
   }
 
   @override
@@ -102,8 +108,8 @@ class AppState extends State<App> {
           builder: (context, orientation) {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
-              initialRoute: '/',
-             // home: Passcode(),
+              initialRoute: '/splash',
+              // home: Passcode(),
               title: AppText.appName,
               theme: AppStyle.myTheme(),
               routes: {
@@ -113,14 +119,12 @@ class AppState extends State<App> {
                 Passcode.route:(_) => Passcode(),
                 ImportAcc.route: (_) => ImportAcc(_createAccModel),
                 ReceiveWallet.route: (_) => ReceiveWallet(_createAccModel),
-                //MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
+                MySplashScreen.route: (_) => MySplashScreen(_createAccModel),
                 ContentsBackup.route: (_) => ContentsBackup(_createAccModel),
               },
               builder: (context, widget) => ResponsiveWrapper.builder(
                 BouncingScrollWrapper.builder(context, widget),
                 maxWidth: 1200,
-                // ignore: avoid_redundant_argument_values
-                minWidth: 450,
                 defaultScale: true,
                 breakpoints: [
                   const ResponsiveBreakpoint.autoScale(480, name: MOBILE),

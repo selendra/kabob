@@ -45,35 +45,16 @@ class MyUserInfoState extends State<MyUserInfo> {
     super.dispose();
   }
 
-  // Future<void> _subscribeBalance() async {
-  //   final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-  //   final channel = await widget.accModel.sdk.api.account
-  //       .subscribeBalance(widget.accModel.keyring.current.address, (res) {
-  //     widget.accModel.balance = res;
-  //     widget.accModel.nativeBalance =
-  //         Fmt.balance(widget.accModel.balance.freeBalance.toString(), 18);
-  //     walletProvider.addAvaibleToken({
-  //       'symbol': widget.accModel.nativeSymbol,
-  //       'balance': widget.accModel.nativeBalance,
-  //     });
-
-  //     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-  //   });
-
-  //   widget.accModel.msgChannel = channel;
-  // }
-
   // ignore: avoid_positional_boolean_parameters
   Future<void> switchBiometric(bool switchValue) async {
     _localAuth = LocalAuthentication();
 
     await _localAuth.canCheckBiometrics.then((value) async {
       if (value == false) {
-        // snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
+        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
       } else {
         if (switchValue) {
           await authenticateBiometric(_localAuth).then((values) async {
-            // print('value 1: $values');
             if (_menuModel.authenticated) {
               setState(() {
                 _menuModel.switchBio = switchValue;

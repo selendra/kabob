@@ -109,18 +109,15 @@ final portfolioChart = LineChartData(
 Widget homeAppBar(BuildContext context) {
   return Container(
     height: 70,
-    padding: const EdgeInsets.only(top: 8.0),
+   // padding: const EdgeInsets.only(top: 8.0),
     color: hexaCodeToColor(AppColors.bgdColor),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Image.asset(
-            'assets/bitriel.png',
-            width: 160,
-            height: 160,
-          ),
+        Image.asset(
+          'assets/bitriel_home.png',
+          width: 170,
+          height: 170,
         ),
         Padding(
           padding: const EdgeInsets.only(right: 16.0),

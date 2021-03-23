@@ -1,3 +1,4 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:vibration/vibration.dart';
 
@@ -11,7 +12,11 @@ class Passcode extends StatelessWidget {
   final TextEditingController pinFourController = TextEditingController();
   final TextEditingController pinFiveController = TextEditingController();
   final TextEditingController pinSixController = TextEditingController();
+
+  final storage = new FlutterSecureStorage();
+
   int pinIndex = 0;
+  String firstPin;
   List<String> currentPin = ["", "", "", "", "", ""];
 
   final outlineInputBorder = OutlineInputBorder(
@@ -100,24 +105,51 @@ class Passcode extends StatelessWidget {
       strPin += element;
     });
     if (pinIndex == 6) {
-      print(strPin);
+      //print(strPin);
       verifyPin(strPin);
       //checkVerify(strPin);
+
+    }
+  }
+
+  Future<void> setVerifyPin(String pin) async {
+    if (firstPin == null) {
+      firstPin = pin;
+      clearAll();
+    } else {
+      if (firstPin == pin) {
+        await storage.write(key: 'passcode', value: pin);
+      }
+    }
+  }
+
+  void clearAll() {
+    for (int i = 0; i < 6; i++) {
+      clearPin();
     }
   }
 
   Future<void> verifyPin(String pin) async {
-    final res = await ApiProvider.sdk.api.keyring
-        .checkPassword(ApiProvider.keyring.current, pin);
+    String value = await storage.read(key: 'passcode');
 
-    if (res) {
-      //correct pasword
+    if (value == null) {
+      //setVerif    yPin(pin);
     } else {
-      for (int i = 0; i < 6; i++) {
-        clearPin();
+      if (value == pin) {
+        print('verify');
       }
-      Vibration.vibrate(amplitude: 500);
     }
+    // final res = await ApiProvider.sdk.api.keyring
+    //     .checkPassword(ApiProvider.keyring.current, pin);
+
+    // if (res) {
+    //   //correct pasword
+    // } else {
+    //   for (int i = 0; i < 6; i++) {
+    //     clearPin();
+    //   }
+    //   Vibration.vibrate(amplitude: 500);
+    // }
   }
 
   void setPin(int n, String text) {

@@ -24,14 +24,13 @@
     "build-dev": "webpack -d --mode development"
   },
   "resolutions": {
-    "@polkadot/api": "^3.3.2-1",
-    "@polkadot/keyring": "^5.2.3"
+    "@polkadot/api": "^4.0.1-7"
+
   },
   "dependencies": {
-    "@polkadot/api": "^4.1.1",
-    "@polkadot/api-contract": "^3.7.2",
-    "@polkadot/keyring": "^5.2.3",
-    "@polkadot/ui-shared": "0.65.2-0",
+    "@polkadot/api": "^4.0.1-7",
+    "@polkadot/ui-shared": "0.70.1",
+    "@polkadot/api-contract": "^4.1.1",
     "bn.js": "^5.1.2",
     "oo7-substrate": "^0.8.0",
     "secp256k1": "^3.8.0",

@@ -45,7 +45,7 @@ class AccountC {
                     focusNode: _newNode,
                     
                     obcureText: true,
-                    validateField: (value) => value.isEmpty|| value.length < 4
+                    validateField: (value) => value.isEmpty|| value.length < 6
                         ? 'Please fill in new 4 digits pin'
                         : null,
                     textInputFormatter: [LengthLimitingTextInputFormatter(4)],

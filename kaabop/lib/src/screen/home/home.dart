@@ -209,8 +209,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         homeM: _homeM,
         portfolioM: _portfolioM,
         toReceiveToken: toReceiveToken,
-        openDrawer: openMyDrawer,
-       
+        openDrawer: openMyDrawer,     
       ),
     );
   }

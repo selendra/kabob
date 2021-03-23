@@ -30,11 +30,14 @@ class MenuBody extends StatelessWidget {
         onTap: () {
           Navigator.pop(context, '');
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => TrxActivity()));
+            context,
+            MaterialPageRoute(
+              builder: (context) => TrxActivity(),
+            ),
+          );
         },
       ),
 
- 
       // Wallet
       const MenuSubTitle(index: 1),
 
@@ -42,9 +45,7 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 0,
         onTap: () {
-
           Navigator.pushNamed(context, ReceiveWallet.route);
-      
         },
       ),
 
@@ -52,17 +53,27 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 1,
         onTap: () {
-     
           showSearch(
             context: context,
             delegate: SearchAsset(),
           );
- 
         },
       ),
 
       // Security
       const MenuSubTitle(index: 2),
+      MyListTile(
+        enable: false,
+        index: 2,
+        subIndex: 1,
+        trailing: Switch(
+          value: model.switchPasscode,
+          onChanged: (value) {
+            //switchBio(value);
+          },
+        ),
+        onTap: null,
+      ),
 
       MyListTile(
         enable: false,
@@ -71,7 +82,6 @@ class MenuBody extends StatelessWidget {
         trailing: Switch(
           value: model.switchBio,
           onChanged: (value) {
-         
             switchBio(value);
           },
         ),

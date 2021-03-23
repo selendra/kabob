@@ -8,7 +8,7 @@ class MySplashScreen extends StatefulWidget {
 
   const MySplashScreen(this.accModel);
 
-  //static const route = '/';
+  static const route = '/splash';
   @override
   State<StatefulWidget> createState() {
     return MySplashScreenState();
@@ -66,7 +66,6 @@ class MySplashScreenState extends State<MySplashScreen>
 
     super.initState();
 
-    // Provider.of<WalletProvider>(context,listen: false).test();
   }
 
   @override
@@ -84,7 +83,7 @@ class MySplashScreenState extends State<MySplashScreen>
         child: FadeTransition(
           opacity: animation,
           child: Image.asset(
-            'assets/bitriel_t1.png',
+            'assets/bitriel_splash.png',
             width: 350,
             height: 350,
           ),
