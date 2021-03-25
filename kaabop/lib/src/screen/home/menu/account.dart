@@ -86,6 +86,7 @@ class _AccountState extends State<Account> {
       );
       Navigator.pop(context);
       AppServices.clearStorage();
+      StorageServices().clearSecure();
       Provider.of<WalletProvider>(context, listen: false).resetDatamap();
       Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
       Navigator.pushAndRemoveUntil(context,
@@ -100,18 +101,18 @@ class _AccountState extends State<Account> {
     try {
       final pairs = await KeyringPrivateStore()
           .getDecryptedSeed(ApiProvider.keyring.keyPairs[0].pubKey, pass);
-      //print(pairs);
 
       if (pairs['seed'] != null) {
         await dialog(
           context,
           GestureDetector(
-              onTap: () {
-                copyToClipBoard(pairs['seed'].toString(), context);
-              },
-              child: Text(
-                pairs['seed'].toString(),
-              )),
+            onTap: () {
+              copyToClipBoard(pairs['seed'].toString(), context);
+            },
+            child: Text(
+              pairs['seed'].toString(),
+            ),
+          ),
           const Text('Backup Key'),
         );
       } else {

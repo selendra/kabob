@@ -170,6 +170,8 @@ class ApiKeyring {
     }
   }
 
+ 
+
   /// Decrypt and get the backup of seed.
   Future<SeedBackupData> getDecryptedSeed(Keyring keyring, password) async {
     final Map data =

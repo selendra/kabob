@@ -1,11 +1,10 @@
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact.dart';
 
 class ContactBookBody extends StatelessWidget {
-  final CreateAccModel sdkModel;
+
 
   final ContactBookModel model;
 
@@ -18,7 +17,7 @@ class ContactBookBody extends StatelessWidget {
   const ContactBookBody({
     this.model,
     this.getContact,
-    this.sdkModel,
+
     this.deleteContact,
     this.editContact,
   });
@@ -52,7 +51,7 @@ class ContactBookBody extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => AddContact(
                           contact: result,
-                          sdkModel: sdkModel,
+                         
                         ),
                       ),
                     );

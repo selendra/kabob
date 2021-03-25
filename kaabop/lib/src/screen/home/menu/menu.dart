@@ -30,7 +30,6 @@ class MenuState extends State<Menu> {
   void initState() {
     _menuModel.globalKey = GlobalKey<ScaffoldState>();
 
-
     readBio();
     checkAvailableBio();
     super.initState();
@@ -41,10 +40,7 @@ class MenuState extends State<Menu> {
     super.dispose();
   }
 
-
-  Future<void> switchPasscode() async{
-    
-  }
+  Future<void> switchPasscode() async {}
 
   Future<void> checkAvailableBio() async {
     await StorageServices.fetchData('biometric').then(
@@ -89,7 +85,6 @@ class MenuState extends State<Menu> {
     } else {
       if (switchValue) {
         await authenticateBiometric().then((values) async {
-          //print('value 1: $values');
           if (_menuModel.authenticated) {
             setState(() {
               _menuModel.switchBio = switchValue;

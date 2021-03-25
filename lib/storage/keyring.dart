@@ -239,6 +239,17 @@ class KeyringPrivateStore {
     _storage.contacts.val = ls;
   }
 
+  Future<String> encryptPrivateKey(String privateKey,String password) async {
+    final String key = Encrypt.passwordToEncryptKey(password);
+    final String encryted = await FlutterAesEcbPkcs5.encryptString(privateKey, key);
+    return encryted;
+  }
+   Future<String> decryptPrivateKey(String privateKey,String password) async {
+    final String key = Encrypt.passwordToEncryptKey(password);
+    final String decryted = await FlutterAesEcbPkcs5.decryptString(privateKey, key);
+    return decryted;
+  }
+
   Future<void> encryptSeedAndSave(
       String pubKey, seed, seedType, password) async {
     final String key = Encrypt.passwordToEncryptKey(password);

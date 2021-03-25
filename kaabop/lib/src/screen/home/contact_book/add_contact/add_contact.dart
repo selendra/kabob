@@ -1,14 +1,13 @@
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact_body.dart';
 
 class AddContact extends StatefulWidget {
   final PhoneContact contact;
-  final CreateAccModel sdkModel;
 
-  const AddContact({this.contact, this.sdkModel});
+
+  const AddContact({this.contact});
 
   @override
   _AddContactState createState() => _AddContactState();

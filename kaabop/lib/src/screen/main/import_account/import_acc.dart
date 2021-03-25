@@ -1,14 +1,11 @@
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/m_import_acc.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
 class ImportAcc extends StatefulWidget {
-  final CreateAccModel importAccModel;
 
-  const ImportAcc(this.importAccModel);
   static const route = '/import';
 
   @override

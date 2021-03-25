@@ -1,13 +1,10 @@
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/contact_book_body.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/edit_contact/edit_contact.dart';
 
 class ContactBook extends StatefulWidget {
-  final CreateAccModel sdkModel;
-
-  const ContactBook(this.sdkModel);
+ 
 
   static const String route = '/contactList';
 
@@ -98,7 +95,7 @@ class _ContactBookState extends State<ContactBook> {
         height: MediaQuery.of(context).size.height,
         child: ContactBookBody(
           model: _contactBookModel,
-          sdkModel: widget.sdkModel,
+      
           deleteContact: deleteContact,
           editContact: editContact,
           getContact: getContact,

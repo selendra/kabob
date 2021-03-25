@@ -59,12 +59,17 @@ class SubmitTrxState extends State<SubmitTrx> {
   List<Map<String, String>> list = [
     {'asset_code': 'SEL'},
     {'asset_code': 'DOT'},
-    {'asset_code': 'KMPI'}
+    {'asset_code': 'KMPI'},
+    {'asset_code': 'BNB'},
+    {'asset_code': 'BSC'}
   ];
 
   List<Map<String, String>> nativeList = [
     {'asset_code': 'SEL'},
     {'asset_code': 'DOT'},
+    {'asset_code': 'KMPI'},
+    {'asset_code': 'BNB'},
+    {'asset_code': 'AYF'}
   ];
 
   void removeAllFocus() {
@@ -151,7 +156,7 @@ class SubmitTrxState extends State<SubmitTrx> {
     enableButton();
   }
 
-  Future<void> transfer(String to, String pass, String value) async {
+  Future<void> sendTxKmpi(String to, String pass, String value) async {
     dialogLoading(
       context,
       content: 'Please wait! This might take a little bit longer',
@@ -242,12 +247,7 @@ class SubmitTrxState extends State<SubmitTrx> {
 
     try {
       final hash = await ApiProvider.sdk.api.tx.signAndSendDot(
-          txInfo,
-          [
-            target,
-            pow(double.parse(amount)*10,12)
-          ],
-          pin,
+          txInfo, [target, pow(double.parse(amount) * 10, 12)], pin,
           onStatusChange: (status) async {});
 
       if (hash != null) {
@@ -272,8 +272,6 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future<void> clickSend() async {
-    String pin;
-
     if (_scanPayM.formStateKey.currentState.validate()) {
       /* Send payment */
 
@@ -282,50 +280,105 @@ class SubmitTrxState extends State<SubmitTrx> {
         unFocusAllField();
       });
 
-      await validateAddress(_scanPayM.controlReceiverAddress.text)
-          .then((value) async {
-        if (value) {
-          await dialogBox().then((value) async {
-            pin = value;
-            if (pin != null &&
-                _scanPayM.controlAmount.text != null &&
-                _scanPayM.controlReceiverAddress.text != null) {
-              if (_scanPayM.asset == 'SEL') {
-                sendTx(_scanPayM.controlReceiverAddress.text,
-                    _scanPayM.controlAmount.text, pin);
-              } else if (_scanPayM.asset == 'KMPI') {
-                if (double.parse(Provider.of<ContractProvider>(context,
-                                listen: false)
-                            .kmpi
-                            .balance) <
-                        double.parse(_scanPayM.controlAmount.text) ||
-                    double.parse(_scanPayM.controlAmount.text) == 0) {
-                  await dialog(
-                    context,
-                    const Text(
-                      'You do not have enough balance to make transaction',
-                    ),
-                    const Text('Insufficient Balance'),
-                  );
-                } else {
-                  transfer(_scanPayM.controlReceiverAddress.text, pin,
-                      _scanPayM.controlAmount.text);
-                }
-              } else {
-                sendTxDot(_scanPayM.controlReceiverAddress.text,
-                    _scanPayM.controlAmount.text, pin);
-              }
-            }
-          });
-        } else {
-          await dialog(
-            context,
-            const Text('Please fill in a valid address'),
-            const Text('Invalid Address'),
-          );
+      await dialogBox().then((value) {
+        switch (_scanPayM.asset) {
+          case "SEL":
+            sendTx(
+              _scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text,
+              value,
+            );
+            break;
+          case "KMPI":
+            sendTxKmpi(
+              _scanPayM.controlReceiverAddress.text,
+              value,
+              _scanPayM.controlAmount.text,
+            );
+            break;
+          case "DOT":
+            sendTxDot(
+              _scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text,
+              value,
+            );
+            break;
+          case "AYF":
+            sendTxAYF(
+              _scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text,
+              value,
+            );
+            break;
+          case "BNB":
+            sendTxBnb(
+              _scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text,
+              value,
+            );
+            break;
         }
       });
     }
+  }
+
+  Future<void> sendTxBnb(String reciever, String amount, String pin) async {
+    dialogLoading(context);
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+    try {
+      final res = await getPrivateKey(pin);
+
+      if (res != null) {
+        final hash = await contract.sendTxBnb(res, reciever, amount);
+        if (hash != null) {
+          Provider.of<ContractProvider>(context, listen: false).bnbBalance();
+          enableAnimation();
+        } else {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+    }
+  }
+
+  Future<void> sendTxAYF(String reciever, String amount, String pin) async {
+    dialogLoading(context);
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+    try {
+      final res = await getPrivateKey(pin);
+      if (res != null) {
+        final hash = await contract.sendTxBsc(res, reciever, amount);
+
+        if (hash != null) {
+          Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+          enableAnimation();
+        } else {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+    }
+  }
+
+  Future<String> getPrivateKey(String pin) async {
+    String privateKey;
+    final encrytKey = await StorageServices().readSecure('private');
+    try {
+      privateKey =
+          await ApiProvider.keyring.store.decryptPrivateKey(encrytKey, pin);
+    } catch (e) {
+      await dialog(
+        context,
+        const Text('PIN verification failed !'),
+        const Text("Opps"),
+      );
+    }
+
+    return privateKey;
   }
 
   Future<void> saveTxHistory(TxHistory txHistory) async {

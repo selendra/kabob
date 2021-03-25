@@ -1,5 +1,4 @@
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class SubmitTrxBody extends StatelessWidget {
   final bool enableInput;

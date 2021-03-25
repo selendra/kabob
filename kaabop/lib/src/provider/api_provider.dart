@@ -56,9 +56,9 @@ class ApiProvider with ChangeNotifier {
 
     if (res != null) {
       _isConnected = true;
+      connectPolNon();
     }
 
-    connectPolNon();
     notifyListeners();
 
     return res;
@@ -68,7 +68,7 @@ class ApiProvider with ChangeNotifier {
     final node = NetworkParams();
 
     node.name = AppConfig.nodeName;
-    node.endpoint = 'wss://westend-rpc.polkadot.io';
+    node.endpoint = AppConfig.dotTestnet;
     node.ss58 = 0;
 
     final res = await sdk.api.connectNon(keyring, [node]);
@@ -81,6 +81,11 @@ class ApiProvider with ChangeNotifier {
 
     notifyListeners();
 
+    return res;
+  }
+
+  Future<String> getPrivateKey(String mnemonic) async {
+    final res = await ApiProvider.sdk.api.getPrivateKey(mnemonic);
     return res;
   }
 
@@ -114,7 +119,7 @@ class ApiProvider with ChangeNotifier {
         res.freeBalance.toString(),
         int.parse('12'),
       );
-      
+
       nativeM.balanceReady = true;
 
       notifyListeners();
@@ -133,7 +138,7 @@ class ApiProvider with ChangeNotifier {
   Future<void> getCurrentAccount() async {
     accountM.address = keyring.current.address;
     accountM.name = keyring.current.name;
-    print(keyring.current.pubKey);
+
     notifyListeners();
   }
 }

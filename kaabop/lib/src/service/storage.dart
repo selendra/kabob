@@ -1,10 +1,25 @@
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class StorageServices {
   static String _decode;
   static SharedPreferences _preferences;
+  final _storage = const FlutterSecureStorage();
+
+  Future<String> readSecure(String key) async {
+    final res = await _storage.read(key: key);
+    return res;
+  }
+
+  Future<void> writeSecure(String key, String value) async {
+    await _storage.write(key: key, value: value);
+  }
+
+  Future<void> clearSecure() async {
+    await _storage.deleteAll();
+  }
 
   static Future<SharedPreferences> setData(dynamic _data, String _path) async {
     _preferences = await SharedPreferences.getInstance();

@@ -155,6 +155,11 @@ class WebViewRunner {
     return null;
   }
 
+  Future<String> getPrivateKey(String mnemonic) async {
+    final res = await evalJavascript('wallets.getPrivateKey("$mnemonic")');
+    return res;
+  }
+
   Future<List> getChainDecimal() async {
     final res = await evalJavascript('settings.getChainDecimal(api)');
     return res;

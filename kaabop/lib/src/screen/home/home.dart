@@ -190,7 +190,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             await TrxOptionMethod.scanQR(
               context,
               _homeM.portfolioList,
-             
             );
           },
           child: SvgPicture.asset(
@@ -209,7 +208,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         homeM: _homeM,
         portfolioM: _portfolioM,
         toReceiveToken: toReceiveToken,
-        openDrawer: openMyDrawer,     
+        openDrawer: openMyDrawer,
       ),
     );
   }

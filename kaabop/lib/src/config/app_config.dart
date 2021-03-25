@@ -36,11 +36,16 @@ class AppConfig {
   // Main Net API
   static const url = "https://testnet-api.selendra.com/pub/v1";
 
+  static const bscTestNet = 'https://data-seed-prebsc-1-s1.binance.org:8545';
+
+  static const bscAddr = '0xd84d89d5c9df06755b5d591794241d3fd20669ce';
 
   static const nodeName = 'Indranet hosted By Selendra';
 
   static const nodeEndpoint = 'wss://rpc-testnet.selendra.org';
 
+  static const dotTestnet = 'wss://westend-rpc.polkadot.io';
+  
   static int ss58 = 42;
 
   // sld_market net API

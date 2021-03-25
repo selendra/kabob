@@ -94,6 +94,8 @@ dependencies:
     path: ../
   animations: ^1.1.2
   provider: ^4.3.3
+  web3dart: ^1.2.3
+
   flutter_secure_storage: ^4.1.0
   flutter_screenshot_switcher: ^1.2.0
 
@@ -138,6 +140,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/abi/
     - assets/icons/
     - assets/images_slide/
 

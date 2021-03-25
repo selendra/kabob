@@ -84,6 +84,11 @@ class KabobApi {
     return res;
   }
 
+  Future<String> getPrivateKey(String mnemonic) async{
+    final res = await service.webView.getPrivateKey(mnemonic);
+    return res;
+  }
+
   Future<List> getChainDecimal() async {
     final res = await service.webView.getChainDecimal();
     return res;

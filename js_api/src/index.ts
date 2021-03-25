@@ -5,6 +5,7 @@ import keyring from "./service/keyring";
 import account from "./service/account";
 //import staking from "./service/staking";
 //import gov from "./service/gov";
+import wallets from "./service/wallet";
 import { genLinks } from "./utils/config/config";
 import { Abi, ContractPromise } from '@polkadot/api-contract';
 import metadata from "./metadata.json";
@@ -63,8 +64,6 @@ async function connectNon(nodes: string[]) {
     }
   });
 }
-
-
 
 
 async function getChainDecimal(api: ApiPromise) {
@@ -301,6 +300,7 @@ const settings = {
 (<any>window).settings = settings;
 (<any>window).keyring = keyring;
 (<any>window).account = account;
+(<any>window).wallets = wallets;
 //(<any>window).staking = staking;
 //(<any>window).gov = gov;
 

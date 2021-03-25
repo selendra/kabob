@@ -1,6 +1,5 @@
 import 'package:wallet_apps/index.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/contact_book.dart';
 
 const fontSizePort = 17.0;
@@ -336,7 +335,7 @@ class MyBottomAppBar extends StatelessWidget {
   final Function fillAddress;
   final Function contactPiker;
   final void Function() openDrawer;
-  final CreateAccModel sdkModel;
+
 
   const MyBottomAppBar({
     this.apiStatus,
@@ -347,7 +346,7 @@ class MyBottomAppBar extends StatelessWidget {
     this.fillAddress,
     this.contactPiker,
     this.openDrawer,
-    this.sdkModel,
+ 
   });
 
   @override
@@ -373,7 +372,7 @@ class MyBottomAppBar extends StatelessWidget {
                         await MyBottomSheet().trxOptions(
                             context: context,
                             portfolioList: homeM.portfolioList,
-                            sdkModel: sdkModel);
+                            );
                       },
               )),
               Expanded(
@@ -397,7 +396,7 @@ class MyBottomAppBar extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ContactBook(sdkModel),
+                              builder: (context) => ContactBook(),
                             ),
                           );
                         },

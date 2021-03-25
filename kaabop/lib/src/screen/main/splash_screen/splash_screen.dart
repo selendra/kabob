@@ -1,12 +1,12 @@
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
+
 
 class MySplashScreen extends StatefulWidget {
-  final CreateAccModel accModel;
+  
 
-  const MySplashScreen(this.accModel);
+  
 
   static const route = '/splash';
   @override

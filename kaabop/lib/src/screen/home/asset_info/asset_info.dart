@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:latlong/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/src/components/component.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
 import '../../../../index.dart';
 

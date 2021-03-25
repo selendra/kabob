@@ -1,7 +1,7 @@
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
+
 
 class MyBottomSheet {
   dynamic response;
@@ -11,7 +11,6 @@ class MyBottomSheet {
     List portfolioList,
     WalletSDK sdk,
     Keyring keyring,
-    CreateAccModel sdkModel,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -60,7 +59,6 @@ class MyBottomSheet {
                           portfolioList,
                           sdk,
                           keyring,
-                          sdkModel,
                         );
                       },
                     ),

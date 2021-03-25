@@ -6,12 +6,11 @@ import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
-  
   final String passPhrase;
 
   static const route = '/importUserInfo';
 
-  const ImportUserInfo( this.passPhrase);
+  const ImportUserInfo(this.passPhrase);
 
   @override
   State<StatefulWidget> createState() {
@@ -59,6 +58,17 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       );
 
       if (acc != null) {
+        final resPk = await ApiProvider().getPrivateKey(widget.passPhrase);
+        if (resPk != null) {
+          ContractProvider().extractAddress(resPk);
+          final res = await ApiProvider.keyring.store
+              .encryptPrivateKey(resPk, _userInfoM.confirmPasswordCon.text);
+
+          if (res != null) {
+            await StorageServices().writeSecure('private',res);
+          }
+        }
+
         Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
         Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
@@ -87,7 +97,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         );
       }
     } catch (e) {
-
       await dialog(
         context,
         Text(e.message.toString()),

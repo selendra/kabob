@@ -181,8 +181,18 @@ class MyUserInfoState extends State<MyUserInfo> {
       )
           .then(
         (value) async {
-          await StorageServices.setData(
-              _userInfoM.confirmPasswordCon.text, 'pass');
+          final resPk = await ApiProvider().getPrivateKey(widget.passPhrase);
+          if (resPk != null) {
+            ContractProvider().extractAddress(resPk);
+            final res = await ApiProvider.keyring.store.encryptPrivateKey(
+              resPk,
+              _userInfoM.confirmPasswordCon.text,
+            );
+
+            if (res != null) {
+              await StorageServices().writeSecure('private', res);
+            }
+          }
 
           Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
           Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
@@ -236,20 +246,21 @@ class MyUserInfoState extends State<MyUserInfo> {
     return Scaffold(
       key: _userInfoM.globalKey,
       body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: MyUserInfoBody(
-            modelUserInfo: _userInfoM,
-            onSubmit: onSubmit,
-            onChanged: onChanged,
-            validateFirstName: validateFirstName,
-            validateMidName: validatePassword,
-            validateLastName: validateConfirmPassword,
-            submitProfile: submitAcc,
-            popScreen: popScreen,
-            switchBio: switchBiometric,
-            item: item,
-            model: _menuModel,
-          )),
+        height: MediaQuery.of(context).size.height,
+        child: MyUserInfoBody(
+          modelUserInfo: _userInfoM,
+          onSubmit: onSubmit,
+          onChanged: onChanged,
+          validateFirstName: validateFirstName,
+          validateMidName: validatePassword,
+          validateLastName: validateConfirmPassword,
+          submitProfile: submitAcc,
+          popScreen: popScreen,
+          switchBio: switchBiometric,
+          item: item,
+          model: _menuModel,
+        ),
+      ),
     );
   }
 }
