@@ -65,7 +65,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
               .encryptPrivateKey(resPk, _userInfoM.confirmPasswordCon.text);
 
           if (res != null) {
-            await StorageServices().writeSecure('private',res);
+            await StorageServices().writeSecure('private', res);
           }
         }
 

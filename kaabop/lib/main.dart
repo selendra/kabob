@@ -45,30 +45,21 @@ class AppState extends State<App> {
   bool _apiConnected = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     initApi();
-    Provider.of<ContractProvider>(context, listen: false).initClient();
-    Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
-    Provider.of<ContractProvider>(context, listen: false).getSymbol();
+    Provider.of<ContractProvider>(context,listen: false).initClient();
   }
 
   Future<void> initApi() async {
     Provider.of<ApiProvider>(context, listen: false).initApi().then(
       (value) {
-     
         Provider.of<ApiProvider>(context, listen: false).connectNode().then(
           (value) {
             if (value != null) {
               setState(() {
                 _apiConnected = true;
               });
-
               if (ApiProvider.keyring.keyPairs.isNotEmpty) {
                 initContract();
                 Provider.of<ApiProvider>(context, listen: false)
@@ -111,15 +102,14 @@ class AppState extends State<App> {
           builder: (context, orientation) {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
-              initialRoute: '/splash',
-              // home: Passcode(),
+              initialRoute: '/',
               title: AppText.appName,
               theme: AppStyle.myTheme(),
               routes: {
                 Home.route: (_) => Home(_apiConnected),
                 CheckIn.route: (_) => const CheckIn(),
                 Account.route: (_) => Account(),
-                Passcode.route: (_) => Passcode(),
+                //Passcode.route: (_) => Passcode(),
                 ImportAcc.route: (_) => ImportAcc(),
                 ReceiveWallet.route: (_) => ReceiveWallet(),
                 MySplashScreen.route: (_) => MySplashScreen(),

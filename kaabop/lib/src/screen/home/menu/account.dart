@@ -89,6 +89,7 @@ class _AccountState extends State<Account> {
       StorageServices().clearSecure();
       Provider.of<WalletProvider>(context, listen: false).resetDatamap();
       Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
+      Provider.of<ContractProvider>(context, listen: false).resetConObject();
       Navigator.pushAndRemoveUntil(context,
           RouteAnimation(enterPage: Welcome()), ModalRoute.withName('/'));
     } catch (e) {
@@ -160,15 +161,17 @@ class _AccountState extends State<Account> {
       ClipboardData(
         text: text,
       ),
-    ).then((value) => {
-          // ignore: deprecated_member_use
-          Scaffold.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Copied to Clipboard'),
-              duration: Duration(seconds: 3),
-            ),
+    ).then(
+      (value) => {
+        // ignore: deprecated_member_use
+        Scaffold.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Copied to Clipboard'),
+            duration: Duration(seconds: 3),
           ),
-        });
+        ),
+      },
+    );
   }
 
   @override

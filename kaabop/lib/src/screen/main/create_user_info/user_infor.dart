@@ -193,7 +193,7 @@ class MyUserInfoState extends State<MyUserInfo> {
               await StorageServices().writeSecure('private', res);
             }
           }
-
+          
           Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
           Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
           Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();

@@ -12,6 +12,7 @@ class AssetInfoC {
   void showRecieved(
     BuildContext context,
     GetWalletMethod _method,
+    {String symbol}
   ) {
     showModalBottomSheet<void>(
       isScrollControlled: true,
@@ -27,7 +28,17 @@ class AssetInfoC {
                 height: MediaQuery.of(context).size.height,
                 padding: const EdgeInsets.only(top: 27.0),
                 color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
-                child: Consumer<ApiProvider>(
+                child: symbol != null ? Consumer<ContractProvider>(
+                  builder: (context,value,child){
+                     return ReceiveWalletBody(
+                      method: _method,
+                      globalKey: _globalKey,
+                      keyQrShare: _keyQrShare,
+                      name: ApiProvider.keyring.current.name,
+                      wallet: value.ethAdd
+                    );
+                  },
+                ): Consumer<ApiProvider>(
                   builder: (context, value, child) {
                     return ReceiveWalletBody(
                       method: _method,

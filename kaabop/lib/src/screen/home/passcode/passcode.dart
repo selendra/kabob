@@ -3,7 +3,7 @@ import 'package:wallet_apps/index.dart';
 import 'package:vibration/vibration.dart';
 
 class Passcode extends StatelessWidget {
-  static const route = '/';
+//  static const route = '/';
 
   //final OutlineInputBorder outlineInputBorder = OutlineInputBorder();
   final TextEditingController pinOneController = TextEditingController();

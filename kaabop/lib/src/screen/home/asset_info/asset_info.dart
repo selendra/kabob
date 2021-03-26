@@ -376,6 +376,7 @@ class _AssetInfoState extends State<AssetInfo> {
                               AssetInfoC().showRecieved(
                                 context,
                                 _method,
+                                symbol: widget.tokenSymbol,
                               );
                             },
                             color: hexaCodeToColor(

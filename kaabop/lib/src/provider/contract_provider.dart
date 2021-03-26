@@ -14,6 +14,7 @@ import '../../index.dart';
 class ContractProvider with ChangeNotifier {
   final WalletSDK sdk = ApiProvider.sdk;
   final Keyring keyring = ApiProvider.keyring;
+  String ethAdd;
 
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();
@@ -80,6 +81,7 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> bnbBalance() async {
     final ethAddr = await StorageServices().readSecure('etherAdd');
+    ethAdd = ethAddr;
     final balance = await _web3client.getBalance(
       EthereumAddress.fromHex(ethAddr),
     );
@@ -90,6 +92,7 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> getBscBalance() async {
     final ethAddr = await StorageServices().readSecure('etherAdd');
+    ethAdd = ethAddr;
     final res = await query('balanceOf', [EthereumAddress.fromHex(ethAddr)]);
     bscNative.balance = Fmt.bigIntToDouble(
       res[0] as BigInt,
@@ -227,6 +230,19 @@ class ContractProvider with ChangeNotifier {
   Future<void> getAStatus() async {
     final res = await sdk.api.getAStatus(keyring.keyPairs[0].address);
     atd.status = res;
+    notifyListeners();
+  }
+
+  void resetConObject() {
+    atd = Atd();
+    kmpi = Kmpi();
+    bscNative = NativeM();
+    bnbNative = NativeM(
+      logo: 'assets/bnb-2.png',
+      symbol: 'BNB',
+      org: 'testnet',
+    );
+
     notifyListeners();
   }
 }

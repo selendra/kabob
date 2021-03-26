@@ -8,7 +8,7 @@ class MySplashScreen extends StatefulWidget {
 
   
 
-  static const route = '/splash';
+  static const route = '/';
   @override
   State<StatefulWidget> createState() {
     return MySplashScreenState();

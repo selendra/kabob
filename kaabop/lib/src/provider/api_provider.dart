@@ -141,4 +141,17 @@ class ApiProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  void resetNativeObj() {
+    accountM = AccountM();
+    nativeM = NativeM(
+      logo: 'assets/native_token.png',
+      symbol: 'SEL',
+      org: 'SELENDRA',
+      balanceReady: false,
+    );
+    dot = NativeM();
+
+    notifyListeners();
+  }
 }

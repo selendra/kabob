@@ -43,6 +43,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
+    Provider.of<ContractProvider>(context, listen: false).getSymbol();
+  }
+
   Future<void> handleDialog() async {
     if (!Provider.of<ApiProvider>(context, listen: false).isConnected) {
       startNode();
