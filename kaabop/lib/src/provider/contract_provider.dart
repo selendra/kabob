@@ -14,7 +14,7 @@ import '../../index.dart';
 class ContractProvider with ChangeNotifier {
   final WalletSDK sdk = ApiProvider.sdk;
   final Keyring keyring = ApiProvider.keyring;
-  String ethAdd;
+  String ethAdd = '';
 
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();
@@ -79,21 +79,24 @@ class ContractProvider with ChangeNotifier {
     }
   }
 
-  Future<void> bnbBalance() async {
+  Future<void> getEtherAddr() async {
     final ethAddr = await StorageServices().readSecure('etherAdd');
     ethAdd = ethAddr;
+    notifyListeners();
+  }
+
+  Future<void> bnbBalance() async {
     final balance = await _web3client.getBalance(
-      EthereumAddress.fromHex(ethAddr),
+      EthereumAddress.fromHex(ethAdd),
     );
 
     bnbNative.balance = balance.getValueInUnit(EtherUnit.ether).toString();
+
     notifyListeners();
   }
 
   Future<void> getBscBalance() async {
-    final ethAddr = await StorageServices().readSecure('etherAdd');
-    ethAdd = ethAddr;
-    final res = await query('balanceOf', [EthereumAddress.fromHex(ethAddr)]);
+    final res = await query('balanceOf', [EthereumAddress.fromHex(ethAdd)]);
     bscNative.balance = Fmt.bigIntToDouble(
       res[0] as BigInt,
       int.parse(bscNative.chainDecimal),
@@ -107,9 +110,9 @@ class ContractProvider with ChangeNotifier {
     String amount,
   ) async {
     initClient();
-
-    final credentials =
-        await _web3client.credentialsFromPrivateKey(privateKey.substring(2));
+    final credentials = await _web3client.credentialsFromPrivateKey(
+      privateKey.substring(2),
+    );
 
     final res = await _web3client.sendTransaction(
       credentials,
@@ -141,14 +144,16 @@ class ContractProvider with ChangeNotifier {
         function: txFunction,
         parameters: [
           EthereumAddress.fromHex(reciever),
-          BigInt.from(pow(
-              double.parse(amount) * 10, int.parse(bscNative.chainDecimal))),
+          BigInt.from(
+            pow(
+              double.parse(amount) * 10,
+              int.parse(bscNative.chainDecimal),
+            ),
+          ),
         ],
       ),
       fetchChainIdFromNetworkId: true,
     );
-
-    print(res);
 
     return res;
   }
@@ -158,7 +163,6 @@ class ContractProvider with ChangeNotifier {
     kmpi.logo = 'assets/koompi_white_logo.png';
     kmpi.symbol = 'KMPI';
     kmpi.org = 'KOOMPI';
-    kmpi.balanceReady = false;
 
     await sdk.api.callContract();
     await fetchKmpiHash();
@@ -176,7 +180,7 @@ class ContractProvider with ChangeNotifier {
     final res = await sdk.api.balanceOfByPartition(
         keyring.current.address, keyring.current.address, kmpi.hash);
     kmpi.balance = BigInt.parse(res['output'].toString()).toString();
-    kmpi.balanceReady = true;
+
     notifyListeners();
   }
 
@@ -185,7 +189,6 @@ class ContractProvider with ChangeNotifier {
     atd.logo = 'assets/FingerPrint1.png';
     atd.symbol = 'ATD';
     atd.org = 'KOOMPI';
-    atd.balanceReady = false;
 
     await sdk.api.initAttendant();
     notifyListeners();
@@ -194,7 +197,6 @@ class ContractProvider with ChangeNotifier {
   Future<void> fetchAtdBalance() async {
     final res = await sdk.api.getAToken(keyring.current.address);
     atd.balance = BigInt.parse(res).toString();
-    atd.balanceReady = true;
 
     notifyListeners();
   }

@@ -32,6 +32,7 @@ class MenuState extends State<Menu> {
 
     readBio();
     checkAvailableBio();
+    checkPasscode();
     super.initState();
   }
 
@@ -40,7 +41,15 @@ class MenuState extends State<Menu> {
     super.dispose();
   }
 
-  Future<void> switchPasscode() async {}
+  Future<void> checkPasscode() async {
+    final res = await StorageServices().readSecure('passcode');
+
+    if (res != null) {
+      setState(() {
+        _menuModel.switchPasscode = true;
+      });
+    }
+  }
 
   Future<void> checkAvailableBio() async {
     await StorageServices.fetchData('biometric').then(

@@ -4,7 +4,7 @@ class NativeM {
   String balance = '';
   String logo;
   String org;
-  bool balanceReady = false;
+
 
   NativeM({
     this.chainDecimal,
@@ -12,6 +12,6 @@ class NativeM {
     this.balance,
     this.logo,
     this.org,
-    this.balanceReady,
+
   });
 }

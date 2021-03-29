@@ -108,7 +108,7 @@ final portfolioChart = LineChartData(
 Widget homeAppBar(BuildContext context) {
   return Container(
     height: 70,
-   // padding: const EdgeInsets.only(top: 8.0),
+    // padding: const EdgeInsets.only(top: 8.0),
     color: hexaCodeToColor(AppColors.bgdColor),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -329,24 +329,21 @@ Widget rowDecorationStyle(
 class MyBottomAppBar extends StatelessWidget {
   final bool apiStatus;
   final HomeModel homeM;
-  final PortfolioM portfolioM;
+
   final Function scanReceipt;
   final Function toReceiveToken;
   final Function fillAddress;
   final Function contactPiker;
   final void Function() openDrawer;
 
-
   const MyBottomAppBar({
     this.apiStatus,
     this.homeM,
-    this.portfolioM,
     this.scanReceipt,
     this.toReceiveToken,
     this.fillAddress,
     this.contactPiker,
     this.openDrawer,
- 
   });
 
   @override
@@ -370,9 +367,9 @@ class MyBottomAppBar extends StatelessWidget {
                     ? null
                     : () async {
                         await MyBottomSheet().trxOptions(
-                            context: context,
-                            portfolioList: homeM.portfolioList,
-                            );
+                          context: context,
+                          portfolioList: homeM.portfolioList,
+                        );
                       },
               )),
               Expanded(

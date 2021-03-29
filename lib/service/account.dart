@@ -27,6 +27,12 @@ class ServiceAccount {
     return res;
   }
 
+  Future<Map> queryNBalance(String address) async {
+    final res = await serviceRoot.webView
+        .evalJavascript('account.getBalance(apiNon, "$address")');
+    return res;
+  }
+
   /// Get on-chain account info of addresses
   Future<List> queryIndexInfo(List addresses) async {
     var res = await serviceRoot.webView.evalJavascript(

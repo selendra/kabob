@@ -69,7 +69,7 @@ class MenuBody extends StatelessWidget {
         trailing: Switch(
           value: model.switchPasscode,
           onChanged: (value) {
-            //switchBio(value);
+            Navigator.pushNamed(context, Passcode.route);
           },
         ),
         onTap: null,

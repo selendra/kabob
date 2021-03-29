@@ -22,7 +22,6 @@ class Home extends StatefulWidget {
 class HomeState extends State<Home> with TickerProviderStateMixin {
   MenuModel menuModel = MenuModel();
   final HomeModel _homeM = HomeModel();
-  final PortfolioM _portfolioM = PortfolioM();
   BuildContext dialogContext;
 
   String status = '';
@@ -213,7 +212,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       bottomNavigationBar: MyBottomAppBar(
         apiStatus: widget.apiConnected,
         homeM: _homeM,
-        portfolioM: _portfolioM,
         toReceiveToken: toReceiveToken,
         openDrawer: openMyDrawer,
       ),

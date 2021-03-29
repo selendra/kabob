@@ -1,9 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/contract_provider.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
-import 'package:wallet_apps/src/screen/check_in/check_in.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,6 +46,7 @@ class AppState extends State<App> {
     super.didChangeDependencies();
     initApi();
     Provider.of<ContractProvider>(context,listen: false).initClient();
+    Provider.of<ContractProvider>(context,listen: false).getEtherAddr();
   }
 
   Future<void> initApi() async {
@@ -109,7 +107,7 @@ class AppState extends State<App> {
                 Home.route: (_) => Home(_apiConnected),
                 CheckIn.route: (_) => const CheckIn(),
                 Account.route: (_) => Account(),
-                //Passcode.route: (_) => Passcode(),
+                Passcode.route: (_) => Passcode(),
                 ImportAcc.route: (_) => ImportAcc(),
                 ReceiveWallet.route: (_) => ReceiveWallet(),
                 MySplashScreen.route: (_) => MySplashScreen(),

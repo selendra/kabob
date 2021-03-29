@@ -54,29 +54,25 @@ export 'package:wallet_apps/src/config/size_config/size_config.dart';
 // Add Asset
 export 'package:wallet_apps/src/models/asset_m.dart';
 
-export 'package:wallet_apps/src/models/fmt.dart';
+export 'package:wallet_apps/src/utils/fmt.dart';
 export 'package:wallet_apps/src/models/home_m.dart';
 /* Menu */
 export 'package:wallet_apps/src/models/menu_m.dart';
 // Dashboard
-export 'package:wallet_apps/src/models/model_login.dart';
+
 export 'package:wallet_apps/src/models/model_scan_pay.dart';
 /* Main Screen */
 
 export 'package:wallet_apps/src/models/model_user_info.dart';
-// Change Password
-export 'package:wallet_apps/src/models/password_m.dart';
-// Change PIN
-export 'package:wallet_apps/src/models/pin_m.dart';
+
 /* Home Screen */
 export 'package:wallet_apps/src/models/portfolio_m.dart';
 export 'package:wallet_apps/src/models/portfolio_rate_m.dart';
 // Add Phone
-export 'package:wallet_apps/src/models/sms_code_model.dart';
-export 'package:wallet_apps/src/models/sms_code_model.dart';
+
 export 'package:wallet_apps/src/route.dart';
 //Check In
-export 'package:wallet_apps/src/screen/check_in/check_in.dart';
+export 'package:wallet_apps/src/screen/home/check_in/check_in.dart';
 /* Home Screen */
 export 'package:wallet_apps/src/screen/home/home.dart';
 export 'package:wallet_apps/src/screen/home/home.dart';
@@ -134,6 +130,7 @@ export 'package:wallet_apps/theme/style.dart';
 //Provider
 export 'src/provider/api_provider.dart';
 export 'src/provider/contract_provider.dart';
+export 'src/provider/wallet_provider.dart';
 // Asset Info
 export 'src/screen/home/asset_info/asset_checkin.dart';
 export 'src/screen/home/asset_info/asset_history.dart';

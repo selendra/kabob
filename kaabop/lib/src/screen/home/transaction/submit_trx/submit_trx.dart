@@ -5,10 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/fmt.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
@@ -16,7 +13,6 @@ class SubmitTrx extends StatefulWidget {
   final String asset;
   final List<dynamic> _listPortfolio;
   final bool enableInput;
-  //final CreateAccModel sdkModel;
 
   const SubmitTrx(
       // ignore: avoid_positional_boolean_parameters
@@ -24,7 +20,6 @@ class SubmitTrx extends StatefulWidget {
       // ignore: avoid_positional_boolean_parameters
       this.enableInput,
       this._listPortfolio,
-      //this.sdkModel,
       {this.asset});
   @override
   State<StatefulWidget> createState() {
@@ -98,7 +93,6 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   String onChanged(String value) {
     if (_scanPayM.nodeReceiverAddress.hasFocus) {
-      // FocusScope.of(context).requestFocus(_scanPayM.nodeAmount);
     } else if (_scanPayM.nodeAmount.hasFocus) {
       _scanPayM.formStateKey.currentState.validate();
       if (_scanPayM.formStateKey.currentState.validate()) {

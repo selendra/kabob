@@ -29,6 +29,10 @@ class ApiAccount {
     final res = await service.queryBalance(address);
     return res != null ? BalanceData.fromJson(res) : null;
   }
+    Future<BalanceData> queryNBalance(String address) async {
+    final res = await service.queryNBalance(address);
+    return res != null ? BalanceData.fromJson(res) : null;
+  }
 
   /// subscribe balance
   /// @return [String] msgChannel, call unsubscribeMessage(msgChannel) to unsub.

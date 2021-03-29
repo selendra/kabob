@@ -8,9 +8,8 @@ import 'package:latlong/latlong.dart';
 import 'package:wallet_apps/src/models/checkin.m.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/contract_provider.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
-import 'package:wallet_apps/src/screen/check_in/check_in_body.dart';
-import '../../provider/wallet_provider.dart';
+
+import 'check_in_body.dart';
 
 class CheckIn extends StatefulWidget {
   final String qrRes;

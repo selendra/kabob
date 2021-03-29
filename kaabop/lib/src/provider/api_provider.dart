@@ -32,7 +32,7 @@ class ApiProvider with ChangeNotifier {
     logo: 'assets/native_token.png',
     symbol: 'SEL',
     org: 'SELENDRA',
-    balanceReady: false,
+  
   );
   NativeM dot = NativeM();
 
@@ -107,23 +107,31 @@ class ApiProvider with ChangeNotifier {
         res.freeBalance.toString(),
         int.parse(nativeM.chainDecimal),
       );
-      nativeM.balanceReady = true;
+   
 
       notifyListeners();
     });
   }
 
   Future<void> subscribeNBalance() async {
-    await sdk.api.account.subscribeNBalance(keyring.current.address, (res) {
-      dot.balance = Fmt.balance(
-        res.freeBalance.toString(),
-        int.parse('12'),
-      );
+    final res = await sdk.api.account.queryNBalance(keyring.current.address);
 
-      nativeM.balanceReady = true;
+    dot.balance = Fmt.balance(
+      res.freeBalance.toString(),
+      int.parse('12'),
+    );
+    notifyListeners();
 
-      notifyListeners();
-    });
+    // await sdk.api.account.subscribeNBalance(keyring.current.address, (res) {
+    //   dot.balance = Fmt.balance(
+    //     res.freeBalance.toString(),
+    //     int.parse('12'),
+    //   );
+
+    //   nativeM.balanceReady = true;
+
+    //   notifyListeners();
+    // });
   }
 
   Future<void> getAddressIcon() async {
@@ -148,7 +156,7 @@ class ApiProvider with ChangeNotifier {
       logo: 'assets/native_token.png',
       symbol: 'SEL',
       org: 'SELENDRA',
-      balanceReady: false,
+     
     );
     dot = NativeM();
 
