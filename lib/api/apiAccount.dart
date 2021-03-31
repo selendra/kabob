@@ -50,7 +50,7 @@ class ApiAccount {
     String address,
     Function(BalanceData) onUpdate,
   ) async {
-    final msgChannel = 'Balance';
+    final msgChannel = 'NBalance';
     final code = 'account.getBalance(apiNon, "$address", "$msgChannel")';
     await apiRoot.service.webView.subscribeMessage(
         code, msgChannel, (data) => onUpdate(BalanceData.fromJson(data)));

@@ -568,8 +568,9 @@ Widget fieldPicker(BuildContext context, String labelText, String widgetName,
             right: 26.0,
           ),
           decoration: BoxDecoration(
-              color: hexaCodeToColor("#FFFFFF").withOpacity(0.1),
-              borderRadius: BorderRadius.circular(size5)),
+            color: hexaCodeToColor("#FFFFFF").withOpacity(0.1),
+            borderRadius: BorderRadius.circular(size5),
+          ),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -581,7 +582,7 @@ Widget fieldPicker(BuildContext context, String labelText, String widgetName,
               Icon(
                 icons,
                 color: Colors.white,
-              )
+              ),
             ],
           ),
         ),
@@ -707,7 +708,7 @@ Widget customDropDown(
                     }).toList();
             },
           ),
-        )
+        ),
       ],
     ),
   );
@@ -763,9 +764,14 @@ Widget textDropDown(String text) {
 
 Widget drawerText(String text, Color colors, double fontSize) {
   /* Drawer Text */
-  return Text(text,
-      style: TextStyle(
-          color: colors, fontSize: fontSize, fontWeight: FontWeight.bold));
+  return Text(
+    text,
+    style: TextStyle(
+      color: colors,
+      fontSize: fontSize,
+      fontWeight: FontWeight.bold,
+    ),
+  );
 }
 
 Widget warningTitleDialog() {

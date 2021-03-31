@@ -1,22 +1,38 @@
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:vibration/vibration.dart';
 
-class Passcode extends StatelessWidget {
+class Passcode extends StatefulWidget {
+  final String isHome;
+  const Passcode({this.isHome});
   static const route = '/passcode';
 
-  //final OutlineInputBorder outlineInputBorder = OutlineInputBorder();
+  @override
+  _PasscodeState createState() => _PasscodeState();
+}
+
+class _PasscodeState extends State<Passcode> {
   final TextEditingController pinOneController = TextEditingController();
+
   final TextEditingController pinTwoController = TextEditingController();
+
   final TextEditingController pinThreeController = TextEditingController();
+
   final TextEditingController pinFourController = TextEditingController();
+
   final TextEditingController pinFiveController = TextEditingController();
+
   final TextEditingController pinSixController = TextEditingController();
 
-  final storage = new FlutterSecureStorage();
+  final localAuth = LocalAuthentication();
+
+  GlobalKey<ScaffoldState> globalkey;
 
   int pinIndex = 0;
+
   String firstPin;
+
+  bool _isFirst = false;
+
   List<String> currentPin = ["", "", "", "", "", ""];
 
   final outlineInputBorder = OutlineInputBorder(
@@ -27,40 +43,99 @@ class Passcode extends StatelessWidget {
   );
 
   @override
+  void initState() {
+    authToHome();
+    super.initState();
+  }
+
+  Future<void> authToHome() async {
+    if (widget.isHome != null) {
+      final bio = await StorageServices.readSaveBio();
+      if (bio) {
+        authenticate();
+      }
+    }
+  }
+
+  Future<void> passcodeAuth(String pin) async {
+    final res = await StorageServices().readSecure('passcode');
+
+    if (res == pin) {
+      Navigator.pushReplacementNamed(context, Home.route);
+    } else {
+      clearAll();
+      Vibration.vibrate(amplitude: 500);
+    }
+  }
+
+  Future<void> authenticate() async {
+    bool authenticate = false;
+
+    try {
+      authenticate = await localAuth.authenticateWithBiometrics(
+        localizedReason: '',
+        stickyAuth: true,
+      );
+
+      if (authenticate) {
+        Navigator.pushReplacementNamed(context, Home.route);
+      }
+    } on SocketException catch (e) {
+      await Future.delayed(const Duration(milliseconds: 300), () {});
+      AppServices.openSnackBar(globalkey, e.message);
+    } catch (e) {
+      await dialog(context, Text("${e.message}", textAlign: TextAlign.center),
+          const Text("Message"));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: globalkey,
       body: BodyScaffold(
-          child: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.1,
-                ),
-                const Text(
-                  'Enter 6-Digits Code',
-                  style: TextStyle(
-                    fontSize: 26.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+        child: SafeArea(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Center(
+              child: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.1,
                   ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const SizedBox(height: 60),
-                _buildPinRow(),
-                ReuseNumPad(pinIndexSetup, clearPin),
-              ],
+                  if (_isFirst)
+                    const Text(
+                      'Re-enter 6-Digits Code',
+                      style: TextStyle(
+                        fontSize: 26.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    )
+                  else
+                    const Text(
+                      'Enter 6-Digits Code',
+                      style: TextStyle(
+                        fontSize: 26.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  const SizedBox(height: 60),
+                  _buildPinRow(),
+                  ReuseNumPad(pinIndexSetup, clearPin),
+                ],
+              ),
             ),
           ),
         ),
-      )),
+      ),
     );
   }
 
@@ -91,7 +166,7 @@ class Passcode extends StatelessWidget {
     }
   }
 
-  void pinIndexSetup(String text) {
+  Future<void> pinIndexSetup(String text) async {
     if (pinIndex == 0) {
       pinIndex = 1;
     } else if (pinIndex < 6) {
@@ -105,20 +180,62 @@ class Passcode extends StatelessWidget {
       strPin += element;
     });
     if (pinIndex == 6) {
-      //print(strPin);
-      verifyPin(strPin);
-      //checkVerify(strPin);
+      final res = await StorageServices().readSecure('passcode');
 
+      if (widget.isHome != null) {
+        passcodeAuth(strPin);
+      } else {
+        if (res == null) {
+          setVerifyPin(strPin);
+        } else {
+          clearVerifyPin(strPin);
+        }
+      }
+    }
+  }
+
+  Future<void> clearVerifyPin(String pin) async {
+    if (firstPin == null) {
+      firstPin = pin;
+
+      clearAll();
+      setState(() {
+        _isFirst = true;
+      });
+    } else {
+      if (firstPin == pin) {
+        await StorageServices().clearKeySecure('passcode');
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Home.route,
+          ModalRoute.withName('/'),
+        );
+      } else {
+        clearAll();
+        Vibration.vibrate(amplitude: 500);
+      }
     }
   }
 
   Future<void> setVerifyPin(String pin) async {
     if (firstPin == null) {
       firstPin = pin;
+
       clearAll();
+      setState(() {
+        _isFirst = true;
+      });
     } else {
       if (firstPin == pin) {
-        await storage.write(key: 'passcode', value: pin);
+        await StorageServices().writeSecure('passcode', pin);
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          Home.route,
+          ModalRoute.withName('/'),
+        );
+      } else {
+        clearAll();
+        Vibration.vibrate(amplitude: 500);
       }
     }
   }
@@ -127,29 +244,6 @@ class Passcode extends StatelessWidget {
     for (int i = 0; i < 6; i++) {
       clearPin();
     }
-  }
-
-  Future<void> verifyPin(String pin) async {
-    String value = await storage.read(key: 'passcode');
-
-    if (value == null) {
-      //setVerif    yPin(pin);
-    } else {
-      if (value == pin) {
-        print('verify');
-      }
-    }
-    // final res = await ApiProvider.sdk.api.keyring
-    //     .checkPassword(ApiProvider.keyring.current, pin);
-
-    // if (res) {
-    //   //correct pasword
-    // } else {
-    //   for (int i = 0; i < 6; i++) {
-    //     clearPin();
-    //   }
-    //   Vibration.vibrate(amplitude: 500);
-    // }
   }
 
   void setPin(int n, String text) {
@@ -178,9 +272,11 @@ class Passcode extends StatelessWidget {
 
 class ReusePinNum extends StatelessWidget {
   final OutlineInputBorder outlineInputBorder;
+
   final TextEditingController textEditingController;
 
   const ReusePinNum(this.outlineInputBorder, this.textEditingController);
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -200,7 +296,9 @@ class ReusePinNum extends StatelessWidget {
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 42,
-          color: hexaCodeToColor(AppColors.secondary),
+          color: hexaCodeToColor(
+            AppColors.secondary,
+          ),
         ),
       ),
     );
@@ -223,7 +321,6 @@ class ReuseNumPad extends StatelessWidget {
   Widget _buildNumberPad() {
     return Expanded(
       child: Container(
-        //padding: const EdgeInsets.only(left: 32, right: 32, top: 20),
         alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -331,9 +428,10 @@ class ReuseKeyBoardNum extends StatelessWidget {
         child: Text(
           '$n',
           style: TextStyle(
-              fontSize: 24 * MediaQuery.of(context).textScaleFactor,
-              color: Colors.white,
-              fontWeight: FontWeight.bold),
+            fontSize: 24 * MediaQuery.of(context).textScaleFactor,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

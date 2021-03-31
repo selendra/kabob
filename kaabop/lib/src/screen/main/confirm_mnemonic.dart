@@ -31,38 +31,48 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
 
     for (var r = 0; r * 3 < _wordsLeft.length; r++) {
       if (_wordsLeft.length > r * 3) {
-        rows.add(Row(
-          children: _wordsLeft
-              .getRange(
-                  r * 3,
-                  _wordsLeft.length > (r + 1) * 3
-                      ? (r + 1) * 3
-                      : _wordsLeft.length)
-              .map(
-                (i) => Container(
-                  alignment: Alignment.center,
-                  color: hexaCodeToColor(AppColors.cardColor),
-                  padding: const EdgeInsets.only(left: 4, right: 4, bottom: 4),
-                  margin: const EdgeInsets.only(left: 4, right: 4, bottom: 4),
-                  // ignore: deprecated_member_use
-                  child: FlatButton(
-                    onPressed: () {
-                      setState(() {
-                        _wordsLeft.remove(i);
-                        _wordsSelected.add(i.toString());
-                      });
-                      if (_wordsLeft.isEmpty) validationMnemonic();
-                    },
-                    child: MyText(
-                      text: i.toString(),
-                      color: AppColors.secondarytext,
-                      fontWeight: FontWeight.bold,
+        rows.add(
+          Row(
+            children: _wordsLeft
+                .getRange(
+                    r * 3,
+                    _wordsLeft.length > (r + 1) * 3
+                        ? (r + 1) * 3
+                        : _wordsLeft.length)
+                .map(
+                  (i) => Container(
+                    alignment: Alignment.center,
+                    color: hexaCodeToColor(AppColors.cardColor),
+                    padding: const EdgeInsets.only(
+                      left: 4,
+                      right: 4,
+                      bottom: 4,
+                    ),
+                    margin: const EdgeInsets.only(
+                      left: 4,
+                      right: 4,
+                      bottom: 4,
+                    ),
+                    // ignore: deprecated_member_use
+                    child: FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          _wordsLeft.remove(i);
+                          _wordsSelected.add(i.toString());
+                        });
+                        if (_wordsLeft.isEmpty) validationMnemonic();
+                      },
+                      child: MyText(
+                        text: i.toString(),
+                        color: AppColors.secondarytext,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              )
-              .toList(),
-        ));
+                )
+                .toList(),
+          ),
+        );
       }
     }
     return Container(
@@ -134,14 +144,15 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
               child: Column(
                 children: [
                   Align(
-                      alignment: Alignment.centerLeft,
-                      child: MyText(
-                        text: AppText.confirmMnemonic,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.whiteColorHexa,
-                        bottom: 12,
-                      )),
+                    alignment: Alignment.centerLeft,
+                    child: MyText(
+                      text: AppText.confirmMnemonic,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.whiteColorHexa,
+                      bottom: 12,
+                    ),
+                  ),
 
                   MyText(
                     textAlign: TextAlign.left,
@@ -159,9 +170,10 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: MyText(
-                          text: AppText.reset,
-                          bottom: 16,
-                          color: AppColors.secondarytext),
+                        text: AppText.reset,
+                        bottom: 16,
+                        color: AppColors.secondarytext,
+                      ),
                     ),
                   ),
 

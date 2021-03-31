@@ -192,7 +192,7 @@ class HomeBody extends StatelessWidget {
                       RouteAnimation(
                         enterPage: AssetInfo(
                           assetLogo: 'assets/icons/polkadot.png',
-                          balance: value.dot.balance ?? '0',
+                          balance: value.dot.balance,
                           tokenSymbol: 'DOT',
                         ),
                       ),
@@ -202,7 +202,7 @@ class HomeBody extends StatelessWidget {
                     'assets/icons/polkadot.png',
                     'DOT',
                     'testnet',
-                    value.dot.balance ?? '0',
+                    value.dot.balance,
                     Colors.black,
                   ),
                 ),

@@ -4,13 +4,6 @@ import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 
 class ContentsBackup extends StatefulWidget {
-
-
-  // ContentsBackup(CreateAccModel createAccModel) {
-  //   this.createAccM = createAccModel;
-  // }
-  
-
   static const route = '/contentsBackup';
 
   @override

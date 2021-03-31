@@ -165,6 +165,11 @@ class WebViewRunner {
     return res;
   }
 
+  Future<List> getNChainDecimal() async {
+    final res = await evalJavascript('settings.getChainDecimal(apiNon)');
+    return res;
+  }
+
   Future<String> callContract() async {
     final res = await evalJavascript('settings.callContract(api)');
     return res;

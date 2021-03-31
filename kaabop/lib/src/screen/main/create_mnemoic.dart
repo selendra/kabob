@@ -105,7 +105,9 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ConfirmMnemonic(
-                        widget.passPhrase, widget.passPhraseList),
+                      widget.passPhrase,
+                      widget.passPhraseList,
+                    ),
                   ),
                 );
               },

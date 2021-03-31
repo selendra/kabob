@@ -27,6 +27,7 @@ class ContractProvider with ChangeNotifier {
   Future<void> initClient() async {
     _httpClient = Client();
     _web3client = Web3Client(AppConfig.bscTestNet, _httpClient);
+  
   }
 
   Future<DeployedContract> initBsc(String contractAddr) async {

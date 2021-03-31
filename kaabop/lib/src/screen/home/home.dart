@@ -145,7 +145,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     walletProvider.addAvaibleToken({
       'symbol': api.nativeM.symbol,
-      'balance': api.nativeM.balance,
+      'balance': api.nativeM.balance ?? '0',
     });
 
     if (!contract.kmpi.isContain && !contract.atd.isContain) {

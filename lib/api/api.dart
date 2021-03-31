@@ -94,6 +94,11 @@ class KabobApi {
     return res;
   }
 
+   Future<List> getNChainDecimal() async {
+    final res = await service.webView.getNChainDecimal();
+    return res;
+  }
+
   Future<String> callContract() async {
     final res = await service.webView.callContract();
     return res;

@@ -32,9 +32,8 @@ class ApiProvider with ChangeNotifier {
     logo: 'assets/native_token.png',
     symbol: 'SEL',
     org: 'SELENDRA',
-  
   );
-  NativeM dot = NativeM();
+  NativeM dot = NativeM(balance: '0');
 
   bool _isConnected = false;
 
@@ -56,7 +55,6 @@ class ApiProvider with ChangeNotifier {
 
     if (res != null) {
       _isConnected = true;
-      connectPolNon();
     }
 
     notifyListeners();
@@ -76,7 +74,7 @@ class ApiProvider with ChangeNotifier {
     if (res != null) {
       _isConnected = true;
 
-      subscribeNBalance();
+      getNChainDecimal();
     }
 
     notifyListeners();
@@ -101,37 +99,32 @@ class ApiProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getNChainDecimal() async {
+    final res = await sdk.api.getNChainDecimal();
+    dot.chainDecimal = res[0].toString();
+    subscribeNBalance();
+    notifyListeners();
+  }
+
   Future<void> subscribeBalance() async {
     await sdk.api.account.subscribeBalance(keyring.current.address, (res) {
       nativeM.balance = Fmt.balance(
         res.freeBalance.toString(),
         int.parse(nativeM.chainDecimal),
       );
-   
 
       notifyListeners();
     });
   }
 
   Future<void> subscribeNBalance() async {
-    final res = await sdk.api.account.queryNBalance(keyring.current.address);
-
-    dot.balance = Fmt.balance(
-      res.freeBalance.toString(),
-      int.parse('12'),
-    );
-    notifyListeners();
-
-    // await sdk.api.account.subscribeNBalance(keyring.current.address, (res) {
-    //   dot.balance = Fmt.balance(
-    //     res.freeBalance.toString(),
-    //     int.parse('12'),
-    //   );
-
-    //   nativeM.balanceReady = true;
-
-    //   notifyListeners();
-    // });
+    await sdk.api.account.subscribeNBalance(keyring.current.address, (res) {
+      dot.balance = Fmt.balance(
+        res.freeBalance.toString(),
+        int.parse(dot.chainDecimal),
+      );
+      notifyListeners();
+    });
   }
 
   Future<void> getAddressIcon() async {
@@ -156,7 +149,6 @@ class ApiProvider with ChangeNotifier {
       logo: 'assets/native_token.png',
       symbol: 'SEL',
       org: 'SELENDRA',
-     
     );
     dot = NativeM();
 

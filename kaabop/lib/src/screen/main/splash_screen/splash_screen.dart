@@ -2,12 +2,7 @@ import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 
-
 class MySplashScreen extends StatefulWidget {
-  
-
-  
-
   static const route = '/';
   @override
   State<StatefulWidget> createState() {
@@ -29,16 +24,53 @@ class MySplashScreenState extends State<MySplashScreen>
         Navigator.pushReplacement(
             context, RouteAnimation(enterPage: Welcome()));
       } else {
-        checkBiometric();
+        checkBio();
       }
     });
+  }
+
+  Future<void> checkBio() async {
+    final bio = await StorageServices.readSaveBio();
+
+    final passCode = await StorageServices().readSecure('passcode');
+
+    if (bio && passCode != null) {
+      Navigator.pushReplacement(
+        context,
+        RouteAnimation(
+          enterPage: const Passcode(isHome: 'home'),
+        ),
+      );
+    } else {
+      if (bio) {
+        Navigator.pushReplacement(
+          context,
+          RouteAnimation(
+            enterPage: FingerPrint(),
+          ),
+        );
+      } else if (passCode != null) {
+        Navigator.pushReplacement(
+          context,
+          RouteAnimation(
+            enterPage: const Passcode(isHome: 'home'),
+          ),
+        );
+      } else {
+        Navigator.pushReplacementNamed(context, Home.route);
+      }
+    }
   }
 
   Future<void> checkBiometric() async {
     await StorageServices.readSaveBio().then((value) {
       if (value) {
         Navigator.pushReplacement(
-            context, RouteAnimation(enterPage: FingerPrint()));
+          context,
+          RouteAnimation(
+            enterPage: FingerPrint(),
+          ),
+        );
       } else {
         Navigator.pushReplacementNamed(context, Home.route);
       }
@@ -65,7 +97,6 @@ class MySplashScreenState extends State<MySplashScreen>
     );
 
     super.initState();
-
   }
 
   @override
