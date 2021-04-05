@@ -5,9 +5,6 @@ import 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart'
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
 class ImportAcc extends StatefulWidget {
-
-  static const route = '/import';
-
   @override
   State<StatefulWidget> createState() {
     return ImportAccState();
@@ -66,8 +63,6 @@ class ImportAccState extends State<ImportAcc> {
             ),
           ),
         );
-
-    
       }
     });
   }

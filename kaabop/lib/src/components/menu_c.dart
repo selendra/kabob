@@ -13,7 +13,7 @@ class MenuHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, Account.route);
+        Navigator.pushNamed(context, AppText.accountView);
       },
       child: Container(
         margin: const EdgeInsets.only(left: 16),

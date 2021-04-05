@@ -9,7 +9,7 @@ class ProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, Account.route);
+        Navigator.pushNamed(context, AppText.accountView);
       },
       child: Container(
         width: double.infinity,

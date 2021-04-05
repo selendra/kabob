@@ -5,16 +5,12 @@ import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:latlong/latlong.dart';
-import 'package:wallet_apps/src/models/checkin.m.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/contract_provider.dart';
-
 import 'check_in_body.dart';
 
 class CheckIn extends StatefulWidget {
   final String qrRes;
   const CheckIn({this.qrRes = ''});
-  static const route = '/checkin';
+
   @override
   _CheckInState createState() => _CheckInState();
 }

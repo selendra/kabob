@@ -27,7 +27,6 @@ class ContractProvider with ChangeNotifier {
   Future<void> initClient() async {
     _httpClient = Client();
     _web3client = Web3Client(AppConfig.bscTestNet, _httpClient);
-  
   }
 
   Future<DeployedContract> initBsc(String contractAddr) async {
@@ -58,6 +57,7 @@ class ContractProvider with ChangeNotifier {
     bscNative.chainDecimal = res[0].toString();
     bnbBalance();
     getBscBalance();
+
     notifyListeners();
   }
 
@@ -83,6 +83,7 @@ class ContractProvider with ChangeNotifier {
   Future<void> getEtherAddr() async {
     final ethAddr = await StorageServices().readSecure('etherAdd');
     ethAdd = ethAddr;
+
     notifyListeners();
   }
 

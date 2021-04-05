@@ -45,6 +45,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+
     Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
     Provider.of<ContractProvider>(context, listen: false).getSymbol();
   }
@@ -109,7 +110,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> toReceiveToken() async {
-    await Navigator.pushNamed(context, ReceiveWallet.route);
+    await Navigator.pushNamed(context, AppText.recieveWalletView);
   }
 
   void openMyDrawer() {

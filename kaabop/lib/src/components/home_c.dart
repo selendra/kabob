@@ -390,12 +390,7 @@ class MyBottomAppBar extends StatelessWidget {
                   onPressed: !apiStatus
                       ? null
                       : () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ContactBook(),
-                            ),
-                          );
+                          Navigator.pushNamed(context, AppText.contactBookView);
                         },
                 ),
               ),

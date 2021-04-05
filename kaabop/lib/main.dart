@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'src/route/router.dart' as router;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -100,18 +101,14 @@ class AppState extends State<App> {
           builder: (context, orientation) {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
-              initialRoute: '/',
+              initialRoute: AppText.splashScreenView,
               title: AppText.appName,
               theme: AppStyle.myTheme(),
+              onGenerateRoute: router.generateRoute,
               routes: {
                 Home.route: (_) => Home(_apiConnected),
-                CheckIn.route: (_) => const CheckIn(),
-                Account.route: (_) => Account(),
-                Passcode.route: (_) => const Passcode(),
-                ImportAcc.route: (_) => ImportAcc(),
-                ReceiveWallet.route: (_) => ReceiveWallet(),
-                MySplashScreen.route: (_) => MySplashScreen(),
-                ContentsBackup.route: (_) => ContentsBackup(),
+            
+            
               },
               builder: (context, widget) => ResponsiveWrapper.builder(
                 BouncingScrollWrapper.builder(context, widget),

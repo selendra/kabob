@@ -4,7 +4,7 @@ import 'package:vibration/vibration.dart';
 class Passcode extends StatefulWidget {
   final String isHome;
   const Passcode({this.isHome});
-  static const route = '/passcode';
+  //static const route = '/passcode';
 
   @override
   _PasscodeState createState() => _PasscodeState();

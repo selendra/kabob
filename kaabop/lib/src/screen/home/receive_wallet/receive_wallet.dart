@@ -5,10 +5,7 @@ import 'package:wallet_apps/src/provider/api_provider.dart';
 
 class ReceiveWallet extends StatefulWidget {
 
-
- 
-
-  static const route = '/recievewallet';
+  //static const route = '/recievewallet';
 
   @override
   State<StatefulWidget> createState() {

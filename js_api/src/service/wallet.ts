@@ -11,4 +11,5 @@ async function getPrivateKey(mnemonic: string) {
 
 export default {
     getPrivateKey,
+
 };

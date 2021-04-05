@@ -1,10 +1,8 @@
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/screen/main/create_mnemoic.dart';
 
 class ContentsBackup extends StatefulWidget {
-  static const route = '/contentsBackup';
+  //static const route = '/contentsBackup';
 
   @override
   _ContentsBackupState createState() => _ContentsBackupState();

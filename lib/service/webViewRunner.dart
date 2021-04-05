@@ -261,7 +261,6 @@ class WebViewRunner {
   }
 
   void unsubscribeMessage(String channel) {
-  
     final unsubCall = 'unsub$channel';
     _web.evalJavascript('$unsubCall && $unsubCall()');
   }

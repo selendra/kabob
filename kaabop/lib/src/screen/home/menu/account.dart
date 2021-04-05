@@ -10,7 +10,7 @@ import 'package:wallet_apps/src/screen/home/menu/account_c.dart';
 import '../../../../index.dart';
 
 class Account extends StatefulWidget {
-  static const route = '/account';
+  //static const route = '/account';
   @override
   _AccountState createState() => _AccountState();
 }

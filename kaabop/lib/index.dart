@@ -60,6 +60,8 @@ export 'package:wallet_apps/src/models/home_m.dart';
 export 'package:wallet_apps/src/models/menu_m.dart';
 // Dashboard
 
+export 'package:wallet_apps/src/models/checkin.m.dart';
+
 export 'package:wallet_apps/src/models/model_scan_pay.dart';
 /* Main Screen */
 
@@ -70,7 +72,7 @@ export 'package:wallet_apps/src/models/portfolio_m.dart';
 export 'package:wallet_apps/src/models/portfolio_rate_m.dart';
 // Add Phone
 
-export 'package:wallet_apps/src/route.dart';
+export 'package:wallet_apps/src/route/router.dart';
 //Check In
 export 'package:wallet_apps/src/screen/home/check_in/check_in.dart';
 /* Home Screen */
@@ -105,8 +107,9 @@ export 'package:wallet_apps/src/screen/home/transaction/qr_scanner/qr_scanner.da
 export 'package:wallet_apps/src/screen/home/transaction/submit_trx/fill_pin_dialog.dart';
 export 'package:wallet_apps/src/screen/home/transaction/submit_trx/submit_trx.dart';
 export 'package:wallet_apps/src/screen/home/transaction/submit_trx/submit_trx_body.dart';
-export 'package:wallet_apps/src/screen/main/confirm_mnemonic.dart';
-export 'package:wallet_apps/src/screen/main/contents_backup.dart';
+export 'package:wallet_apps/src/screen/main/confirm_mnemonic/confirm_mnemonic.dart';
+export 'package:wallet_apps/src/screen/main/confirm_mnemonic/contents_backup.dart';
+export 'package:wallet_apps/src/screen/main/confirm_mnemonic/create_mnemoic.dart';
 export 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 export 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 export 'package:wallet_apps/src/screen/main/local_auth/finger_print.dart';

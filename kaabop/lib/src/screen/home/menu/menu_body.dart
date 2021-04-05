@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/screen/home/menu/account.dart';
 
 import 'add_asset/search_asset.dart';
 
@@ -29,11 +28,9 @@ class MenuBody extends StatelessWidget {
         subIndex: 0,
         onTap: () {
           Navigator.pop(context, '');
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) => TrxActivity(),
-            ),
+            AppText.txActivityView,
           );
         },
       ),
@@ -45,7 +42,7 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 0,
         onTap: () {
-          Navigator.pushNamed(context, ReceiveWallet.route);
+          Navigator.pushNamed(context, AppText.recieveWalletView);
         },
       ),
 
@@ -69,7 +66,7 @@ class MenuBody extends StatelessWidget {
         trailing: Switch(
           value: model.switchPasscode,
           onChanged: (value) {
-            Navigator.pushNamed(context, Passcode.route);
+            Navigator.pushNamed(context, AppText.passcodeView);
           },
         ),
         onTap: null,
@@ -95,7 +92,7 @@ class MenuBody extends StatelessWidget {
         index: 3,
         subIndex: 0,
         onTap: () async {
-          Navigator.popAndPushNamed(context, Account.route);
+          Navigator.popAndPushNamed(context, AppText.accountView);
         },
       ),
     ]);

@@ -84,7 +84,7 @@ class KabobApi {
     return res;
   }
 
-  Future<String> getPrivateKey(String mnemonic) async{
+  Future<String> getPrivateKey(String mnemonic) async {
     final res = await service.webView.getPrivateKey(mnemonic);
     return res;
   }
@@ -94,7 +94,7 @@ class KabobApi {
     return res;
   }
 
-   Future<List> getNChainDecimal() async {
+  Future<List> getNChainDecimal() async {
     final res = await service.webView.getNChainDecimal();
     return res;
   }
