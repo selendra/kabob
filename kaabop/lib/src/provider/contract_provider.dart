@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
-import 'package:wallet_apps/src/models/atd.dart';
-import 'package:wallet_apps/src/models/kmpi.dart';
-import 'package:wallet_apps/src/models/native.m.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:flutter/services.dart';
 import '../../index.dart';
@@ -18,9 +14,16 @@ class ContractProvider with ChangeNotifier {
 
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();
-  NativeM bscNative = NativeM();
-  NativeM bnbNative =
-      NativeM(logo: 'assets/bnb-2.png', symbol: 'BNB', org: 'testnet');
+  NativeM bscNative = NativeM(
+    symbol: 'AYC',
+    isContain: false,
+  );
+  NativeM bnbNative = NativeM(
+    logo: 'assets/bnb-2.png',
+    symbol: 'BNB',
+    org: 'testnet',
+    isContain: false,
+  );
   Client _httpClient;
   Web3Client _web3client;
 
@@ -32,7 +35,7 @@ class ContractProvider with ChangeNotifier {
   Future<DeployedContract> initBsc(String contractAddr) async {
     final String abiCode = await rootBundle.loadString('assets/abi/abi.json');
     final contract = DeployedContract(
-      ContractAbi.fromJson(abiCode, 'AYC'),
+      ContractAbi.fromJson(abiCode, 'AYF'),
       EthereumAddress.fromHex(contractAddr),
     );
 
@@ -55,8 +58,6 @@ class ContractProvider with ChangeNotifier {
     final res = await query('decimals', []);
 
     bscNative.chainDecimal = res[0].toString();
-    bnbBalance();
-    getBscBalance();
 
     notifyListeners();
   }
@@ -87,7 +88,8 @@ class ContractProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> bnbBalance() async {
+  Future<void> getBnbBalance() async {
+    bnbNative.isContain = true;
     final balance = await _web3client.getBalance(
       EthereumAddress.fromHex(ethAdd),
     );
@@ -98,6 +100,7 @@ class ContractProvider with ChangeNotifier {
   }
 
   Future<void> getBscBalance() async {
+    bscNative.isContain = true;
     final res = await query('balanceOf', [EthereumAddress.fromHex(ethAdd)]);
     bscNative.balance = Fmt.bigIntToDouble(
       res[0] as BigInt,
@@ -213,15 +216,30 @@ class ContractProvider with ChangeNotifier {
       initKmpi().then((value) async {
         await StorageServices.saveBool(kmpi.symbol, true);
       });
-    } else if (symbol == 'AYC') {
-      await StorageServices.saveBool(bscNative.symbol, true);
+    } else if (symbol == 'AYF') {
+      bscNative.isContain = true;
+
+      await StorageServices.saveBool('AYF', true);
+
+      getBscDecimal();
+      getSymbol();
+      getBscBalance();
     } else if (symbol == 'BNB') {
-      await StorageServices.saveBool(bnbNative.symbol, true);
-    } else {
+      bnbNative.isContain = true;
+
+      await StorageServices.saveBool('BNB', true);
+
+      getBscDecimal();
+      getBnbBalance();
+    } else if (symbol == 'ATD') {
       initAtd().then((value) async {
         await StorageServices.saveBool(atd.symbol, true);
       });
+    } else {
+      ApiProvider().connectPolNon();
+      await StorageServices.saveBool('DOT', true);
     }
+    notifyListeners();
     Navigator.pushNamedAndRemoveUntil(
         context, Home.route, ModalRoute.withName('/'));
   }
@@ -230,9 +248,18 @@ class ContractProvider with ChangeNotifier {
     if (symbol == 'KMPI') {
       kmpi.isContain = false;
       await StorageServices.removeKey('KMPI');
-    } else {
+    } else if (symbol == 'ATD') {
       atd.isContain = false;
       await StorageServices.removeKey('ATD');
+    } else if (symbol == 'AYF') {
+      bscNative.isContain = false;
+      await StorageServices.removeKey('AYF');
+    } else if (symbol == 'BNB') {
+      bnbNative.isContain = false;
+      await StorageServices.removeKey('BNB');
+    } else {
+      ApiProvider().dot.isContain = false;
+      await StorageServices.removeKey('DOT');
     }
     notifyListeners();
   }
@@ -246,11 +273,12 @@ class ContractProvider with ChangeNotifier {
   void resetConObject() {
     atd = Atd();
     kmpi = Kmpi();
-    bscNative = NativeM();
+    bscNative = NativeM(isContain: false);
     bnbNative = NativeM(
       logo: 'assets/bnb-2.png',
       symbol: 'BNB',
       org: 'testnet',
+      isContain: false,
     );
 
     notifyListeners();

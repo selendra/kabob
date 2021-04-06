@@ -325,7 +325,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       if (res != null) {
         final hash = await contract.sendTxBnb(res, reciever, amount);
         if (hash != null) {
-          Provider.of<ContractProvider>(context, listen: false).bnbBalance();
+          Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
           enableAnimation();
         } else {
           Navigator.pop(context);

@@ -25,12 +25,6 @@ class ApiProvider with ChangeNotifier {
       color: Colors.transparent,
     ),
     TokenModel(
-      logo: 'assets/koompi_white_logo.png',
-      symbol: 'KMPI',
-      org: 'KOOMPI',
-      color: Colors.transparent,
-    ),
-    TokenModel(
       logo: 'assets/bnb-2.png',
       symbol: 'BNB',
       org: 'tesnet',
@@ -38,7 +32,7 @@ class ApiProvider with ChangeNotifier {
     ),
     TokenModel(
       logo: 'assets/icons/kusama.png',
-      symbol: 'AYC',
+      symbol: 'AYF',
       org: 'tesnet',
       color: Colors.transparent,
     ),
@@ -51,7 +45,7 @@ class ApiProvider with ChangeNotifier {
     symbol: 'SEL',
     org: 'SELENDRA',
   );
-  NativeM dot = NativeM(balance: '0');
+  NativeM dot = NativeM(balance: '0', isContain: false);
 
   bool _isConnected = false;
 
@@ -81,6 +75,7 @@ class ApiProvider with ChangeNotifier {
   }
 
   Future<NetworkParams> connectPolNon() async {
+    dot.isContain = true;
     final node = NetworkParams();
 
     node.name = AppConfig.nodeName;

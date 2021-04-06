@@ -68,9 +68,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
             await StorageServices().writeSecure('private', res);
           }
         }
-
         Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
-        Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
 
         Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         Provider.of<ApiProvider>(context, listen: false).getAddressIcon();

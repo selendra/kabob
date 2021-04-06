@@ -1,5 +1,4 @@
 import 'package:wallet_apps/index.dart';
-
 import 'package:wallet_apps/src/models/token.m.dart';
 import 'package:wallet_apps/src/screen/home/menu/add_asset/search_asset.dart';
 

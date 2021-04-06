@@ -47,12 +47,12 @@ class AppState extends State<App> {
     initApi();
     Provider.of<ContractProvider>(context, listen: false).initClient();
     Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
+    Provider.of<ContractProvider>(context, listen: false).getSymbol();
   }
 
   Future<void> initApi() async {
     Provider.of<ApiProvider>(context, listen: false).initApi().then(
       (value) {
-        Provider.of<ApiProvider>(context, listen: false).connectPolNon();
         Provider.of<ApiProvider>(context, listen: false).connectNode().then(
           (value) {
             if (value != null) {
@@ -79,6 +79,25 @@ class AppState extends State<App> {
     await StorageServices.readBool('KMPI').then((value) {
       if (value) {
         Provider.of<ContractProvider>(context, listen: false).initKmpi();
+      }
+    });
+
+    await StorageServices.readBool('BNB').then((value) {
+      if (value) {
+        Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
+        Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+      }
+    });
+    await StorageServices.readBool('AYF').then((value) {
+      if (value) {
+        Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
+        Provider.of<ContractProvider>(context, listen: false).getSymbol();
+        Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+      }
+    });
+    await StorageServices.readBool('DOT').then((value) {
+      if (value) {
+        Provider.of<ApiProvider>(context, listen: false).connectPolNon();
       }
     });
 

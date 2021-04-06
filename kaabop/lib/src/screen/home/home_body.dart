@@ -178,101 +178,111 @@ class HomeBody extends StatelessWidget {
           ),
           Consumer<ApiProvider>(
             builder: (context, value, child) {
-              return Dismissible(
-                key: UniqueKey(),
-                direction: DismissDirection.endToStart,
-                background: DismissibleBackground(),
-                onDismissed: (direct) {
-                  setPortfolio();
-                },
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      RouteAnimation(
-                        enterPage: AssetInfo(
-                          assetLogo: 'assets/icons/polkadot.png',
-                          balance: value.dot.balance,
-                          tokenSymbol: 'DOT',
+              return value.dot.isContain
+                  ? Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.endToStart,
+                      background: DismissibleBackground(),
+                      onDismissed: (direct) {
+                        setPortfolio();
+                        Provider.of<ContractProvider>(context)
+                            .removeToken(value.dot.symbol);
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            RouteAnimation(
+                              enterPage: AssetInfo(
+                                assetLogo: 'assets/icons/polkadot.png',
+                                balance: value.dot.balance,
+                                tokenSymbol: 'DOT',
+                              ),
+                            ),
+                          );
+                        },
+                        child: AssetItem(
+                          'assets/icons/polkadot.png',
+                          'DOT',
+                          'testnet',
+                          value.dot.balance,
+                          Colors.black,
                         ),
                       ),
-                    );
-                  },
-                  child: AssetItem(
-                    'assets/icons/polkadot.png',
-                    'DOT',
-                    'testnet',
-                    value.dot.balance,
-                    Colors.black,
-                  ),
-                ),
-              );
+                    )
+                  : Container();
             },
           ),
           Consumer<ContractProvider>(
             builder: (context, value, child) {
-              return Dismissible(
-                key: UniqueKey(),
-                direction: DismissDirection.endToStart,
-                background: DismissibleBackground(),
-                onDismissed: (direct) {
-                  setPortfolio();
-                },
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      RouteAnimation(
-                        enterPage: AssetInfo(
-                          assetLogo: value.bnbNative.logo,
-                          balance: value.bnbNative.balance ?? '0',
-                          tokenSymbol: value.bnbNative.symbol ?? '',
+              return value.bnbNative.isContain
+                  ? Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.endToStart,
+                      background: DismissibleBackground(),
+                      onDismissed: (direct) {
+                        setPortfolio();
+                        value.removeToken(value.bnbNative.symbol);
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            RouteAnimation(
+                              enterPage: AssetInfo(
+                                assetLogo: value.bnbNative.logo,
+                                balance: value.bnbNative.balance ?? '0',
+                                tokenSymbol: value.bnbNative.symbol ?? '',
+                              ),
+                            ),
+                          );
+                        },
+                        child: AssetItem(
+                          value.bnbNative.logo,
+                          value.bnbNative.symbol ?? '',
+                          'testnet',
+                          value.bnbNative.balance ?? '0',
+                          Colors.black,
                         ),
                       ),
-                    );
-                  },
-                  child: AssetItem(
-                    value.bnbNative.logo,
-                    value.bnbNative.symbol ?? '',
-                    'testnet',
-                    value.bnbNative.balance ?? '0',
-                    Colors.black,
-                  ),
-                ),
-              );
+                    )
+                  : Container();
             },
           ),
           Consumer<ContractProvider>(
             builder: (context, value, child) {
-              return Dismissible(
-                key: UniqueKey(),
-                direction: DismissDirection.endToStart,
-                background: DismissibleBackground(),
-                onDismissed: (direct) {
-                  setPortfolio();
-                },
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      RouteAnimation(
-                        enterPage: AssetInfo(
-                          assetLogo: 'assets/icons/kusama.png',
-                          balance: value.bscNative.balance ?? '0',
-                          tokenSymbol: value.bscNative.symbol ?? '',
+              return value.bscNative.isContain
+                  ? Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.endToStart,
+                      background: DismissibleBackground(),
+                      onDismissed: (direct) {
+                        setPortfolio();
+                        value.removeToken(value.bscNative.symbol);
+                      },
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            RouteAnimation(
+                              enterPage: AssetInfo(
+                                assetLogo: 'assets/icons/kusama.png',
+                                balance: value.bscNative.balance ?? '0',
+                                tokenSymbol: value.bscNative.symbol ?? '',
+                              ),
+                            ),
+                          );
+                        },
+                        child: AssetItem(
+                          'assets/icons/kusama.png',
+                          value.bscNative.symbol ?? '',
+                          'testnet',
+                          value.bscNative.balance ?? '0',
+                          Colors.black,
                         ),
                       ),
-                    );
-                  },
-                  child: AssetItem(
-                    'assets/icons/kusama.png',
-                    value.bscNative.symbol ?? '',
-                    'testnet',
-                    value.bscNative.balance ?? '0',
-                    Colors.black,
-                  ),
-                ),
-              );
+                    )
+                  : Container();
             },
           ),
           const SizedBox(

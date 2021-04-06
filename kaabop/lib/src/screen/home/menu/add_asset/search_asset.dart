@@ -2,17 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/reuse_widget.dart';
-
 import 'package:wallet_apps/src/models/token.m.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'package:wallet_apps/theme/color.dart';
 
 class SearchAsset extends SearchDelegate {
-
   final Function added;
   final List<TokenModel> token;
-  SearchAsset({ this.added, this.token});
+  SearchAsset({this.added, this.token});
 
   @override
   ThemeData appBarTheme(BuildContext context) {
@@ -134,7 +130,7 @@ class SearchAsset extends SearchDelegate {
                   });
                 },
                 child: Container(
-                 // padding: const EdgeInsets.all(8.0),
+                  // padding: const EdgeInsets.all(8.0),
                   child: portFolioItemRow(
                       searchProducts[index].logo,
                       searchProducts[index].symbol,
