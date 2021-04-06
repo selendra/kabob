@@ -107,8 +107,6 @@ class AppState extends State<App> {
               onGenerateRoute: router.generateRoute,
               routes: {
                 Home.route: (_) => Home(_apiConnected),
-            
-            
               },
               builder: (context, widget) => ResponsiveWrapper.builder(
                 BouncingScrollWrapper.builder(context, widget),

@@ -24,6 +24,24 @@ class ApiProvider with ChangeNotifier {
       org: 'KOOMPI',
       color: Colors.transparent,
     ),
+    TokenModel(
+      logo: 'assets/koompi_white_logo.png',
+      symbol: 'KMPI',
+      org: 'KOOMPI',
+      color: Colors.transparent,
+    ),
+    TokenModel(
+      logo: 'assets/bnb-2.png',
+      symbol: 'BNB',
+      org: 'tesnet',
+      color: Colors.transparent,
+    ),
+    TokenModel(
+      logo: 'assets/icons/kusama.png',
+      symbol: 'AYC',
+      org: 'tesnet',
+      color: Colors.transparent,
+    ),
   ];
 
   ContractProvider contractProvider;

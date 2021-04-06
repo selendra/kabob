@@ -23,7 +23,7 @@ class AppText {
   static String next = "Next";
 
   static const String splashScreenView = '/';
-  static const String txActivityView = '/home';
+  static const String txActivityView = '/txactivity';
   static const String checkinView = '/checkin';
   static const String accountView = '/account';
   static const String contactBookView = '/contactbook';

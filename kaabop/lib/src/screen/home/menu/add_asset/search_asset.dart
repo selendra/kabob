@@ -134,7 +134,7 @@ class SearchAsset extends SearchDelegate {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.all(8.0),
+                 // padding: const EdgeInsets.all(8.0),
                   child: portFolioItemRow(
                       searchProducts[index].logo,
                       searchProducts[index].symbol,

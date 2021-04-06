@@ -50,10 +50,11 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 1,
         onTap: () {
-          showSearch(
-            context: context,
-            delegate: SearchAsset(),
-          );
+          // showSearch(
+          //   context: context,
+          //   delegate: SearchAsset(),
+          // );
+          Navigator.push(context, RouteAnimation(enterPage: AddAsset()));
         },
       ),
 

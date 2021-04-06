@@ -196,6 +196,8 @@ class ContractProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> initAYC() async {}
+
   Future<void> fetchAtdBalance() async {
     final res = await sdk.api.getAToken(keyring.current.address);
     atd.balance = BigInt.parse(res).toString();
@@ -211,6 +213,10 @@ class ContractProvider with ChangeNotifier {
       initKmpi().then((value) async {
         await StorageServices.saveBool(kmpi.symbol, true);
       });
+    } else if (symbol == 'AYC') {
+      await StorageServices.saveBool(bscNative.symbol, true);
+    } else if (symbol == 'BNB') {
+      await StorageServices.saveBool(bnbNative.symbol, true);
     } else {
       initAtd().then((value) async {
         await StorageServices.saveBool(atd.symbol, true);

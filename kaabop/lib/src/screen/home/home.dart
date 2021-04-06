@@ -39,6 +39,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       startNode();
     }
 
+    AppServices.noInternetConnection(_homeM.globalKey);
+
     super.initState();
   }
 
