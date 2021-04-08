@@ -4,7 +4,6 @@ import 'package:wallet_apps/index.dart';
 
 import 'package:wallet_apps/src/models/token.m.dart';
 
-
 class AddAsset extends StatefulWidget {
   static const route = '/addasset';
   @override
@@ -19,7 +18,7 @@ class AddAssetState extends State<AddAsset> {
   final FlareControls _flareController = FlareControls();
 
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
-  final List<TokenModel> _token = [];
+  String _tokenSymbol = '';
 
   @override
   void initState() {
@@ -28,6 +27,11 @@ class AddAssetState extends State<AddAsset> {
     AppServices.noInternetConnection(globalKey);
 
     super.initState();
+  }
+
+  Future<bool> validateEtherAddress(String address) async {
+    final res = await ApiProvider.sdk.api.validateEtherAddr(address);
+    return res;
   }
 
   Future<bool> validateAddress(String address) async {
@@ -61,241 +65,69 @@ class AddAssetState extends State<AddAsset> {
     });
   }
 
-  String onChanged(String textChange) {
-    _modelAsset.formStateAsset.currentState.validate();
-    enableButton(true);
-    return null;
+  Future<void> addAsset() async {
+    if (_modelAsset.match) {
+      Provider.of<ContractProvider>(context, listen: false)
+          .addToken(ContractProvider().kmpi.symbol, context);
+    } else {
+      Provider.of<ContractProvider>(context, listen: false).addToken(
+        _tokenSymbol,
+        context,
+        contractAddr: _modelAsset.controllerAssetCode.text,
+      );
+    }
   }
 
-  // Future<void> listToken() async {
-  //   _token.add(TokenModel(
-  //     logo: widget.sdkModel.contractModel.ptLogo,
-  //     symbol: widget.sdkModel.contractModel.pTokenSymbol,
-  //     org: widget.sdkModel.contractModel.pOrg,
-  //     color: Colors.black,
-  //   ));
-  //   _token.add(TokenModel(
-  //     logo: widget.sdkModel.contractModel.attendantM.attLogo,
-  //     symbol: widget.sdkModel.contractModel.attendantM.aSymbol,
-  //     org: widget.sdkModel.contractModel.attendantM.aOrg,
-  //     color: Colors.transparent,
-  //   ));
-  // }
+  Future<void> submitAsset() async {
+    setState(() {
+      _modelAsset.loading = true;
+    });
+    final resEther =
+        await validateEtherAddress(_modelAsset.controllerAssetCode.text);
+    final res = await validateAddress(_modelAsset.controllerAssetCode.text);
 
-  // Future<void> addAsset(String symbol) async {
-  //   dialogLoading(context);
-  //   setState(() {
-  //     widget.sdkModel.contractModel.isContain = true;
-  //   });
-  //   await _contractSymbol();
-  //   await _getHashBySymbol().then((value) async {
-  //     await _balanceOfByPartition();
-  //   });
-  //   await StorageServices.saveBool('KMPI', true);
-  //   enableAnimation();
-  // }
+    if (res || resEther) {
+      if (res) {
+        if (_modelAsset.controllerAssetCode.text == AppConfig.kmpiAddr) {
+          setState(() {
+            _modelAsset.match = true;
+            _modelAsset.loading = false;
+          });
+        }
+      } else {
+        final res = await Provider.of<ContractProvider>(context, listen: false)
+            .query(_modelAsset.controllerAssetCode.text, 'symbol', []);
+        if (res != null) {
+          setState(() {
+            _tokenSymbol = res[0].toString();
+            _modelAsset.loading = false;
+          });
+        }
+      }
+    } else {
+      await dialog(context, const Text('Invalid token contract address!'),
+          const Text('Opps'));
+      setState(() {
+        _modelAsset.loading = false;
+      });
+    }
+  }
 
-  // Future<void> addAssetInSearch(String symbol) async {
-  //   if (symbol == 'KMPI') {
-  //     widget.sdkModel.contractModel.isContain = true;
-  //     await _contractSymbol();
-  //     await _getHashBySymbol().then((value) async {
-  //       await _balanceOfByPartition();
-  //     });
-  //     setPortfolio();
-  //     await StorageServices.saveBool('KMPI', true);
-  //     Navigator.pushNamedAndRemoveUntil(
-  //         context, Home.route, ModalRoute.withName('/'));
-  //   } else {
-  //     setState(() {
-  //       widget.sdkModel.contractModel.attendantM.isAContain = true;
-  //     });
-  //     await initAttendant();
-  //     await StorageServices.saveBool(
-  //       widget.sdkModel.contractModel.attendantM.aSymbol,
-  //       true,
-  //     );
-  //     Navigator.pushNamedAndRemoveUntil(
-  //         context, Home.route, ModalRoute.withName('/'));
-  //   }
-  // }
+  void onSubmit() {
+    if (_modelAsset.formStateAsset.currentState.validate()) {
+      submitAsset();
+    }
+  }
 
-  // Future<void> initAttendant() async {
-  //   await widget.sdkModel.sdk.api.initAttendant();
+  String onChanged(String textChange) {
+    if (_modelAsset.formStateAsset.currentState.validate()) {
+      enableButton(true);
+    } else {
+      enableButton(false);
+    }
 
-  //   await getToken().then((value) {
-  //     addATT();
-  //   });
-  // }
-
-  // Future<void> initContract() async {
-  //   final res = await ApiProvider.sdk.api.callContract();
-  //   setState(() {
-  //     _address = res.toString();
-  //   });
-  // }
-
-  // Future<void> _contractSymbol() async {
-  //   try {
-  //     final res = await widget.sdkModel.sdk.api
-  //         .contractSymbol(widget.sdkModel.keyring.keyPairs[0].address);
-  //     if (res != null) {
-  //       setState(() {
-  //         widget.sdkModel.contractModel.pTokenSymbol = res[0].toString();
-  //       });
-  //     }
-  //   } catch (e) {
-  //     //print(e.toString());
-  //   }
-  // }
-
-  // Future<void> _getHashBySymbol() async {
-  //   try {
-  //     final res = await widget.sdkModel.sdk.api.getHashBySymbol(
-  //       widget.sdkModel.keyring.keyPairs[0].address,
-  //       widget.sdkModel.contractModel.pTokenSymbol,
-  //     );
-
-  //     if (res != null) {
-  //       widget.sdkModel.contractModel.pHash = res;
-  //     }
-  //   } catch (e) {
-  //     //print(e.toString());
-  //   }
-  // }
-
-  // Future<void> _balanceOfByPartition() async {
-  //   try {
-  //     final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
-  //       widget.sdkModel.keyring.keyPairs[0].address,
-  //       widget.sdkModel.keyring.keyPairs[0].address,
-  //       widget.sdkModel.contractModel.pHash,
-  //     );
-
-  //     widget.sdkModel.contractModel.pBalance =
-  //         BigInt.parse(res['output'].toString()).toString();
-  //     // ignore: empty_catches
-  //   } catch (e) {}
-  // }
-
-  // Future<void> getToken() async {
-  //   final res = await widget.sdkModel.sdk.api
-  //       .getAToken(widget.sdkModel.keyring.keyPairs[0].address);
-  //   widget.sdkModel.contractModel.attendantM.aBalance =
-  //       BigInt.parse(res).toString();
-  // }
-
-  // void addATT() {
-  //   final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-
-  //   walletProvider.addAvaibleToken({
-  //     'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
-  //     'balance': widget.sdkModel.contractModel.attendantM.aBalance,
-  //   });
-
-  //   Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-  // }
-
-  // void setPortfolio() {
-  //   final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-
-  //   walletProvider.addAvaibleToken({
-  //     'symbol': widget.sdkModel.contractModel.pTokenSymbol,
-  //     'balance': widget.sdkModel.contractModel.pBalance,
-  //   });
-
-  //   Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-  // }
-
-  // Future enableAnimation() async {
-  //   Navigator.pop(context);
-  //   setState(() {
-  //     _modelAsset.added = true;
-  //   });
-  //   _flareController.play('Checkmark');
-  //   Timer(const Duration(milliseconds: 2500), () {
-  //     Navigator.pop(context);
-  //   });
-  // }
-
-  // Future<void> submitSearch(String symbol) async {
-  //   if (symbol == 'KMPI') {
-  //     await StorageServices.readBool('KMPI').then((value) async {
-  //       if (!value) {
-  //         addAssetInSearch(symbol);
-  //       } else {
-  //         await dialog(
-  //           context,
-  //           const Text('This asset is already added!'),
-  //           const Text('Asset Added'),
-  //         );
-  //       }
-  //     });
-  //   } else if (symbol == 'ATD') {
-  //     await StorageServices.readBool('ATD').then((value) async {
-  //       if (!value) {
-  //         addAssetInSearch(symbol);
-  //       } else {
-  //         await dialog(
-  //           context,
-  //           const Text('This asset is already added!'),
-  //           const Text('Asset Added'),
-  //         );
-  //       }
-  //     });
-  //   }
-  // }
-
-  // Future<void> submitAsset() async {
-  //   setState(() {
-  //     _modelAsset.loading = true;
-  //   });
-  //   await StorageServices.readBool('KMPI').then((value) async {
-  //     if (!value) {
-  //       await validateAddress(_modelAsset.controllerAssetCode.text)
-  //           .then((value) async {
-  //         //print(value);
-  //         if (value) {
-  //           if (_modelAsset.controllerAssetCode.text ==
-  //               widget.sdkModel.contractModel.pContractAddress) {
-  //             setState(() {
-  //               _modelAsset.match = true;
-  //               _modelAsset.loading = false;
-  //             });
-  //           } else {
-  //             setState(() {
-  //               _modelAsset.loading = false;
-  //               _modelAsset.controllerAssetCode.text = '';
-  //             });
-  //             await dialog(
-  //               context,
-  //               const Text('Failed to find asset by address.'),
-  //               const Text('Asset not found'),
-  //             );
-  //           }
-  //         } else {
-  //           setState(() {
-  //             _modelAsset.loading = false;
-  //           });
-  //           await dialog(
-  //             context,
-  //             const Text('Please fill in a valid address!'),
-  //             const Text('Invalid Address'),
-  //           );
-  //         }
-  //       });
-  //     } else {
-  //       setState(() {
-  //         _modelAsset.loading = false;
-  //       });
-  //       await dialog(
-  //         context,
-  //         const Text('This asset is already added!'),
-  //         const Text('Asset Added'),
-  //       );
-  //     }
-  //   });
-  // }
+    return null;
+  }
 
   void qrRes(String value) {
     if (value != null) {
@@ -320,10 +152,13 @@ class AddAssetState extends State<AddAsset> {
           children: [
             AddAssetBody(
               assetM: _modelAsset,
+              addAsset: addAsset,
               popScreen: popScreen,
               onChanged: onChanged,
-              token: _token,
               qrRes: qrRes,
+              tokenSymbol: _tokenSymbol,
+              onSubmit: onSubmit,
+              submitAsset: submitAsset,
             ),
             if (_modelAsset.added == false)
               Container()

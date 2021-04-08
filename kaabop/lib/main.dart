@@ -47,12 +47,14 @@ class AppState extends State<App> {
     initApi();
     Provider.of<ContractProvider>(context, listen: false).initClient();
     Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
-    Provider.of<ContractProvider>(context, listen: false).getSymbol();
   }
 
   Future<void> initApi() async {
     Provider.of<ApiProvider>(context, listen: false).initApi().then(
       (value) {
+        isDotContain();
+        isBnbContain();
+        isBscContain();
         Provider.of<ApiProvider>(context, listen: false).connectNode().then(
           (value) {
             if (value != null) {
@@ -75,29 +77,41 @@ class AppState extends State<App> {
     );
   }
 
-  Future<void> initContract() async {
-    await StorageServices.readBool('KMPI').then((value) {
+  Future<void> isDotContain() async {
+    await StorageServices.readBool('DOT').then((value) {
       if (value) {
-        Provider.of<ContractProvider>(context, listen: false).initKmpi();
+        Provider.of<ApiProvider>(context, listen: false).isDotContain();
+        Provider.of<ApiProvider>(context, listen: false).connectPolNon();
       }
     });
+  }
 
+  Future<void> isBnbContain() async {
     await StorageServices.readBool('BNB').then((value) {
       if (value) {
         Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
         Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
       }
     });
+  }
+
+  Future<void> isBscContain() async {
     await StorageServices.readBool('AYF').then((value) {
       if (value) {
-        Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
+        Provider.of<ContractProvider>(context, listen: false)
+            .getBscDecimal()
+            .then((value) {
+          Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+        });
         Provider.of<ContractProvider>(context, listen: false).getSymbol();
-        Provider.of<ContractProvider>(context, listen: false).getBscBalance();
       }
     });
-    await StorageServices.readBool('DOT').then((value) {
+  }
+
+  Future<void> initContract() async {
+    await StorageServices.readBool('KMPI').then((value) {
       if (value) {
-        Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+        Provider.of<ContractProvider>(context, listen: false).initKmpi();
       }
     });
 

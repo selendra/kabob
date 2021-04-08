@@ -1,30 +1,28 @@
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/token.m.dart';
 import 'package:wallet_apps/src/screen/home/menu/add_asset/search_asset.dart';
 
 class AddAssetBody extends StatelessWidget {
   final ModelAsset assetM;
-
+  final String tokenSymbol;
   final Function validateIssuer;
   final Function popScreen;
   final String Function(String) onChanged;
+  final String Function(String) validateField;
   final Function onSubmit;
   final void Function() submitAsset;
   final Function addAsset;
-  final Function submitSearch;
   final Function qrRes;
-  final List<TokenModel> token;
 
   const AddAssetBody({
     this.assetM,
+    this.tokenSymbol,
     this.validateIssuer,
     this.popScreen,
     this.onChanged,
+    this.validateField,
     this.onSubmit,
     this.submitAsset,
-    this.token,
     this.addAsset,
-    this.submitSearch,
     this.qrRes,
   });
 
@@ -49,7 +47,7 @@ class AddAssetBody extends StatelessWidget {
                 onPressed: () {
                   showSearch(
                     context: context,
-                    delegate: SearchAsset(added: submitSearch, token: token),
+                    delegate: SearchAsset(),
                   );
                 },
               ),
@@ -61,7 +59,7 @@ class AddAssetBody extends StatelessWidget {
         ),
         Expanded(
           child: SvgPicture.asset(
-            'assets/icons/no_data.svg',
+            'assets/icons/contract.svg',
             width: 200,
             height: 200,
           ),
@@ -82,12 +80,48 @@ class AddAssetBody extends StatelessWidget {
                     ],
                     controller: assetM.controllerAssetCode,
                     focusNode: assetM.nodeAssetCode,
-                    validateField: (value) => value == null
+                    validateField: (value) => value.isEmpty
                         ? 'Please fill in token contract address'
                         : null,
                     onChanged: onChanged,
                     onSubmit: onSubmit,
                   ),
+                  if (assetM.match)
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: portFolioItemRow(
+                        ContractProvider().kmpi.logo,
+                        ContractProvider().kmpi.symbol,
+                        Colors.black,
+                        addAsset,
+                      ),
+                    )
+                  else if (tokenSymbol == 'AYF')
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      child: portFolioItemRow(
+                        ContractProvider().bscNative.logo,
+                        tokenSymbol,
+                        Colors.black,
+                        addAsset,
+                      ),
+                    )
+                  else if (tokenSymbol != 'AYF' && tokenSymbol != '')
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: portFolioItemRow(
+                        ContractProvider().bscNative.logo,
+                        tokenSymbol,
+                        Colors.black,
+                        addAsset,
+                      ),
+                    )
+                  else
+                    Container(),
+                  if (assetM.loading)
+                    const CircularProgressIndicator()
+                  else
+                    Container(),
                   Align(
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
@@ -112,29 +146,19 @@ class AddAssetBody extends StatelessWidget {
             ),
           ),
         ),
+        const SizedBox(height: 40.0),
         MyFlatButton(
           textButton: "Submit",
           edgeMargin: const EdgeInsets.only(left: 66, right: 66),
           hasShadow: true,
           action: assetM.enable ? submitAsset : null,
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-        if (assetM.match)
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            // child: portFolioItemRow(
-
-            //     Colors.black),
-          )
-        else
-          Container(),
-        if (assetM.loading) const CircularProgressIndicator() else Container(),
       ],
     );
   }
 
-  Widget portFolioItemRow(String asset, String tokenSymbol, String org,
-      String balance, Color color) {
+  Widget portFolioItemRow(
+      String logo, String tokenSymbol, Color color, Function addAsset) {
     return rowDecorationStyle(
       child: Row(
         children: <Widget>[
@@ -145,7 +169,7 @@ class AddAssetBody extends StatelessWidget {
             margin: const EdgeInsets.only(right: 20),
             decoration: BoxDecoration(
                 color: color, borderRadius: BorderRadius.circular(40)),
-            child: Image.asset(asset),
+            child: Image.asset(logo),
           ),
           Expanded(
             child: Container(
@@ -158,7 +182,7 @@ class AddAssetBody extends StatelessWidget {
                     text: tokenSymbol,
                     color: "#FFFFFF",
                   ),
-                  MyText(text: org, fontSize: 15),
+                  //MyText(text: org, fontSize: 15),
                 ],
               ),
             ),
@@ -175,11 +199,12 @@ class AddAssetBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
                     MyText(
-                        width: double.infinity,
-                        text: 'Add', //portfolioData[0]["data"]['balance'],
-                        color: AppColors.secondary,
-                        textAlign: TextAlign.right,
-                        overflow: TextOverflow.ellipsis),
+                      width: double.infinity,
+                      text: 'Add', //portfolioData[0]["data"]['balance'],
+                      color: AppColors.secondary,
+                      textAlign: TextAlign.right,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),

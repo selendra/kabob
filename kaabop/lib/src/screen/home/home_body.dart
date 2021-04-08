@@ -1,10 +1,5 @@
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/components/asset_item.dart';
-import 'package:wallet_apps/src/components/portfolio_cus.dart';
-import 'package:wallet_apps/src/components/route_animation.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/contract_provider.dart';
 import 'asset_info/asset_info.dart';
 import 'menu/add_asset/search_asset.dart';
 
@@ -53,9 +48,11 @@ class HomeBody extends StatelessWidget {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            showSearch(
-                              context: context,
-                              delegate: SearchAsset(),
+                            Navigator.push(
+                              context,
+                              RouteAnimation(
+                                enterPage: AddAsset(),
+                              ),
                             );
                           },
                           child: const Align(
@@ -105,7 +102,7 @@ class HomeBody extends StatelessWidget {
                       direction: DismissDirection.endToStart,
                       background: DismissibleBackground(),
                       onDismissed: (direct) {
-                        value.removeToken(value.kmpi.symbol);
+                        value.removeToken(value.kmpi.symbol, context);
                         setPortfolio();
                       },
                       child: Consumer<ContractProvider>(
@@ -148,7 +145,7 @@ class HomeBody extends StatelessWidget {
                       direction: DismissDirection.endToStart,
                       background: DismissibleBackground(),
                       onDismissed: (direct) {
-                        value.removeToken(value.atd.symbol);
+                        value.removeToken(value.atd.symbol, context);
                         setPortfolio();
                       },
                       child: GestureDetector(
@@ -185,8 +182,9 @@ class HomeBody extends StatelessWidget {
                       background: DismissibleBackground(),
                       onDismissed: (direct) {
                         setPortfolio();
-                        Provider.of<ContractProvider>(context)
-                            .removeToken(value.dot.symbol);
+
+                        Provider.of<ContractProvider>(context, listen: false)
+                            .removeToken(value.dot.symbol, context);
                       },
                       child: GestureDetector(
                         onTap: () {
@@ -194,16 +192,16 @@ class HomeBody extends StatelessWidget {
                             context,
                             RouteAnimation(
                               enterPage: AssetInfo(
-                                assetLogo: 'assets/icons/polkadot.png',
+                                assetLogo: value.dot.logo,
                                 balance: value.dot.balance,
-                                tokenSymbol: 'DOT',
+                                tokenSymbol: value.dot.symbol,
                               ),
                             ),
                           );
                         },
                         child: AssetItem(
-                          'assets/icons/polkadot.png',
-                          'DOT',
+                          value.dot.logo,
+                          value.dot.symbol,
                           'testnet',
                           value.dot.balance,
                           Colors.black,
@@ -222,7 +220,7 @@ class HomeBody extends StatelessWidget {
                       background: DismissibleBackground(),
                       onDismissed: (direct) {
                         setPortfolio();
-                        value.removeToken(value.bnbNative.symbol);
+                        value.removeToken(value.bnbNative.symbol, context);
                       },
                       child: GestureDetector(
                         onTap: () {
@@ -258,7 +256,7 @@ class HomeBody extends StatelessWidget {
                       background: DismissibleBackground(),
                       onDismissed: (direct) {
                         setPortfolio();
-                        value.removeToken(value.bscNative.symbol);
+                        value.removeToken(value.bscNative.symbol, context);
                       },
                       child: GestureDetector(
                         onTap: () {
@@ -266,7 +264,7 @@ class HomeBody extends StatelessWidget {
                             context,
                             RouteAnimation(
                               enterPage: AssetInfo(
-                                assetLogo: 'assets/icons/kusama.png',
+                                assetLogo: value.bscNative.logo,
                                 balance: value.bscNative.balance ?? '0',
                                 tokenSymbol: value.bscNative.symbol ?? '',
                               ),
@@ -274,7 +272,7 @@ class HomeBody extends StatelessWidget {
                           );
                         },
                         child: AssetItem(
-                          'assets/icons/kusama.png',
+                          value.bscNative.logo,
                           value.bscNative.symbol ?? '',
                           'testnet',
                           value.bscNative.balance ?? '0',
@@ -285,6 +283,50 @@ class HomeBody extends StatelessWidget {
                   : Container();
             },
           ),
+          Consumer<ContractProvider>(builder: (context, value, child) {
+            return value.token.isNotEmpty
+                ? SizedBox(
+                    height: 500,
+                    child: ListView.builder(
+                      addAutomaticKeepAlives: false ,
+                        itemCount: value.token.length,
+                        itemBuilder: (context, index) {
+                          return Dismissible(
+                            key: UniqueKey(),
+                            direction: DismissDirection.endToStart,
+                            background: DismissibleBackground(),
+                            onDismissed: (direct) {
+                               setPortfolio();
+                              value.removeToken(value.bscNative.symbol, context);
+                            },
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  RouteAnimation(
+                                    enterPage: AssetInfo(
+                                      assetLogo: value.bscNative.logo,
+                                      balance:
+                                          value.token[index].balance ?? '0',
+                                      tokenSymbol:
+                                          value.token[index].symbol ?? '',
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: AssetItem(
+                                value.bscNative.logo,
+                                value.token[index].symbol ?? '',
+                                'testnet',
+                                value.token[index].balance ?? '0',
+                                Colors.black,
+                              ),
+                            ),
+                          );
+                        }),
+                  )
+                : Container();
+          }),
           const SizedBox(
             height: 40,
           ),

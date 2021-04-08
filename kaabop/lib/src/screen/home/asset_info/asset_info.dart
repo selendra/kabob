@@ -315,9 +315,7 @@ class _AssetInfoState extends State<AssetInfo> {
                         ],
                       ),
                     ),
-                    if (widget.tokenSymbol != "ATD")
-                      Container()
-                    else
+                    if (widget.tokenSymbol == "ATD")
                       Expanded(
                         child: Align(
                           alignment: Alignment.bottomRight,
@@ -328,12 +326,25 @@ class _AssetInfoState extends State<AssetInfo> {
                                 text: value.atd.status
                                     ? 'Status: Check-In'
                                     : 'Status: Check-out',
-                                fontSize: 14.0,
+                                fontSize: 16.0,
                               );
                             },
                           ),
                         ),
-                      ),
+                      )
+                    else if (widget.tokenSymbol == "AYF")
+                      const Expanded(
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: MyText(
+                            textAlign: TextAlign.right,
+                            text: 'BEP-20',
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      )
+                    else
+                      Container()
                   ],
                 ),
               ),

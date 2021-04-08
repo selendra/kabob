@@ -51,6 +51,10 @@ export 'package:wallet_apps/src/components/trx_component.dart';
 export 'package:wallet_apps/src/components/trx_option_c.dart';
 export 'package:wallet_apps/src/config/app_config.dart';
 export 'package:wallet_apps/src/config/size_config/size_config.dart';
+export 'package:wallet_apps/src/components/asset_item.dart';
+export 'package:wallet_apps/src/components/portfolio_cus.dart';
+export 'package:wallet_apps/src/components/route_animation.dart';
+
 // Add Asset
 export 'package:wallet_apps/src/models/asset_m.dart';
 

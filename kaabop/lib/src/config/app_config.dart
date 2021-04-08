@@ -40,6 +40,10 @@ class AppConfig {
 
   static const bscAddr = '0xd84d89d5c9df06755b5d591794241d3fd20669ce';
 
+  static const kmpiAddr = '5GZ9uD6RgN84bpBuic1HWq9AP7k2SSFtK9jCVkrncZsuARQU';
+
+  //test 0x78F51cc2e297dfaC4c0D5fb3552d413DC3F71314
+
   static const nodeName = 'Indranet hosted By Selendra';
 
   static const nodeEndpoint = 'wss://rpc-testnet.selendra.org';

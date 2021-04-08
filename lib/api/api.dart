@@ -89,6 +89,12 @@ class KabobApi {
     return res;
   }
 
+
+  Future<bool> validateEtherAddr(String address) async {
+    final res = await service.webView.validateEtherAddr(address);
+    return res;
+  }
+
   Future<List> getChainDecimal() async {
     final res = await service.webView.getChainDecimal();
     return res;

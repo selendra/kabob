@@ -1,4 +1,5 @@
-import { Wallet } from 'ethers';
+import { ethers, Wallet } from 'ethers';
+
 
 
 async function getPrivateKey(mnemonic: string) {
@@ -8,8 +9,15 @@ async function getPrivateKey(mnemonic: string) {
     });
 }
 
+async function validateEtherAddr(address: string) {
+    return new Promise(async (resolve, reject) => {
+        const isEtherAddress = ethers.utils.isAddress(address);
+        resolve(isEtherAddress);
+    });
+}
+
 
 export default {
     getPrivateKey,
-
+    validateEtherAddr,
 };

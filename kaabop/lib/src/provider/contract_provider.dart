@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
+import 'package:provider/provider.dart';
+import 'package:wallet_apps/src/models/token.m.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:flutter/services.dart';
 import '../../index.dart';
@@ -15,7 +17,8 @@ class ContractProvider with ChangeNotifier {
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();
   NativeM bscNative = NativeM(
-    symbol: 'AYC',
+    logo: 'assets/icons/kusama.png',
+    symbol: 'AYF',
     isContain: false,
   );
   NativeM bnbNative = NativeM(
@@ -27,6 +30,8 @@ class ContractProvider with ChangeNotifier {
   Client _httpClient;
   Web3Client _web3client;
 
+  List<TokenModel> token = [];
+
   Future<void> initClient() async {
     _httpClient = Client();
     _web3client = Web3Client(AppConfig.bscTestNet, _httpClient);
@@ -35,15 +40,17 @@ class ContractProvider with ChangeNotifier {
   Future<DeployedContract> initBsc(String contractAddr) async {
     final String abiCode = await rootBundle.loadString('assets/abi/abi.json');
     final contract = DeployedContract(
-      ContractAbi.fromJson(abiCode, 'AYF'),
+      ContractAbi.fromJson(abiCode, 'BEP-20'),
       EthereumAddress.fromHex(contractAddr),
     );
 
     return contract;
   }
 
-  Future<List> query(String functionName, List args) async {
-    final contract = await initBsc(AppConfig.bscAddr);
+  Future<List> query(
+      String contractAddress, String functionName, List args) async {
+    initClient();
+    final contract = await initBsc(contractAddress);
     final ethFunction = contract.function(functionName);
 
     final res = await _web3client.call(
@@ -55,7 +62,7 @@ class ContractProvider with ChangeNotifier {
   }
 
   Future<void> getBscDecimal() async {
-    final res = await query('decimals', []);
+    final res = await query(AppConfig.bscAddr, 'decimals', []);
 
     bscNative.chainDecimal = res[0].toString();
 
@@ -63,7 +70,7 @@ class ContractProvider with ChangeNotifier {
   }
 
   Future<void> getSymbol() async {
-    final res = await query('symbol', []);
+    final res = await query(AppConfig.bscAddr, 'symbol', []);
 
     bscNative.symbol = res[0].toString();
     notifyListeners();
@@ -101,7 +108,8 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> getBscBalance() async {
     bscNative.isContain = true;
-    final res = await query('balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+    final res = await query(
+        AppConfig.bscAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
     bscNative.balance = Fmt.bigIntToDouble(
       res[0] as BigInt,
       int.parse(bscNative.chainDecimal),
@@ -208,10 +216,8 @@ class ContractProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addToken(
-    String symbol,
-    BuildContext context,
-  ) async {
+  Future<void> addToken(String symbol, BuildContext context,
+      {String contractAddr}) async {
     if (symbol == 'KMPI') {
       initKmpi().then((value) async {
         await StorageServices.saveBool(kmpi.symbol, true);
@@ -221,8 +227,8 @@ class ContractProvider with ChangeNotifier {
 
       await StorageServices.saveBool('AYF', true);
 
-      getBscDecimal();
       getSymbol();
+      getBscDecimal();
       getBscBalance();
     } else if (symbol == 'BNB') {
       bnbNative.isContain = true;
@@ -235,16 +241,29 @@ class ContractProvider with ChangeNotifier {
       initAtd().then((value) async {
         await StorageServices.saveBool(atd.symbol, true);
       });
-    } else {
-      ApiProvider().connectPolNon();
+    } else if (symbol == 'DOT') {
       await StorageServices.saveBool('DOT', true);
+
+      ApiProvider().connectPolNon();
+      Provider.of<ApiProvider>(context, listen: false).isDotContain();
+    } else {
+      final symbol = await query(contractAddr, 'symbol', []);
+      final decimal = await query(contractAddr, 'decimals', []);
+      final balance = await query(
+          contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+
+      token.add(TokenModel(
+        decimal: decimal[0].toString(),
+        symbol: symbol[0].toString(),
+        balance: balance[0].toString(),
+      ));
     }
     notifyListeners();
     Navigator.pushNamedAndRemoveUntil(
         context, Home.route, ModalRoute.withName('/'));
   }
 
-  Future<void> removeToken(String symbol) async {
+  Future<void> removeToken(String symbol, BuildContext context) async {
     if (symbol == 'KMPI') {
       kmpi.isContain = false;
       await StorageServices.removeKey('KMPI');
@@ -257,9 +276,11 @@ class ContractProvider with ChangeNotifier {
     } else if (symbol == 'BNB') {
       bnbNative.isContain = false;
       await StorageServices.removeKey('BNB');
-    } else {
-      ApiProvider().dot.isContain = false;
+    } else if (symbol == 'DOT') {
       await StorageServices.removeKey('DOT');
+      Provider.of<ApiProvider>(context, listen: false).dotIsNotContain();
+    }else{
+      
     }
     notifyListeners();
   }

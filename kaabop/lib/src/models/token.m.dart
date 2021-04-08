@@ -2,6 +2,7 @@ import 'dart:ui';
 
 class TokenModel {
   String logo;
+  String decimal;
   String symbol;
   String org;
   String balance;
@@ -10,6 +11,7 @@ class TokenModel {
 
   TokenModel({
     this.logo,
+    this.decimal,
     this.symbol,
     this.org,
     this.balance,

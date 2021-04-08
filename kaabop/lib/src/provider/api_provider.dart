@@ -25,6 +25,12 @@ class ApiProvider with ChangeNotifier {
       color: Colors.transparent,
     ),
     TokenModel(
+      logo: 'assets/icons/polkadot.png',
+      symbol: 'DOT',
+      org: 'testnet',
+      color: Colors.transparent,
+    ),
+    TokenModel(
       logo: 'assets/bnb-2.png',
       symbol: 'BNB',
       org: 'tesnet',
@@ -45,7 +51,12 @@ class ApiProvider with ChangeNotifier {
     symbol: 'SEL',
     org: 'SELENDRA',
   );
-  NativeM dot = NativeM(balance: '0', isContain: false);
+  NativeM dot = NativeM(
+    symbol: 'DOT',
+    logo: 'assets/icons/polkadot.png',
+    balance: '0',
+    isContain: false,
+  );
 
   bool _isConnected = false;
 
@@ -75,9 +86,7 @@ class ApiProvider with ChangeNotifier {
   }
 
   Future<NetworkParams> connectPolNon() async {
-    dot.isContain = true;
     final node = NetworkParams();
-
     node.name = AppConfig.nodeName;
     node.endpoint = AppConfig.dotTestnet;
     node.ss58 = 0;
@@ -93,6 +102,16 @@ class ApiProvider with ChangeNotifier {
     notifyListeners();
 
     return res;
+  }
+
+  void isDotContain() {
+    dot.isContain = true;
+    notifyListeners();
+  }
+
+  void dotIsNotContain() {
+    dot.isContain = false;
+    notifyListeners();
   }
 
   Future<String> getPrivateKey(String mnemonic) async {
