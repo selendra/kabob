@@ -361,7 +361,7 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(
                   child: MyIconButton(
                 icon: 'telegram.svg',
-                iconSize: 32,
+                iconSize: 34,
                 onPressed: !apiStatus
                     ? null
                     : () async {
@@ -374,7 +374,7 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(
                   child: MyIconButton(
                 icon: 'wallet.svg',
-                iconSize: 32,
+                iconSize: 34,
                 onPressed: !apiStatus
                     ? null
                     : () async {

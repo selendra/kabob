@@ -2,8 +2,6 @@ import 'dart:ui';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
-import 'package:wallet_apps/src/models/token.m.dart';
-
 class AddAsset extends StatefulWidget {
   static const route = '/addasset';
   @override
@@ -18,6 +16,7 @@ class AddAssetState extends State<AddAsset> {
   final FlareControls _flareController = FlareControls();
 
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
+  FlareControls flareController = FlareControls();
   String _tokenSymbol = '';
 
   @override
@@ -66,16 +65,20 @@ class AddAssetState extends State<AddAsset> {
   }
 
   Future<void> addAsset() async {
+    await dialogLoading(context);
     if (_modelAsset.match) {
       Provider.of<ContractProvider>(context, listen: false)
           .addToken(ContractProvider().kmpi.symbol, context);
+ 
     } else {
       Provider.of<ContractProvider>(context, listen: false).addToken(
         _tokenSymbol,
         context,
         contractAddr: _modelAsset.controllerAssetCode.text,
       );
+  
     }
+    await enableAnimation();
   }
 
   Future<void> submitAsset() async {
@@ -140,6 +143,19 @@ class AddAssetState extends State<AddAsset> {
 
   void popScreen() {
     Navigator.pop(context, {});
+  }
+
+  Future<void> enableAnimation() async {
+    Navigator.pop(context);
+    setState(() {
+      _modelAsset.added = true;
+    });
+    flareController.play('Checkmark');
+
+    Timer(const Duration(milliseconds: 2500), () {
+      Navigator.pushNamedAndRemoveUntil(
+          context, Home.route, ModalRoute.withName('/'));
+    });
   }
 
   @override

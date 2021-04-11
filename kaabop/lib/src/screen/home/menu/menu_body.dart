@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet_apps/index.dart';
 
-import 'add_asset/search_asset.dart';
-
 class MenuBody extends StatelessWidget {
   final Map<String, dynamic> userInfo;
   final MenuModel model;
@@ -50,10 +48,6 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 1,
         onTap: () {
-          // showSearch(
-          //   context: context,
-          //   delegate: SearchAsset(),
-          // );
           Navigator.push(context, RouteAnimation(enterPage: AddAsset()));
         },
       ),

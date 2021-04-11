@@ -137,7 +137,7 @@ class SubmitTrxState extends State<SubmitTrx> {
           context, Home.route, ModalRoute.withName('/'));
     });
   }
-
+  
   void popScreen() {
     /* Close Current Screen */
     Navigator.pop(context, null);

@@ -1,7 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'asset_info/asset_info.dart';
-import 'menu/add_asset/search_asset.dart';
 
 class HomeBody extends StatelessWidget {
   final Function balanceOf;
@@ -238,7 +237,7 @@ class HomeBody extends StatelessWidget {
                         child: AssetItem(
                           value.bnbNative.logo,
                           value.bnbNative.symbol ?? '',
-                          'testnet',
+                          'Smart Chain',
                           value.bnbNative.balance ?? '0',
                           Colors.black,
                         ),
@@ -274,7 +273,7 @@ class HomeBody extends StatelessWidget {
                         child: AssetItem(
                           value.bscNative.logo,
                           value.bscNative.symbol ?? '',
-                          'testnet',
+                          'BEP-20',
                           value.bscNative.balance ?? '0',
                           Colors.black,
                         ),
@@ -285,46 +284,42 @@ class HomeBody extends StatelessWidget {
           ),
           Consumer<ContractProvider>(builder: (context, value, child) {
             return value.token.isNotEmpty
-                ? SizedBox(
-                    height: 500,
-                    child: ListView.builder(
-                      addAutomaticKeepAlives: false ,
-                        itemCount: value.token.length,
-                        itemBuilder: (context, index) {
-                          return Dismissible(
-                            key: UniqueKey(),
-                            direction: DismissDirection.endToStart,
-                            background: DismissibleBackground(),
-                            onDismissed: (direct) {
-                               setPortfolio();
-                              value.removeToken(value.bscNative.symbol, context);
-                            },
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  RouteAnimation(
-                                    enterPage: AssetInfo(
-                                      assetLogo: value.bscNative.logo,
-                                      balance:
-                                          value.token[index].balance ?? '0',
-                                      tokenSymbol:
-                                          value.token[index].symbol ?? '',
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: AssetItem(
-                                value.bscNative.logo,
-                                value.token[index].symbol ?? '',
-                                'testnet',
-                                value.token[index].balance ?? '0',
-                                Colors.black,
+                ? ListView.builder(
+                    shrinkWrap: true,
+                    addAutomaticKeepAlives: false,
+                    itemCount: value.token.length,
+                    itemBuilder: (context, index) {
+                      return Dismissible(
+                        key: UniqueKey(),
+                        direction: DismissDirection.endToStart,
+                        background: DismissibleBackground(),
+                        onDismissed: (direct) {
+                          setPortfolio();
+                          value.removeToken(value.token[index].symbol, context);
+                        },
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              RouteAnimation(
+                                enterPage: AssetInfo(
+                                  assetLogo: value.bscNative.logo,
+                                  balance: value.token[index].balance ?? '0',
+                                  tokenSymbol: value.token[index].symbol ?? '',
+                                ),
                               ),
-                            ),
-                          );
-                        }),
-                  )
+                            );
+                          },
+                          child: AssetItem(
+                            value.bscNative.logo,
+                            value.token[index].symbol ?? '',
+                            'testnet',
+                            value.token[index].balance ?? '0',
+                            Colors.black,
+                          ),
+                        ),
+                      );
+                    })
                 : Container();
           }),
           const SizedBox(

@@ -69,19 +69,10 @@ class SearchAsset extends SearchDelegate {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () async {
-                  await StorageServices.readBool(searchProducts[index].symbol)
-                      .then((value) async {
-                    if (!value) {
-                      Provider.of<ContractProvider>(context, listen: false)
-                          .addToken(searchProducts[index].symbol, context);
-                    } else {
-                      await dialog(
-                        context,
-                        const Text('This asset is already added!'),
-                        const Text('Asset Added'),
-                      );
-                    }
-                  });
+                  Provider.of<ContractProvider>(context, listen: false)
+                      .addToken(searchProducts[index].symbol, context);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Home.route, ModalRoute.withName('/'));
                 },
                 child: Container(
                   padding: const EdgeInsets.all(8.0),
@@ -115,19 +106,11 @@ class SearchAsset extends SearchDelegate {
             itemBuilder: (context, index) {
               return GestureDetector(
                 onTap: () async {
-                  await StorageServices.readBool(searchProducts[index].symbol)
-                      .then((value) async {
-                    if (!value) {
-                      Provider.of<ContractProvider>(context, listen: false)
-                          .addToken(searchProducts[index].symbol, context);
-                    } else {
-                      await dialog(
-                        context,
-                        const Text('This asset is already added!'),
-                        const Text('Asset Added'),
-                      );
-                    }
-                  });
+                  Provider.of<ContractProvider>(context, listen: false)
+                      .addToken(searchProducts[index].symbol, context);
+
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Home.route, ModalRoute.withName('/'));
                 },
                 child: Container(
                   // padding: const EdgeInsets.all(8.0),

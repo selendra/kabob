@@ -16,6 +16,7 @@ class StorageServices {
   Future<void> writeSecure(String key, String value) async {
     await _storage.write(key: key, value: value);
   }
+
   Future<void> clearKeySecure(String key) async {
     await _storage.delete(key: key);
   }
@@ -76,6 +77,39 @@ class StorageServices {
     await _preferences.setString(key, jsonEncode(txHistoryList));
 
     return _preferences;
+  }
+
+  static Future<void> saveContractAddr(String contractAddr) async {
+    List contractAddrList = [];
+    final res = await fetchData('contractList');
+
+    if (res != null) {
+      contractAddrList = res as List;
+
+      final itemContain =
+          contractAddrList.where((element) => element == contractAddr);
+
+      if (itemContain == null) {
+        contractAddrList.add(contractAddr);
+        await StorageServices.setData(contractAddrList, 'contractList');
+      }
+    } else {
+      contractAddrList.add(contractAddr);
+      await StorageServices.setData(contractAddrList, 'contractList');
+    }
+  }
+
+  static Future<void> removeContractAddr(String contractAddr) async {
+    List contractAddrList = [];
+    final res = await fetchData('contractList');
+
+    if (res != null) {
+      contractAddrList = res as List;
+
+      contractAddrList.removeWhere((element) => element == contractAddr);
+
+      await StorageServices.setData(contractAddrList, 'contractList');
+    }
   }
 
   // ignore: avoid_positional_boolean_parameters

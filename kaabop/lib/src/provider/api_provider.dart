@@ -33,13 +33,13 @@ class ApiProvider with ChangeNotifier {
     TokenModel(
       logo: 'assets/bnb-2.png',
       symbol: 'BNB',
-      org: 'tesnet',
+      org: 'smart chain',
       color: Colors.transparent,
     ),
     TokenModel(
-      logo: 'assets/icons/kusama.png',
+      logo: 'assets/FingerPrint1.png',
       symbol: 'AYF',
-      org: 'tesnet',
+      org: 'BEP-20',
       color: Colors.transparent,
     ),
   ];

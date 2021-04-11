@@ -17,14 +17,15 @@ class ContractProvider with ChangeNotifier {
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();
   NativeM bscNative = NativeM(
-    logo: 'assets/icons/kusama.png',
+    logo: 'assets/FingerPrint1.png',
     symbol: 'AYF',
+    org: 'BEP-20',
     isContain: false,
   );
   NativeM bnbNative = NativeM(
     logo: 'assets/bnb-2.png',
     symbol: 'BNB',
-    org: 'testnet',
+    org: 'Smart Chain',
     isContain: false,
   );
   Client _httpClient;
@@ -207,8 +208,6 @@ class ContractProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> initAYC() async {}
-
   Future<void> fetchAtdBalance() async {
     final res = await sdk.api.getAToken(keyring.current.address);
     atd.balance = BigInt.parse(res).toString();
@@ -219,48 +218,58 @@ class ContractProvider with ChangeNotifier {
   Future<void> addToken(String symbol, BuildContext context,
       {String contractAddr}) async {
     if (symbol == 'KMPI') {
-      initKmpi().then((value) async {
-        await StorageServices.saveBool(kmpi.symbol, true);
-      });
+      if (!kmpi.isContain) {
+        initKmpi().then((value) async {
+          await StorageServices.saveBool(kmpi.symbol, true);
+        });
+      }
     } else if (symbol == 'AYF') {
-      bscNative.isContain = true;
+      if (!bscNative.isContain) {
+        bscNative.isContain = true;
 
-      await StorageServices.saveBool('AYF', true);
+        await StorageServices.saveBool('AYF', true);
 
-      getSymbol();
-      getBscDecimal();
-      getBscBalance();
+        await getSymbol();
+        await getBscDecimal();
+        await getBscBalance();
+      }
     } else if (symbol == 'BNB') {
-      bnbNative.isContain = true;
+      if (!bnbNative.isContain) {
+        bnbNative.isContain = true;
 
-      await StorageServices.saveBool('BNB', true);
+        await StorageServices.saveBool('BNB', true);
 
-      getBscDecimal();
-      getBnbBalance();
+        await getBscDecimal();
+        getBnbBalance();
+      }
     } else if (symbol == 'ATD') {
-      initAtd().then((value) async {
-        await StorageServices.saveBool(atd.symbol, true);
-      });
+      if (!atd.isContain) {
+        initAtd().then((value) async {
+          await StorageServices.saveBool(atd.symbol, true);
+        });
+      }
     } else if (symbol == 'DOT') {
-      await StorageServices.saveBool('DOT', true);
+      if (!ApiProvider().dot.isContain) {
+        await StorageServices.saveBool('DOT', true);
 
-      ApiProvider().connectPolNon();
-      Provider.of<ApiProvider>(context, listen: false).isDotContain();
+        ApiProvider().connectPolNon();
+        Provider.of<ApiProvider>(context, listen: false).isDotContain();
+      }
     } else {
       final symbol = await query(contractAddr, 'symbol', []);
       final decimal = await query(contractAddr, 'decimals', []);
-      final balance = await query(
-          contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+      final balance = await query(contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
       token.add(TokenModel(
+        contractAddr: contractAddr,
         decimal: decimal[0].toString(),
         symbol: symbol[0].toString(),
         balance: balance[0].toString(),
       ));
+
+      await StorageServices.saveContractAddr(contractAddr);
     }
     notifyListeners();
-    Navigator.pushNamedAndRemoveUntil(
-        context, Home.route, ModalRoute.withName('/'));
   }
 
   Future<void> removeToken(String symbol, BuildContext context) async {
@@ -279,8 +288,18 @@ class ContractProvider with ChangeNotifier {
     } else if (symbol == 'DOT') {
       await StorageServices.removeKey('DOT');
       Provider.of<ApiProvider>(context, listen: false).dotIsNotContain();
-    }else{
-      
+    } else {
+      final item = token.firstWhere(
+        (element) => element.symbol.toLowerCase().startsWith(
+              symbol.toLowerCase(),
+            ),
+      );
+      await StorageServices.removeContractAddr(item.contractAddr);
+      token.removeWhere(
+        (element) => element.symbol.toLowerCase().startsWith(
+              symbol.toLowerCase(),
+            ),
+      );
     }
     notifyListeners();
   }
