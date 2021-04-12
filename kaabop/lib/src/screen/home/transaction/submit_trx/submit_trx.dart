@@ -51,21 +51,13 @@ class SubmitTrxState extends State<SubmitTrx> {
     super.initState();
   }
 
-  List<Map<String, String>> list = [
-    {'asset_code': 'SEL'},
-    {'asset_code': 'DOT'},
-    {'asset_code': 'KMPI'},
-    {'asset_code': 'BNB'},
-    {'asset_code': 'BSC'}
-  ];
-
-  List<Map<String, String>> nativeList = [
-    {'asset_code': 'SEL'},
-    {'asset_code': 'DOT'},
-    {'asset_code': 'KMPI'},
-    {'asset_code': 'BNB'},
-    {'asset_code': 'AYF'}
-  ];
+  // List<Map<String, String>> nativeList = [
+  //   {'asset_code': 'SEL'},
+  //   {'asset_code': 'DOT'},
+  //   {'asset_code': 'KMPI'},
+  //   {'asset_code': 'BNB'},
+  //   {'asset_code': 'AYF'}
+  // ];
 
   void removeAllFocus() {
     _scanPayM.nodeAmount.unfocus();
@@ -137,7 +129,7 @@ class SubmitTrxState extends State<SubmitTrx> {
           context, Home.route, ModalRoute.withName('/'));
     });
   }
-  
+
   void popScreen() {
     /* Close Current Screen */
     Navigator.pop(context, null);
@@ -385,13 +377,13 @@ class SubmitTrxState extends State<SubmitTrx> {
     _scanPayM.nodeReceiverAddress.unfocus();
   }
 
-  PopupMenuItem item(Map<String, dynamic> list) {
+  PopupMenuItem item(List list) {
     /* Display Drop Down List */
     return PopupMenuItem(
-      value: list["asset_code"],
+      value: list,
       child: Align(
         child: Text(
-          list["asset_code"].toString(),
+          list.toString(),
         ),
       ),
     );
@@ -399,7 +391,6 @@ class SubmitTrxState extends State<SubmitTrx> {
 
   @override
   Widget build(BuildContext context) {
-    final contract = Provider.of<ContractProvider>(context);
     return Scaffold(
       key: _scanPayM.globalKey,
       body: _loading
@@ -410,16 +401,19 @@ class SubmitTrxState extends State<SubmitTrx> {
               height: MediaQuery.of(context).size.height,
               child: Stack(
                 children: <Widget>[
-                  SubmitTrxBody(
-                    enableInput: widget.enableInput,
-                    dialog: dialogBox,
-                    scanPayM: _scanPayM,
-                    onChanged: onChanged,
-                    onSubmit: onSubmit,
-                    clickSend: clickSend,
-                    resetAssetsDropDown: resetAssetsDropDown,
-                    item: item,
-                    list: contract.kmpi.isContain ? list : nativeList,
+                  Consumer<WalletProvider>(
+                    builder: (context, value, child) {
+                      return SubmitTrxBody(
+                        enableInput: widget.enableInput,
+                        dialog: dialogBox,
+                        scanPayM: _scanPayM,
+                        onChanged: onChanged,
+                        onSubmit: onSubmit,
+                        clickSend: clickSend,
+                        resetAssetsDropDown: resetAssetsDropDown,
+                        list: value.listSymbol,
+                      );
+                    },
                   ),
                   if (_scanPayM.isPay == false)
                     Container()

@@ -31,4 +31,5 @@ class AppText {
   static const String importAccView = '/import';
   static const String contentBackup = '/contentsbackup';
   static const String recieveWalletView = '/recieveWallet';
+  static const String claimAirdropView = '/claimairdrop';
 }

@@ -40,13 +40,21 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 0,
         onTap: () {
-          Navigator.pushNamed(context, AppText.recieveWalletView);
+          Navigator.pushNamed(context, AppText.claimAirdropView);
         },
       ),
 
       MyListTile(
         index: 1,
         subIndex: 1,
+        onTap: () {
+          Navigator.pushNamed(context, AppText.recieveWalletView);
+        },
+      ),
+
+      MyListTile(
+        index: 1,
+        subIndex: 2,
         onTap: () {
           Navigator.push(context, RouteAnimation(enterPage: AddAsset()));
         },

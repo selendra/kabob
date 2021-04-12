@@ -222,12 +222,15 @@ class ContractProvider with ChangeNotifier {
         initKmpi().then((value) async {
           await StorageServices.saveBool(kmpi.symbol, true);
         });
+        Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
       }
     } else if (symbol == 'AYF') {
       if (!bscNative.isContain) {
         bscNative.isContain = true;
 
         await StorageServices.saveBool('AYF', true);
+
+        Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
 
         await getSymbol();
         await getBscDecimal();
@@ -239,6 +242,8 @@ class ContractProvider with ChangeNotifier {
 
         await StorageServices.saveBool('BNB', true);
 
+        Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
+
         await getBscDecimal();
         getBnbBalance();
       }
@@ -246,19 +251,23 @@ class ContractProvider with ChangeNotifier {
       if (!atd.isContain) {
         initAtd().then((value) async {
           await StorageServices.saveBool(atd.symbol, true);
+          Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
         });
       }
     } else if (symbol == 'DOT') {
       if (!ApiProvider().dot.isContain) {
         await StorageServices.saveBool('DOT', true);
+   
 
         ApiProvider().connectPolNon();
         Provider.of<ApiProvider>(context, listen: false).isDotContain();
+        Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
       }
     } else {
       final symbol = await query(contractAddr, 'symbol', []);
       final decimal = await query(contractAddr, 'decimals', []);
-      final balance = await query(contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+      final balance = await query(
+          contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
       token.add(TokenModel(
         contractAddr: contractAddr,
@@ -268,6 +277,7 @@ class ContractProvider with ChangeNotifier {
       ));
 
       await StorageServices.saveContractAddr(contractAddr);
+      Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol[0].toString());
     }
     notifyListeners();
   }
@@ -276,18 +286,23 @@ class ContractProvider with ChangeNotifier {
     if (symbol == 'KMPI') {
       kmpi.isContain = false;
       await StorageServices.removeKey('KMPI');
+
     } else if (symbol == 'ATD') {
       atd.isContain = false;
       await StorageServices.removeKey('ATD');
+
     } else if (symbol == 'AYF') {
       bscNative.isContain = false;
       await StorageServices.removeKey('AYF');
+   
     } else if (symbol == 'BNB') {
       bnbNative.isContain = false;
       await StorageServices.removeKey('BNB');
+ 
     } else if (symbol == 'DOT') {
       await StorageServices.removeKey('DOT');
       Provider.of<ApiProvider>(context, listen: false).dotIsNotContain();
+      
     } else {
       final item = token.firstWhere(
         (element) => element.symbol.toLowerCase().startsWith(
@@ -301,6 +316,7 @@ class ContractProvider with ChangeNotifier {
             ),
       );
     }
+    Provider.of<WalletProvider>(context,listen: false).removeTokenSymbol(symbol);
     notifyListeners();
   }
 

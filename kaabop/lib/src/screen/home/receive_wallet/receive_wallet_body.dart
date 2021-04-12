@@ -1,20 +1,26 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/components/reuse_dropdown.dart';
 
 class ReceiveWalletBody extends StatelessWidget {
   final GlobalKey keyQrShare;
   final GlobalKey<ScaffoldState> globalKey;
   final HomeModel homeM;
   final GetWalletMethod method;
+  final Function(String) onChanged;
   final String name;
   final String wallet;
+  final String initialValue;
 
   const ReceiveWalletBody({
     this.keyQrShare,
     this.globalKey,
     this.homeM,
     this.method,
+    this.onChanged,
     this.name,
     this.wallet,
+    this.initialValue,
   });
 
   @override
@@ -64,6 +70,42 @@ class ReceiveWalletBody extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
+                            Stack(
+                              children: [
+                                Align(
+                                  child: Container(
+                                    padding: const EdgeInsets.only(top: 14.0),
+                                    margin: const EdgeInsets.only(bottom: 36.0),
+                                    child: const MyText(
+                                      text: 'Wallet',
+                                      fontSize: 20.0,
+                                      color: "#FFFFFF",
+                                    ),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.topRight,
+                                  child: Container(
+                                    padding: const EdgeInsets.only(right: 16.0),
+                                    margin: const EdgeInsets.only(bottom: 36.0),
+                                    child: Consumer<WalletProvider>(
+                                      builder: (context, value, child) {
+                                        return ReuseDropDown(
+                                          initialValue: initialValue,
+                                          onChanged: onChanged,
+                                          itemsList: value.listSymbol,
+                                          style: TextStyle(
+                                            color: hexaCodeToColor(
+                                              AppColors.textColor,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                             qrCodeGenerator(
                               wallet,
                               AppConfig.logoQrEmbedded,

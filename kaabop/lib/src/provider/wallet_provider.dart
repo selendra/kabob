@@ -3,10 +3,11 @@ import 'package:provider/provider.dart';
 
 import '../../index.dart';
 
-
 class WalletProvider with ChangeNotifier {
   final List<PortfolioM> _portfolioM = [];
   List<Map<String, String>> availableToken = [];
+
+  List<String> listSymbol = ['SEL'];
 
   List<Color> pieColorList = [
     hexaCodeToColor("#D65B09"),
@@ -24,6 +25,15 @@ class WalletProvider with ChangeNotifier {
   void setProfolio() {
     clearPortfolio();
     getPortfolio();
+  }
+
+  void addTokenSymbol(String symbol) {
+    listSymbol.add(symbol);
+    notifyListeners();
+  }
+  void removeTokenSymbol(String symbol) {
+    listSymbol.remove(symbol);
+    notifyListeners();
   }
 
   void addAvaibleToken(Map<String, String> token) {

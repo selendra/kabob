@@ -498,14 +498,7 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
-      Container(
-        margin: const EdgeInsets.only(bottom: 36.0),
-        child: const MyText(
-          text: 'Wallet',
-          fontSize: 20.0,
-          color: "#FFFFFF",
-        ),
-      ),
+    
       Container(
         decoration: BoxDecoration(
           border: Border.all(

@@ -30,6 +30,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AppText.recieveWalletView:
       return RouteAnimation(enterPage: ReceiveWallet());
       break;
+    case AppText.claimAirdropView:
+      return RouteAnimation(enterPage: ClaimAirDrop());
+      break;
     default:
       return RouteAnimation(enterPage: MySplashScreen());
   }

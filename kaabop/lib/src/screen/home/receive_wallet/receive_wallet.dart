@@ -4,7 +4,6 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 
 class ReceiveWallet extends StatefulWidget {
-
   //static const route = '/recievewallet';
 
   @override
@@ -17,17 +16,42 @@ class ReceiveWalletState extends State<ReceiveWallet> {
   GlobalKey<ScaffoldState> _globalKey;
   final GlobalKey _keyQrShare = GlobalKey();
 
-
   final GetWalletMethod _method = GetWalletMethod();
   String name = 'username';
   String wallet = 'wallet address';
+  String initialValue = 'SEL';
 
   @override
   void initState() {
-
     _globalKey = GlobalKey<ScaffoldState>();
+
     AppServices.noInternetConnection(_globalKey);
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    name = Provider.of<ApiProvider>(context).accountM.name;
+    wallet = Provider.of<ApiProvider>(context).accountM.address;
+    super.didChangeDependencies();
+  }
+
+  void onChanged(String value) {
+    setState(() {
+      initialValue = value;
+    });
+    changedEthAdd(value);
+  }
+
+  void changedEthAdd(String value) {
+    if (value != 'SEL' && value != 'DOT' && value != 'KMPI') {
+      setState(() {
+        wallet = Provider.of<ContractProvider>(context, listen: false).ethAdd;
+      });
+    } else {
+      wallet =
+          Provider.of<ApiProvider>(context, listen: false).accountM.address;
+    }
   }
 
   @override
@@ -36,16 +60,14 @@ class ReceiveWalletState extends State<ReceiveWallet> {
       key: _globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
-        child: Consumer<ApiProvider>(
-          builder: (context, value, child) {
-            return ReceiveWalletBody(
-              keyQrShare: _keyQrShare,
-              globalKey: _globalKey,
-              method: _method,
-              name: value.accountM.name,
-              wallet: value.accountM.address,
-            );
-          },
+        child: ReceiveWalletBody(
+          keyQrShare: _keyQrShare,
+          globalKey: _globalKey,
+          method: _method,
+          name: name,
+          wallet: wallet,
+          initialValue: initialValue,
+          onChanged: onChanged,
         ),
       ),
     );

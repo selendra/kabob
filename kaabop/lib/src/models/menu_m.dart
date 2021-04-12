@@ -20,6 +20,7 @@ class MenuModel {
     {
       'title': "Wallet",
       'sub': [
+        {'icon': "assets/icons/form.svg", 'subTitle': 'Claim Airdrop'},
         {'icon': "assets/icons/wallet.svg", 'subTitle': 'Wallet'},
         {'icon': "assets/icons/plus.svg", 'subTitle': 'Asset'}
       ]

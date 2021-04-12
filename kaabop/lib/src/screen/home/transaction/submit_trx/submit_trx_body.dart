@@ -1,4 +1,5 @@
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/components/reuse_dropdown.dart';
 
 class SubmitTrxBody extends StatelessWidget {
   final bool enableInput;
@@ -7,9 +8,8 @@ class SubmitTrxBody extends StatelessWidget {
   final String Function(String) onChanged;
   final Function onSubmit;
   final void Function() clickSend;
-  final Function resetAssetsDropDown;
-
-  final List<Map<String, String>> list;
+  final Function(String) resetAssetsDropDown;
+  final List<String> list;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
   const SubmitTrxBody({
@@ -54,16 +54,7 @@ class SubmitTrxBody extends StatelessWidget {
                   : null,
           onChanged: onChanged,
           onSubmit: () {}),
-      // MyInputField(
-      //     pBottom: 16,
-      //     labelText: "Memo",
-      //     textInputFormatter: [
-      //       LengthLimitingTextInputFormatter(TextField.noMaxLength)
-      //     ],
-      //     controller: scanPayM.controlMemo,
-      //     focusNode: scanPayM.nodeMemo,
-      //     onChanged: onChanged,
-      //     onSubmit: () {})
+    
     ];
 
     return Column(
@@ -88,13 +79,45 @@ class SubmitTrxBody extends StatelessWidget {
                     left: 16,
                     right: 16,
                   ),
-                  child: customDropDown(
-                    scanPayM.asset ?? "Asset name",
-                    list,
-                    scanPayM,
-                    resetAssetsDropDown,
-                    item,
+
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                      top: 11.0,
+                      bottom: 11.0,
+                      left: 26.0,
+                      right: 14.0,
+                    ),
+                    decoration: BoxDecoration(
+                      color: hexaCodeToColor(AppColors.cardColor),
+                      borderRadius: BorderRadius.circular(size5),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        const Expanded(
+                          child: MyText(
+                            text: 'Asset',
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+                        ReuseDropDown(
+                          initialValue: scanPayM.asset ?? "Asset name",
+                          onChanged: resetAssetsDropDown,
+                          itemsList: list,
+                          style: TextStyle(
+                            color: hexaCodeToColor(AppColors.textColor),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+
+                  // child: customDropDown(
+                  //   scanPayM.asset ?? "Asset name",
+                  //   list,
+                  //   scanPayM,
+                  //   resetAssetsDropDown,
+                  //   item,
+                  // ),
                 ),
                 listInput[1],
                 //listInput[2],

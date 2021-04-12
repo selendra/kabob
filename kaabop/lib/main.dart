@@ -80,6 +80,8 @@ class AppState extends State<App> {
   Future<void> isDotContain() async {
     await StorageServices.readBool('DOT').then((value) {
       if (value) {
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol('DOT');
         Provider.of<ApiProvider>(context, listen: false).isDotContain();
         Provider.of<ApiProvider>(context, listen: false).connectPolNon();
       }
@@ -89,6 +91,8 @@ class AppState extends State<App> {
   Future<void> isBnbContain() async {
     await StorageServices.readBool('BNB').then((value) {
       if (value) {
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol('BNB');
         Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
         Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
       }
@@ -98,6 +102,8 @@ class AppState extends State<App> {
   Future<void> isBscContain() async {
     await StorageServices.readBool('AYF').then((value) {
       if (value) {
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol('AYF');
         Provider.of<ContractProvider>(context, listen: false)
             .getBscDecimal()
             .then((value) {
@@ -111,6 +117,8 @@ class AppState extends State<App> {
   Future<void> initContract() async {
     await StorageServices.readBool('KMPI').then((value) {
       if (value) {
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol('KMPI');
         Provider.of<ContractProvider>(context, listen: false).initKmpi();
       }
     });
@@ -118,6 +126,8 @@ class AppState extends State<App> {
     await StorageServices.readBool('ATD').then(
       (value) {
         if (value) {
+          Provider.of<WalletProvider>(context, listen: false)
+              .addTokenSymbol('ATD');
           Provider.of<ContractProvider>(context, listen: false).initAtd();
           Provider.of<ContractProvider>(context, listen: false)
               .fetchAtdBalance();
