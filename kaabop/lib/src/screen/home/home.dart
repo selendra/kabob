@@ -2,9 +2,7 @@ import 'dart:ui';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/contract_provider.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
+import 'package:wallet_apps/src/screen/home/claim_airdrop/intro_airdrop.dart';
 
 class Home extends StatefulWidget {
   final bool apiConnected;
@@ -32,6 +30,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       status = null;
       Timer(const Duration(seconds: 3), () {
         setPortfolio();
+        showAirdrop();
       });
     }
 
@@ -111,14 +110,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     _homeM.globalKey.currentState.openDrawer();
   }
 
-  Future<void> onRefresh() async {
-    await Future.delayed(const Duration(milliseconds: 300)).then((value) {
-      setPortfolio();
-      Provider.of<ContractProvider>(context,listen: false).getBnbBalance();
-      Provider.of<ContractProvider>(context,listen: false).getBscBalance();
-    });
-  }
-
   void setPortfolio() {
     final walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
@@ -126,6 +117,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     final contract = Provider.of<ContractProvider>(context, listen: false);
 
     final api = Provider.of<ApiProvider>(context, listen: false);
+
+    walletProvider.addAvaibleToken({
+      'symbol': api.nativeM.symbol,
+      'balance': api.nativeM.balance ?? '0',
+    });
     if (contract.kmpi.isContain) {
       walletProvider.addAvaibleToken({
         'symbol': contract.kmpi.symbol,
@@ -140,16 +136,48 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       });
     }
 
-    walletProvider.addAvaibleToken({
-      'symbol': api.nativeM.symbol,
-      'balance': api.nativeM.balance ?? '0',
-    });
+    if (contract.bnbNative.isContain) {
+      walletProvider.addAvaibleToken({
+        'symbol': contract.bnbNative.symbol,
+        'balance': contract.bnbNative.balance,
+      });
+    }
 
-    if (!contract.kmpi.isContain && !contract.atd.isContain) {
-      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+    if (api.dot.isContain) {
+      walletProvider.addAvaibleToken({
+        'symbol': api.dot.symbol,
+        'balance': api.dot.balance,
+      });
+    }
+
+    if (contract.bscNative.isContain) {
+      walletProvider.addAvaibleToken({
+        'symbol': '${contract.bscNative.symbol} (BEP-20)',
+        'balance': contract.bscNative.balance,
+      });
+    }
+
+    if (contract.token.isNotEmpty) {
+      for (int i = 0; i < contract.token.length; i++) {
+        walletProvider.addAvaibleToken({
+          'symbol': contract.token[i].symbol,
+          'balance': contract.token[i].balance,
+        });
+      }
     }
 
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  }
+
+  Future<void> onClosed() async {
+    await StorageServices.setUserID('claim', 'claim');
+    Navigator.pop(context);
+  }
+
+  Future<void> onClaim() async {
+    Navigator.pop(context);
+    await StorageServices.setUserID('claim', 'claim');
+    Navigator.push(context, RouteAnimation(enterPage: IntroAirdrop()));
   }
 
   Future<void> handle() async {
@@ -159,10 +187,20 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       });
 
       Navigator.of(dialogContext).pop();
-      Timer(const Duration(seconds: 3), () {
+      Timer(const Duration(seconds: 3), () async {
         setPortfolio();
+        showAirdrop();
       });
     }
+  }
+
+  Future<void> showAirdrop() async {
+    Timer(const Duration(seconds: 1), () async {
+      final res = await StorageServices.fetchData('claim');
+      if (res == null) {
+        await dialogEvent(context, 'assets/bep20.png', onClosed, onClaim);
+      }
+    });
   }
 
   @override
@@ -174,13 +212,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
         child: Menu(_homeM.userData),
       ),
-      body: RefreshIndicator(
-        onRefresh: onRefresh,
-        child: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: HomeBody(
-            setPortfolio: setPortfolio,
-          ),
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: HomeBody(
+          setPortfolio: setPortfolio,
         ),
       ),
       floatingActionButton: SizedBox(

@@ -70,17 +70,13 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         }
         Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
 
+        isDotContain();
+        isBnbContain();
+        isBscContain();
+
         Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
         Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
-        Provider.of<WalletProvider>(context, listen: false).addAvaibleToken({
-          'symbol':
-              Provider.of<ApiProvider>(context, listen: false).nativeM.symbol,
-          'balance': Provider.of<ApiProvider>(context, listen: false)
-                  .nativeM
-                  .balance ??
-              '0',
-        });
 
         await dialogSuccess(
           context,
@@ -105,6 +101,29 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       );
       Navigator.pop(context);
     }
+  }
+
+  Future<void> isDotContain() async {
+    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
+    Provider.of<ApiProvider>(context, listen: false).isDotContain();
+    Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+  }
+
+  Future<void> isBnbContain() async {
+    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
+    Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
+    Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+  }
+
+  Future<void> isBscContain() async {
+    Provider.of<WalletProvider>(context, listen: false)
+        .addTokenSymbol('SEL (BEP-20)');
+    Provider.of<ContractProvider>(context, listen: false).getSymbol();
+    Provider.of<ContractProvider>(context, listen: false)
+        .getBscDecimal()
+        .then((value) {
+      Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+    });
   }
 
   // ignore: avoid_void_async

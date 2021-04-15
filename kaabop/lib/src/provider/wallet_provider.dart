@@ -9,17 +9,18 @@ class WalletProvider with ChangeNotifier {
 
   List<String> listSymbol = ['SEL'];
 
-  List<Color> pieColorList = [
-    hexaCodeToColor("#D65B09"),
-    hexaCodeToColor(AppColors.secondary),
-    hexaCodeToColor("#F0C90A"),
+  List<Color> pieColorList = const [
+    Color(0xFFff7675),
+    Color(0xFF74b9ff),
+    Color(0xFF55efc4),
+    Color(0xFFffeaa7),
+    Color(0xFFa29bfe),
+    Color(0xFFfd79a8),
+    Color(0xFFe17055),
+    Color(0xFF00b894),
   ];
 
-  Map<String, double> dataMap = {
-    'SEL': 100.0,
-    'KMPI': 0.0,
-    'ATD': 0.0,
-  };
+  Map<String, double> dataMap = {};
   List<PortfolioM> get portfolio => _portfolioM;
 
   void setProfolio() {
@@ -31,6 +32,7 @@ class WalletProvider with ChangeNotifier {
     listSymbol.add(symbol);
     notifyListeners();
   }
+
   void removeTokenSymbol(String symbol) {
     listSymbol.remove(symbol);
     notifyListeners();
@@ -87,11 +89,13 @@ class WalletProvider with ChangeNotifier {
 
   Future<void> getPortfolio() async {
     _portfolioM.clear();
+    dataMap.clear();
 
     double temp = 0.0;
 
     await getTotal().then((total) {
       double percen = 0.0;
+
       for (int i = 0; i < availableToken.length; i++) {
         temp = double.parse(availableToken[i]['balance']) / total;
 
@@ -101,36 +105,19 @@ class WalletProvider with ChangeNotifier {
               symbol: availableToken[i]['symbol'],
               percentage: '0'));
         } else {
-          if (availableToken[i]['symbol'] == 'SEL') {
-            percen = temp * 100;
-            _portfolioM.add(PortfolioM(
-              color: pieColorList[0],
-              symbol: 'SEL',
-              percentage: percen.toStringAsFixed(4),
-            ));
-            dataMap.update('SEL',
-                (value) => value = double.parse(percen.toStringAsFixed(4)));
-          } else if (availableToken[i]['symbol'] == 'KMPI') {
-            percen = temp * 100;
-            _portfolioM.add(PortfolioM(
-                color: pieColorList[1],
-                symbol: 'KMPI',
-                percentage: percen.toStringAsFixed(4)));
-            dataMap.update('KMPI',
-                (value) => value = double.parse(percen.toStringAsFixed(4)));
-          } else if (availableToken[i]['symbol'] == 'ATD') {
-            percen = temp * 100;
-            _portfolioM.add(PortfolioM(
-                color: pieColorList[2],
-                symbol: 'ATD',
-                percentage: percen.toStringAsFixed(4)));
-            dataMap.update('ATD',
-                (value) => value = double.parse(percen.toStringAsFixed(4)));
-          }
+          percen = temp * 100;
+          _portfolioM.add(PortfolioM(
+            color: pieColorList[i],
+            symbol: availableToken[i]['symbol'],
+            percentage: percen.toStringAsFixed(4),
+          ));
+
+          dataMap.addAll({
+            availableToken[i]['symbol']: double.parse(percen.toStringAsFixed(4))
+          });
         }
+        notifyListeners();
       }
     });
-
-    notifyListeners();
   }
 }

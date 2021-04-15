@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/screen/home/claim_airdrop/intro_airdrop.dart';
 
 class MenuBody extends StatelessWidget {
   final Map<String, dynamic> userInfo;
@@ -40,7 +41,8 @@ class MenuBody extends StatelessWidget {
         index: 1,
         subIndex: 0,
         onTap: () {
-          Navigator.pushNamed(context, AppText.claimAirdropView);
+         // Navigator.pushNamed(context, AppText.claimAirdropView);
+         Navigator.push(context, RouteAnimation(enterPage: IntroAirdrop()));
         },
       ),
 

@@ -17,8 +17,7 @@ class ContractProvider with ChangeNotifier {
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();
   NativeM bscNative = NativeM(
-    logo: 'assets/FingerPrint1.png',
-    symbol: 'AYF',
+    logo: 'assets/native_token.png',
     org: 'BEP-20',
     isContain: false,
   );
@@ -35,7 +34,7 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> initClient() async {
     _httpClient = Client();
-    _web3client = Web3Client(AppConfig.bscTestNet, _httpClient);
+    _web3client = Web3Client(AppConfig.bscMainNet, _httpClient);
   }
 
   Future<DeployedContract> initBsc(String contractAddr) async {
@@ -63,7 +62,7 @@ class ContractProvider with ChangeNotifier {
   }
 
   Future<void> getBscDecimal() async {
-    final res = await query(AppConfig.bscAddr, 'decimals', []);
+    final res = await query(AppConfig.bscMainnetAddr, 'decimals', []);
 
     bscNative.chainDecimal = res[0].toString();
 
@@ -71,7 +70,7 @@ class ContractProvider with ChangeNotifier {
   }
 
   Future<void> getSymbol() async {
-    final res = await query(AppConfig.bscAddr, 'symbol', []);
+    final res = await query(AppConfig.bscMainnetAddr, 'symbol', []);
 
     bscNative.symbol = res[0].toString();
     notifyListeners();
@@ -98,8 +97,9 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> getBnbBalance() async {
     bnbNative.isContain = true;
+    final ethAddr = await StorageServices().readSecure('etherAdd');
     final balance = await _web3client.getBalance(
-      EthereumAddress.fromHex(ethAdd),
+      EthereumAddress.fromHex(ethAddr),
     );
 
     bnbNative.balance = balance.getValueInUnit(EtherUnit.ether).toString();
@@ -109,12 +109,31 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> getBscBalance() async {
     bscNative.isContain = true;
-    final res = await query(
-        AppConfig.bscAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+    final res = await query(AppConfig.bscMainnetAddr, 'balanceOf',
+        [EthereumAddress.fromHex(ethAdd)]);
     bscNative.balance = Fmt.bigIntToDouble(
       res[0] as BigInt,
       int.parse(bscNative.chainDecimal),
     ).toString();
+
+    notifyListeners();
+  }
+
+  Future<void> fetchNonBalance() async {
+    initClient();
+    for (int i = 0; i < token.length; i++) {
+      final contractAddr = findContractAddr(token[i].symbol);
+      final decimal = await query(contractAddr, 'decimals', []);
+
+      final balance = await query(
+          contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+
+      token[i].balance = Fmt.bigIntToDouble(
+        balance[0] as BigInt,
+        int.parse(decimal[0].toString()),
+      ).toString();
+    }
+
     notifyListeners();
   }
 
@@ -141,13 +160,15 @@ class ContractProvider with ChangeNotifier {
   }
 
   Future<String> sendTxBsc(
+    String contractAddr,
+    String chainDecimal,
     String privateKey,
     String reciever,
     String amount,
   ) async {
     initClient();
 
-    final contract = await initBsc(AppConfig.bscAddr);
+    final contract = await initBsc(contractAddr);
     final txFunction = contract.function('transfer');
     final credentials = await _web3client.credentialsFromPrivateKey(privateKey);
 
@@ -161,7 +182,7 @@ class ContractProvider with ChangeNotifier {
           BigInt.from(
             pow(
               double.parse(amount) * 10,
-              int.parse(bscNative.chainDecimal),
+              int.parse(chainDecimal),
             ),
           ),
         ],
@@ -222,15 +243,17 @@ class ContractProvider with ChangeNotifier {
         initKmpi().then((value) async {
           await StorageServices.saveBool(kmpi.symbol, true);
         });
-        Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol(symbol);
       }
-    } else if (symbol == 'AYF') {
+    } else if (symbol == 'SEL') {
       if (!bscNative.isContain) {
         bscNative.isContain = true;
 
-        await StorageServices.saveBool('AYF', true);
+        await StorageServices.saveBool('SEL', true);
 
-        Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol("$symbol (BEP-20)");
 
         await getSymbol();
         await getBscDecimal();
@@ -242,7 +265,8 @@ class ContractProvider with ChangeNotifier {
 
         await StorageServices.saveBool('BNB', true);
 
-        Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol(symbol);
 
         await getBscDecimal();
         getBnbBalance();
@@ -251,17 +275,18 @@ class ContractProvider with ChangeNotifier {
       if (!atd.isContain) {
         initAtd().then((value) async {
           await StorageServices.saveBool(atd.symbol, true);
-          Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
+          Provider.of<WalletProvider>(context, listen: false)
+              .addTokenSymbol(symbol);
         });
       }
     } else if (symbol == 'DOT') {
       if (!ApiProvider().dot.isContain) {
         await StorageServices.saveBool('DOT', true);
-   
 
         ApiProvider().connectPolNon();
         Provider.of<ApiProvider>(context, listen: false).isDotContain();
-        Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol);
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol(symbol);
       }
     } else {
       final symbol = await query(contractAddr, 'symbol', []);
@@ -270,14 +295,15 @@ class ContractProvider with ChangeNotifier {
           contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
       token.add(TokenModel(
-        contractAddr: contractAddr,
-        decimal: decimal[0].toString(),
-        symbol: symbol[0].toString(),
-        balance: balance[0].toString(),
-      ));
+          contractAddr: contractAddr,
+          decimal: decimal[0].toString(),
+          symbol: symbol[0].toString(),
+          balance: balance[0].toString(),
+          org: 'BEP-20'));
 
       await StorageServices.saveContractAddr(contractAddr);
-      Provider.of<WalletProvider>(context,listen: false).addTokenSymbol(symbol[0].toString());
+      Provider.of<WalletProvider>(context, listen: false)
+          .addTokenSymbol(symbol[0].toString());
     }
     notifyListeners();
   }
@@ -286,38 +312,44 @@ class ContractProvider with ChangeNotifier {
     if (symbol == 'KMPI') {
       kmpi.isContain = false;
       await StorageServices.removeKey('KMPI');
-
     } else if (symbol == 'ATD') {
       atd.isContain = false;
       await StorageServices.removeKey('ATD');
-
-    } else if (symbol == 'AYF') {
+    } else if (symbol == 'SEL') {
       bscNative.isContain = false;
-      await StorageServices.removeKey('AYF');
-   
+      await StorageServices.removeKey('SEL');
     } else if (symbol == 'BNB') {
       bnbNative.isContain = false;
       await StorageServices.removeKey('BNB');
- 
     } else if (symbol == 'DOT') {
       await StorageServices.removeKey('DOT');
       Provider.of<ApiProvider>(context, listen: false).dotIsNotContain();
-      
     } else {
-      final item = token.firstWhere(
-        (element) => element.symbol.toLowerCase().startsWith(
-              symbol.toLowerCase(),
-            ),
-      );
-      await StorageServices.removeContractAddr(item.contractAddr);
+      final mContractAddr = findContractAddr(symbol);
+      await StorageServices.removeContractAddr(mContractAddr);
       token.removeWhere(
         (element) => element.symbol.toLowerCase().startsWith(
               symbol.toLowerCase(),
             ),
       );
     }
-    Provider.of<WalletProvider>(context,listen: false).removeTokenSymbol(symbol);
+    if (symbol == 'SEL') {
+      Provider.of<WalletProvider>(context, listen: false)
+          .removeTokenSymbol("$symbol (BEP-20)");
+    } else {
+      Provider.of<WalletProvider>(context, listen: false)
+          .removeTokenSymbol(symbol);
+    }
     notifyListeners();
+  }
+
+  String findContractAddr(String symbol) {
+    final item = token.firstWhere(
+      (element) => element.symbol.toLowerCase().startsWith(
+            symbol.toLowerCase(),
+          ),
+    );
+    return item.contractAddr;
   }
 
   Future<void> getAStatus() async {
@@ -329,7 +361,11 @@ class ContractProvider with ChangeNotifier {
   void resetConObject() {
     atd = Atd();
     kmpi = Kmpi();
-    bscNative = NativeM(isContain: false);
+    bscNative = NativeM(
+      logo: 'assets/native_token.png',
+      org: 'BEP-20',
+      isContain: false,
+    );
     bnbNative = NativeM(
       logo: 'assets/bnb-2.png',
       symbol: 'BNB',

@@ -65,18 +65,16 @@ class AddAssetState extends State<AddAsset> {
   }
 
   Future<void> addAsset() async {
-    await dialogLoading(context);
+    dialogLoading(context);
     if (_modelAsset.match) {
       Provider.of<ContractProvider>(context, listen: false)
           .addToken(ContractProvider().kmpi.symbol, context);
- 
     } else {
       Provider.of<ContractProvider>(context, listen: false).addToken(
         _tokenSymbol,
         context,
         contractAddr: _modelAsset.controllerAssetCode.text,
       );
-  
     }
     await enableAnimation();
   }

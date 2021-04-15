@@ -5,7 +5,6 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/account.m.dart';
 import 'package:wallet_apps/src/models/native.m.dart';
 import 'package:wallet_apps/src/models/token.m.dart';
-import 'package:wallet_apps/src/provider/contract_provider.dart';
 
 class ApiProvider with ChangeNotifier {
   static WalletSDK sdk = WalletSDK();
@@ -27,18 +26,18 @@ class ApiProvider with ChangeNotifier {
     TokenModel(
       logo: 'assets/icons/polkadot.png',
       symbol: 'DOT',
-      org: 'testnet',
+      org: '',
       color: Colors.transparent,
     ),
     TokenModel(
       logo: 'assets/bnb-2.png',
       symbol: 'BNB',
-      org: 'smart chain',
+      org: 'Smart Chain',
       color: Colors.transparent,
     ),
     TokenModel(
-      logo: 'assets/FingerPrint1.png',
-      symbol: 'AYF',
+      logo: 'assets/native_token.png',
+      symbol: 'SEL',
       org: 'BEP-20',
       color: Colors.transparent,
     ),
@@ -49,7 +48,7 @@ class ApiProvider with ChangeNotifier {
   NativeM nativeM = NativeM(
     logo: 'assets/native_token.png',
     symbol: 'SEL',
-    org: 'SELENDRA',
+    org: 'Testnet',
   );
   NativeM dot = NativeM(
     symbol: 'DOT',
@@ -88,7 +87,7 @@ class ApiProvider with ChangeNotifier {
   Future<NetworkParams> connectPolNon() async {
     final node = NetworkParams();
     node.name = AppConfig.nodeName;
-    node.endpoint = AppConfig.dotTestnet;
+    node.endpoint = AppConfig.dotMainnet;
     node.ss58 = 0;
 
     final res = await sdk.api.connectNon(keyring, [node]);
@@ -180,7 +179,7 @@ class ApiProvider with ChangeNotifier {
     nativeM = NativeM(
       logo: 'assets/native_token.png',
       symbol: 'SEL',
-      org: 'SELENDRA',
+      org: 'Testnet',
     );
     dot = NativeM();
 

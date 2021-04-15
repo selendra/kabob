@@ -266,7 +266,7 @@ class SubmitTrxState extends State<SubmitTrx> {
         unFocusAllField();
       });
 
-      await dialogBox().then((value) {
+      await dialogBox().then((value) async {
         switch (_scanPayM.asset) {
           case "SEL":
             sendTx(
@@ -289,15 +289,34 @@ class SubmitTrxState extends State<SubmitTrx> {
               value,
             );
             break;
-          case "AYF":
-            sendTxAYF(
+          case "SEL (BEP-20)":
+            final chainDecimal = await ContractProvider()
+                .query(AppConfig.bscMainnetAddr, 'decimals', []);
+            if (chainDecimal != null) {
+              sendTxAYF(
+                AppConfig.bscMainnetAddr,
+                chainDecimal[0].toString(),
+                _scanPayM.controlReceiverAddress.text,
+                _scanPayM.controlAmount.text,
+                value,
+              );
+            }
+            break;
+          case "BNB":
+            sendTxBnb(
               _scanPayM.controlReceiverAddress.text,
               _scanPayM.controlAmount.text,
               value,
             );
             break;
-          case "BNB":
-            sendTxBnb(
+          default:
+            final contractAddr =
+                ContractProvider().findContractAddr(_scanPayM.asset);
+            final chainDecimal =
+                await ContractProvider().query(contractAddr, 'decimals', []);
+            sendTxAYF(
+              contractAddr,
+              chainDecimal[0].toString(),
               _scanPayM.controlReceiverAddress.text,
               _scanPayM.controlAmount.text,
               value,
@@ -329,13 +348,20 @@ class SubmitTrxState extends State<SubmitTrx> {
     }
   }
 
-  Future<void> sendTxAYF(String reciever, String amount, String pin) async {
+  Future<void> sendTxAYF(String contractAddr, String chainDecimal,
+      String reciever, String amount, String pin) async {
     dialogLoading(context);
     final contract = Provider.of<ContractProvider>(context, listen: false);
     try {
       final res = await getPrivateKey(pin);
       if (res != null) {
-        final hash = await contract.sendTxBsc(res, reciever, amount);
+        final hash = await contract.sendTxBsc(
+          contractAddr,
+          chainDecimal,
+          res,
+          reciever,
+          amount,
+        );
 
         if (hash != null) {
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();

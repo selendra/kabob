@@ -13,21 +13,21 @@ class ClaimAirDrop extends StatefulWidget {
 }
 
 class _ClaimAirDropState extends State<ClaimAirDrop> {
-  final TextEditingController _emailController = TextEditingController();
+  TextEditingController _emailController;
 
-  final TextEditingController _phoneController = TextEditingController();
+  TextEditingController _phoneController;
 
-  final TextEditingController _walletController = TextEditingController();
+  TextEditingController _walletController;
 
-  final TextEditingController _socialController = TextEditingController();
+  TextEditingController _socialController;
 
-  final FocusNode _emailFocusNode = FocusNode();
+  FocusNode _emailFocusNode;
 
-  final FocusNode _phoneFocusNode = FocusNode();
+  FocusNode _phoneFocusNode;
 
-  final FocusNode _walletFocusNode = FocusNode();
+  FocusNode _walletFocusNode;
 
-  final FocusNode _socialFocusNode = FocusNode();
+  FocusNode _socialFocusNode;
 
   final airdropKey = GlobalKey<FormState>();
 
@@ -41,27 +41,8 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
 // your spreadsheet id
   static const _spreadsheetId = AppConfig.spreedSheetId;
 
-  void main() async {
-    // init GSheets
-    final gsheets = GSheets(AppConfig.credentials);
-    // fetch spreadsheet by its id
-    final ss = await gsheets.spreadsheet(_spreadsheetId);
-    // get worksheet by its title
-    print(ss.sheets);
-
-    final sheet = await ss.worksheetById(0);
-    final secondRow = {
-      'index': '5',
-      'letter': 'f',
-      'number': '6',
-      'label': 'f6',
-    };
-    //await sheet.values.appendRow(['t','t','t','t']);
-    await sheet.deleteRow(3);
-  }
-
   bool validateEmail(String value) {
-    final Pattern pattern =
+    const Pattern pattern =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     final RegExp regex = RegExp(pattern.toString());
     // ignore: avoid_bool_literals_in_conditional_expressions
@@ -169,6 +150,9 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
     setState(() {
       _submitted = true;
     });
+    await StorageServices.setUserID('claim', 'claim');
+    Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+    Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
 
     Timer(const Duration(milliseconds: 2500), () {
       Navigator.pushNamedAndRemoveUntil(
@@ -178,7 +162,25 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
 
   @override
   void initState() {
+    _emailController = TextEditingController();
+    _phoneController = TextEditingController();
+    _walletController = TextEditingController();
+    _socialController = TextEditingController();
+
+    _emailFocusNode = FocusNode();
+    _phoneFocusNode = FocusNode();
+    _walletFocusNode = FocusNode();
+    _socialFocusNode = FocusNode();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _phoneController.dispose();
+    _walletController.dispose();
+    _socialController.dispose();
+    super.dispose();
   }
 
   @override
@@ -200,82 +202,117 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                 Expanded(
                   child: Form(
                     key: airdropKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MyInputField(
-                          pBottom: 16,
-                          labelText: "Email",
-                          inputType: TextInputType.emailAddress,
-                          textInputFormatter: [
-                            LengthLimitingTextInputFormatter(
-                              TextField.noMaxLength,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(20),
+                            width: MediaQuery.of(context).size.width,
+                            child: ClipRRect(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10.0)),
+                              child: Image.asset(
+                                'assets/bep20.png',
+                                height: 230,
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                          ],
-                          controller: _emailController,
-                          focusNode: _emailFocusNode,
-                          validateField: validateEmailField,
-                          onChanged: onChangedEmail,
-                          onSubmit: onSubmit,
-                        ),
-                        MyInputField(
-                          pBottom: 16,
-                          labelText: "Phone Number",
-                          textInputFormatter: [
-                            LengthLimitingTextInputFormatter(
-                              TextField.noMaxLength,
-                            ),
-                          ],
-                          controller: _phoneController,
-                          focusNode: _phoneFocusNode,
-                          inputType: TextInputType.number,
-                          validateField: (value) => value.isEmpty
-                              ? 'Please fill in phone number'
-                              : null,
-                          onChanged: onChanged,
-                          onSubmit: onSubmit,
-                        ),
-                        MyInputField(
-                          pBottom: 16,
-                          labelText: "Wallet Address",
-                          textInputFormatter: [
-                            LengthLimitingTextInputFormatter(
-                              TextField.noMaxLength,
-                            ),
-                          ],
-                          controller: _walletController,
-                          focusNode: _walletFocusNode,
-                          validateField: (value) => value.isEmpty
-                              ? 'Please fill in wallet address'
-                              : null,
-                          onChanged: onChanged,
-                          onSubmit: onSubmit,
-                        ),
-                        MyInputField(
-                          pBottom: 16,
-                          labelText: "Social Link (optional)",
-                          textInputFormatter: [
-                            LengthLimitingTextInputFormatter(
-                              TextField.noMaxLength,
-                            ),
-                          ],
-                          controller: _socialController,
-                          focusNode: _socialFocusNode,
-                          onChanged: onChanged,
-                          onSubmit: onSubmit,
-                        ),
-                        const SizedBox(height: 20),
-                        MyFlatButton(
-                          textButton: "Claim Airdrop",
-                          edgeMargin: const EdgeInsets.only(
-                            top: 40,
-                            left: 66,
-                            right: 66,
                           ),
-                          hasShadow: true,
-                          action: _enableButton ? submitForm : null,
-                        ),
-                      ],
+                          MyInputField(
+                            pBottom: 24,
+                            labelText:
+                                "Email (by submitting will get +5 \$SEL)",
+                            inputType: TextInputType.emailAddress,
+                            textInputFormatter: [
+                              LengthLimitingTextInputFormatter(
+                                TextField.noMaxLength,
+                              ),
+                            ],
+                            controller: _emailController,
+                            focusNode: _emailFocusNode,
+                            validateField: validateEmailField,
+                            onChanged: onChangedEmail,
+                            onSubmit: onSubmit,
+                          ),
+                          MyInputField(
+                            pBottom: 24,
+                            labelText:
+                                "Phone Number (by submitting will get +5 \$SEL)",
+                            textInputFormatter: [
+                              LengthLimitingTextInputFormatter(
+                                TextField.noMaxLength,
+                              ),
+                            ],
+                            controller: _phoneController,
+                            focusNode: _phoneFocusNode,
+                            inputType: TextInputType.number,
+                            validateField: (value) => value.isEmpty
+                                ? 'Please fill in phone number'
+                                : null,
+                            onChanged: onChanged,
+                            onSubmit: onSubmit,
+                          ),
+                          MyInputField(
+                            pBottom: 8,
+                            labelText:
+                                "Wallet Address (0xe0e5c149b9cdf9d2279b6ddfda9bc0a4a975285c)",
+                            textInputFormatter: [
+                              LengthLimitingTextInputFormatter(
+                                TextField.noMaxLength,
+                              ),
+                            ],
+                            controller: _walletController,
+                            focusNode: _walletFocusNode,
+                            validateField: (value) => value.isEmpty
+                                ? 'Please fill in wallet address'
+                                : null,
+                            onChanged: onChanged,
+                            onSubmit: onSubmit,
+                          ),
+                          const MyText(
+                            text:
+                                'Get Wallet (each address will get 100 \$SEL)',
+                            textAlign: TextAlign.left,
+                            left: 16.0,
+                            right: 16.0,
+                            fontSize: 16.0,
+                          ),
+                          MyInputField(
+                            pTop: 24.0,
+                            pBottom: 8,
+                            labelText: "Social Link (optional)",
+                            textInputFormatter: [
+                              LengthLimitingTextInputFormatter(
+                                TextField.noMaxLength,
+                              ),
+                            ],
+                            controller: _socialController,
+                            focusNode: _socialFocusNode,
+                            onChanged: onChanged,
+                            onSubmit: onSubmit,
+                          ),
+                          const MyText(
+                            text:
+                                'Notes: shared link of (twitter,linkedin,facebook) +5 \$SEL each, YouTube video at least 30 seconds +50 \$SEL, per each approved video.',
+                            textAlign: TextAlign.start,
+                            left: 16.0,
+                            right: 16.0,
+                            fontSize: 16.0,
+                          ),
+                          const SizedBox(height: 20),
+                          MyFlatButton(
+                            textButton: "Claim Airdrop",
+                            edgeMargin: const EdgeInsets.only(
+                              top: 40,
+                              left: 66,
+                              right: 66,
+                            ),
+                            hasShadow: true,
+                            action: _enableButton ? submitForm : null,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

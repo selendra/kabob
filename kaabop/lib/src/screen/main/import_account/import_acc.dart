@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/m_import_acc.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
@@ -5,6 +6,8 @@ import 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart'
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
 class ImportAcc extends StatefulWidget {
+  final String reimport;
+  const ImportAcc({this.reimport});
   @override
   State<StatefulWidget> createState() {
     return ImportAccState();
@@ -67,6 +70,97 @@ class ImportAccState extends State<ImportAcc> {
     });
   }
 
+  Future<void> onSubmitIm() async {
+    if (_importAccModel.formKey.currentState.validate()) {
+      reImport();
+    }
+  }
+
+  Future<void> reImport() async {
+    dialogLoading(context);
+    final isValidSeed =
+        await validateMnemonic(_importAccModel.mnemonicCon.text);
+    final isValidPw = await checkPassword(_importAccModel.pwCon.text);
+
+    if (isValidSeed == false) {
+      await dialog(
+          context, const Text('Invalid seed phrases'), const Text('Opps'));
+    }
+
+    if (isValidPw == false) {
+      await dialog(
+          context, const Text('PIN verification failed'), const Text('Opps'));
+    }
+
+    if (isValidSeed && isValidPw) {
+      Navigator.pop(context);
+      setState(() {
+        enable = true;
+      });
+      final resPk =
+          await ApiProvider().getPrivateKey(_importAccModel.mnemonicCon.text);
+      if (resPk != null) {
+        ContractProvider().extractAddress(resPk);
+        final res = await ApiProvider.keyring.store
+            .encryptPrivateKey(resPk, _importAccModel.pwCon.text);
+
+        if (res != null) {
+          await StorageServices().writeSecure('private', res);
+        }
+      }
+      Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
+      isDotContain();
+      isBnbContain();
+      isBscContain();
+
+      await dialogSuccess(
+        context,
+        const Text("You haved imported successfully"),
+        const Text('Congratulation'),
+        // ignore: deprecated_member_use
+        action: FlatButton(
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.pushNamedAndRemoveUntil(
+                context, Home.route, ModalRoute.withName('/'));
+          },
+          child: const Text('Continue'),
+        ),
+      );
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> isDotContain() async {
+    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
+    Provider.of<ApiProvider>(context, listen: false).isDotContain();
+    Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+  }
+
+  Future<void> isBnbContain() async {
+    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
+    Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
+    Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+  }
+
+  Future<void> isBscContain() async {
+    Provider.of<WalletProvider>(context, listen: false)
+        .addTokenSymbol('SEL (BEP-20)');
+    Provider.of<ContractProvider>(context, listen: false).getSymbol();
+    Provider.of<ContractProvider>(context, listen: false)
+        .getBscDecimal()
+        .then((value) {
+      Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+    });
+  }
+
+  Future<bool> checkPassword(String pin) async {
+    final res = await ApiProvider.sdk.api.keyring
+        .checkPassword(ApiProvider.keyring.current, pin);
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,12 +168,13 @@ class ImportAccState extends State<ImportAcc> {
         body: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: ImportAccBody(
+            reImport: widget.reimport,
             importAccModel: _importAccModel,
-            onChanged: onChanged,
-            onSubmit: submit,
+            onChanged: widget.reimport != null ? null : onChanged,
+            onSubmit: widget.reimport != null ? onSubmitIm : submit,
             clearInput: clearInput,
             enable: enable,
-            submit: submit,
+            submit: widget.reimport != null ? onSubmitIm : submit,
           ),
         ) //welcomeBody(context, navigatePage),
         );

@@ -107,7 +107,6 @@ final portfolioChart = LineChartData(
 Widget homeAppBar(BuildContext context) {
   return Container(
     height: 70,
-    // padding: const EdgeInsets.only(top: 8.0),
     color: hexaCodeToColor(AppColors.bgdColor),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,7 +123,8 @@ Widget homeAppBar(BuildContext context) {
             color: Colors.white,
             icon: const Icon(LineAwesomeIcons.bell),
             onPressed: () async {
-              await MyBottomSheet().notification(context: context);
+              await dialog(context, const Text('Coming Soon!'),
+                  const Text('Notification'));
             },
           ),
         ),
@@ -311,24 +311,24 @@ class AddAssetRowButton extends StatelessWidget {
 Widget rowDecorationStyle(
     {Widget child, double mTop = 0, double mBottom = 16}) {
   return Container(
-      margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
-      padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
-      height: 90,
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-              color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
-        ],
-        color: hexaCodeToColor(AppColors.cardColor),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: child);
+    margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
+    padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
+    height: 90,
+    decoration: BoxDecoration(
+      boxShadow: const [
+        BoxShadow(
+            color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
+      ],
+      color: hexaCodeToColor(AppColors.cardColor),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: child,
+  );
 }
 
 class MyBottomAppBar extends StatelessWidget {
   final bool apiStatus;
   final HomeModel homeM;
-
   final Function scanReceipt;
   final Function toReceiveToken;
   final Function fillAddress;

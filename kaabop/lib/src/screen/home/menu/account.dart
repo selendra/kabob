@@ -87,7 +87,7 @@ class _AccountState extends State<Account> {
       Navigator.pop(context);
       AppServices.clearStorage();
       StorageServices().clearSecure();
-      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+      //Provider.of<WalletProvider>(context, listen: false).resetDatamap();
       Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
       Provider.of<ContractProvider>(context, listen: false).resetConObject();
       Navigator.pushAndRemoveUntil(context,

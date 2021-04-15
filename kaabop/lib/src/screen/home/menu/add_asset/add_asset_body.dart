@@ -96,7 +96,7 @@ class AddAssetBody extends StatelessWidget {
                         addAsset,
                       ),
                     )
-                  else if (tokenSymbol == 'AYF')
+                  else if (tokenSymbol == 'SEL')
                     Container(
                       padding: const EdgeInsets.all(16.0),
                       child: portFolioItemRow(
@@ -106,7 +106,7 @@ class AddAssetBody extends StatelessWidget {
                         addAsset,
                       ),
                     )
-                  else if (tokenSymbol != 'AYF' && tokenSymbol != '')
+                  else if (tokenSymbol != 'SEL' && tokenSymbol != '')
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: portFolioItemRow(

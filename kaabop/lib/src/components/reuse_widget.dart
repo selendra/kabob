@@ -241,6 +241,109 @@ Future dialog(BuildContext context, Widget text, Widget title,
   return result;
 }
 
+Future dialogEvent(
+  BuildContext context,
+  String url,
+  void Function() onClosed,
+  void Function() onClaim,
+) async {
+  final result = await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          contentPadding: const EdgeInsets.all(0),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height / 1.9,
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: ListView(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                  ),
+                  child: Image.asset(
+                    url,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                const MyText(
+                    text: 'Selendra Airdrop',
+                    //color: '#000000',
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                const SizedBox(
+                  height: 16,
+                ),
+                const MyText(
+                  text:
+                      'Selendra will conduct 3 airdrops. Each drop will have 6 sessions with a total of 31,415,927 SEL tokens. Each session will last as long as 3 months to distribute to as many people as possible. The first airdrop will take place in April 2021, during Khmer New Year. Enjoy the airdrop, everyone.',
+                  textAlign: TextAlign.start,
+                  right: 16,
+                  left: 16,
+                  fontSize: 16,
+                ),
+                const SizedBox(
+                  height: 28,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // ignore: deprecated_member_use
+                    SizedBox(
+                      height: 50,
+                      width: 100,
+                      child: RaisedButton(
+                        onPressed: onClosed,
+                        color: Colors.grey[50],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: hexaCodeToColor(AppColors.textColor),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // ignore: deprecated_member_use
+                    SizedBox(
+                      height: 50,
+                      width: 100,
+                      child: RaisedButton(
+                        onPressed: onClaim,
+                        color: hexaCodeToColor(AppColors.secondary),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          'Claim',
+                          style: TextStyle(
+                            color: hexaCodeToColor('#ffffff'),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      });
+  return result;
+}
+
 Future dialogSuccess(BuildContext context, Widget text, Widget title,
     {Widget action, Color bgColor}) async {
   final result = await showDialog(
@@ -498,7 +601,6 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
   return Column(
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
-    
       Container(
         decoration: BoxDecoration(
           border: Border.all(

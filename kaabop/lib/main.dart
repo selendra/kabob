@@ -52,15 +52,18 @@ class AppState extends State<App> {
   Future<void> initApi() async {
     Provider.of<ApiProvider>(context, listen: false).initApi().then(
       (value) {
-        isDotContain();
-        isBnbContain();
-        isBscContain();
+        if (ApiProvider.keyring.keyPairs.isNotEmpty) {
+          isDotContain();
+          isBnbContain();
+          isBscContain();
+        }
         Provider.of<ApiProvider>(context, listen: false).connectNode().then(
           (value) {
             if (value != null) {
               setState(() {
                 _apiConnected = true;
               });
+
               if (ApiProvider.keyring.keyPairs.isNotEmpty) {
                 initContract();
                 Provider.of<ApiProvider>(context, listen: false)
@@ -78,40 +81,44 @@ class AppState extends State<App> {
   }
 
   Future<void> isDotContain() async {
-    await StorageServices.readBool('DOT').then((value) {
-      if (value) {
-        Provider.of<WalletProvider>(context, listen: false)
-            .addTokenSymbol('DOT');
-        Provider.of<ApiProvider>(context, listen: false).isDotContain();
-        Provider.of<ApiProvider>(context, listen: false).connectPolNon();
-      }
-    });
+    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
+    Provider.of<ApiProvider>(context, listen: false).isDotContain();
+    Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+    // await StorageServices.readBool('DOT').then((value) {
+    //   if (value) {
+    //     Provider.of<WalletProvider>(context, listen: false)
+    //         .addTokenSymbol('DOT');
+    //     Provider.of<ApiProvider>(context, listen: false).isDotContain();
+    //     Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+    //   }
+    // });
   }
 
   Future<void> isBnbContain() async {
-    await StorageServices.readBool('BNB').then((value) {
-      if (value) {
-        Provider.of<WalletProvider>(context, listen: false)
-            .addTokenSymbol('BNB');
-        Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
-        Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
-      }
-    });
+    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
+    Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
+    Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+    // await StorageServices.readBool('BNB').then((value) {
+    //   if (value) {
+
+    //   }
+    // });
   }
 
   Future<void> isBscContain() async {
-    await StorageServices.readBool('AYF').then((value) {
-      if (value) {
-        Provider.of<WalletProvider>(context, listen: false)
-            .addTokenSymbol('AYF');
-        Provider.of<ContractProvider>(context, listen: false)
-            .getBscDecimal()
-            .then((value) {
-          Provider.of<ContractProvider>(context, listen: false).getBscBalance();
-        });
-        Provider.of<ContractProvider>(context, listen: false).getSymbol();
-      }
+    Provider.of<WalletProvider>(context, listen: false)
+        .addTokenSymbol('SEL (BEP-20)');
+    Provider.of<ContractProvider>(context, listen: false)
+        .getBscDecimal()
+        .then((value) {
+      Provider.of<ContractProvider>(context, listen: false).getBscBalance();
     });
+    Provider.of<ContractProvider>(context, listen: false).getSymbol();
+    // await StorageServices.readBool('SEL').then((value) {
+    //   if (value) {
+
+    //   }
+    // });
   }
 
   Future<void> initContract() async {
@@ -145,6 +152,7 @@ class AppState extends State<App> {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
               initialRoute: AppText.splashScreenView,
+              
               title: AppText.appName,
               theme: AppStyle.myTheme(),
               onGenerateRoute: router.generateRoute,

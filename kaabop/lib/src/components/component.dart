@@ -263,7 +263,7 @@ class MyAppBar extends StatelessWidget {
         height: 65.0,
         width: MediaQuery.of(context).size.width,
         margin: margin,
-        color: hexaCodeToColor(AppColors.cardColor),
+        color: color ?? hexaCodeToColor(AppColors.cardColor),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

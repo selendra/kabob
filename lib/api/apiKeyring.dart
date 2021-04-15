@@ -170,8 +170,6 @@ class ApiKeyring {
     }
   }
 
- 
-
   /// Decrypt and get the backup of seed.
   Future<SeedBackupData> getDecryptedSeed(Keyring keyring, password) async {
     final Map data =
@@ -194,9 +192,8 @@ class ApiKeyring {
 
   /// check password of account
   Future<bool> checkPassword(KeyPairData account, String pass) async {
-    print(account.pubKey);
     final res = await service.checkPassword(account.pubKey, pass);
-    print(res);
+
     return res;
   }
 
@@ -284,7 +281,6 @@ class ApiKeyring {
 
   Future<dynamic> contractTransfer(String senderPubKey, String to, String value,
       String password, String hash) async {
-
     final res =
         await service.contractTranfer(senderPubKey, to, value, password, hash);
 

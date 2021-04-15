@@ -12,9 +12,20 @@ class HomeBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        await Future.delayed(const Duration(milliseconds: 300)).then((value) {
+        final contract = Provider.of<ContractProvider>(context, listen: false);
+        await Future.delayed(const Duration(milliseconds: 300))
+            .then((value) async {
           setPortfolio();
-          Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
+          if (contract.bnbNative.isContain) {
+            contract.getBnbBalance();
+          }
+          if (contract.bscNative.isContain) {
+            contract.getBscBalance();
+          }
+
+          if (contract.token.isNotEmpty) {
+            contract.fetchNonBalance();
+          }
         });
       },
       child: ListView(
@@ -70,29 +81,34 @@ class HomeBody extends StatelessWidget {
               ],
             ),
           ),
-          Consumer<ApiProvider>(builder: (context, value, child) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  RouteAnimation(
-                    enterPage: AssetInfo(
-                      assetLogo: value.nativeM.logo,
-                      balance: value.nativeM.balance,
-                      tokenSymbol: value.nativeM.symbol,
-                    ),
-                  ),
-                );
-              },
-              child: AssetItem(
-                value.nativeM.logo,
-                value.nativeM.symbol,
-                value.nativeM.org,
-                value.nativeM.balance,
-                Colors.white,
-              ),
-            );
-          }),
+          Consumer<ContractProvider>(
+            builder: (context, value, child) {
+              return value.bscNative.isContain
+                  ? GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          RouteAnimation(
+                            enterPage: AssetInfo(
+                              assetLogo: value.bscNative.logo,
+                              balance: value.bscNative.balance ?? '0',
+                              tokenSymbol: value.bscNative.symbol ?? '',
+                              org: value.bscNative.org,
+                            ),
+                          ),
+                        );
+                      },
+                      child: AssetItem(
+                        value.bscNative.logo,
+                        value.bscNative.symbol ?? '',
+                        'BEP-20',
+                        value.bscNative.balance ?? '0',
+                        hexaCodeToColor('#022330'),
+                      ),
+                    )
+                  : Container();
+            },
+          ),
           Consumer<ContractProvider>(
             builder: (context, value, child) {
               return value.kmpi.isContain
@@ -118,6 +134,7 @@ class HomeBody extends StatelessWidget {
                                     assetLogo: value.kmpi.logo,
                                     balance: value.kmpi.balance ?? '0',
                                     tokenSymbol: value.kmpi.symbol,
+                                    org: value.kmpi.org,
                                   ),
                                 ),
                               );
@@ -156,6 +173,7 @@ class HomeBody extends StatelessWidget {
                                 assetLogo: value.atd.logo,
                                 balance: value.atd.balance ?? '0',
                                 tokenSymbol: value.atd.symbol,
+                                org: value.atd.org,
                               ),
                             ),
                           );
@@ -175,36 +193,26 @@ class HomeBody extends StatelessWidget {
           Consumer<ApiProvider>(
             builder: (context, value, child) {
               return value.dot.isContain
-                  ? Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.endToStart,
-                      background: DismissibleBackground(),
-                      onDismissed: (direct) {
-                        setPortfolio();
-
-                        Provider.of<ContractProvider>(context, listen: false)
-                            .removeToken(value.dot.symbol, context);
-                      },
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            RouteAnimation(
-                              enterPage: AssetInfo(
-                                assetLogo: value.dot.logo,
-                                balance: value.dot.balance,
-                                tokenSymbol: value.dot.symbol,
-                              ),
+                  ? GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          RouteAnimation(
+                            enterPage: AssetInfo(
+                              assetLogo: value.dot.logo,
+                              balance: value.dot.balance,
+                              tokenSymbol: value.dot.symbol,
+                              org: value.dot.org,
                             ),
-                          );
-                        },
-                        child: AssetItem(
-                          value.dot.logo,
-                          value.dot.symbol,
-                          'testnet',
-                          value.dot.balance,
-                          Colors.black,
-                        ),
+                          ),
+                        );
+                      },
+                      child: AssetItem(
+                        value.dot.logo,
+                        value.dot.symbol,
+                        '',
+                        value.dot.balance,
+                        Colors.black,
                       ),
                     )
                   : Container();
@@ -213,75 +221,54 @@ class HomeBody extends StatelessWidget {
           Consumer<ContractProvider>(
             builder: (context, value, child) {
               return value.bnbNative.isContain
-                  ? Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.endToStart,
-                      background: DismissibleBackground(),
-                      onDismissed: (direct) {
-                        setPortfolio();
-                        value.removeToken(value.bnbNative.symbol, context);
-                      },
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            RouteAnimation(
-                              enterPage: AssetInfo(
-                                assetLogo: value.bnbNative.logo,
-                                balance: value.bnbNative.balance ?? '0',
-                                tokenSymbol: value.bnbNative.symbol ?? '',
-                              ),
+                  ? GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          RouteAnimation(
+                            enterPage: AssetInfo(
+                              assetLogo: value.bnbNative.logo,
+                              balance: value.bnbNative.balance ?? '0',
+                              tokenSymbol: value.bnbNative.symbol ?? '',
                             ),
-                          );
-                        },
-                        child: AssetItem(
-                          value.bnbNative.logo,
-                          value.bnbNative.symbol ?? '',
-                          'Smart Chain',
-                          value.bnbNative.balance ?? '0',
-                          Colors.black,
-                        ),
+                          ),
+                        );
+                      },
+                      child: AssetItem(
+                        value.bnbNative.logo,
+                        value.bnbNative.symbol ?? '',
+                        'Smart Chain',
+                        value.bnbNative.balance ?? '0',
+                        Colors.black,
                       ),
                     )
                   : Container();
             },
           ),
-          Consumer<ContractProvider>(
-            builder: (context, value, child) {
-              return value.bscNative.isContain
-                  ? Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.endToStart,
-                      background: DismissibleBackground(),
-                      onDismissed: (direct) {
-                        setPortfolio();
-                        value.removeToken(value.bscNative.symbol, context);
-                      },
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            RouteAnimation(
-                              enterPage: AssetInfo(
-                                assetLogo: value.bscNative.logo,
-                                balance: value.bscNative.balance ?? '0',
-                                tokenSymbol: value.bscNative.symbol ?? '',
-                              ),
-                            ),
-                          );
-                        },
-                        child: AssetItem(
-                          value.bscNative.logo,
-                          value.bscNative.symbol ?? '',
-                          'BEP-20',
-                          value.bscNative.balance ?? '0',
-                          Colors.black,
-                        ),
-                      ),
-                    )
-                  : Container();
-            },
-          ),
+          Consumer<ApiProvider>(builder: (context, value, child) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  RouteAnimation(
+                    enterPage: AssetInfo(
+                      assetLogo: value.nativeM.logo,
+                      balance: value.nativeM.balance,
+                      tokenSymbol: value.nativeM.symbol,
+                      org: value.nativeM.org,
+                    ),
+                  ),
+                );
+              },
+              child: AssetItem(
+                value.nativeM.logo,
+                value.nativeM.symbol,
+                value.nativeM.org,
+                value.nativeM.balance,
+                Colors.white,
+              ),
+            );
+          }),
           Consumer<ContractProvider>(builder: (context, value, child) {
             return value.token.isNotEmpty
                 ? ListView.builder(
@@ -306,6 +293,7 @@ class HomeBody extends StatelessWidget {
                                   assetLogo: value.bscNative.logo,
                                   balance: value.token[index].balance ?? '0',
                                   tokenSymbol: value.token[index].symbol ?? '',
+                                  org: value.token[index].org,
                                 ),
                               ),
                             );
@@ -313,7 +301,7 @@ class HomeBody extends StatelessWidget {
                           child: AssetItem(
                             value.bscNative.logo,
                             value.token[index].symbol ?? '',
-                            'testnet',
+                            'BEP-20',
                             value.token[index].balance ?? '0',
                             Colors.black,
                           ),

@@ -3,6 +3,7 @@ import 'package:wallet_apps/src/models/m_import_acc.dart';
 
 class ImportAccBody extends StatelessWidget {
   final bool enable;
+  final String reImport;
   final ImportAccModel importAccModel;
   final String Function(String) onChanged;
   final Function onSubmit;
@@ -15,6 +16,7 @@ class ImportAccBody extends StatelessWidget {
     this.onSubmit,
     this.clearInput,
     this.enable,
+    this.reImport,
     this.submit,
   });
 
@@ -34,69 +36,90 @@ class ImportAccBody extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: MyText(
-                      text: 'Source Type',
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: "#FFFFFF",
-                      bottom: 16,
+              child: Form(
+                key: importAccModel.formKey,
+                child: Column(
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: MyText(
+                        text: 'Source Type',
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: "#FFFFFF",
+                        bottom: 16,
+                      ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: hexaCodeToColor(AppColors.secondary),
-                                width: 1.5,
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: hexaCodeToColor(AppColors.secondary),
+                                  width: 1.5,
+                                ),
                               ),
                             ),
-                          ),
-                          child: const MyText(
-                            text: "Mnemonic",
-                            color: "#FFFFFF",
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          alignment: Alignment.center,
-                          height: 50,
-                          child: const MyText(
-                            text: "Keystore (json)",
-                            // color: "#FFFFFF",
+                            child: const MyText(
+                              text: "Seed Phrase",
+                              color: "#FFFFFF",
+                            ),
                           ),
                         ),
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            height: 50,
+                            child: const MyText(
+                              text: "Keystore (json)",
+                              // color: "#FFFFFF",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      child: MyInputField(
+                        pLeft: 0,
+                        pRight: 0,
+                        pBottom: 16.0,
+                        labelText: "Seed Phrase",
+                        textInputFormatter: [
+                          LengthLimitingTextInputFormatter(
+                              TextField.noMaxLength)
+                        ],
+                        controller: importAccModel.mnemonicCon,
+                        focusNode: importAccModel.mnemonicNode,
+                        maxLine: null,
+                        onChanged: onChanged,
+                        //inputAction: TextInputAction.done,
+                        onSubmit: reImport!=null ? (){} : onSubmit,
                       ),
-                    ],
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 30),
-                    child: MyInputField(
+                    ),
+                    if (reImport!=null) MyInputField(
                       pLeft: 0,
                       pRight: 0,
                       pBottom: 16.0,
-                      labelText: "Mnemonic",
+                      labelText: "Pin",
                       textInputFormatter: [
-                        LengthLimitingTextInputFormatter(TextField.noMaxLength)
+                        LengthLimitingTextInputFormatter(4)
                       ],
-                      controller: importAccModel.mnemonicCon,
-                      focusNode: importAccModel.mnemonicNode,
+                      controller: importAccModel.pwCon,
+                      focusNode: importAccModel.pwNode,
+                      validateField: (value) =>
+                          value.isEmpty ? 'Please fill in pin' : null,
                       maxLine: null,
                       onChanged: onChanged,
                       //inputAction: TextInputAction.done,
                       onSubmit: onSubmit,
-                    ),
-                  ),
-                ],
+                    ) else Container(),
+                  ],
+                ),
               ),
             ),
             Expanded(

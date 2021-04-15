@@ -11,11 +11,13 @@ class AssetInfo extends StatefulWidget {
   final String assetLogo;
   final String balance;
   final String tokenSymbol;
+  final String org;
 
   const AssetInfo({
     this.assetLogo,
     this.balance,
     this.tokenSymbol,
+    this.org,
   });
   @override
   _AssetInfoState createState() => _AssetInfoState();
@@ -332,7 +334,7 @@ class _AssetInfoState extends State<AssetInfo> {
                           ),
                         ),
                       )
-                    else if (widget.tokenSymbol == "AYF")
+                    else if (widget.tokenSymbol == "SEL" && widget.org == 'BEP-20')
                       const Expanded(
                         child: Align(
                           alignment: Alignment.bottomRight,
@@ -388,6 +390,7 @@ class _AssetInfoState extends State<AssetInfo> {
                                 context,
                                 _method,
                                 symbol: widget.tokenSymbol,
+                                org: widget.org,
                               );
                             },
                             color: hexaCodeToColor(
@@ -434,7 +437,7 @@ class _AssetInfoState extends State<AssetInfo> {
                 ],
               ),
             ),
-            if (widget.tokenSymbol == 'SEL')
+            if (widget.tokenSymbol == 'SEL' && widget.org!= 'BEP-20')
               AssetHistory(
                 _txHistoryModel.tx,
                 _flareController,

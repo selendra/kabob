@@ -28,24 +28,43 @@ class PortFolioCus extends StatelessWidget {
                     height: 150,
                     child: Consumer<WalletProvider>(
                       builder: (context, value, child) {
-                        return PieChart(
-                          ringStrokeWidth: 15,
-                          dataMap: value.dataMap,
-                          chartType: ChartType.ring,
-                          colorList: value.pieColorList,
-                          centerText: "100%",
-                          legendOptions: const LegendOptions(
-                            showLegends: false,
-                          ),
-                          chartValuesOptions: ChartValuesOptions(
-                            showChartValues: false,
-                            showChartValueBackground: false,
-                            chartValueStyle: TextStyle(
-                              color: hexaCodeToColor("#FFFFFF"),
-                              fontSize: 16,
-                            ),
-                          ),
-                        );
+                        return value.dataMap.isEmpty
+                            ?  PieChart(
+                                ringStrokeWidth: 15,
+                                dataMap: const {'SEL':100},
+                                chartType: ChartType.ring,
+                                //colorList: value.pieColorList,
+                                centerText: "100%",
+                                legendOptions: const LegendOptions(
+                                  showLegends: false,
+                                ),
+                                chartValuesOptions: ChartValuesOptions(
+                                  showChartValues: false,
+                                  showChartValueBackground: false,
+                                  chartValueStyle: TextStyle(
+                                    color: hexaCodeToColor("#FFFFFF"),
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              )
+                            : PieChart(
+                                ringStrokeWidth: 15,
+                                dataMap: value.dataMap,
+                                chartType: ChartType.ring,
+                                //colorList: value.pieColorList,
+                                centerText: "100%",
+                                legendOptions: const LegendOptions(
+                                  showLegends: false,
+                                ),
+                                chartValuesOptions: ChartValuesOptions(
+                                  showChartValues: false,
+                                  showChartValueBackground: false,
+                                  chartValueStyle: TextStyle(
+                                    color: hexaCodeToColor("#FFFFFF"),
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              );
                       },
                     ),
                   ),

@@ -17,14 +17,38 @@ class MySplashScreenState extends State<MySplashScreen>
   Animation<double> animation;
 
   Future<void> getCurrentAccount() async {
-    await Future.delayed(const Duration(seconds: 1), () {
+    await Future.delayed(const Duration(seconds: 1), () async {
       final List<KeyPairData> ls = ApiProvider.keyring.keyPairs.toList();
 
       if (ls.isEmpty) {
         Navigator.pushReplacement(
             context, RouteAnimation(enterPage: Welcome()));
       } else {
-        checkBio();
+        final ethAddr = await StorageServices().readSecure('etherAdd');
+
+        if (ethAddr == null) {
+          await dialogSuccess(
+            context,
+            const Text(
+                'Please reimport your seed phrases to add support to new update.'),
+            const Text('New Update!'),
+            action: FlatButton(
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  RouteAnimation(
+                    enterPage: const ImportAcc(
+                      reimport: 'reimport',
+                    ),
+                  ),
+                );
+              },
+              child: const Text('Continue'),
+            ),
+          );
+        } else {
+          checkBio();
+        }
       }
     });
   }
