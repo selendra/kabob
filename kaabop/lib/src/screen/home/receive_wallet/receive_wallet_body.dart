@@ -11,6 +11,7 @@ class ReceiveWalletBody extends StatelessWidget {
   final String name;
   final String wallet;
   final String initialValue;
+  final String assetInfo;
 
   const ReceiveWalletBody({
     this.keyQrShare,
@@ -21,6 +22,7 @@ class ReceiveWalletBody extends StatelessWidget {
     this.name,
     this.wallet,
     this.initialValue,
+    this.assetInfo,
   });
 
   @override
@@ -83,27 +85,32 @@ class ReceiveWalletBody extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: Container(
-                                    padding: const EdgeInsets.only(right: 16.0),
-                                    margin: const EdgeInsets.only(bottom: 36.0),
-                                    child: Consumer<WalletProvider>(
-                                      builder: (context, value, child) {
-                                        return ReuseDropDown(
-                                          initialValue: initialValue,
-                                          onChanged: onChanged,
-                                          itemsList: value.listSymbol,
-                                          style: TextStyle(
-                                            color: hexaCodeToColor(
-                                              AppColors.textColor,
+                                if (assetInfo != null)
+                                  Container()
+                                else
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Container(
+                                      padding:
+                                          const EdgeInsets.only(right: 16.0),
+                                      margin:
+                                          const EdgeInsets.only(bottom: 36.0),
+                                      child: Consumer<WalletProvider>(
+                                        builder: (context, value, child) {
+                                          return ReuseDropDown(
+                                            initialValue: initialValue,
+                                            onChanged: onChanged,
+                                            itemsList: value.listSymbol,
+                                            style: TextStyle(
+                                              color: hexaCodeToColor(
+                                                AppColors.textColor,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                             qrCodeGenerator(

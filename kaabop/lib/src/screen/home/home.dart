@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/screen/home/claim_airdrop/intro_airdrop.dart';
+
 
 class Home extends StatefulWidget {
   final bool apiConnected;
@@ -157,6 +157,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       });
     }
 
+     if (contract.kgoNative.isContain) {
+      walletProvider.addAvaibleToken({
+        'symbol': '${contract.kgoNative.symbol} (BEP-20)',
+        'balance': contract.kgoNative.balance,
+      });
+    }
+
     if (contract.token.isNotEmpty) {
       for (int i = 0; i < contract.token.length; i++) {
         walletProvider.addAvaibleToken({
@@ -177,7 +184,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   Future<void> onClaim() async {
     Navigator.pop(context);
     await StorageServices.setUserID('claim', 'claim');
-    Navigator.push(context, RouteAnimation(enterPage: IntroAirdrop()));
+    Navigator.push(context, RouteAnimation(enterPage: ClaimAirDrop()));
   }
 
   Future<void> handle() async {

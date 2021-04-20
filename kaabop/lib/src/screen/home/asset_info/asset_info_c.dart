@@ -9,14 +9,14 @@ class AssetInfoC {
   bool transferFrom = false;
 
   void showRecieved(BuildContext context, GetWalletMethod _method,
-      {String symbol,org}) {
+      {String symbol, org}) {
     showModalBottomSheet<void>(
       isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         final _keyQrShare = GlobalKey();
         final _globalKey = GlobalKey<ScaffoldState>();
-        
+
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
           child: Scaffold(
@@ -33,7 +33,9 @@ class AssetInfoC {
                             globalKey: _globalKey,
                             keyQrShare: _keyQrShare,
                             name: ApiProvider.keyring.current.name,
-                            wallet: symbol == 'BNB' || symbol == 'SEL'&&org == 'BEP-20'
+                            assetInfo: 'assetInfo',
+                            wallet: symbol == 'BNB' ||
+                                    symbol == 'SEL' && org == 'BEP-20'
                                 ? value.ethAdd
                                 : ApiProvider.keyring.current.address,
                           );
@@ -47,6 +49,7 @@ class AssetInfoC {
                             keyQrShare: _keyQrShare,
                             name: value.accountM.name,
                             wallet: value.accountM.address,
+                            assetInfo: 'assetInfo',
                           );
                         },
                       )),

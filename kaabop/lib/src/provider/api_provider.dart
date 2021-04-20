@@ -77,6 +77,7 @@ class ApiProvider with ChangeNotifier {
 
     if (res != null) {
       _isConnected = true;
+      print('connected');
     }
 
     notifyListeners();
@@ -90,11 +91,16 @@ class ApiProvider with ChangeNotifier {
     node.endpoint = AppConfig.dotMainnet;
     node.ss58 = 0;
 
+    final node1 = NetworkParams();
+    node.name = 'Polkadot(Live, hosted by PatractLabs)';
+    node.endpoint = 'wss://polkadot.elara.patract.io';
+    node.ss58 = 0;
+
     final res = await sdk.api.connectNon(keyring, [node]);
 
     if (res != null) {
       _isConnected = true;
-
+      print('connected');
       getNChainDecimal();
     }
 

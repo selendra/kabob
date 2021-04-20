@@ -55,6 +55,7 @@ class AppState extends State<App> {
         if (ApiProvider.keyring.keyPairs.isNotEmpty) {
           isDotContain();
           isBnbContain();
+          isKgoContain();
           isBscContain();
         }
         Provider.of<ApiProvider>(context, listen: false).connectNode().then(
@@ -84,25 +85,23 @@ class AppState extends State<App> {
     Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
     Provider.of<ApiProvider>(context, listen: false).isDotContain();
     Provider.of<ApiProvider>(context, listen: false).connectPolNon();
-    // await StorageServices.readBool('DOT').then((value) {
-    //   if (value) {
-    //     Provider.of<WalletProvider>(context, listen: false)
-    //         .addTokenSymbol('DOT');
-    //     Provider.of<ApiProvider>(context, listen: false).isDotContain();
-    //     Provider.of<ApiProvider>(context, listen: false).connectPolNon();
-    //   }
-    // });
   }
 
   Future<void> isBnbContain() async {
     Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
     Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
     Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
-    // await StorageServices.readBool('BNB').then((value) {
-    //   if (value) {
+  }
 
-    //   }
-    // });
+  Future<void> isKgoContain() async {
+    Provider.of<WalletProvider>(context, listen: false)
+        .addTokenSymbol('KGO (BEP-20)');
+    Provider.of<ContractProvider>(context, listen: false).getKgoSymbol();
+    Provider.of<ContractProvider>(context, listen: false)
+        .getKgoDecimal()
+        .then((value) {
+      Provider.of<ContractProvider>(context, listen: false).getKgoBalance();
+    });
   }
 
   Future<void> isBscContain() async {
@@ -114,11 +113,6 @@ class AppState extends State<App> {
       Provider.of<ContractProvider>(context, listen: false).getBscBalance();
     });
     Provider.of<ContractProvider>(context, listen: false).getSymbol();
-    // await StorageServices.readBool('SEL').then((value) {
-    //   if (value) {
-
-    //   }
-    // });
   }
 
   Future<void> initContract() async {
@@ -152,7 +146,6 @@ class AppState extends State<App> {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
               initialRoute: AppText.splashScreenView,
-              
               title: AppText.appName,
               theme: AppStyle.myTheme(),
               onGenerateRoute: router.generateRoute,

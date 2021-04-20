@@ -334,7 +334,7 @@ class _AssetInfoState extends State<AssetInfo> {
                           ),
                         ),
                       )
-                    else if (widget.tokenSymbol == "SEL" && widget.org == 'BEP-20')
+                    else if (widget.org == 'BEP-20')
                       const Expanded(
                         child: Align(
                           alignment: Alignment.bottomRight,

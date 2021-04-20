@@ -109,6 +109,34 @@ class HomeBody extends StatelessWidget {
                   : Container();
             },
           ),
+            Consumer<ContractProvider>(
+            builder: (context, value, child) {
+              return value.kgoNative.isContain
+                  ? GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          RouteAnimation(
+                            enterPage: AssetInfo(
+                              assetLogo: value.kgoNative.logo,
+                              balance: value.kgoNative.balance ?? '0',
+                              tokenSymbol: value.kgoNative.symbol ?? '',
+                              org: value.kgoNative.org,
+                            ),
+                          ),
+                        );
+                      },
+                      child: AssetItem(
+                        value.kgoNative.logo,
+                        value.kgoNative.symbol ?? '',
+                        'BEP-20',
+                        value.kgoNative.balance ?? '0',
+                        hexaCodeToColor('#022330'),
+                      ),
+                    )
+                  : Container();
+            },
+          ),
           Consumer<ContractProvider>(
             builder: (context, value, child) {
               return value.kmpi.isContain

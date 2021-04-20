@@ -20,15 +20,20 @@ class MenuModel {
     {
       'title': "Wallet",
       'sub': [
-        {'icon': "assets/icons/form.svg", 'subTitle': 'Claim Airdrop'},
         {'icon': "assets/icons/wallet.svg", 'subTitle': 'Wallet'},
         {'icon': "assets/icons/plus.svg", 'subTitle': 'Asset'}
       ]
     },
     {
+      'title': "Airdrop",
+      'sub': [
+        {'icon': "assets/icons/form.svg", 'subTitle': 'Claim SEL'},
+        {'icon': "assets/icons/form.svg", 'subTitle': 'Claim KGO'},
+      ]
+    },
+    {
       'title': "Security",
       'sub': [
-        {'icon': "assets/icons/pin_code.svg", 'subTitle': 'PIN'},
         {'icon': "assets/icons/password.svg", 'subTitle': 'Passcode'},
         {'icon': "assets/icons/finger_print.svg", 'subTitle': 'Fingerprint'}
       ]

@@ -45,6 +45,8 @@ class AppConfig {
 
   static const bscMainnetAddr = '0x288d3A87a87C284Ed685E0490E5C4cC0883a060a';
 
+  static const kgoAddr = '0x5d3AfBA1924aD748776E4Ca62213BF7acf39d773';
+
   static const kmpiAddr = '5GZ9uD6RgN84bpBuic1HWq9AP7k2SSFtK9jCVkrncZsuARQU';
 
   //test 0x78F51cc2e297dfaC4c0D5fb3552d413DC3F71314
@@ -62,9 +64,38 @@ class AppConfig {
   static const spreedSheetId = '1hFKqaUe1q_6A-b-_ZnEAC574d51fCi1bTWQKCluHF2E';
 
 
+  static const nodeListPolkadot = [
+  {
+    'name': 'Polkadot (Live, hosted by PatractLabs)',
+    'ss58': 0,
+    'endpoint': 'wss://polkadot.elara.patract.io',
+  },
+  {
+    'name': 'Polkadot (Live, hosted by Polkawallet CN)',
+    'ss58': 0,
+    'endpoint': 'wss://polkadot-1.polkawallet.io:9944',
+  },
+  {
+    'name': 'Polkadot (Live, hosted by Polkawallet EU)',
+    'ss58': 0,
+    'endpoint': 'wss://polkadot-2.polkawallet.io',
+  },
+  {
+    'name': 'Polkadot (Live, hosted by Parity)',
+    'ss58': 0,
+    'endpoint': 'wss://rpc.polkadot.io',
+  },
+  {
+    'name': 'Polkadot (Live, hosted by onfinality)',
+    'ss58': 0,
+    'endpoint': 'wss://polkadot.api.onfinality.io/public-ws',
+  },
+];
+
+
   static const credentials = ' ';
 
-  
+
 
   // 
   // sld_market net API

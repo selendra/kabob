@@ -21,6 +21,12 @@ class ContractProvider with ChangeNotifier {
     org: 'BEP-20',
     isContain: false,
   );
+
+  NativeM kgoNative = NativeM(
+    logo: 'assets/kgo.png',
+    org: 'BEP-20',
+    isContain: false,
+  );
   NativeM bnbNative = NativeM(
     logo: 'assets/bnb-2.png',
     symbol: 'BNB',
@@ -59,6 +65,33 @@ class ContractProvider with ChangeNotifier {
       params: args,
     );
     return res;
+  }
+
+  Future<void> getKgoSymbol() async {
+    final res = await query(AppConfig.kgoAddr, 'symbol', []);
+
+    kgoNative.symbol = res[0].toString();
+    kgoNative.isContain = true;
+    notifyListeners();
+  }
+
+  Future<void> getKgoDecimal() async {
+    final res = await query(AppConfig.kgoAddr, 'decimals', []);
+    kgoNative.chainDecimal = res[0].toString();
+    notifyListeners();
+  }
+
+  Future<void> getKgoBalance() async {
+    bscNative.isContain = true;
+    final res = await query(
+        AppConfig.kgoAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+
+    kgoNative.balance = Fmt.bigIntToDouble(
+      res[0] as BigInt,
+      int.parse(kgoNative.chainDecimal),
+    ).toString();
+
+    notifyListeners();
   }
 
   Future<void> getBscDecimal() async {

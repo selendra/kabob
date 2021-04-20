@@ -302,6 +302,19 @@ class SubmitTrxState extends State<SubmitTrx> {
               );
             }
             break;
+          case "KGO (BEP-20)":
+            final chainDecimal = await ContractProvider()
+                .query(AppConfig.kgoAddr, 'decimals', []);
+            if (chainDecimal != null) {
+              sendTxAYF(
+                AppConfig.kgoAddr,
+                chainDecimal[0].toString(),
+                _scanPayM.controlReceiverAddress.text,
+                _scanPayM.controlAmount.text,
+                value,
+              );
+            }
+            break;
           case "BNB":
             sendTxBnb(
               _scanPayM.controlReceiverAddress.text,

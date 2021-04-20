@@ -128,7 +128,9 @@ class AddAssetBody extends StatelessWidget {
                       onTap: () async {
                         final _response = await Navigator.push(
                             context, transitionRoute(QrScanner()));
-                        qrRes(_response.toString());
+                        if (_response != null) {
+                          qrRes(_response.toString());
+                        }
                       },
                       child: Container(
                         padding: const EdgeInsets.only(right: 16.0),
