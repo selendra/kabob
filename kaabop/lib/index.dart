@@ -91,6 +91,7 @@ export 'package:wallet_apps/src/screen/home/home_body.dart';
 export 'package:wallet_apps/src/screen/home/menu/account.dart';
 
 export 'package:wallet_apps/src/screen/home/claim_airdrop/claim_airdrop.dart';
+export 'package:wallet_apps/src/screen/home/navigation_drawer/navigation_drawer.dart';
 // Add Assets
 export 'package:wallet_apps/src/screen/home/menu/add_asset/add_asset.dart';
 export 'package:wallet_apps/src/screen/home/menu/add_asset/add_asset_body.dart';

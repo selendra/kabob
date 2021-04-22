@@ -1,8 +1,5 @@
-import 'dart:ui';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
-
 
 class Home extends StatefulWidget {
   final bool apiConnected;
@@ -35,8 +32,26 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     }
 
     if (!widget.apiConnected) {
-      startNode();
+      startNode(context);
     }
+    Timer(const Duration(seconds: 20), () async {
+      if (!widget.apiConnected) {
+        await Future.delayed(const Duration(milliseconds: 200), () {
+          status = null;
+        });
+        Navigator.of(context).pop();
+
+        await dialog(
+          AppUtils.globalKey.currentContext,
+          const Text('Failed to connect to Selendra remote node.'),
+          const Text('Connection Failed'),
+        );
+        Timer(const Duration(seconds: 3), () {
+          setPortfolio();
+          showAirdrop();
+        });
+      }
+    });
 
     AppServices.noInternetConnection(_homeM.globalKey);
 
@@ -45,61 +60,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   Future<void> handleDialog() async {
     if (!Provider.of<ApiProvider>(context, listen: false).isConnected) {
-      startNode();
+      startNode(context);
     }
-  }
-
-  Future<void> startNode() async {
-    await Future.delayed(
-      const Duration(milliseconds: 50),
-      () {
-        showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            dialogContext = context;
-            return disableNativePopBackButton(
-              AlertDialog(
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                title: Column(
-                  children: [
-                    CircularProgressIndicator(
-                      backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation(
-                        hexaCodeToColor(
-                          AppColors.secondary,
-                        ),
-                      ),
-                    ),
-                    Shimmer.fromColors(
-                      baseColor: Colors.red,
-                      highlightColor: Colors.yellow,
-                      child: const Align(
-                        child: MyText(
-                          text: "\nConnecting to Remote Node...",
-                          color: "#000000",
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-                content: const Padding(
-                  padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                  child: MyText(
-                    text: "Please wait ! this might take a bit longer",
-                    color: "#000000",
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
   }
 
   Future<void> toReceiveToken() async {
@@ -125,44 +87,44 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     if (contract.kmpi.isContain) {
       walletProvider.addAvaibleToken({
         'symbol': contract.kmpi.symbol,
-        'balance': contract.kmpi.balance,
+        'balance': contract.kmpi.balance?? '0',
       });
     }
 
     if (contract.atd.isContain) {
       walletProvider.addAvaibleToken({
         'symbol': contract.atd.symbol,
-        'balance': contract.atd.balance,
+        'balance': contract.atd.balance?? '0',
       });
     }
 
     if (contract.bnbNative.isContain) {
       walletProvider.addAvaibleToken({
         'symbol': contract.bnbNative.symbol,
-        'balance': contract.bnbNative.balance,
+        'balance': contract.bnbNative.balance?? '0',
       });
     }
 
     if (api.dot.isContain) {
       walletProvider.addAvaibleToken({
         'symbol': api.dot.symbol,
-        'balance': api.dot.balance,
+        'balance': api.dot.balance?? '0',
       });
     }
 
     if (contract.bscNative.isContain) {
       walletProvider.addAvaibleToken({
         'symbol': '${contract.bscNative.symbol} (BEP-20)',
-        'balance': contract.bscNative.balance,
+        'balance': contract.bscNative.balance?? '0',
       });
     }
 
-     if (contract.kgoNative.isContain) {
-      walletProvider.addAvaibleToken({
-        'symbol': '${contract.kgoNative.symbol} (BEP-20)',
-        'balance': contract.kgoNative.balance,
-      });
-    }
+    // if (contract.kgoNative.isContain) {
+    //   walletProvider.addAvaibleToken({
+    //     'symbol': '${contract.kgoNative.symbol} (BEP-20)',
+    //     'balance': contract.kgoNative.balance,
+    //   });
+    // }
 
     if (contract.token.isNotEmpty) {
       for (int i = 0; i < contract.token.length; i++) {
@@ -193,7 +155,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         status = null;
       });
 
-      Navigator.of(dialogContext).pop();
+      Navigator.of(context).pop();
       Timer(const Duration(seconds: 3), () async {
         setPortfolio();
         showAirdrop();

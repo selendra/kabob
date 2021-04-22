@@ -77,7 +77,6 @@ class ApiProvider with ChangeNotifier {
 
     if (res != null) {
       _isConnected = true;
-      print('connected');
     }
 
     notifyListeners();
@@ -100,7 +99,7 @@ class ApiProvider with ChangeNotifier {
 
     if (res != null) {
       _isConnected = true;
-      print('connected');
+
       getNChainDecimal();
     }
 

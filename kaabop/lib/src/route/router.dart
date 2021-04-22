@@ -16,7 +16,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return RouteAnimation(enterPage: TrxActivity());
       break;
     case AppText.importAccView:
-      return RouteAnimation(enterPage: ImportAcc());
+      return RouteAnimation(enterPage: const ImportAcc());
       break;
     case AppText.contentBackup:
       return RouteAnimation(enterPage: ContentsBackup());
@@ -32,6 +32,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       break;
     case AppText.claimAirdropView:
       return RouteAnimation(enterPage: ClaimAirDrop());
+      break;
+    case AppText.navigationDrawerView:
+      return RouteAnimation(enterPage: NavigationDrawer());
       break;
     default:
       return RouteAnimation(enterPage: MySplashScreen());

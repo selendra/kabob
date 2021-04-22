@@ -18,29 +18,53 @@ class ContractProvider with ChangeNotifier {
   Kmpi kmpi = Kmpi();
   NativeM bscNative = NativeM(
     logo: 'assets/native_token.png',
+    symbol: 'SEL',
     org: 'BEP-20',
-    isContain: false,
+    isContain: true,
   );
 
   NativeM kgoNative = NativeM(
     logo: 'assets/kgo.png',
     org: 'BEP-20',
-    isContain: false,
+    isContain: true,
   );
+
+  NativeM etherNative = NativeM(
+    logo: 'assets/eth_logo.png',
+    symbol: 'ETH',
+    org: '',
+    isContain: true,
+  );
+
   NativeM bnbNative = NativeM(
     logo: 'assets/bnb-2.png',
     symbol: 'BNB',
     org: 'Smart Chain',
-    isContain: false,
+    isContain: true,
   );
   Client _httpClient;
-  Web3Client _web3client;
+  Web3Client _web3client, _etherClient;
 
   List<TokenModel> token = [];
 
   Future<void> initClient() async {
     _httpClient = Client();
     _web3client = Web3Client(AppConfig.bscMainNet, _httpClient);
+  }
+
+  Future<void> initEtherClient() async {
+    _httpClient = Client();
+    _etherClient = Web3Client(AppConfig.etherTestnet, _httpClient);
+  }
+
+  Future<void> getEtherBalance() async {
+    initEtherClient();
+    final ethAddr = await StorageServices().readSecure('etherAdd');
+    final EtherAmount ethbalance =
+        await _etherClient.getBalance(EthereumAddress.fromHex(ethAddr));
+    etherNative.balance = ethbalance.getValueInUnit(EtherUnit.ether).toString();
+
+    notifyListeners();
   }
 
   Future<DeployedContract> initBsc(String contractAddr) async {
@@ -142,6 +166,7 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> getBscBalance() async {
     bscNative.isContain = true;
+    await getBscDecimal();
     final res = await query(AppConfig.bscMainnetAddr, 'balanceOf',
         [EthereumAddress.fromHex(ethAdd)]);
     bscNative.balance = Fmt.bigIntToDouble(

@@ -39,9 +39,16 @@ class MenuModel {
       ]
     },
     {
-      'title': "Account",
+      'title': "Join community",
       'sub': [
         {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Account'},
+      ]
+    },
+    {
+      'title': "About",
+      'sub': [
+        {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Privacy Policy'},
+        {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Term of Use'},
       ]
     },
   ];

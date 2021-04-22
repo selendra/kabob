@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
 
@@ -212,6 +213,61 @@ BoxDecoration signOutColor() {
 
 /* Dialog of response from server */
 // ignore: type_annotate_public_apis
+
+Future<void> startNode(BuildContext context) async {
+  await Future.delayed(
+    const Duration(milliseconds: 50),
+    () {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          // ignore: parameter_assignments
+
+          return disableNativePopBackButton(
+            AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              title: Column(
+                children: [
+                  CircularProgressIndicator(
+                    backgroundColor: Colors.transparent,
+                    valueColor: AlwaysStoppedAnimation(
+                      hexaCodeToColor(
+                        AppColors.secondary,
+                      ),
+                    ),
+                  ),
+                  Shimmer.fromColors(
+                    baseColor: Colors.red,
+                    highlightColor: Colors.yellow,
+                    child: const Align(
+                      child: MyText(
+                        text: "\nConnecting to Remote Node...",
+                        color: "#000000",
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              content: const Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: MyText(
+                  text: "Please wait ! this might take a bit longer",
+                  color: "#000000",
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
 Future dialog(BuildContext context, Widget text, Widget title,
     {Widget action, Color bgColor}) async {
   final result = await showDialog(
@@ -276,11 +332,11 @@ Future dialogEvent(
                   height: 24,
                 ),
                 const MyText(
-                    text: 'Selendra Airdrop',
-                    //color: '#000000',
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  text: 'Selendra Airdrop',
+                  //color: '#000000',
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
                 const SizedBox(
                   height: 16,
                 ),

@@ -55,8 +55,11 @@ class AppState extends State<App> {
         if (ApiProvider.keyring.keyPairs.isNotEmpty) {
           isDotContain();
           isBnbContain();
-          isKgoContain();
+          //isKgoContain();
           isBscContain();
+
+          // Provider.of<ContractProvider>(context, listen: false)
+          //     .getEtherBalance();
         }
         Provider.of<ApiProvider>(context, listen: false).connectNode().then(
           (value) {
@@ -89,8 +92,11 @@ class AppState extends State<App> {
 
   Future<void> isBnbContain() async {
     Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
-    Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
-    Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+    Provider.of<ContractProvider>(context, listen: false)
+        .getBscDecimal()
+        .then((value) {
+      Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+    });
   }
 
   Future<void> isKgoContain() async {
@@ -107,12 +113,12 @@ class AppState extends State<App> {
   Future<void> isBscContain() async {
     Provider.of<WalletProvider>(context, listen: false)
         .addTokenSymbol('SEL (BEP-20)');
+    Provider.of<ContractProvider>(context, listen: false).getSymbol();
     Provider.of<ContractProvider>(context, listen: false)
         .getBscDecimal()
         .then((value) {
       Provider.of<ContractProvider>(context, listen: false).getBscBalance();
     });
-    Provider.of<ContractProvider>(context, listen: false).getSymbol();
   }
 
   Future<void> initContract() async {
@@ -145,6 +151,7 @@ class AppState extends State<App> {
           builder: (context, orientation) {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
+              navigatorKey: AppUtils.globalKey,
               initialRoute: AppText.splashScreenView,
               title: AppText.appName,
               theme: AppStyle.myTheme(),

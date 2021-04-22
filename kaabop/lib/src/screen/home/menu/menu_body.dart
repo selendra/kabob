@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet_apps/index.dart';
 
 class MenuBody extends StatelessWidget {
@@ -12,6 +13,20 @@ class MenuBody extends StatelessWidget {
     this.model,
     this.switchBio,
   });
+
+  Future<void> _launchInBrowser(String url) async {
+    if (await canLaunch(url)) {
+      await launch(
+        url,
+        forceSafariVC: false,
+        forceWebView: false,
+        headers: <String, String>{'my_header_key': 'my_header_value'},
+      );
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,13 +77,13 @@ class MenuBody extends StatelessWidget {
             Navigator.pushNamed(context, AppText.claimAirdropView);
           },
         ),
-        MyListTile(
-          index: 2,
-          subIndex: 1,
-          onTap: () {
-            //Navigator.pushNamed(context, AppText.claimAirdropView);
-          },
-        ),
+        // MyListTile(
+        //   index: 2,
+        //   subIndex: 1,
+        //   onTap: () {
+        //     //Navigator.pushNamed(context, AppText.claimAirdropView);
+        //   },
+        // ),
 
         // Account
         const MenuSubTitle(index: 3),
@@ -101,13 +116,32 @@ class MenuBody extends StatelessWidget {
         const MenuSubTitle(index: 4),
 
         MyListTile(
-          index: 3,
+          index: 4,
           subIndex: 0,
           onTap: () async {
             Navigator.popAndPushNamed(context, AppText.accountView);
           },
         ),
+
+        const MenuSubTitle(index: 5),
+
+        MyListTile(
+          index:5,
+          subIndex: 0,
+          onTap: () async {
+          _launchInBrowser('https://selendra.com/privacy');
+          },
+        ),
+
+        MyListTile(
+          index:5,
+          subIndex: 1,
+          onTap: () async {
+            _launchInBrowser('https://selendra.com/termofuse');
+          },
+        ),
       ],
+
     );
   }
 }

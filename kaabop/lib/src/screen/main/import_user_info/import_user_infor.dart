@@ -111,7 +111,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   Future<void> isBnbContain() async {
     Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
-    Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
     Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
   }
 

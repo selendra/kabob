@@ -23,6 +23,14 @@ class HomeBody extends StatelessWidget {
             contract.getBscBalance();
           }
 
+          // if (contract.etherNative.isContain) {
+          //   contract.getEtherBalance();
+          // }
+
+          // if (contract.kgoNative.isContain) {
+          //   contract.getKgoBalance();
+          // }
+
           if (contract.token.isNotEmpty) {
             contract.fetchNonBalance();
           }
@@ -109,34 +117,34 @@ class HomeBody extends StatelessWidget {
                   : Container();
             },
           ),
-            Consumer<ContractProvider>(
-            builder: (context, value, child) {
-              return value.kgoNative.isContain
-                  ? GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                              assetLogo: value.kgoNative.logo,
-                              balance: value.kgoNative.balance ?? '0',
-                              tokenSymbol: value.kgoNative.symbol ?? '',
-                              org: value.kgoNative.org,
-                            ),
-                          ),
-                        );
-                      },
-                      child: AssetItem(
-                        value.kgoNative.logo,
-                        value.kgoNative.symbol ?? '',
-                        'BEP-20',
-                        value.kgoNative.balance ?? '0',
-                        hexaCodeToColor('#022330'),
-                      ),
-                    )
-                  : Container();
-            },
-          ),
+          // Consumer<ContractProvider>(
+          //   builder: (context, value, child) {
+          //     return value.kgoNative.isContain
+          //         ? GestureDetector(
+          //             onTap: () {
+          //               Navigator.push(
+          //                 context,
+          //                 RouteAnimation(
+          //                   enterPage: AssetInfo(
+          //                     assetLogo: value.kgoNative.logo,
+          //                     balance: value.kgoNative.balance ?? '0',
+          //                     tokenSymbol: value.kgoNative.symbol ?? '',
+          //                     org: value.kgoNative.org,
+          //                   ),
+          //                 ),
+          //               );
+          //             },
+          //             child: AssetItem(
+          //               value.kgoNative.logo,
+          //               value.kgoNative.symbol ?? '',
+          //               'BEP-20',
+          //               value.kgoNative.balance ?? '0',
+          //               hexaCodeToColor('#022330'),
+          //             ),
+          //           )
+          //         : Container();
+          //   },
+          // ),
           Consumer<ContractProvider>(
             builder: (context, value, child) {
               return value.kmpi.isContain
@@ -273,6 +281,30 @@ class HomeBody extends StatelessWidget {
                   : Container();
             },
           ),
+          // Consumer<ContractProvider>(builder: (context, value, child) {
+          //   return GestureDetector(
+          //     onTap: () {
+          //       // Navigator.push(
+          //       //   context,
+          //       //   RouteAnimation(
+          //       //     enterPage: AssetInfo(
+          //       //       assetLogo: value.nativeM.logo,
+          //       //       balance: value.nativeM.balance,
+          //       //       tokenSymbol: value.nativeM.symbol,
+          //       //       org: value.nativeM.org,
+          //       //     ),
+          //       //   ),
+          //       // );
+          //     },
+          //     child: AssetItem(
+          //       value.etherNative.logo,
+          //       value.etherNative.symbol,
+          //       value.etherNative.org,
+          //       value.etherNative.balance??'0',
+          //       Colors.white,
+          //     ),
+          //   );
+          // }),
           Consumer<ApiProvider>(builder: (context, value, child) {
             return GestureDetector(
               onTap: () {

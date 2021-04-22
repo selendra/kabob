@@ -251,7 +251,6 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   Future<void> isBnbContain() async {
     Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
-    Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
     Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
     // await StorageServices.readBool('BNB').then((value) {
     //   if (value) {
