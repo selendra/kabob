@@ -119,17 +119,17 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       });
     }
 
-    // if (contract.kgoNative.isContain) {
-    //   walletProvider.addAvaibleToken({
-    //     'symbol': '${contract.kgoNative.symbol} (BEP-20)',
-    //     'balance': contract.kgoNative.balance,
-    //   });
-    // }
+    if (contract.kgoNative.isContain) {
+      walletProvider.addAvaibleToken({
+        'symbol': '${contract.kgoNative.symbol} (BEP-20)',
+        'balance': contract.kgoNative.balance,
+      });
+    }
 
     if (contract.token.isNotEmpty) {
       for (int i = 0; i < contract.token.length; i++) {
         walletProvider.addAvaibleToken({
-          'symbol': contract.token[i].symbol,
+          'symbol':'${contract.token[i].symbol} (BEP-20)',
           'balance': contract.token[i].balance,
         });
       }

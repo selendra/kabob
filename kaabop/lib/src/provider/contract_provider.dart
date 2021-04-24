@@ -217,6 +217,28 @@ class ContractProvider with ChangeNotifier {
     return res;
   }
 
+  Future<String> sendTxEther(
+    String privateKey,
+    String reciever,
+    String amount,
+  ) async {
+    initEtherClient();
+    final credentials = await _web3client.credentialsFromPrivateKey(
+      privateKey.substring(2),
+    );
+
+    final res = await _etherClient.sendTransaction(
+      credentials,
+      Transaction(
+        to: EthereumAddress.fromHex(reciever),
+        value: EtherAmount.fromUnitAndValue(EtherUnit.ether, amount),
+      ),
+      fetchChainIdFromNetworkId: true,
+    );
+
+    return res;
+  }
+
   Future<String> sendTxBsc(
     String contractAddr,
     String chainDecimal,
@@ -346,23 +368,63 @@ class ContractProvider with ChangeNotifier {
         Provider.of<WalletProvider>(context, listen: false)
             .addTokenSymbol(symbol);
       }
+    } else if (symbol == 'KGO') {
+      if (!ApiProvider().dot.isContain) {
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol('KGO (BEP-20)');
+        Provider.of<ContractProvider>(context, listen: false).getKgoSymbol();
+        Provider.of<ContractProvider>(context, listen: false)
+            .getKgoDecimal()
+            .then((value) {
+          Provider.of<ContractProvider>(context, listen: false).getKgoBalance();
+        });
+      }
     } else {
       final symbol = await query(contractAddr, 'symbol', []);
       final decimal = await query(contractAddr, 'decimals', []);
       final balance = await query(
           contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
-      token.add(TokenModel(
-          contractAddr: contractAddr,
-          decimal: decimal[0].toString(),
-          symbol: symbol[0].toString(),
-          balance: balance[0].toString(),
-          org: 'BEP-20'));
+      if (token.isNotEmpty) {
+        TokenModel item = token.firstWhere(
+            (element) =>
+                element.symbol.toLowerCase() ==
+                symbol[0].toString().toLowerCase(),
+            orElse: () => null);
 
-      await StorageServices.saveContractAddr(contractAddr);
-      Provider.of<WalletProvider>(context, listen: false)
-          .addTokenSymbol(symbol[0].toString());
+        if (item == null) {
+          addContractToken(
+            TokenModel(
+              contractAddr: contractAddr,
+              decimal: decimal[0].toString(),
+              symbol: symbol[0].toString(),
+              balance: balance[0].toString(),
+              org: 'BEP-20',
+            ),
+          );
+
+          await StorageServices.saveContractAddr(contractAddr);
+          Provider.of<WalletProvider>(context, listen: false)
+              .addTokenSymbol('${symbol[0]} (BEP-20)');
+        }
+      } else {
+        token.add(TokenModel(
+            contractAddr: contractAddr,
+            decimal: decimal[0].toString(),
+            symbol: symbol[0].toString(),
+            balance: balance[0].toString(),
+            org: 'BEP-20'));
+
+        await StorageServices.saveContractAddr(contractAddr);
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol(symbol[0].toString());
+      }
     }
+    notifyListeners();
+  }
+
+  Future<void> addContractToken(TokenModel tokenModel) async {
+    token.add(tokenModel);
     notifyListeners();
   }
 
@@ -430,6 +492,8 @@ class ContractProvider with ChangeNotifier {
       org: 'testnet',
       isContain: false,
     );
+
+    token.clear();
 
     notifyListeners();
   }

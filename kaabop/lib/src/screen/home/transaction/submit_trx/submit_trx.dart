@@ -361,6 +361,26 @@ class SubmitTrxState extends State<SubmitTrx> {
     }
   }
 
+  Future<void> sendTxEther(String reciever, String amount, String pin) async {
+    dialogLoading(context);
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+    try {
+      final res = await getPrivateKey(pin);
+
+      if (res != null) {
+        final hash = await contract.sendTxEther(res, reciever, amount);
+        if (hash != null) {
+          enableAnimation();
+        } else {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+    }
+  }
+
   Future<void> sendTxAYF(String contractAddr, String chainDecimal,
       String reciever, String amount, String pin) async {
     dialogLoading(context);

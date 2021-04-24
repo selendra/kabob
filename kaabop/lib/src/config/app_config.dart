@@ -43,7 +43,8 @@ class AppConfig {
 
   //static const bscAddr = '0xd84d89d5c9df06755b5d591794241d3fd20669ce';
 
-  static const etherTestnet = 'https://rinkeby.infura.io/v3/93a7248515ca45d0ba4bbbb8c33f1bda';
+  static const etherTestnet =
+      'https://rinkeby.infura.io/v3/93a7248515ca45d0ba4bbbb8c33f1bda';
 
   static const bscMainnetAddr = '0x288d3A87a87C284Ed685E0490E5C4cC0883a060a';
 
@@ -93,9 +94,16 @@ class AppConfig {
     },
   ];
 
+
+  static const testInviteLink = 'https://selendra-airdrop.netlify.app/invitation?ref=';
+
+  static const testInviteLink1 = 'https://selendra-airdrop.netlify.app/claim-\$sel?ref=';
+
+  static const baseInviteLink = 'https://airdrop.selendra.org/claim-\$sel?ref=';
+
   static const credentials = ' ';
 
- 
+
   //
   // sld_market net API
   // https://sld_marketnet-api.selendra.com/pub/v1

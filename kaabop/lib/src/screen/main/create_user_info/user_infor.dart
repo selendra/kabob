@@ -198,6 +198,7 @@ class MyUserInfoState extends State<MyUserInfo> {
           isDotContain();
           isBnbContain();
           isBscContain();
+          isKgoContain();
 
           Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
           Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
@@ -274,6 +275,17 @@ class MyUserInfoState extends State<MyUserInfo> {
 
     //   }
     // });
+  }
+
+  Future<void> isKgoContain() async {
+    Provider.of<WalletProvider>(context, listen: false)
+        .addTokenSymbol('KGO (BEP-20)');
+    Provider.of<ContractProvider>(context, listen: false).getKgoSymbol();
+    Provider.of<ContractProvider>(context, listen: false)
+        .getKgoDecimal()
+        .then((value) {
+      Provider.of<ContractProvider>(context, listen: false).getKgoBalance();
+    });
   }
 
   PopupMenuItem item(Map<String, dynamic> list) {

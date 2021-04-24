@@ -36,6 +36,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
     case AppText.navigationDrawerView:
       return RouteAnimation(enterPage: NavigationDrawer());
       break;
+    case AppText.inviteFriendView:
+      return RouteAnimation(enterPage: InviteFriend());
+      break;
     default:
       return RouteAnimation(enterPage: MySplashScreen());
   }

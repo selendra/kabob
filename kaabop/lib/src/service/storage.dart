@@ -80,22 +80,20 @@ class StorageServices {
   }
 
   static Future<void> saveContractAddr(String contractAddr) async {
-    List contractAddrList = [];
+    final List<String> contractAddrList = [];
     final res = await fetchData('contractList');
 
     if (res != null) {
-      contractAddrList = res as List;
-
-      final itemContain =
-          contractAddrList.where((element) => element == contractAddr);
-
-      if (itemContain == null) {
-        contractAddrList.add(contractAddr);
-        await StorageServices.setData(contractAddrList, 'contractList');
+      contractAddrList.clear();
+      for (final i in res) {
+        contractAddrList.add(i.toString());
       }
+      contractAddrList.add(contractAddr);
+      await setData(contractAddrList, 'contractList');
     } else {
       contractAddrList.add(contractAddr);
-      await StorageServices.setData(contractAddrList, 'contractList');
+
+      await setData(contractAddrList, 'contractList');
     }
   }
 
@@ -108,7 +106,11 @@ class StorageServices {
 
       contractAddrList.removeWhere((element) => element == contractAddr);
 
-      await StorageServices.setData(contractAddrList, 'contractList');
+      if (contractAddrList.isNotEmpty) {
+        await StorageServices.setData(contractAddrList, 'contractList');
+      } else {
+        await removeKey('contractList');
+      }
     }
   }
 

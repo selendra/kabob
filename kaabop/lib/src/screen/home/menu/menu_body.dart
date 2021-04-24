@@ -27,7 +27,6 @@ class MenuBody extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -35,19 +34,19 @@ class MenuBody extends StatelessWidget {
         MenuHeader(userInfo: userInfo),
 
         // History
-        const MenuSubTitle(index: 0),
+        // const MenuSubTitle(index: 0),
 
-        MyListTile(
-          index: 0,
-          subIndex: 0,
-          onTap: () {
-            Navigator.pop(context, '');
-            Navigator.pushNamed(
-              context,
-              AppText.txActivityView,
-            );
-          },
-        ),
+        // MyListTile(
+        //   index: 0,
+        //   subIndex: 0,
+        //   onTap: () {
+        //     Navigator.pop(context, '');
+        //     Navigator.pushNamed(
+        //       context,
+        //       AppText.txActivityView,
+        //     );
+        //   },
+        // ),
 
         // Wallet
         const MenuSubTitle(index: 1),
@@ -75,6 +74,13 @@ class MenuBody extends StatelessWidget {
           subIndex: 0,
           onTap: () {
             Navigator.pushNamed(context, AppText.claimAirdropView);
+          },
+        ),
+        MyListTile(
+          index: 2,
+          subIndex: 2,
+          onTap: () {
+            Navigator.pushNamed(context, AppText.inviteFriendView);
           },
         ),
         // MyListTile(
@@ -113,35 +119,34 @@ class MenuBody extends StatelessWidget {
           ),
           onTap: null,
         ),
-        const MenuSubTitle(index: 4),
+        // const MenuSubTitle(index: 4),
 
-        MyListTile(
-          index: 4,
-          subIndex: 0,
-          onTap: () async {
-            Navigator.popAndPushNamed(context, AppText.accountView);
-          },
-        ),
+        // MyListTile(
+        //   index: 4,
+        //   subIndex: 0,
+        //   onTap: () async {
+        //     Navigator.popAndPushNamed(context, AppText.accountView);
+        //   },
+        // ),
 
         const MenuSubTitle(index: 5),
 
         MyListTile(
-          index:5,
+          index: 5,
           subIndex: 0,
           onTap: () async {
-          _launchInBrowser('https://selendra.com/privacy');
+            _launchInBrowser('https://selendra.com/privacy');
           },
         ),
 
         MyListTile(
-          index:5,
+          index: 5,
           subIndex: 1,
           onTap: () async {
             _launchInBrowser('https://selendra.com/termofuse');
           },
         ),
       ],
-
     );
   }
 }

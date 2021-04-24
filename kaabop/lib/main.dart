@@ -1,5 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/models/token.m.dart';
+import 'package:web3dart/web3dart.dart';
 import 'src/route/router.dart' as router;
 
 void main() {
@@ -51,12 +53,14 @@ class AppState extends State<App> {
 
   Future<void> initApi() async {
     Provider.of<ApiProvider>(context, listen: false).initApi().then(
-      (value) {
+      (value) async {
         if (ApiProvider.keyring.keyPairs.isNotEmpty) {
           isDotContain();
           isBnbContain();
-          //isKgoContain();
+          isKgoContain();
           isBscContain();
+
+          getSavedContractToken();
 
           // Provider.of<ContractProvider>(context, listen: false)
           //     .getEtherBalance();
@@ -82,6 +86,32 @@ class AppState extends State<App> {
         );
       },
     );
+  }
+
+  Future<void> getSavedContractToken() async {
+    final contractProvider =
+        Provider.of<ContractProvider>(context, listen: false);
+    final res = await StorageServices.fetchData('contractList');
+
+    if (res != null) {
+      for (final i in res) {
+        final symbol = await contractProvider.query(i.toString(), 'symbol', []);
+        final decimal =
+            await contractProvider.query(i.toString(), 'decimals', []);
+        final balance = await contractProvider.query(i.toString(), 'balanceOf',
+            [EthereumAddress.fromHex(contractProvider.ethAdd)]);
+
+        contractProvider.addContractToken(TokenModel(
+          contractAddr: i.toString(),
+          decimal: decimal[0].toString(),
+          symbol: symbol[0].toString(),
+          balance: balance[0].toString(),
+          org: 'BEP-20',
+        ));
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol('${symbol[0]} (BEP-20)');
+      }
+    }
   }
 
   Future<void> isDotContain() async {

@@ -34,8 +34,7 @@ class AssetInfoC {
                             keyQrShare: _keyQrShare,
                             name: ApiProvider.keyring.current.name,
                             assetInfo: 'assetInfo',
-                            wallet: symbol == 'BNB' ||
-                                    symbol == 'SEL' && org == 'BEP-20'
+                            wallet: symbol == 'BNB' || org == 'BEP-20'
                                 ? value.ethAdd
                                 : ApiProvider.keyring.current.address,
                           );

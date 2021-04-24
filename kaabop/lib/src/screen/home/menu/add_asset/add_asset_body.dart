@@ -106,11 +106,21 @@ class AddAssetBody extends StatelessWidget {
                         addAsset,
                       ),
                     )
+                  else if (tokenSymbol == 'KGO')
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      child: portFolioItemRow(
+                        ContractProvider().kgoNative.logo,
+                        tokenSymbol,
+                        Colors.black,
+                        addAsset,
+                      ),
+                    )
                   else if (tokenSymbol != 'SEL' && tokenSymbol != '')
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
                       child: portFolioItemRow(
-                        ContractProvider().bscNative.logo,
+                        'assets/circle.png',
                         tokenSymbol,
                         Colors.black,
                         addAsset,

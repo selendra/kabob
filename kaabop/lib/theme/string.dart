@@ -33,4 +33,5 @@ class AppText {
   static const String recieveWalletView = '/recieveWallet';
   static const String claimAirdropView = '/claimairdrop';
   static const String navigationDrawerView ='/navigationdrawer';
+  static const String inviteFriendView = '/invitefriend';
 }

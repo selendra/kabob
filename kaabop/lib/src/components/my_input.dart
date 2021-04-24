@@ -18,6 +18,8 @@ class MyInputField extends StatelessWidget {
   final void Function() onTap;
   final FocusNode focusNode;
   final IconButton icon;
+  final Widget suffix;
+  final bool autoFocus;
   final String Function(String) validateField;
   final String Function(String) onChanged;
   final Function onSubmit;
@@ -42,6 +44,8 @@ class MyInputField extends StatelessWidget {
       @required this.focusNode,
       this.icon,
       this.textColor = "#FFFFFF",
+      this.autoFocus,
+      this.suffix,
       this.validateField,
       this.onChanged,
       @required this.onSubmit});
@@ -54,6 +58,7 @@ class MyInputField extends StatelessWidget {
           key: key,
           enabled: enableInput,
           focusNode: focusNode,
+          autofocus: autoFocus??false,
           keyboardType: inputType,
           obscureText: obcureText,
           controller: controller,
@@ -91,6 +96,8 @@ class MyInputField extends StatelessWidget {
             contentPadding: const  EdgeInsets.fromLTRB(
                 21, 23, 21, 23), // Default padding = -10.0 px
             suffixIcon: icon,
+            suffix: suffix,
+            
           ),
           inputFormatters: textInputFormatter,
           /* Limit Length Of Text Input */

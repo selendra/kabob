@@ -29,6 +29,7 @@ class MenuModel {
       'sub': [
         {'icon': "assets/icons/form.svg", 'subTitle': 'Claim SEL'},
         {'icon': "assets/icons/form.svg", 'subTitle': 'Claim KGO'},
+        {'icon': "assets/icons/add_people.svg", 'subTitle': 'Invite Friends'},
       ]
     },
     {

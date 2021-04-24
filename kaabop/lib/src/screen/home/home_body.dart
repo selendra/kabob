@@ -27,9 +27,9 @@ class HomeBody extends StatelessWidget {
           //   contract.getEtherBalance();
           // }
 
-          // if (contract.kgoNative.isContain) {
-          //   contract.getKgoBalance();
-          // }
+          if (contract.kgoNative.isContain) {
+            contract.getKgoBalance();
+          }
 
           if (contract.token.isNotEmpty) {
             contract.fetchNonBalance();
@@ -91,60 +91,56 @@ class HomeBody extends StatelessWidget {
           ),
           Consumer<ContractProvider>(
             builder: (context, value, child) {
-              return value.bscNative.isContain
-                  ? GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                              assetLogo: value.bscNative.logo,
-                              balance: value.bscNative.balance ?? '0',
-                              tokenSymbol: value.bscNative.symbol ?? '',
-                              org: value.bscNative.org,
-                            ),
-                          ),
-                        );
-                      },
-                      child: AssetItem(
-                        value.bscNative.logo,
-                        value.bscNative.symbol ?? '',
-                        'BEP-20',
-                        value.bscNative.balance ?? '0',
-                        hexaCodeToColor('#022330'),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    RouteAnimation(
+                      enterPage: AssetInfo(
+                        assetLogo: value.bscNative.logo,
+                        balance: value.bscNative.balance ?? '0',
+                        tokenSymbol: value.bscNative.symbol ?? '',
+                        org: value.bscNative.org,
                       ),
-                    )
-                  : Container();
+                    ),
+                  );
+                },
+                child: AssetItem(
+                  value.bscNative.logo,
+                  value.bscNative.symbol ?? '',
+                  'BEP-20',
+                  value.bscNative.balance ?? '0',
+                  hexaCodeToColor('#022330'),
+                ),
+              );
             },
           ),
-          // Consumer<ContractProvider>(
-          //   builder: (context, value, child) {
-          //     return value.kgoNative.isContain
-          //         ? GestureDetector(
-          //             onTap: () {
-          //               Navigator.push(
-          //                 context,
-          //                 RouteAnimation(
-          //                   enterPage: AssetInfo(
-          //                     assetLogo: value.kgoNative.logo,
-          //                     balance: value.kgoNative.balance ?? '0',
-          //                     tokenSymbol: value.kgoNative.symbol ?? '',
-          //                     org: value.kgoNative.org,
-          //                   ),
-          //                 ),
-          //               );
-          //             },
-          //             child: AssetItem(
-          //               value.kgoNative.logo,
-          //               value.kgoNative.symbol ?? '',
-          //               'BEP-20',
-          //               value.kgoNative.balance ?? '0',
-          //               hexaCodeToColor('#022330'),
-          //             ),
-          //           )
-          //         : Container();
-          //   },
-          // ),
+          Consumer<ContractProvider>(
+            builder: (context, value, child) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    RouteAnimation(
+                      enterPage: AssetInfo(
+                        assetLogo: value.kgoNative.logo,
+                        balance: value.kgoNative.balance ?? '0',
+                        tokenSymbol: value.kgoNative.symbol ?? '',
+                        org: value.kgoNative.org,
+                      ),
+                    ),
+                  );
+                },
+                child: AssetItem(
+                  value.kgoNative.logo,
+                  value.kgoNative.symbol ?? '',
+                  'BEP-20',
+                  value.kgoNative.balance ?? '0',
+                  hexaCodeToColor('#022330'),
+                ),
+              );
+            },
+          ),
           Consumer<ContractProvider>(
             builder: (context, value, child) {
               return value.kmpi.isContain
@@ -256,29 +252,27 @@ class HomeBody extends StatelessWidget {
           ),
           Consumer<ContractProvider>(
             builder: (context, value, child) {
-              return value.bnbNative.isContain
-                  ? GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                              assetLogo: value.bnbNative.logo,
-                              balance: value.bnbNative.balance ?? '0',
-                              tokenSymbol: value.bnbNative.symbol ?? '',
-                            ),
-                          ),
-                        );
-                      },
-                      child: AssetItem(
-                        value.bnbNative.logo,
-                        value.bnbNative.symbol ?? '',
-                        'Smart Chain',
-                        value.bnbNative.balance ?? '0',
-                        Colors.black,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    RouteAnimation(
+                      enterPage: AssetInfo(
+                        assetLogo: value.bnbNative.logo,
+                        balance: value.bnbNative.balance ?? '0',
+                        tokenSymbol: value.bnbNative.symbol ?? '',
                       ),
-                    )
-                  : Container();
+                    ),
+                  );
+                },
+                child: AssetItem(
+                  value.bnbNative.logo,
+                  value.bnbNative.symbol ?? '',
+                  'Smart Chain',
+                  value.bnbNative.balance ?? '0',
+                  Colors.black,
+                ),
+              );
             },
           ),
           // Consumer<ContractProvider>(builder: (context, value, child) {
@@ -334,6 +328,7 @@ class HomeBody extends StatelessWidget {
                 ? ListView.builder(
                     shrinkWrap: true,
                     addAutomaticKeepAlives: false,
+                    primary: false,
                     itemCount: value.token.length,
                     itemBuilder: (context, index) {
                       return Dismissible(
@@ -341,8 +336,8 @@ class HomeBody extends StatelessWidget {
                         direction: DismissDirection.endToStart,
                         background: DismissibleBackground(),
                         onDismissed: (direct) {
-                          setPortfolio();
                           value.removeToken(value.token[index].symbol, context);
+                          setPortfolio();
                         },
                         child: GestureDetector(
                           onTap: () {
@@ -350,7 +345,7 @@ class HomeBody extends StatelessWidget {
                               context,
                               RouteAnimation(
                                 enterPage: AssetInfo(
-                                  assetLogo: value.bscNative.logo,
+                                  assetLogo: 'assets/circle.png',
                                   balance: value.token[index].balance ?? '0',
                                   tokenSymbol: value.token[index].symbol ?? '',
                                   org: value.token[index].org,
@@ -359,7 +354,7 @@ class HomeBody extends StatelessWidget {
                             );
                           },
                           child: AssetItem(
-                            value.bscNative.logo,
+                            'assets/circle.png',
                             value.token[index].symbol ?? '',
                             'BEP-20',
                             value.token[index].balance ?? '0',

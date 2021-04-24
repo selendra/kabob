@@ -265,207 +265,222 @@ class _AssetInfoState extends State<AssetInfo> {
                 Navigator.pop(context);
               },
             ),
-            Container(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                width: double.infinity,
-                height: MediaQuery.of(context).size.height * 0.15,
-                padding: const EdgeInsets.only(
-                  left: 20,
-                  right: 20,
-                  top: 25,
-                  bottom: 25,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: hexaCodeToColor(AppColors.cardColor),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      margin: widget.tokenSymbol == 'SEL'
-                          ? const EdgeInsets.only()
-                          : const EdgeInsets.only(right: 16),
-                      width: 70,
-                      height: 70,
+            Expanded(
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.15,
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 25,
+                        bottom: 25,
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
+                        color: hexaCodeToColor(AppColors.cardColor),
                       ),
-                      child: Image.asset(widget.assetLogo),
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      height: 80,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          const MyText(
-                            text: "Balance",
-                            color: "#FFFFFF",
-                            fontSize: 20,
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            margin: widget.tokenSymbol == 'SEL'
+                                ? const EdgeInsets.only()
+                                : const EdgeInsets.only(right: 16),
+                            width: 70,
+                            height: 70,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Image.asset(widget.assetLogo),
                           ),
-                          const SizedBox(height: 5),
-                          Expanded(
-                            child: MyText(
-                              text: widget.balance,
-                              color: AppColors.secondarytext,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
+                          Container(
+                            alignment: Alignment.centerLeft,
+                            height: 80,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const MyText(
+                                  text: "Balance",
+                                  color: "#FFFFFF",
+                                  fontSize: 20,
+                                ),
+                                const SizedBox(height: 5),
+                                Expanded(
+                                  child: MyText(
+                                    text: widget.balance,
+                                    color: AppColors.secondarytext,
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
+                          if (widget.tokenSymbol == "ATD")
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Consumer<ContractProvider>(
+                                  builder: (context, value, child) {
+                                    return MyText(
+                                      textAlign: TextAlign.right,
+                                      text: value.atd.status
+                                          ? 'Status: Check-In'
+                                          : 'Status: Check-out',
+                                      fontSize: 16.0,
+                                    );
+                                  },
+                                ),
+                              ),
+                            )
+                          else if (widget.org == 'BEP-20')
+                            const Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: MyText(
+                                  textAlign: TextAlign.right,
+                                  text: 'BEP-20',
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            )
+                          else
+                            Container()
                         ],
                       ),
                     ),
-                    if (widget.tokenSymbol == "ATD")
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: Consumer<ContractProvider>(
-                            builder: (context, value, child) {
-                              return MyText(
-                                textAlign: TextAlign.right,
-                                text: value.atd.status
-                                    ? 'Status: Check-In'
-                                    : 'Status: Check-out',
-                                fontSize: 16.0,
-                              );
-                            },
+                  ),
+                  Container(
+                    padding: widget.tokenSymbol == 'ATD'
+                        ? const EdgeInsets.symmetric()
+                        : const EdgeInsets.symmetric(vertical: 16.0),
+                    child: widget.tokenSymbol == 'ATD'
+                        ? Container()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                height: 50,
+                                width: 150,
+                                // ignore: deprecated_member_use
+                                child: FlatButton(
+                                  onPressed: () {
+                                    MyBottomSheet().trxOptions(
+                                      context: context,
+                                    );
+                                  },
+                                  color: hexaCodeToColor(AppColors.secondary),
+                                  disabledColor: Colors.grey[700],
+                                  focusColor:
+                                      hexaCodeToColor(AppColors.secondary),
+                                  child: const MyText(
+                                    text: 'Transfer',
+                                    color: '#FFFFFF',
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16.0),
+                              SizedBox(
+                                height: 50,
+                                width: 150,
+                                // ignore: deprecated_member_use
+                                child: FlatButton(
+                                  onPressed: () {
+                                    AssetInfoC().showRecieved(
+                                      context,
+                                      _method,
+                                      symbol: widget.tokenSymbol,
+                                      org: widget.org,
+                                    );
+                                  },
+                                  color: hexaCodeToColor(
+                                    AppColors.secondary,
+                                  ),
+                                  disabledColor: Colors.grey[700],
+                                  focusColor: hexaCodeToColor(
+                                    AppColors.secondary,
+                                  ),
+                                  child: const MyText(
+                                    text: 'Recieved',
+                                    color: '#FFFFFF',
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      )
-                    else if (widget.org == 'BEP-20')
-                      const Expanded(
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: MyText(
-                            textAlign: TextAlign.right,
-                            text: 'BEP-20',
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      )
-                    else
-                      Container()
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              padding: widget.tokenSymbol == 'ATD'
-                  ? const EdgeInsets.symmetric()
-                  : const EdgeInsets.symmetric(vertical: 16.0),
-              child: widget.tokenSymbol == 'ATD'
-                  ? Container()
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      top: 16.0,
+                    ),
+                    child: Row(
                       children: [
-                        SizedBox(
-                          height: 50,
-                          width: 150,
-                          // ignore: deprecated_member_use
-                          child: FlatButton(
-                            onPressed: () {
-                              MyBottomSheet().trxOptions(
-                                context: context,
-                              );
-                            },
-                            color: hexaCodeToColor(AppColors.secondary),
-                            disabledColor: Colors.grey[700],
-                            focusColor: hexaCodeToColor(AppColors.secondary),
-                            child: const MyText(
-                              text: 'Transfer',
-                              color: '#FFFFFF',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16.0),
-                        SizedBox(
-                          height: 50,
-                          width: 150,
-                          // ignore: deprecated_member_use
-                          child: FlatButton(
-                            onPressed: () {
-                              AssetInfoC().showRecieved(
-                                context,
-                                _method,
-                                symbol: widget.tokenSymbol,
-                                org: widget.org,
-                              );
-                            },
+                        Container(
+                          width: 5,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
                             color: hexaCodeToColor(
                               AppColors.secondary,
                             ),
-                            disabledColor: Colors.grey[700],
-                            focusColor: hexaCodeToColor(
-                              AppColors.secondary,
-                            ),
-                            child: const MyText(
-                              text: 'Recieved',
-                              color: '#FFFFFF',
-                            ),
                           ),
+                        ),
+                        const MyText(
+                          text: 'Activity',
+                          fontSize: 27,
+                          color: "#FFFFFF",
+                          left: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ],
                     ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 16.0,
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    width: 5,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: hexaCodeToColor(
-                        AppColors.secondary,
-                      ),
-                    ),
                   ),
-                  const MyText(
-                    text: 'Activity',
-                    fontSize: 27,
-                    color: "#FFFFFF",
-                    left: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  if (widget.tokenSymbol == 'SEL' && widget.org != 'BEP-20')
+                    AssetHistory(
+                      _txHistoryModel.tx,
+                      _flareController,
+                      _scanPayM.isPay,
+                      widget.assetLogo,
+                      _deleteHistory,
+                      showDetailDialog,
+                    )
+                  else
+                    Container(),
+                  if (widget.tokenSymbol == 'KMPI')
+                    AssetHistory(
+                      _txHistoryModel.txKpi,
+                      _flareController,
+                      _scanPayM.isPay,
+                      widget.assetLogo,
+                      _deleteHistory,
+                      showDetailDialog,
+                    )
+                  else
+                    Container(),
+                  if (widget.tokenSymbol == 'ATD')
+                    AttActivity(
+                      _checkAll.reversed.toList(),
+                      _refresh,
+                    )
+                  else
+                    Container(),
+                  // if (widget.tokenSymbol != 'ATD' ||
+                  //     widget.tokenSymbol != 'KMPI' || widget.tokenSymbol != 'SEL' ||
+                  //     widget.org == 'BEP-20')
+                  //   SvgPicture.asset(
+                  //     'assets/icons/no_data.svg',
+                  //     width: 180,
+                  //     height: 180,
+                  //   )
                 ],
               ),
             ),
-            if (widget.tokenSymbol == 'SEL' && widget.org!= 'BEP-20')
-              AssetHistory(
-                _txHistoryModel.tx,
-                _flareController,
-                _scanPayM.isPay,
-                widget.assetLogo,
-                _deleteHistory,
-                showDetailDialog,
-              )
-            else
-              Container(),
-            if (widget.tokenSymbol == 'KMPI')
-              AssetHistory(
-                _txHistoryModel.txKpi,
-                _flareController,
-                _scanPayM.isPay,
-                widget.assetLogo,
-                _deleteHistory,
-                showDetailDialog,
-              )
-            else
-              Container(),
-            if (widget.tokenSymbol == 'ATD')
-              AttActivity(
-                _checkAll.reversed.toList(),
-                _refresh,
-              )
-            else
-              Container()
           ],
         ),
       ),

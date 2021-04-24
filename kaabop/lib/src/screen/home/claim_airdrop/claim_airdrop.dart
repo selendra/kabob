@@ -21,6 +21,8 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
 
   TextEditingController _socialController;
 
+  TextEditingController _referralController;
+
   FocusNode _emailFocusNode;
 
   FocusNode _phoneFocusNode;
@@ -28,6 +30,8 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
   FocusNode _walletFocusNode;
 
   FocusNode _socialFocusNode;
+
+  FocusNode _referralNode;
 
   final airdropKey = GlobalKey<FormState>();
 
@@ -123,13 +127,15 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
     // get worksheet by its title
 
     final sheet = ss.worksheetById(0);
+    
 
     try {
       await sheet.values.appendRow([
         _emailController.text,
         _phoneController.text,
         _walletController.text,
-        _socialController.text ?? ''
+        _socialController.text ?? '',
+        _referralController.text ?? ''
       ]);
 
       enableAnimation();
@@ -142,6 +148,8 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
       );
     }
   }
+
+ 
 
   Future<void> enableAnimation() async {
     Navigator.pop(context);
@@ -160,17 +168,28 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
     });
   }
 
+  Future<void> pasteDataToClipboard() async {
+    final ClipboardData data = await Clipboard.getData(Clipboard.kTextPlain);
+
+    _referralController.text = data.text;
+    _referralController.selection = TextSelection.fromPosition(
+        TextPosition(offset: _referralController.text.length));
+    setState(() {});
+  }
+
   @override
   void initState() {
     _emailController = TextEditingController();
     _phoneController = TextEditingController();
     _walletController = TextEditingController();
     _socialController = TextEditingController();
+    _referralController = TextEditingController();
 
     _emailFocusNode = FocusNode();
     _phoneFocusNode = FocusNode();
     _walletFocusNode = FocusNode();
     _socialFocusNode = FocusNode();
+    _referralNode = FocusNode();
     super.initState();
   }
 
@@ -214,7 +233,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                                   const BorderRadius.all(Radius.circular(10.0)),
                               child: Image.asset(
                                 'assets/bep20.png',
-                                height: 230,
+                                height: 180,
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -300,6 +319,28 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                             right: 16.0,
                             fontSize: 16.0,
                           ),
+                          MyInputField(
+                            pTop: 24.0,
+                            pBottom: 8,
+                            labelText: "Referral ID",
+                            textInputFormatter: [
+                              LengthLimitingTextInputFormatter(
+                                TextField.noMaxLength,
+                              ),
+                            ],
+                            suffix: GestureDetector(
+                              onTap: () {
+                                pasteDataToClipboard();
+                              },
+                              child: const MyText(
+                                text: 'PASTE',
+                              ),
+                            ),
+                            controller: _referralController,
+                            focusNode: _referralNode,
+                            onChanged: onChanged,
+                            onSubmit: onSubmit,
+                          ),
                           const SizedBox(height: 20),
                           MyFlatButton(
                             textButton: "Claim Airdrop",
@@ -311,6 +352,8 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                             hasShadow: true,
                             action: _enableButton ? submitForm : null,
                           ),
+                          
+                          const SizedBox(height: 200),
                         ],
                       ),
                     ),
