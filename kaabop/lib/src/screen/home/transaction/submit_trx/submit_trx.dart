@@ -322,6 +322,13 @@ class SubmitTrxState extends State<SubmitTrx> {
               value,
             );
             break;
+          case "ETH":
+            sendTxEther(
+              _scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text,
+              value,
+            );
+            break;
           default:
             final contractAddr =
                 ContractProvider().findContractAddr(_scanPayM.asset);

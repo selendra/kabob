@@ -62,6 +62,8 @@ export 'package:wallet_apps/src/utils/fmt.dart';
 export 'package:wallet_apps/src/models/home_m.dart';
 /* Menu */
 export 'package:wallet_apps/src/models/menu_m.dart';
+
+export 'package:wallet_apps/src/models/token.m.dart';
 // Dashboard
 
 export 'package:wallet_apps/src/models/atd.dart';

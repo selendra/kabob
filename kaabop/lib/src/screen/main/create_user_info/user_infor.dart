@@ -195,9 +195,11 @@ class MyUserInfoState extends State<MyUserInfo> {
           }
           Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
 
-          isDotContain();
-          isBnbContain();
-          isBscContain();
+          Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+          Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+          Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+
+          
           isKgoContain();
 
           Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
@@ -236,51 +238,51 @@ class MyUserInfoState extends State<MyUserInfo> {
     }
   }
 
-  Future<void> isDotContain() async {
-    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
-    Provider.of<ApiProvider>(context, listen: false).isDotContain();
-    Provider.of<ApiProvider>(context, listen: false).connectPolNon();
-    // await StorageServices.readBool('DOT').then((value) {
-    //   if (value) {
-    //     Provider.of<WalletProvider>(context, listen: false)
-    //         .addTokenSymbol('DOT');
-    //     Provider.of<ApiProvider>(context, listen: false).isDotContain();
-    //     Provider.of<ApiProvider>(context, listen: false).connectPolNon();
-    //   }
-    // });
-  }
+  // Future<void> isDotContain() async {
+  //   // Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
+  //   // Provider.of<ApiProvider>(context, listen: false).isDotContain();
+  //   Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+  //   // await StorageServices.readBool('DOT').then((value) {
+  //   //   if (value) {
+  //   //     Provider.of<WalletProvider>(context, listen: false)
+  //   //         .addTokenSymbol('DOT');
+  //   //     Provider.of<ApiProvider>(context, listen: false).isDotContain();
+  //   //     Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+  //   //   }
+  //   // });
+  // }
 
-  Future<void> isBnbContain() async {
-    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
-    Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
-    // await StorageServices.readBool('BNB').then((value) {
-    //   if (value) {
+  // Future<void> isBnbContain() async {
+  //   Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
+  //   Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+  //   // await StorageServices.readBool('BNB').then((value) {
+  //   //   if (value) {
 
-    //   }
-    // });
-  }
+  //   //   }
+  //   // });
+  // }
 
-  Future<void> isBscContain() async {
-    Provider.of<WalletProvider>(context, listen: false)
-        .addTokenSymbol('SEL (BEP-20)');
-    Provider.of<ContractProvider>(context, listen: false).getSymbol();
-    Provider.of<ContractProvider>(context, listen: false)
-        .getBscDecimal()
-        .then((value) {
-      Provider.of<ContractProvider>(context, listen: false).getBscBalance();
-    });
+  // Future<void> isBscContain() async {
+  //   Provider.of<WalletProvider>(context, listen: false)
+  //       .addTokenSymbol('SEL (BEP-20)');
+  //   Provider.of<ContractProvider>(context, listen: false).getSymbol();
+  //   Provider.of<ContractProvider>(context, listen: false)
+  //       .getBscDecimal()
+  //       .then((value) {
+  //     Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+  //   });
 
-    // await StorageServices.readBool('SEL').then((value) {
-    //   if (value) {
+  //   // await StorageServices.readBool('SEL').then((value) {
+  //   //   if (value) {
 
-    //   }
-    // });
-  }
+  //   //   }
+  //   // });
+  // }
 
   Future<void> isKgoContain() async {
-    Provider.of<WalletProvider>(context, listen: false)
-        .addTokenSymbol('KGO (BEP-20)');
-    Provider.of<ContractProvider>(context, listen: false).getKgoSymbol();
+    // Provider.of<WalletProvider>(context, listen: false)
+    //     .addTokenSymbol('KGO (BEP-20)');
+    // Provider.of<ContractProvider>(context, listen: false).getKgoSymbol();
     Provider.of<ContractProvider>(context, listen: false)
         .getKgoDecimal()
         .then((value) {

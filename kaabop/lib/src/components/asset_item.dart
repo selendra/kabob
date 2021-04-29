@@ -7,22 +7,28 @@ class AssetItem extends StatelessWidget {
   final String org;
   final String balance;
   final Color color;
+  final double size;
 
-  const AssetItem(
-      this.asset, this.tokenSymbol, this.org, this.balance, this.color);
+  const AssetItem(this.asset, this.tokenSymbol, this.org, this.balance,
+      this.color, {this.size});
   @override
   Widget build(BuildContext context) {
     return rowDecorationStyle(
         child: Row(
       children: <Widget>[
         Container(
-          width: 50,
-          height: 50,
+          width: 65,//size ?? 65,
+          height: 65,//size ?? 65,
           padding: const EdgeInsets.all(6),
           margin: const EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
-              color: color, borderRadius: BorderRadius.circular(40)),
-          child: Image.asset(asset),
+            color: color,
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: Image.asset(
+            asset,
+            fit: BoxFit.contain,
+          ),
         ),
         Expanded(
           child: Container(
@@ -49,7 +55,7 @@ class AssetItem extends StatelessWidget {
               children: [
                 MyText(
                     width: double.infinity,
-                    text: balance ?? '0', //portfolioData[0]["data"]['balance'],
+                    text: balance ?? '0',
                     color: "#FFFFFF",
                     textAlign: TextAlign.right,
                     overflow: TextOverflow.ellipsis),

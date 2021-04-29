@@ -46,14 +46,13 @@ class ApiProvider with ChangeNotifier {
   ContractProvider contractProvider;
   AccountM accountM = AccountM();
   NativeM nativeM = NativeM(
-    logo: 'assets/native_token.png',
+    logo: 'assets/SelendraCircle-White.png',
     symbol: 'SEL',
     org: 'Testnet',
   );
   NativeM dot = NativeM(
     symbol: 'DOT',
     logo: 'assets/icons/polkadot.png',
-    balance: '0',
     isContain: false,
   );
 
@@ -63,6 +62,7 @@ class ApiProvider with ChangeNotifier {
 
   Future<void> initApi() async {
     await keyring.init();
+    keyring.setSS58(42);
     await sdk.init(keyring);
   }
 
@@ -108,10 +108,10 @@ class ApiProvider with ChangeNotifier {
     return res;
   }
 
-  void isDotContain() {
-    dot.isContain = true;
-    notifyListeners();
-  }
+  // void isDotContain() {
+  //   dot.isContain = true;
+  //   notifyListeners();
+  // }
 
   void dotIsNotContain() {
     dot.isContain = false;
@@ -175,7 +175,7 @@ class ApiProvider with ChangeNotifier {
   Future<void> getCurrentAccount() async {
     accountM.address = keyring.current.address;
     accountM.name = keyring.current.name;
-
+    print(accountM.address);
     notifyListeners();
   }
 

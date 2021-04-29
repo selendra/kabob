@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.1.0+16
+version: 2.1.0+17
 #6 feature
 #8 debug
 #1 refactor
@@ -38,6 +38,7 @@ dependencies:
   url_launcher: ^6.0.3
   
   latlong: ^0.6.1
+  web_socket_channel: ^1.1.0
 
   gsheets: ^0.2.7
   
@@ -117,12 +118,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   lint: ^1.0.0
-  flutter_launcher_icons: ^0.8.0
 
-flutter_icons:
-  image_path: "assets/bitriel-3.png"
-  ios: true
-  android: true
 
   
 

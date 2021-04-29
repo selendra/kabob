@@ -7,7 +7,7 @@ class WalletProvider with ChangeNotifier {
   final List<PortfolioM> _portfolioM = [];
   List<Map<String, String>> availableToken = [];
 
-  List<String> listSymbol = ['SEL'];
+  List<String> listSymbol = ['SEL','DOT','BNB','ETH','SEL (BEP-20)','KGO (BEP-20)'];
 
   List<Color> pieColorList = const [
     Color(0xFFff7675),

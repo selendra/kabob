@@ -4,7 +4,7 @@ import 'package:wallet_apps/index.dart';
 class Home extends StatefulWidget {
   final bool apiConnected;
   // ignore: avoid_positional_boolean_parameters
-  const Home(this.apiConnected);
+  const Home({this.apiConnected});
 
   static const route = '/home';
 
@@ -23,30 +23,25 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    if (widget.apiConnected) {
-      status = null;
-      Timer(const Duration(seconds: 3), () {
-        setPortfolio();
-        showAirdrop();
-      });
-    }
+    Timer(const Duration(seconds: 3), () {
+      handle();
+    });
 
-    if (!widget.apiConnected) {
-      startNode(context);
-    }
+    if (ApiProvider.keyring.current.address != null) startNode(context);
+
     Timer(const Duration(seconds: 20), () async {
       if (!widget.apiConnected) {
-        await Future.delayed(const Duration(milliseconds: 200), () {
-          status = null;
-        });
-        Navigator.of(context).pop();
+        // await Future.delayed(const Duration(milliseconds: 200), () {
+        //   status = null;
+        // });
+        // Navigator.of(context).pop();
 
         await dialog(
           AppUtils.globalKey.currentContext,
           const Text('Failed to connect to Selendra remote node.'),
           const Text('Connection Failed'),
         );
-        Timer(const Duration(seconds: 3), () {
+        Timer(const Duration(milliseconds: 500), () {
           setPortfolio();
           showAirdrop();
         });
@@ -87,50 +82,47 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     if (contract.kmpi.isContain) {
       walletProvider.addAvaibleToken({
         'symbol': contract.kmpi.symbol,
-        'balance': contract.kmpi.balance?? '0',
+        'balance': contract.kmpi.balance ?? '0',
       });
     }
 
     if (contract.atd.isContain) {
       walletProvider.addAvaibleToken({
         'symbol': contract.atd.symbol,
-        'balance': contract.atd.balance?? '0',
+        'balance': contract.atd.balance ?? '0',
       });
     }
 
-    if (contract.bnbNative.isContain) {
-      walletProvider.addAvaibleToken({
-        'symbol': contract.bnbNative.symbol,
-        'balance': contract.bnbNative.balance?? '0',
-      });
-    }
+    walletProvider.addAvaibleToken({
+      'symbol': contract.bnbNative.symbol,
+      'balance': contract.bnbNative.balance ?? '0',
+    });
 
-    if (api.dot.isContain) {
-      walletProvider.addAvaibleToken({
-        'symbol': api.dot.symbol,
-        'balance': api.dot.balance?? '0',
-      });
-    }
+    walletProvider.addAvaibleToken({
+      'symbol': api.dot.symbol,
+      'balance': api.dot.balance ?? '0',
+    });
 
-    if (contract.bscNative.isContain) {
-      walletProvider.addAvaibleToken({
-        'symbol': '${contract.bscNative.symbol} (BEP-20)',
-        'balance': contract.bscNative.balance?? '0',
-      });
-    }
+    walletProvider.addAvaibleToken({
+      'symbol': '${contract.bscNative.symbol} (BEP-20)',
+      'balance': contract.bscNative.balance ?? '0',
+    });
 
-    if (contract.kgoNative.isContain) {
-      walletProvider.addAvaibleToken({
-        'symbol': '${contract.kgoNative.symbol} (BEP-20)',
-        'balance': contract.kgoNative.balance,
-      });
-    }
+    walletProvider.addAvaibleToken({
+      'symbol': '${contract.kgoNative.symbol} (BEP-20)',
+      'balance': contract.kgoNative.balance ?? '0',
+    });
+
+    walletProvider.addAvaibleToken({
+      'symbol': '${contract.etherNative.symbol} (BEP-20)',
+      'balance': contract.etherNative.balance ?? '0',
+    });
 
     if (contract.token.isNotEmpty) {
       for (int i = 0; i < contract.token.length; i++) {
         walletProvider.addAvaibleToken({
-          'symbol':'${contract.token[i].symbol} (BEP-20)',
-          'balance': contract.token[i].balance,
+          'symbol': '${contract.token[i].symbol} (BEP-20)',
+          'balance': contract.token[i].balance ?? '0',
         });
       }
     }
@@ -150,17 +142,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> handle() async {
-    if (widget.apiConnected) {
-      await Future.delayed(const Duration(milliseconds: 200), () {
-        status = null;
-      });
+  
 
-      Navigator.of(context).pop();
-      Timer(const Duration(seconds: 3), () async {
-        setPortfolio();
-        showAirdrop();
-      });
-    }
+    Navigator.of(context).pop();
+    Timer(const Duration(seconds: 2), () async {
+      setPortfolio();
+      showAirdrop();
+    });
   }
 
   Future<void> showAirdrop() async {
@@ -174,7 +162,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    if (status != null) handle();
     return Scaffold(
       key: _homeM.globalKey,
       drawer: Theme(
@@ -191,27 +178,21 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         width: 64,
         height: 64,
         child: FloatingActionButton(
-          backgroundColor: hexaCodeToColor(AppColors.secondary)
-              .withOpacity(!widget.apiConnected ? 0.3 : 1.0),
+          backgroundColor:
+              hexaCodeToColor(AppColors.secondary).withOpacity(1.0),
           onPressed: () async {
             await TrxOptionMethod.scanQR(
               context,
               _homeM.portfolioList,
             );
           },
-          child: SvgPicture.asset(
-            'assets/icons/qr_code.svg',
-            width: 30,
-            height: 30,
-            color: !widget.apiConnected
-                ? Colors.white.withOpacity(0.2)
-                : Colors.white,
-          ),
+          child: SvgPicture.asset('assets/icons/qr_code.svg',
+              width: 30, height: 30, color: Colors.white),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(
-        apiStatus: widget.apiConnected,
+        apiStatus: true,
         homeM: _homeM,
         toReceiveToken: toReceiveToken,
         openDrawer: openMyDrawer,

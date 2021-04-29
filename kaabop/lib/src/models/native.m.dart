@@ -1,7 +1,7 @@
 class NativeM {
   String chainDecimal;
   String symbol;
-  String balance = '';
+  String balance;
   String logo;
   String org;
   bool isContain;

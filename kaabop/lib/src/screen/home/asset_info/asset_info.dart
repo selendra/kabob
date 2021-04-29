@@ -287,18 +287,17 @@ class _AssetInfoState extends State<AssetInfo> {
                         children: [
                           Container(
                             alignment: Alignment.centerLeft,
-                            margin: widget.tokenSymbol == 'SEL'
-                                ? const EdgeInsets.only()
-                                : const EdgeInsets.only(right: 16),
+                            margin: const EdgeInsets.only(right: 16),
                             width: 70,
                             height: 70,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: Image.asset(widget.assetLogo),
+                            child: Image.asset(widget.assetLogo,fit: BoxFit.contain,),
                           ),
                           Container(
                             alignment: Alignment.centerLeft,
+                            margin: const EdgeInsets.only(top: 16),
                             height: 80,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

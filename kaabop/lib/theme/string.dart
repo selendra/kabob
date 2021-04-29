@@ -15,12 +15,15 @@ class AppText {
   static String offlineStorage = "Offline storage";
   static String mnemonicAdvise =
       "Keep it safe to a safe place on the isolated network.\n\nDo not share and store passphrase in a networked environment, such as emails, photo albums, social applications.";
+  static String claimAirdropNote = 'Notes: Share posts link on Twitter, Linkedin, Facebook. Copy-paste the posts URL into the above textfield and fire away! Each shared link of (twitter, linkedin, facebook) +5 \$SEL , YouTube video at least 30 second +50 \$SEL, per each approved video.';
   static String createAccTitle = "Create Account";
   static String importAccTitle = "Import Account ";
   static String backup = "Backup prom";
   static String reset = "Reset";
   static String welcome = "Welcome to";
   static String next = "Next";
+
+  static const String loadingPattern = '--.--';
 
   static const String splashScreenView = '/';
   static const String txActivityView = '/txactivity';

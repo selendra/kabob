@@ -17,27 +17,28 @@ class ContractProvider with ChangeNotifier {
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();
   NativeM bscNative = NativeM(
-    logo: 'assets/native_token.png',
+    logo: 'assets/SelendraCircle-Dark.png',
     symbol: 'SEL',
     org: 'BEP-20',
     isContain: true,
   );
 
   NativeM kgoNative = NativeM(
-    logo: 'assets/kgo.png',
+    logo: 'assets/Kiwi-GO-White-1.png',
+    symbol: 'KGO',
     org: 'BEP-20',
     isContain: true,
   );
 
   NativeM etherNative = NativeM(
-    logo: 'assets/eth_logo.png',
+    logo: 'assets/eth.png',
     symbol: 'ETH',
     org: '',
     isContain: true,
   );
 
   NativeM bnbNative = NativeM(
-    logo: 'assets/bnb-2.png',
+    logo: 'assets/bnb.png',
     symbol: 'BNB',
     org: 'Smart Chain',
     isContain: true,
@@ -59,6 +60,7 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> getEtherBalance() async {
     initEtherClient();
+
     final ethAddr = await StorageServices().readSecure('etherAdd');
     final EtherAmount ethbalance =
         await _etherClient.getBalance(EthereumAddress.fromHex(ethAddr));
@@ -102,6 +104,7 @@ class ContractProvider with ChangeNotifier {
   Future<void> getKgoDecimal() async {
     final res = await query(AppConfig.kgoAddr, 'decimals', []);
     kgoNative.chainDecimal = res[0].toString();
+
     notifyListeners();
   }
 
@@ -364,7 +367,7 @@ class ContractProvider with ChangeNotifier {
         await StorageServices.saveBool('DOT', true);
 
         ApiProvider().connectPolNon();
-        Provider.of<ApiProvider>(context, listen: false).isDotContain();
+        //Provider.of<ApiProvider>(context, listen: false).isDotContain();
         Provider.of<WalletProvider>(context, listen: false)
             .addTokenSymbol(symbol);
       }

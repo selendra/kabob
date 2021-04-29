@@ -11,14 +11,9 @@ class InviteFriend extends StatelessWidget {
 
   Future<void> referralShare(GlobalKey globalKey, String referralLink) async {
     try {
-      // final byteData = await rootBundle.load('assets/share_social.bg.png');
+      Share.share(
+          'Join me to claim more Selendra \$SEL token airdrop! Click $referralLink to claim your tokens! Connect with people in community @ t.me/selendraorg  http://twitter.com/selendraorg');
 
-      // final file =
-      //     File('${(await getTemporaryDirectory()).path}/share_social.bg.png');
-      // await file.writeAsBytes(byteData.buffer
-      //     .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-
-      Share.share('Follow Selendra and get free \$SEL tokens. Share twitter.com/selendraorg to get more \$SEL. Claim it at $referralLink. Join t.me/selendraorg to connect with others in the community.');
       //Follow Selendra and get free $SEL tokens. Share twitter.com/selendraorg to get more $SEL. Claim it at https://selendra-airdrop.netlify.app/claim-$sel?ref=38034120c302. Join t.me/selendraorg to connect with others in the community.
       //Share.shareFiles([file.path], text: referralLink);
     } catch (e) {
@@ -29,7 +24,7 @@ class InviteFriend extends StatelessWidget {
   void copyAndShowSnackBar(String copyText, String snackBarContent,
       GlobalKey<ScaffoldState> _globalKey) {
     Clipboard.setData(
-      ClipboardData(text: copyText??''),
+      ClipboardData(text: copyText ?? ''),
     );
     snackBar(snackBarContent, _globalKey);
   }

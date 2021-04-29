@@ -23,9 +23,9 @@ class HomeBody extends StatelessWidget {
             contract.getBscBalance();
           }
 
-          // if (contract.etherNative.isContain) {
-          //   contract.getEtherBalance();
-          // }
+          if (contract.etherNative.isContain) {
+            contract.getEtherBalance();
+          }
 
           if (contract.kgoNative.isContain) {
             contract.getKgoBalance();
@@ -98,7 +98,8 @@ class HomeBody extends StatelessWidget {
                     RouteAnimation(
                       enterPage: AssetInfo(
                         assetLogo: value.bscNative.logo,
-                        balance: value.bscNative.balance ?? '0',
+                        balance:
+                            value.bscNative.balance ?? AppText.loadingPattern,
                         tokenSymbol: value.bscNative.symbol ?? '',
                         org: value.bscNative.org,
                       ),
@@ -109,8 +110,8 @@ class HomeBody extends StatelessWidget {
                   value.bscNative.logo,
                   value.bscNative.symbol ?? '',
                   'BEP-20',
-                  value.bscNative.balance ?? '0',
-                  hexaCodeToColor('#022330'),
+                  value.bscNative.balance ?? AppText.loadingPattern,
+                  Colors.transparent,
                 ),
               );
             },
@@ -124,7 +125,8 @@ class HomeBody extends StatelessWidget {
                     RouteAnimation(
                       enterPage: AssetInfo(
                         assetLogo: value.kgoNative.logo,
-                        balance: value.kgoNative.balance ?? '0',
+                        balance:
+                            value.kgoNative.balance ?? AppText.loadingPattern,
                         tokenSymbol: value.kgoNative.symbol ?? '',
                         org: value.kgoNative.org,
                       ),
@@ -135,8 +137,8 @@ class HomeBody extends StatelessWidget {
                   value.kgoNative.logo,
                   value.kgoNative.symbol ?? '',
                   'BEP-20',
-                  value.kgoNative.balance ?? '0',
-                  hexaCodeToColor('#022330'),
+                  value.kgoNative.balance ?? AppText.loadingPattern,
+                  Colors.transparent,
                 ),
               );
             },
@@ -164,7 +166,8 @@ class HomeBody extends StatelessWidget {
                                 RouteAnimation(
                                   enterPage: AssetInfo(
                                     assetLogo: value.kmpi.logo,
-                                    balance: value.kmpi.balance ?? '0',
+                                    balance: value.kmpi.balance ??
+                                        AppText.loadingPattern,
                                     tokenSymbol: value.kmpi.symbol,
                                     org: value.kmpi.org,
                                   ),
@@ -203,7 +206,8 @@ class HomeBody extends StatelessWidget {
                             RouteAnimation(
                               enterPage: AssetInfo(
                                 assetLogo: value.atd.logo,
-                                balance: value.atd.balance ?? '0',
+                                balance:
+                                    value.atd.balance ?? AppText.loadingPattern,
                                 tokenSymbol: value.atd.symbol,
                                 org: value.atd.org,
                               ),
@@ -222,34 +226,6 @@ class HomeBody extends StatelessWidget {
                   : Container();
             },
           ),
-          Consumer<ApiProvider>(
-            builder: (context, value, child) {
-              return value.dot.isContain
-                  ? GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                              assetLogo: value.dot.logo,
-                              balance: value.dot.balance,
-                              tokenSymbol: value.dot.symbol,
-                              org: value.dot.org,
-                            ),
-                          ),
-                        );
-                      },
-                      child: AssetItem(
-                        value.dot.logo,
-                        value.dot.symbol,
-                        '',
-                        value.dot.balance,
-                        Colors.black,
-                      ),
-                    )
-                  : Container();
-            },
-          ),
           Consumer<ContractProvider>(
             builder: (context, value, child) {
               return GestureDetector(
@@ -259,7 +235,8 @@ class HomeBody extends StatelessWidget {
                     RouteAnimation(
                       enterPage: AssetInfo(
                         assetLogo: value.bnbNative.logo,
-                        balance: value.bnbNative.balance ?? '0',
+                        balance:
+                            value.bnbNative.balance ?? AppText.loadingPattern,
                         tokenSymbol: value.bnbNative.symbol ?? '',
                       ),
                     ),
@@ -269,36 +246,64 @@ class HomeBody extends StatelessWidget {
                   value.bnbNative.logo,
                   value.bnbNative.symbol ?? '',
                   'Smart Chain',
-                  value.bnbNative.balance ?? '0',
-                  Colors.black,
+                  value.bnbNative.balance ?? AppText.loadingPattern,
+                  Colors.transparent,
+                  size: 60,
                 ),
               );
             },
           ),
-          // Consumer<ContractProvider>(builder: (context, value, child) {
-          //   return GestureDetector(
-          //     onTap: () {
-          //       // Navigator.push(
-          //       //   context,
-          //       //   RouteAnimation(
-          //       //     enterPage: AssetInfo(
-          //       //       assetLogo: value.nativeM.logo,
-          //       //       balance: value.nativeM.balance,
-          //       //       tokenSymbol: value.nativeM.symbol,
-          //       //       org: value.nativeM.org,
-          //       //     ),
-          //       //   ),
-          //       // );
-          //     },
-          //     child: AssetItem(
-          //       value.etherNative.logo,
-          //       value.etherNative.symbol,
-          //       value.etherNative.org,
-          //       value.etherNative.balance??'0',
-          //       Colors.white,
-          //     ),
-          //   );
-          // }),
+          Consumer<ContractProvider>(builder: (context, value, child) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  RouteAnimation(
+                    enterPage: AssetInfo(
+                      assetLogo: value.etherNative.logo,
+                      balance: value.etherNative.balance,
+                      tokenSymbol: value.etherNative.symbol,
+                      org: value.etherNative.org,
+                    ),
+                  ),
+                );
+              },
+              child: AssetItem(
+                value.etherNative.logo,
+                value.etherNative.symbol,
+                value.etherNative.org,
+                value.etherNative.balance ?? AppText.loadingPattern,
+                Colors.transparent,
+              ),
+            );
+          }),
+          Consumer<ApiProvider>(
+            builder: (context, value, child) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    RouteAnimation(
+                      enterPage: AssetInfo(
+                        assetLogo: value.dot.logo,
+                        balance: value.dot.balance,
+                        tokenSymbol: value.dot.symbol,
+                        org: value.dot.org,
+                      ),
+                    ),
+                  );
+                },
+                child: AssetItem(
+                  value.dot.logo,
+                  value.dot.symbol,
+                  '',
+                  value.dot.balance ?? AppText.loadingPattern,
+                  Colors.transparent,
+                  size: 60,
+                ),
+              );
+            },
+          ),
           Consumer<ApiProvider>(builder: (context, value, child) {
             return GestureDetector(
               onTap: () {
@@ -307,7 +312,7 @@ class HomeBody extends StatelessWidget {
                   RouteAnimation(
                     enterPage: AssetInfo(
                       assetLogo: value.nativeM.logo,
-                      balance: value.nativeM.balance,
+                      balance: value.nativeM.balance ??  AppText.loadingPattern,
                       tokenSymbol: value.nativeM.symbol,
                       org: value.nativeM.org,
                     ),
@@ -318,8 +323,8 @@ class HomeBody extends StatelessWidget {
                 value.nativeM.logo,
                 value.nativeM.symbol,
                 value.nativeM.org,
-                value.nativeM.balance,
-                Colors.white,
+                value.nativeM.balance??  AppText.loadingPattern,
+                Colors.transparent,
               ),
             );
           }),
@@ -346,7 +351,8 @@ class HomeBody extends StatelessWidget {
                               RouteAnimation(
                                 enterPage: AssetInfo(
                                   assetLogo: 'assets/circle.png',
-                                  balance: value.token[index].balance ?? '0',
+                                  balance: value.token[index].balance ??
+                                      AppText.loadingPattern,
                                   tokenSymbol: value.token[index].symbol ?? '',
                                   org: value.token[index].org,
                                 ),
@@ -357,8 +363,9 @@ class HomeBody extends StatelessWidget {
                             'assets/circle.png',
                             value.token[index].symbol ?? '',
                             'BEP-20',
-                            value.token[index].balance ?? '0',
-                            Colors.black,
+                            value.token[index].balance ??
+                                AppText.loadingPattern,
+                            Colors.transparent,
                           ),
                         ),
                       );

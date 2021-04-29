@@ -109,9 +109,11 @@ class ImportAccState extends State<ImportAcc> {
         }
       }
       Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
-      isDotContain();
-      isBnbContain();
-      isBscContain();
+      Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+      Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+      Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+      Provider.of<ContractProvider>(context, listen: false).getEtherBalance();
+      
 
       await dialogSuccess(
         context,
@@ -133,14 +135,14 @@ class ImportAccState extends State<ImportAcc> {
   }
 
   Future<void> isDotContain() async {
-    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
-    Provider.of<ApiProvider>(context, listen: false).isDotContain();
+    // Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
+    // Provider.of<ApiProvider>(context, listen: false).isDotContain();
     Provider.of<ApiProvider>(context, listen: false).connectPolNon();
   }
 
   Future<void> isBnbContain() async {
-    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
-    Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
+    // Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
+    // Provider.of<ContractProvider>(context, listen: false).getBscDecimal();
     Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
   }
 

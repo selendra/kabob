@@ -127,7 +127,6 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
     // get worksheet by its title
 
     final sheet = ss.worksheetById(0);
-    
 
     try {
       await sheet.values.appendRow([
@@ -148,8 +147,6 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
       );
     }
   }
-
- 
 
   Future<void> enableAnimation() async {
     Navigator.pop(context);
@@ -311,9 +308,8 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                             onChanged: onChanged,
                             onSubmit: onSubmit,
                           ),
-                          const MyText(
-                            text:
-                                'Notes: shared link of (twitter,linkedin,facebook) +5 \$SEL each, YouTube video at least 30 seconds +50 \$SEL, per each approved video.',
+                          MyText(
+                            text: AppText.claimAirdropNote,
                             textAlign: TextAlign.start,
                             left: 16.0,
                             right: 16.0,
@@ -352,7 +348,6 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                             hasShadow: true,
                             action: _enableButton ? submitForm : null,
                           ),
-                          
                           const SizedBox(height: 200),
                         ],
                       ),

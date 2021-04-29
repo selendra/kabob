@@ -11,6 +11,7 @@ class MenuHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final acc = Provider.of<ApiProvider>(context).accountM;
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, AppText.accountView);
@@ -33,7 +34,7 @@ class MenuHeader extends StatelessWidget {
                         color: hexaCodeToColor(AppColors.cardColor),
                         borderRadius: BorderRadius.circular(60),
                       ),
-                      child: SvgPicture.string(value.accountM.addressIcon),
+                      child: SvgPicture.string(acc.addressIcon),
                     ),
                   ),
                   const SizedBox(width: 5),
@@ -42,7 +43,7 @@ class MenuHeader extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       MyText(
-                        text: value.accountM.name,
+                        text: acc.name,
                         color: "#FFFFFF",
                         fontSize: 16,
                       ),

@@ -354,14 +354,14 @@ class MyBottomAppBar extends StatelessWidget {
         shape: const CircularNotchedRectangle(),
         notchMargin: 8.0,
         child: SizedBox(
-          height: 60,
+          height: 65,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
                   child: MyIconButton(
                 icon: 'telegram.svg',
-                iconSize: 34,
+                iconSize: 36,
                 onPressed: !apiStatus
                     ? null
                     : () async {
@@ -374,7 +374,7 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(
                   child: MyIconButton(
                 icon: 'wallet.svg',
-                iconSize: 34,
+                iconSize: 36,
                 onPressed: !apiStatus
                     ? null
                     : () async {
@@ -385,7 +385,7 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(
                 child: MyIconButton(
                   icon: 'contact_list.svg',
-                  iconSize: 25,
+                  iconSize: 26,
                   onPressed: !apiStatus
                       ? null
                       : () async {
@@ -396,7 +396,7 @@ class MyBottomAppBar extends StatelessWidget {
               Expanded(
                 child: MyIconButton(
                   icon: 'menu.svg',
-                  iconSize: 25,
+                  iconSize: 27,
                   onPressed: !apiStatus ? null : openDrawer,
                 ),
               )
