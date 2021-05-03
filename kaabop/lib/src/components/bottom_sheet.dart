@@ -109,7 +109,7 @@ class MyBottomSheet {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset('assets/no_data.svg', height: 200),
+                    SvgPicture.asset('assets/icons/no_data.svg', height: 200),
                     const MyText(text: "There are no notification found")
                   ],
                 ),

@@ -15,7 +15,7 @@ class AssetCheckIn extends StatelessWidget {
           const SizedBox(height: 16),
           if (_txCheckIn.isEmpty)
             SvgPicture.asset(
-              'assets/no_data.svg',
+              'assets/icons/no_data.svg',
               width: 250,
               height: 250,
             )

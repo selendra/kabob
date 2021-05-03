@@ -36,7 +36,7 @@ class ApiProvider with ChangeNotifier {
       color: Colors.transparent,
     ),
     TokenModel(
-      logo: 'assets/native_token.png',
+      logo: 'assets/SelendraCircle-Dark.png',
       symbol: 'SEL',
       org: 'BEP-20',
       color: Colors.transparent,
@@ -175,14 +175,13 @@ class ApiProvider with ChangeNotifier {
   Future<void> getCurrentAccount() async {
     accountM.address = keyring.current.address;
     accountM.name = keyring.current.name;
-    print(accountM.address);
     notifyListeners();
   }
 
   void resetNativeObj() {
     accountM = AccountM();
     nativeM = NativeM(
-      logo: 'assets/native_token.png',
+      logo: 'assets/SelendraCircle-White.png',
       symbol: 'SEL',
       org: 'Testnet',
     );

@@ -1,5 +1,4 @@
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
-import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
 
@@ -17,7 +16,7 @@ class MySplashScreenState extends State<MySplashScreen>
   Animation<double> animation;
 
   Future<void> getCurrentAccount() async {
-    await Future.delayed(const Duration(milliseconds: 200), () async {
+    await Future.delayed(const Duration(milliseconds: 500), () async {
       final List<KeyPairData> ls = ApiProvider.keyring.keyPairs.toList();
 
       if (ls.isEmpty) {
@@ -106,22 +105,7 @@ class MySplashScreenState extends State<MySplashScreen>
     // dialogLoading(context);
     getCurrentAccount();
 
-    // controller = AnimationController(
-    //   duration: const Duration(milliseconds: 300),
-    //   vsync: this,
-    // );
-
-    // animation = CurvedAnimation(
-    //   curve: Curves.easeIn,
-    //   parent: controller,
-    // );
-
-    // /*Perform faded animation to logo*/
-    // controller.forward().then(
-    //       (value) {},
-    //     );
-
-    // getCurrentAccount();
+    
 
     super.initState();
   }
@@ -134,23 +118,8 @@ class MySplashScreenState extends State<MySplashScreen>
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-          // child: CircularProgressIndicator(),
-          ),
+      body: Center(),
     );
-    // return Scaffold(
-    //   key: _globalKey,
-    //   backgroundColor: hexaCodeToColor(AppColors.bgdColor),
-    //   // body: Align(
-    //   //   child: FadeTransition(
-    //   //     opacity: animation,
-    //   //     child: Image.asset(
-    //   //       'assets/bitriel_splash.png',
-    //   //       width: 350,
-    //   //       height: 350,
-    //   //     ),
-    //   //   ),
-    //   // ),
-    // );
+  
   }
 }

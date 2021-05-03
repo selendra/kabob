@@ -23,7 +23,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 4), () {
       handle();
     });
 
@@ -31,10 +31,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     Timer(const Duration(seconds: 20), () async {
       if (!widget.apiConnected) {
-        // await Future.delayed(const Duration(milliseconds: 200), () {
-        //   status = null;
-        // });
-        // Navigator.of(context).pop();
+  
 
         await dialog(
           AppUtils.globalKey.currentContext,

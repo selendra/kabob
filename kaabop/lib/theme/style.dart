@@ -15,11 +15,12 @@ class AppStyle {
           bodyText2: TextStyle(color: hexaCodeToColor(AppColors.textColor))),
       canvasColor: hexaCodeToColor("#FFFFFF"),
       cardColor: hexaCodeToColor(AppConfig.darkBlue50.toString()),
+
       bottomAppBarTheme:
           BottomAppBarTheme(color: hexaCodeToColor(AppColors.cardColor)),
       // floatingActionButtonTheme: FloatingActionButtonThemeData(backgroundColor: hexaCodeToColor(AppColors.textColor)),
       fontFamily: "Avenir",
-      unselectedWidgetColor: Colors.white,
+      //unselectedWidgetColor: Colors.white,
       scaffoldBackgroundColor:
           Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
     );

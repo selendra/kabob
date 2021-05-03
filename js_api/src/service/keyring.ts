@@ -12,7 +12,7 @@ import { SubmittableExtrinsic } from "@polkadot/api/types";
 import { ITuple } from "@polkadot/types/types";
 import { DispatchError } from "@polkadot/types/interfaces";
 import { ContractPromise } from "@polkadot/api-contract";
-let keyring = new Keyring({ ss58Format: 0, type: "sr25519" });
+let keyring = new Keyring({ ss58Format: 42, type: "sr25519" });
 
 /**
  * Generate a set of new mnemonic.

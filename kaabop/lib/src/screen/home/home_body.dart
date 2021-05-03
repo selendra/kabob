@@ -44,48 +44,48 @@ class HomeBody extends StatelessWidget {
             child: Column(
               children: [
                 PortFolioCus(),
-                Container(
-                  margin: const EdgeInsets.only(top: 16),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 5,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: hexaCodeToColor(AppColors.secondary),
-                        ),
-                      ),
-                      const MyText(
-                        text: 'Assets',
-                        fontSize: 27,
-                        color: AppColors.whiteColorHexa,
-                        left: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              RouteAnimation(
-                                enterPage: AddAsset(),
-                              ),
-                            );
-                          },
-                          child: const Align(
-                            alignment: Alignment.bottomRight,
-                            child: Icon(
-                              Icons.add_circle_outline,
-                              color: Colors.white,
-                              size: 32,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                // Container(
+                //   margin: const EdgeInsets.only(top: 16),
+                //   child: Row(
+                //     children: [
+                //       Container(
+                //         width: 5,
+                //         height: 40,
+                //         decoration: BoxDecoration(
+                //           borderRadius: BorderRadius.circular(8),
+                //           color: hexaCodeToColor(AppColors.secondary),
+                //         ),
+                //       ),
+                //       const MyText(
+                //         text: 'Assets',
+                //         fontSize: 27,
+                //         color: AppColors.whiteColorHexa,
+                //         left: 16,
+                //         fontWeight: FontWeight.bold,
+                //       ),
+                //       Expanded(
+                //         child: GestureDetector(
+                //           onTap: () {
+                //             Navigator.push(
+                //               context,
+                //               RouteAnimation(
+                //                 enterPage: AddAsset(),
+                //               ),
+                //             );
+                //           },
+                //           child: const Align(
+                //             alignment: Alignment.bottomRight,
+                //             child: Icon(
+                //               Icons.add_circle_outline,
+                //               color: Colors.white,
+                //               size: 32,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -286,7 +286,7 @@ class HomeBody extends StatelessWidget {
                     RouteAnimation(
                       enterPage: AssetInfo(
                         assetLogo: value.dot.logo,
-                        balance: value.dot.balance,
+                        balance: value.dot.balance?? AppText.loadingPattern,
                         tokenSymbol: value.dot.symbol,
                         org: value.dot.org,
                       ),
@@ -312,7 +312,7 @@ class HomeBody extends StatelessWidget {
                   RouteAnimation(
                     enterPage: AssetInfo(
                       assetLogo: value.nativeM.logo,
-                      balance: value.nativeM.balance ??  AppText.loadingPattern,
+                      balance: value.nativeM.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.nativeM.symbol,
                       org: value.nativeM.org,
                     ),
@@ -323,7 +323,7 @@ class HomeBody extends StatelessWidget {
                 value.nativeM.logo,
                 value.nativeM.symbol,
                 value.nativeM.org,
-                value.nativeM.balance??  AppText.loadingPattern,
+                value.nativeM.balance ?? AppText.loadingPattern,
                 Colors.transparent,
               ),
             );

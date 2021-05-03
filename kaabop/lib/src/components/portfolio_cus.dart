@@ -10,11 +10,11 @@ class PortFolioCus extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.only(left: 25, top: 25, bottom: 25),
+      padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
       width: double.infinity,
       height: 200,
       decoration: BoxDecoration(
-        color: hexaCodeToColor(AppColors.cardColor),
+        //color: hexaCodeToColor(AppColors.cardColor),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(

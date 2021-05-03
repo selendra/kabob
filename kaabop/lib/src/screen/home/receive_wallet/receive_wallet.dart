@@ -1,7 +1,5 @@
-import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-
 import 'package:wallet_apps/src/provider/api_provider.dart';
 
 class ReceiveWallet extends StatefulWidget {
@@ -16,7 +14,6 @@ class ReceiveWallet extends StatefulWidget {
 class ReceiveWalletState extends State<ReceiveWallet> {
   GlobalKey<ScaffoldState> _globalKey;
   final GlobalKey _keyQrShare = GlobalKey();
-  KeyPairData _currentAcc;
 
   final GetWalletMethod _method = GetWalletMethod();
   String name = 'username';
@@ -42,6 +39,7 @@ class ReceiveWalletState extends State<ReceiveWallet> {
     setState(() {
       initialValue = value;
     });
+
     changedEthAdd(value);
   }
 
@@ -66,8 +64,8 @@ class ReceiveWalletState extends State<ReceiveWallet> {
           keyQrShare: _keyQrShare,
           globalKey: _globalKey,
           method: _method,
-          name: _currentAcc.name??'',
-          wallet: _currentAcc.address??'',
+          name: name,
+          wallet: wallet,
           initialValue: initialValue,
           onChanged: onChanged,
         ),

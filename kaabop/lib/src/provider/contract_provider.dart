@@ -389,7 +389,7 @@ class ContractProvider with ChangeNotifier {
           contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
       if (token.isNotEmpty) {
-        TokenModel item = token.firstWhere(
+       final TokenModel item = token.firstWhere(
             (element) =>
                 element.symbol.toLowerCase() ==
                 symbol[0].toString().toLowerCase(),
@@ -485,7 +485,7 @@ class ContractProvider with ChangeNotifier {
     atd = Atd();
     kmpi = Kmpi();
     bscNative = NativeM(
-      logo: 'assets/native_token.png',
+      logo: 'assets/SelendraCircle-Dark.png',
       org: 'BEP-20',
       isContain: false,
     );

@@ -9,16 +9,17 @@ class AssetItem extends StatelessWidget {
   final Color color;
   final double size;
 
-  const AssetItem(this.asset, this.tokenSymbol, this.org, this.balance,
-      this.color, {this.size});
+  const AssetItem(
+      this.asset, this.tokenSymbol, this.org, this.balance, this.color,
+      {this.size});
   @override
   Widget build(BuildContext context) {
     return rowDecorationStyle(
         child: Row(
       children: <Widget>[
         Container(
-          width: 65,//size ?? 65,
-          height: 65,//size ?? 65,
+          width: 65, //size ?? 65,
+          height: 65, //size ?? 65,
           padding: const EdgeInsets.all(6),
           margin: const EdgeInsets.only(right: 20),
           decoration: BoxDecoration(
@@ -70,20 +71,10 @@ class AssetItem extends StatelessWidget {
   Widget rowDecorationStyle(
       {Widget child, double mTop = 0, double mBottom = 16}) {
     return Container(
-        margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
+        margin: EdgeInsets.only(top: mTop, bottom: 2),
         padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
-        height: 90,
-        decoration: BoxDecoration(
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 2.0,
-              offset: Offset(1.0, 1.0),
-            )
-          ],
-          color: hexaCodeToColor(AppColors.cardColor),
-          borderRadius: BorderRadius.circular(8),
-        ),
+        height: 100,
+        color: hexaCodeToColor(AppColors.cardColor),
         child: child);
   }
 }

@@ -159,7 +159,7 @@ class TrxActivityState extends State<TrxActivity> {
                                       borderRadius: BorderRadius.circular(40),
                                     ),
                                     child:
-                                        Image.asset('assets/native_token.png'),
+                                        Image.asset('assets/SelendraCircle-White.png'),
                                   ),
                                   Container(
                                     margin: const EdgeInsets.only(right: 16),

@@ -272,71 +272,71 @@ class _AccountState extends State<Account> {
                                   ],
                                 ),
                               ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                margin: const EdgeInsets.only(
-                                  right: 16,
-                                  left: 16,
-                                  bottom: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Builder(
-                                      builder: (context) => GestureDetector(
-                                        onTap: () {
-                                          copyToClipBoard(
-                                              _currentAcc.pubKey, context);
-                                        },
-                                        child: Row(
-                                          children: [
-                                            const MyText(
-                                              text: 'Public Key:  ',
-                                              color: "#FFFFFF",
-                                            ),
-                                            const SizedBox(height: 50),
-                                            Expanded(
-                                              child: MyText(
-                                                text: _currentAcc.pubKey,
-                                                color: "#FFFFFF",
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Builder(
-                                      builder: (context) => GestureDetector(
-                                        onTap: () {
-                                          copyToClipBoard(
-                                              _currentAcc.address, context);
-                                        },
-                                        child: Row(
-                                          children: [
-                                            const MyText(
-                                              text: 'Address:  ',
-                                              color: "#FFFFFF",
-                                            ),
-                                            Expanded(
-                                              child: MyText(
-                                                text: _currentAcc.address,
-                                                color: "#FFFFFF",
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                //child: SvgPicture.asset('assets/male_avatar.svg'),
-                              ),
-                              const SizedBox(height: 40),
+                              // Container(
+                              //   alignment: Alignment.centerLeft,
+                              //   margin: const EdgeInsets.only(
+                              //     right: 16,
+                              //     left: 16,
+                              //     bottom: 16,
+                              //   ),
+                              //   decoration: BoxDecoration(
+                              //     borderRadius: BorderRadius.circular(5),
+                              //   ),
+                              //   child: Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       Builder(
+                              //         builder: (context) => GestureDetector(
+                              //           onTap: () {
+                              //             copyToClipBoard(
+                              //                 _currentAcc.pubKey, context);
+                              //           },
+                              //           child: Row(
+                              //             children: [
+                              //               const MyText(
+                              //                 text: 'Public Key:  ',
+                              //                 color: "#FFFFFF",
+                              //               ),
+                              //               const SizedBox(height: 50),
+                              //               Expanded(
+                              //                 child: MyText(
+                              //                   text: _currentAcc.pubKey,
+                              //                   color: "#FFFFFF",
+                              //                   overflow: TextOverflow.ellipsis,
+                              //                 ),
+                              //               ),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //       ),
+                              //       Builder(
+                              //         builder: (context) => GestureDetector(
+                              //           onTap: () {
+                              //             copyToClipBoard(
+                              //                 _currentAcc.address, context);
+                              //           },
+                              //           child: Row(
+                              //             children: [
+                              //               const MyText(
+                              //                 text: 'Address:  ',
+                              //                 color: "#FFFFFF",
+                              //               ),
+                              //               Expanded(
+                              //                 child: MyText(
+                              //                   text: _currentAcc.address,
+                              //                   color: "#FFFFFF",
+                              //                   overflow: TextOverflow.ellipsis,
+                              //                 ),
+                              //               ),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              //   //child: SvgPicture.asset('assets/male_avatar.svg'),
+                              // ),
+                             // const SizedBox(height: 40),
                               GestureDetector(
                                 onTap: () {
                                   AccountC().showBackup(

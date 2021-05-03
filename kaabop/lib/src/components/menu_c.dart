@@ -12,7 +12,7 @@ class MenuHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final acc = Provider.of<ApiProvider>(context).accountM;
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         Navigator.pushNamed(context, AppText.accountView);
       },

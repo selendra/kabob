@@ -8,7 +8,7 @@ import { Keyring } from "@polkadot/keyring";
 import { ApiPromise } from "@polkadot/api";
 
 import { subscribeMessage } from "./setting";
-let keyring = new Keyring({ ss58Format: 0, type: "sr25519" });
+let keyring = new Keyring({ ss58Format: 42, type: "sr25519" });
 
 /**
  * Get svg icons of addresses.
@@ -33,7 +33,7 @@ async function genIcons(addresses: string[]) {
  */
 async function genPubKeyIcons(pubKeys: string[]) {
   const icons = await genIcons(
-    pubKeys.map((key) => keyring.encodeAddress(hexToU8a(key), 2))
+    pubKeys.map((key) => keyring.encodeAddress(hexToU8a(key), 42))
   );
   return icons.map((i, index) => {
     i[0] = pubKeys[index];
@@ -93,7 +93,7 @@ async function queryAddressWithAccountIndex(
 async function queryAccountsBonded(api: ApiPromise, pubKeys: string[]) {
   return Promise.all(
     pubKeys
-      .map((key) => keyring.encodeAddress(hexToU8a(key), 2))
+      .map((key) => keyring.encodeAddress(hexToU8a(key), 42))
       .map((i) =>
         Promise.all([api.query.staking.bonded(i), api.query.staking.ledger(i)])
       )

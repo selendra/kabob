@@ -121,10 +121,14 @@ Widget homeAppBar(BuildContext context) {
           child: IconButton(
             iconSize: 30,
             color: Colors.white,
-            icon: const Icon(LineAwesomeIcons.bell),
+            icon: const Icon(Icons.add_circle_outline),
             onPressed: () async {
-              await dialog(context, const Text('Coming Soon!'),
-                  const Text('Notification'));
+              Navigator.push(
+                context,
+                RouteAnimation(
+                  enterPage: AddAsset(),
+                ),
+              );
             },
           ),
         ),

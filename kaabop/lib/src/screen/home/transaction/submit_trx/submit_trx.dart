@@ -145,7 +145,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   Future<void> sendTxKmpi(String to, String pass, String value) async {
     dialogLoading(
       context,
-      content: 'Please wait! This might take a little bit longer',
+      content: 'Please wait! This might be taking some time.',
     );
 
     try {

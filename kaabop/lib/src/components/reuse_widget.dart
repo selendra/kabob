@@ -256,7 +256,7 @@ Future<void> startNode(BuildContext context) async {
               content: const Padding(
                 padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: MyText(
-                  text: "Please wait ! this might take a bit longer",
+                  text: "Please wait ! This might be taking some time.",
                   color: "#000000",
                 ),
               ),
