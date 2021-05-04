@@ -16,6 +16,7 @@ class HomeBody extends StatelessWidget {
         await Future.delayed(const Duration(milliseconds: 300))
             .then((value) async {
           setPortfolio();
+          MarketProvider().fetchTokenMarketPrice(context);
           if (contract.bnbNative.isContain) {
             contract.getBnbBalance();
           }
@@ -112,6 +113,8 @@ class HomeBody extends StatelessWidget {
                   'BEP-20',
                   value.bscNative.balance ?? AppText.loadingPattern,
                   Colors.transparent,
+                  marketPrice: value.bscNative.marketPrice,
+                  priceChange24h: value.bscNative.change24h,
                 ),
               );
             },
@@ -139,6 +142,8 @@ class HomeBody extends StatelessWidget {
                   'BEP-20',
                   value.kgoNative.balance ?? AppText.loadingPattern,
                   Colors.transparent,
+                  marketPrice: value.kgoNative.marketPrice,
+                  priceChange24h: value.kgoNative.change24h,
                 ),
               );
             },
@@ -248,6 +253,8 @@ class HomeBody extends StatelessWidget {
                   'Smart Chain',
                   value.bnbNative.balance ?? AppText.loadingPattern,
                   Colors.transparent,
+                  marketPrice: value.bnbNative.marketPrice,
+                  priceChange24h: value.bnbNative.change24h,
                   size: 60,
                 ),
               );
@@ -274,6 +281,8 @@ class HomeBody extends StatelessWidget {
                 value.etherNative.org,
                 value.etherNative.balance ?? AppText.loadingPattern,
                 Colors.transparent,
+                marketPrice: value.etherNative.marketPrice,
+                priceChange24h: value.etherNative.change24h,
               ),
             );
           }),
@@ -286,7 +295,7 @@ class HomeBody extends StatelessWidget {
                     RouteAnimation(
                       enterPage: AssetInfo(
                         assetLogo: value.dot.logo,
-                        balance: value.dot.balance?? AppText.loadingPattern,
+                        balance: value.dot.balance ?? AppText.loadingPattern,
                         tokenSymbol: value.dot.symbol,
                         org: value.dot.org,
                       ),
@@ -300,6 +309,8 @@ class HomeBody extends StatelessWidget {
                   value.dot.balance ?? AppText.loadingPattern,
                   Colors.transparent,
                   size: 60,
+                  marketPrice: value.dot.marketPrice,
+                  priceChange24h: value.dot.change24h,
                 ),
               );
             },

@@ -6,9 +6,11 @@ class SubmitTrxBody extends StatelessWidget {
   final dynamic dialog;
   final ModelScanPay scanPayM;
   final String Function(String) onChanged;
+  final String Function(String) validateField;
   final Function onSubmit;
   final void Function() clickSend;
   final Function(String) resetAssetsDropDown;
+
   final List<String> list;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
@@ -17,6 +19,7 @@ class SubmitTrxBody extends StatelessWidget {
     this.dialog,
     this.scanPayM,
     this.onChanged,
+    this.validateField,
     this.onSubmit,
     this.clickSend,
     this.resetAssetsDropDown,
@@ -48,10 +51,7 @@ class SubmitTrxBody extends StatelessWidget {
           inputType: TextInputType.number,
           controller: scanPayM.controlAmount,
           focusNode: scanPayM.nodeAmount,
-          validateField: (value) =>
-              value == '' || double.parse(value.toString()) < 0 || value == '-0'
-                  ? 'Please fill in positive amount'
-                  : null,
+          validateField: validateField,
           onChanged: onChanged,
           onSubmit: () {}),
     

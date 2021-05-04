@@ -212,7 +212,7 @@ class ContractProvider with ChangeNotifier {
       credentials,
       Transaction(
         to: EthereumAddress.fromHex(reciever),
-        value: EtherAmount.fromUnitAndValue(EtherUnit.ether, amount),
+        value: EtherAmount.inWei(BigInt.from(double.parse(amount)* pow(10, 18))),
       ),
       fetchChainIdFromNetworkId: true,
     );
@@ -229,16 +229,15 @@ class ContractProvider with ChangeNotifier {
     final credentials = await _web3client.credentialsFromPrivateKey(
       privateKey.substring(2),
     );
-
+ 
     final res = await _etherClient.sendTransaction(
       credentials,
       Transaction(
         to: EthereumAddress.fromHex(reciever),
-        value: EtherAmount.fromUnitAndValue(EtherUnit.ether, amount),
+        value: EtherAmount.inWei(BigInt.from(double.parse(amount)* pow(10, 18))),
       ),
       fetchChainIdFromNetworkId: true,
     );
-
     return res;
   }
 
@@ -389,7 +388,7 @@ class ContractProvider with ChangeNotifier {
           contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
       if (token.isNotEmpty) {
-       final TokenModel item = token.firstWhere(
+        final TokenModel item = token.firstWhere(
             (element) =>
                 element.symbol.toLowerCase() ==
                 symbol[0].toString().toLowerCase(),
@@ -481,19 +480,38 @@ class ContractProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setEtherMarket(String currentPrice, String priceChange24h) {
+    etherNative.marketPrice = currentPrice;
+    etherNative.change24h = priceChange24h;
+    notifyListeners();
+  }
+
+  void setBnbMarket(String currentPrice, String priceChange24h) {
+    bnbNative.marketPrice = currentPrice;
+    bnbNative.change24h = priceChange24h;
+    notifyListeners();
+  }
+
+  void setkiwigoMarket(String currentPrice, String priceChange24h) {
+    kgoNative.marketPrice = currentPrice;
+    kgoNative.change24h = priceChange24h;
+    notifyListeners();
+  }
+
   void resetConObject() {
     atd = Atd();
     kmpi = Kmpi();
     bscNative = NativeM(
+      symbol: 'SEL',
       logo: 'assets/SelendraCircle-Dark.png',
       org: 'BEP-20',
       isContain: false,
     );
     bnbNative = NativeM(
-      logo: 'assets/bnb-2.png',
+      logo: 'assets/bnb.png',
       symbol: 'BNB',
-      org: 'testnet',
-      isContain: false,
+      org: 'Smart Chain',
+      isContain: true,
     );
 
     token.clear();

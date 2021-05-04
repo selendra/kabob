@@ -51,14 +51,6 @@ class SubmitTrxState extends State<SubmitTrx> {
     super.initState();
   }
 
-  // List<Map<String, String>> nativeList = [
-  //   {'asset_code': 'SEL'},
-  //   {'asset_code': 'DOT'},
-  //   {'asset_code': 'KMPI'},
-  //   {'asset_code': 'BNB'},
-  //   {'asset_code': 'AYF'}
-  // ];
-
   void removeAllFocus() {
     _scanPayM.nodeAmount.unfocus();
     _scanPayM.nodeMemo.unfocus();
@@ -96,6 +88,14 @@ class SubmitTrxState extends State<SubmitTrx> {
       }
     }
     return value;
+  }
+
+  String validateField(String value) {
+    if (value == '' || double.parse(value.toString()) < 0 || value == '-0') {
+      return 'Please fill in positive amount';
+    }
+
+    return null;
   }
 
   void onSubmit(BuildContext context) {
@@ -371,6 +371,7 @@ class SubmitTrxState extends State<SubmitTrx> {
   Future<void> sendTxEther(String reciever, String amount, String pin) async {
     dialogLoading(context);
     final contract = Provider.of<ContractProvider>(context, listen: false);
+
     try {
       final res = await getPrivateKey(pin);
 
@@ -476,6 +477,7 @@ class SubmitTrxState extends State<SubmitTrx> {
                         onChanged: onChanged,
                         onSubmit: onSubmit,
                         clickSend: clickSend,
+                        validateField: validateField,
                         resetAssetsDropDown: resetAssetsDropDown,
                         list: value.listSymbol,
                       );

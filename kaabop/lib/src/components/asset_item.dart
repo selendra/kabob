@@ -6,12 +6,14 @@ class AssetItem extends StatelessWidget {
   final String tokenSymbol;
   final String org;
   final String balance;
+  final String marketPrice;
+  final String priceChange24h;
   final Color color;
   final double size;
 
   const AssetItem(
       this.asset, this.tokenSymbol, this.org, this.balance, this.color,
-      {this.size});
+      {this.marketPrice, this.priceChange24h, this.size});
   @override
   Widget build(BuildContext context) {
     return rowDecorationStyle(
@@ -33,7 +35,7 @@ class AssetItem extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            margin: const EdgeInsets.only(right: 16),
+            margin: const EdgeInsets.only(right: 0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,8 +43,35 @@ class AssetItem extends StatelessWidget {
                 MyText(
                   text: tokenSymbol,
                   color: "#FFFFFF",
+                  bottom: 4.0,
                 ),
-                if (org == '') Container() else MyText(text: org, fontSize: 15),
+                if (marketPrice == null)
+                  if (org == '')
+                    Container()
+                  else
+                    MyText(text: org, fontSize: 15)
+                else
+                  Row(
+                    children: [
+                      MyText(
+                        text: '\$ $marketPrice' ?? '',
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: "#FFFFFF",
+                      ),
+                      const SizedBox(width: 6.0),
+                      MyText(
+                        text: priceChange24h.substring(0, 1) == '-'
+                            ? '$priceChange24h%'
+                            : '+$priceChange24h%',
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: priceChange24h.substring(0, 1) == '-'
+                            ? '#FF0000'
+                            : '#00FF00',
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),

@@ -4,6 +4,8 @@ class NativeM {
   String balance;
   String logo;
   String org;
+  String marketPrice;
+  String change24h;
   bool isContain;
 
 
@@ -13,6 +15,8 @@ class NativeM {
     this.balance,
     this.logo,
     this.org,
+    this.marketPrice,
+    this.change24h,
     this.isContain,
   });
 }

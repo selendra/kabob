@@ -17,6 +17,7 @@ class AppState extends State<App> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      MarketProvider().fetchTokenMarketPrice(context);
       initApi();
       Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
     });

@@ -24,15 +24,17 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     Timer(const Duration(seconds: 4), () {
-      handle();
+      if (!widget.apiConnected) {
+        handle();
+      }
+      setPortfolio();
     });
 
-    if (ApiProvider.keyring.current.address != null) startNode(context);
+    if (ApiProvider.keyring.current.address != null &&
+        widget.apiConnected == false) startNode(context);
 
     Timer(const Duration(seconds: 20), () async {
       if (!widget.apiConnected) {
-  
-
         await dialog(
           AppUtils.globalKey.currentContext,
           const Text('Failed to connect to Selendra remote node.'),
@@ -139,10 +141,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future<void> handle() async {
-  
-
     Navigator.of(context).pop();
-    Timer(const Duration(seconds: 2), () async {
+    Timer(const Duration(seconds: 1), () async {
       setPortfolio();
       showAirdrop();
     });
