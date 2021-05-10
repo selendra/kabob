@@ -98,11 +98,11 @@ class InviteFriend extends StatelessWidget {
                   ),
                   _referallRow(
                     'Referral ID :    ',
-                    ethAdd.substring(ethAdd.length - 12),
+                    ethAdd,//.substring(ethAdd.length - 12),
                     200,
                     () {
                       copyAndShowSnackBar(
-                        ethAdd.substring(ethAdd.length - 12),
+                        ethAdd,//.substring(ethAdd.length - 12),
                         'Referral ID Copied',
                         _globalKey,
                       );
@@ -114,12 +114,12 @@ class InviteFriend extends StatelessWidget {
                   _referallRow(
                     'Referral Link :',
                     AppConfig.testInviteLink1 +
-                        ethAdd.substring(ethAdd.length - 12),
+                        ethAdd,//.substring(ethAdd.length - 12),
                     200,
                     () {
                       copyAndShowSnackBar(
                         AppConfig.testInviteLink1 +
-                            ethAdd.substring(ethAdd.length - 12),
+                            ethAdd,//s.substring(ethAdd.length - 12),
                         'Referral Link Copied',
                         _globalKey,
                       );
@@ -133,7 +133,7 @@ class InviteFriend extends StatelessWidget {
                         referralShare(
                           _globalKey,
                           AppConfig.testInviteLink1 +
-                              ethAdd.substring(ethAdd.length - 12),
+                              ethAdd,//.substring(ethAdd.length - 12),
                         );
                       },
                       child: Row(

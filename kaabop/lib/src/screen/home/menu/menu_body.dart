@@ -76,13 +76,13 @@ class MenuBody extends StatelessWidget {
             Navigator.pushNamed(context, AppText.claimAirdropView);
           },
         ),
-        MyListTile(
-          index: 2,
-          subIndex: 2,
-          onTap: () {
-            Navigator.pushNamed(context, AppText.inviteFriendView);
-          },
-        ),
+        // MyListTile(
+        //   index: 2,
+        //   subIndex: 2,
+        //   onTap: () {
+        //     Navigator.pushNamed(context, AppText.inviteFriendView);
+        //   },
+        // ),
         // MyListTile(
         //   index: 2,
         //   subIndex: 1,

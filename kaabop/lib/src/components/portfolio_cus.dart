@@ -23,8 +23,8 @@ class PortFolioCus extends StatelessWidget {
           Expanded(
             child: Align(
               child: SizedBox(
-                width: 150,
-                height: 150,
+                width: 140,
+                height: 140,
                 child: Consumer<WalletProvider>(
                   builder: (context, value, child) {
                     return value.dataMap.isEmpty

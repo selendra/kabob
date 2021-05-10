@@ -36,7 +36,7 @@ class ApiProvider with ChangeNotifier {
       color: Colors.transparent,
     ),
     TokenModel(
-      logo: 'assets/SelendraCircle-Dark.png',
+      logo: 'assets/SelendraCircle-Blue.png',
       symbol: 'SEL',
       org: 'BEP-20',
       color: Colors.transparent,
@@ -113,9 +113,10 @@ class ApiProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void setDotMarket(String currentPrice,String priceChange24h){
+  void setDotMarket(String currentPrice, String priceChange24h) {
     dot.marketPrice = currentPrice;
     dot.change24h = priceChange24h;
+
     notifyListeners();
   }
 
@@ -137,6 +138,7 @@ class ApiProvider with ChangeNotifier {
   Future<void> getChainDecimal() async {
     final res = await sdk.api.getChainDecimal();
     nativeM.chainDecimal = res[0].toString();
+
     subscribeBalance();
     notifyListeners();
   }

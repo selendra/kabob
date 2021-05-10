@@ -16,7 +16,7 @@ class MySplashScreenState extends State<MySplashScreen>
   Animation<double> animation;
 
   Future<void> getCurrentAccount() async {
-    await Future.delayed(const Duration(milliseconds: 500), () async {
+    await Future.delayed(const Duration(milliseconds: 700), () async {
       final List<KeyPairData> ls = ApiProvider.keyring.keyPairs.toList();
 
       if (ls.isEmpty) {
@@ -105,8 +105,6 @@ class MySplashScreenState extends State<MySplashScreen>
     // dialogLoading(context);
     getCurrentAccount();
 
-    
-
     super.initState();
   }
 
@@ -120,6 +118,5 @@ class MySplashScreenState extends State<MySplashScreen>
     return const Scaffold(
       body: Center(),
     );
-  
   }
 }

@@ -250,7 +250,7 @@ Future<void> startNode(BuildContext context) async {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               content: const Padding(

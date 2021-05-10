@@ -56,6 +56,7 @@ class Fmt {
     }
     double v = 0;
     try {
+   
       if (value.contains(',') || value.contains('.')) {
         v = NumberFormat(",##0.${"0" * decimals}").parse(value).toDouble();
       } else {

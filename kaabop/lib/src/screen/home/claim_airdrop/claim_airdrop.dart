@@ -119,6 +119,40 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
     }
   }
 
+  Future<bool> findAddress(String address) async {
+    final gsheets = GSheets(AppConfig.credentials);
+    // fetch spreadsheet by its id
+    final ss = await gsheets.spreadsheet(_spreadsheetId);
+    // get worksheet by its title
+
+    final sheet = ss.worksheetById(0);
+    final value = await sheet.values.map.allRows();
+
+    for (final i in value) {
+      if (i['Wallet'].toLowerCase() == address.toLowerCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Future<int> countRefTime(String address) async{
+  //   final gsheets = GSheets(AppConfig.credentials);
+  //   // fetch spreadsheet by its id
+  //   final ss = await gsheets.spreadsheet(_spreadsheetId);
+  //   // get worksheet by its title
+
+  //   final sheet = ss.worksheetById(0);
+  //   final value = await sheet.values.map.allRows();
+
+  //   for (final i in value) {
+  //     if (i['Wallet'].toLowerCase() == address.toLowerCase()) {
+  //       return true;
+  //     }
+  //   }
+  //   return 0;
+  // }
+
   Future<void> submitForm() async {
     dialogLoading(context);
     final gsheets = GSheets(AppConfig.credentials);
@@ -146,6 +180,57 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
         const Text('Opps'),
       );
     }
+
+    //final res = await findAddress(_walletController.text);
+
+    // if (res) {
+    //   Navigator.pop(context);
+    //   await dialog(
+    //       context,
+    //       const Text('You have already submitted to claim the airdrop.'),
+    //       const Text('Opps'));
+    // } else {
+    //   final resReferal = await findAddress(_referralController.text);
+    //   if (resReferal) {
+
+    //   } else {
+    //     Navigator.pop(context);
+    //     await dialog(
+    //         context,
+    //         const Text('Invalid Referral ID'),
+    //         const Text('Opps'));
+    //   }
+    // }
+
+    // for (final i in value) {
+    //   if (i['Wallet'].toLowerCase() == _walletController.text.toLowerCase()) {
+    //     Navigator.pop(context);
+    //     await dialog(
+    //         context,
+    //         const Text('You have already submitted to claim the airdrop.'),
+    //         const Text('Opps'));
+    //   } else {
+    //     print('submitt');
+    //     // try {
+    //     //   await sheet.values.appendRow([
+    //     //     _emailController.text,
+    //     //     _phoneController.text,
+    //     //     _walletController.text,
+    //     //     _socialController.text ?? '',
+    //     //     _referralController.text ?? ''
+    //     //   ]);
+
+    //     //   enableAnimation();
+    //     // } catch (e) {
+    //     //   Navigator.pop(context);
+    //     //   await dialog(
+    //     //     context,
+    //     //     const Text('Something went wrong. Try again.'),
+    //     //     const Text('Opps'),
+    //     //   );
+    //     // }
+    //   }
+    // }
   }
 
   Future<void> enableAnimation() async {
@@ -187,6 +272,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
     _walletFocusNode = FocusNode();
     _socialFocusNode = FocusNode();
     _referralNode = FocusNode();
+
     super.initState();
   }
 
@@ -297,7 +383,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                           MyInputField(
                             pTop: 24.0,
                             pBottom: 8,
-                            labelText: "Social Link (optional)",
+                            labelText: "Social Post Links (optional)",
                             textInputFormatter: [
                               LengthLimitingTextInputFormatter(
                                 TextField.noMaxLength,
@@ -315,28 +401,28 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                             right: 16.0,
                             fontSize: 16.0,
                           ),
-                          MyInputField(
-                            pTop: 24.0,
-                            pBottom: 8,
-                            labelText: "Referral ID",
-                            textInputFormatter: [
-                              LengthLimitingTextInputFormatter(
-                                TextField.noMaxLength,
-                              ),
-                            ],
-                            suffix: GestureDetector(
-                              onTap: () {
-                                pasteDataToClipboard();
-                              },
-                              child: const MyText(
-                                text: 'PASTE',
-                              ),
-                            ),
-                            controller: _referralController,
-                            focusNode: _referralNode,
-                            onChanged: onChanged,
-                            onSubmit: onSubmit,
-                          ),
+                          // MyInputField(
+                          //   pTop: 24.0,
+                          //   pBottom: 8,
+                          //   labelText: "Referral ID",
+                          //   textInputFormatter: [
+                          //     LengthLimitingTextInputFormatter(
+                          //       TextField.noMaxLength,
+                          //     ),
+                          //   ],
+                          //   suffix: GestureDetector(
+                          //     onTap: () {
+                          //       pasteDataToClipboard();
+                          //     },
+                          //     child: const MyText(
+                          //       text: 'PASTE',
+                          //     ),
+                          //   ),
+                          //   controller: _referralController,
+                          //   focusNode: _referralNode,
+                          //   onChanged: onChanged,
+                          //   onSubmit: onSubmit,
+                          // ),
                           const SizedBox(height: 20),
                           MyFlatButton(
                             textButton: "Claim Airdrop",

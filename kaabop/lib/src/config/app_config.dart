@@ -46,6 +46,8 @@ class AppConfig {
   static const etherTestnet =
       'https://rinkeby.infura.io/v3/93a7248515ca45d0ba4bbbb8c33f1bda';
 
+  static const etherMainet = 'https://mainnet.infura.io/v3/93a7248515ca45d0ba4bbbb8c33f1bda';
+
   static const etherTestnetWebSocket =
       'wss://rinkeby.infura.io/ws/v3/93a7248515ca45d0ba4bbbb8c33f1bda';
 
@@ -108,8 +110,7 @@ class AppConfig {
 
   static const baseInviteLink = 'https://airdrop.selendra.org/claim-\$sel?ref=';
 
-  //static const credentials = ' ';
-
+  static const credentials = ' ';
 
 
 

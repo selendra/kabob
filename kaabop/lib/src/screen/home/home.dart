@@ -24,26 +24,28 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     Timer(const Duration(seconds: 4), () {
-      if (!widget.apiConnected) {
-        handle();
-      }
+      // if (!widget.apiConnected) {
+      //   handle();
+      // }
       setPortfolio();
+      showAirdrop();
     });
+   
 
-    if (ApiProvider.keyring.current.address != null &&
-        widget.apiConnected == false) startNode(context);
+    // if (ApiProvider.keyring.current.address != null &&
+    //     widget.apiConnected == false) startNode(context);
 
-    Timer(const Duration(seconds: 20), () async {
+    Timer(const Duration(seconds: 30), () async {
       if (!widget.apiConnected) {
         await dialog(
           AppUtils.globalKey.currentContext,
           const Text('Failed to connect to Selendra remote node.'),
           const Text('Connection Failed'),
         );
-        Timer(const Duration(milliseconds: 500), () {
-          setPortfolio();
-          showAirdrop();
-        });
+        // Timer(const Duration(milliseconds: 500), () {
+        //   setPortfolio();
+        //   showAirdrop();
+        // });
       }
     });
 
@@ -74,10 +76,18 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
     final api = Provider.of<ApiProvider>(context, listen: false);
 
-    walletProvider.addAvaibleToken({
-      'symbol': api.nativeM.symbol,
-      'balance': api.nativeM.balance ?? '0',
-    });
+    if (api.nativeM.balance == null) {
+      walletProvider.addAvaibleToken({
+        'symbol': api.nativeM.symbol,
+        'balance': '0',
+      });
+    } else {
+      walletProvider.addAvaibleToken({
+        'symbol': api.nativeM.symbol,
+        'balance': api.nativeM.balance.replaceAll(RegExp(','), '') ?? '0',
+      });
+    }
+
     if (contract.kmpi.isContain) {
       walletProvider.addAvaibleToken({
         'symbol': contract.kmpi.symbol,
@@ -97,10 +107,17 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       'balance': contract.bnbNative.balance ?? '0',
     });
 
-    walletProvider.addAvaibleToken({
-      'symbol': api.dot.symbol,
-      'balance': api.dot.balance ?? '0',
-    });
+    if (api.nativeM.balance == null) {
+      walletProvider.addAvaibleToken({
+        'symbol': api.dot.symbol,
+        'balance': '0',
+      });
+    } else {
+      walletProvider.addAvaibleToken({
+        'symbol': api.dot.symbol,
+        'balance': api.dot.balance.replaceAll(RegExp(','), '') ?? '0',
+      });
+    }
 
     walletProvider.addAvaibleToken({
       'symbol': '${contract.bscNative.symbol} (BEP-20)',

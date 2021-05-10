@@ -8,6 +8,39 @@ import '../../../../index.dart';
 class AssetInfoC {
   bool transferFrom = false;
 
+  Widget appBar(BuildContext context, Color color, String trailingText,
+      Widget title, void Function() leadingFunction) {
+    return Container(
+      height: 65.0,
+      width: MediaQuery.of(context).size.width,
+      color: color,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              IconButton(
+                padding: const EdgeInsets.only(left: 30),
+                iconSize: 40.0,
+                icon: const Icon(
+                  LineAwesomeIcons.arrow_left,
+                  color: Colors.white,
+                  size: 30,
+                ),
+                onPressed: leadingFunction,
+              ),
+              title
+            ],
+          ),
+          MyText(
+            text: trailingText,
+            right: 30,
+          ),
+        ],
+      ),
+    );
+  }
+
   void showRecieved(BuildContext context, GetWalletMethod _method,
       {String symbol, org}) {
     showModalBottomSheet<void>(

@@ -7,7 +7,14 @@ class WalletProvider with ChangeNotifier {
   final List<PortfolioM> _portfolioM = [];
   List<Map<String, String>> availableToken = [];
 
-  List<String> listSymbol = ['SEL','DOT','BNB','ETH','SEL (BEP-20)','KGO (BEP-20)'];
+  List<String> listSymbol = [
+    'SEL',
+    'DOT',
+    'BNB',
+    'ETH',
+    'SEL (BEP-20)',
+    'KGO (BEP-20)'
+  ];
 
   List<Color> pieColorList = const [
     Color(0xFFff7675),
@@ -72,7 +79,7 @@ class WalletProvider with ChangeNotifier {
   }
 
   Future<double> getTotal() async {
-    double total = 0;
+    double total = 0.0;
 
     for (int i = 0; i < availableToken.length; i++) {
       total = total + double.parse(availableToken[i]['balance']);
@@ -94,6 +101,8 @@ class WalletProvider with ChangeNotifier {
 
     double temp = 0.0;
 
+    await getTotal();
+
     await getTotal().then((total) {
       double percen = 0.0;
 
@@ -113,7 +122,7 @@ class WalletProvider with ChangeNotifier {
           _portfolioM.add(PortfolioM(
             color: pieColorList[i],
             symbol: availableToken[i]['symbol'],
-            percentage: percen.toStringAsFixed(4),
+            percentage: percen.toStringAsFixed(2),
           ));
 
           dataMap.addAll({

@@ -40,7 +40,7 @@ class MyPieChartRow extends StatelessWidget{
 
           Expanded(
             child: MyText(
-              text: "$endText %",
+              text: "$endText%",
               fontSize: 14.0,
             ),
           ),
@@ -67,7 +67,7 @@ class MyPercentText extends StatelessWidget{
         children: [
           MyText(
             text: value,
-            fontSize: 40,
+            fontSize: 25,
             color: "#FFFFFF",
           ),
 

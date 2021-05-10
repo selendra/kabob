@@ -16,8 +16,9 @@ class ContractProvider with ChangeNotifier {
 
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();
+  bool isReady = false;
   NativeM bscNative = NativeM(
-    logo: 'assets/SelendraCircle-Dark.png',
+    logo: 'assets/SelendraCircle-Blue.png',
     symbol: 'SEL',
     org: 'BEP-20',
     isContain: true,
@@ -55,7 +56,7 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> initEtherClient() async {
     _httpClient = Client();
-    _etherClient = Web3Client(AppConfig.etherTestnet, _httpClient);
+    _etherClient = Web3Client(AppConfig.etherMainet, _httpClient);
   }
 
   Future<void> getEtherBalance() async {
@@ -212,7 +213,8 @@ class ContractProvider with ChangeNotifier {
       credentials,
       Transaction(
         to: EthereumAddress.fromHex(reciever),
-        value: EtherAmount.inWei(BigInt.from(double.parse(amount)* pow(10, 18))),
+        value:
+            EtherAmount.inWei(BigInt.from(double.parse(amount) * pow(10, 18))),
       ),
       fetchChainIdFromNetworkId: true,
     );
@@ -229,12 +231,13 @@ class ContractProvider with ChangeNotifier {
     final credentials = await _web3client.credentialsFromPrivateKey(
       privateKey.substring(2),
     );
- 
+
     final res = await _etherClient.sendTransaction(
       credentials,
       Transaction(
         to: EthereumAddress.fromHex(reciever),
-        value: EtherAmount.inWei(BigInt.from(double.parse(amount)* pow(10, 18))),
+        value:
+            EtherAmount.inWei(BigInt.from(double.parse(amount) * pow(10, 18))),
       ),
       fetchChainIdFromNetworkId: true,
     );
@@ -498,19 +501,25 @@ class ContractProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setReady() {
+    isReady = true;
+
+    notifyListeners();
+  }
+
   void resetConObject() {
     atd = Atd();
     kmpi = Kmpi();
     bscNative = NativeM(
       symbol: 'SEL',
-      logo: 'assets/SelendraCircle-Dark.png',
+      logo: 'assets/SelendraCircle-Blue.png',
       org: 'BEP-20',
       isContain: false,
     );
     bnbNative = NativeM(
       logo: 'assets/bnb.png',
       symbol: 'BNB',
-      org: 'Smart Chain',
+     // org: 'Smart Chain',
       isContain: true,
     );
 
