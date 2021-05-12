@@ -25,9 +25,7 @@ class AssetDetail extends StatelessWidget {
             textRow('24h Low / 24 High', '\$1.61 / \$1.75'),
             line(),
             textRow('Market Rank', '#7'),
-            const SizedBox(
-              height: 25,
-            ),
+            const SizedBox(height: 20),
             const MyText(
               text: 'Market Cap',
               fontSize: 16.0,
@@ -38,7 +36,28 @@ class AssetDetail extends StatelessWidget {
             textRow('Market Cap', '\$51,753,244,083.80'),
             line(),
             textRow('Market Cap Change 24h', '\$-598773221.6576004'),
+            const SizedBox(height: 20),
+            const MyText(
+              text: 'Price History',
+              fontSize: 16.0,
+              textAlign: TextAlign.left,
+              bottom: 16.0,
+            ),
             line(),
+            textRow('All Time High', '\$51,753,244,083.80'),
+            line(),
+            textRow('All Time Low', '\$-598773221.6576004'),
+            const SizedBox(height: 20),
+            const MyText(
+              text: 'Supply',
+              fontSize: 16.0,
+              textAlign: TextAlign.left,
+              bottom: 16.0,
+            ),
+            line(),
+            textRow('Calulating Supply', '\$51,753,244,083.80'),
+            line(),
+            textRow('Total Supply', '\$-598773221.6576004'),
           ],
         ),
       ),
@@ -61,6 +80,7 @@ class AssetDetail extends StatelessWidget {
           MyText(
             text: leadingText,
             color: '#FFFFFF',
+            fontSize: 16,
             overflow: TextOverflow.ellipsis,
           ),
           MyText(

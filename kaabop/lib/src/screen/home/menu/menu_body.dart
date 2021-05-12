@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/screen/home/menu/about.dart';
 
 class MenuBody extends StatelessWidget {
   final Map<String, dynamic> userInfo;
@@ -14,18 +15,18 @@ class MenuBody extends StatelessWidget {
     this.switchBio,
   });
 
-  Future<void> _launchInBrowser(String url) async {
-    if (await canLaunch(url)) {
-      await launch(
-        url,
-        forceSafariVC: false,
-        forceWebView: false,
-        headers: <String, String>{'my_header_key': 'my_header_value'},
-      );
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
+  // Future<void> _launchInBrowser(String url) async {
+  //   if (await canLaunch(url)) {
+  //     await launch(
+  //       url,
+  //       forceSafariVC: false,
+  //       forceWebView: false,
+  //       headers: <String, String>{'my_header_key': 'my_header_value'},
+  //     );
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  //}
 
   @override
   Widget build(BuildContext context) {
@@ -135,17 +136,12 @@ class MenuBody extends StatelessWidget {
           index: 5,
           subIndex: 0,
           onTap: () async {
-            _launchInBrowser('https://selendra.com/privacy');
+            Navigator.push(context, RouteAnimation(enterPage: About()));
+            //_launchInBrowser('https://selendra.com/privacy');
           },
         ),
 
-        MyListTile(
-          index: 5,
-          subIndex: 1,
-          onTap: () async {
-            _launchInBrowser('https://selendra.com/termofuse');
-          },
-        ),
+       
       ],
     );
   }

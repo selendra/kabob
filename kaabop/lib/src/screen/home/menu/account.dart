@@ -254,16 +254,16 @@ class _AccountState extends State<Account> {
                                               color: "#FFFFFF",
                                               fontSize: 20,
                                             ),
-                                            const SizedBox(
-                                              width: 100,
-                                              child: MyText(
-                                                text: "Indracore",
-                                                color: AppColors.secondarytext,
-                                                textAlign: TextAlign.start,
-                                                fontWeight: FontWeight.bold,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
+                                            // const SizedBox(
+                                            //   width: 100,
+                                            //   child: MyText(
+                                            //     text: "Indracore",
+                                            //     color: AppColors.secondarytext,
+                                            //     textAlign: TextAlign.start,
+                                            //     fontWeight: FontWeight.bold,
+                                            //     overflow: TextOverflow.ellipsis,
+                                            //   ),
+                                            // ),
                                           ],
                                         ),
                                         Expanded(child: Container()),

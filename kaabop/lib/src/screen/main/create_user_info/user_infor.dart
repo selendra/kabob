@@ -199,8 +199,9 @@ class MyUserInfoState extends State<MyUserInfo> {
           Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();
 
-          
           isKgoContain();
+
+          MarketProvider().fetchTokenMarketPrice(context);
 
           Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
           Provider.of<ApiProvider>(context, listen: false).getAddressIcon();

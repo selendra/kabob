@@ -18,6 +18,7 @@ class ContractProvider with ChangeNotifier {
   Kmpi kmpi = Kmpi();
   bool isReady = false;
   NativeM bscNative = NativeM(
+    id: 'selendra',
     logo: 'assets/SelendraCircle-Blue.png',
     symbol: 'SEL',
     org: 'BEP-20',
@@ -25,6 +26,7 @@ class ContractProvider with ChangeNotifier {
   );
 
   NativeM kgoNative = NativeM(
+    id: 'kiwigo',
     logo: 'assets/Kiwi-GO-White-1.png',
     symbol: 'KGO',
     org: 'BEP-20',
@@ -32,6 +34,7 @@ class ContractProvider with ChangeNotifier {
   );
 
   NativeM etherNative = NativeM(
+    id: 'etheruem',
     logo: 'assets/eth.png',
     symbol: 'ETH',
     org: '',
@@ -39,6 +42,7 @@ class ContractProvider with ChangeNotifier {
   );
 
   NativeM bnbNative = NativeM(
+    id: 'binance smart chain',
     logo: 'assets/bnb.png',
     symbol: 'BNB',
     org: 'Smart Chain',
@@ -283,6 +287,7 @@ class ContractProvider with ChangeNotifier {
     kmpi.logo = 'assets/koompi_white_logo.png';
     kmpi.symbol = 'KMPI';
     kmpi.org = 'KOOMPI';
+    kmpi.id = 'koompi';
 
     await sdk.api.callContract();
     await fetchKmpiHash();
@@ -309,6 +314,7 @@ class ContractProvider with ChangeNotifier {
     atd.logo = 'assets/FingerPrint1.png';
     atd.symbol = 'ATD';
     atd.org = 'KOOMPI';
+    atd.id = 'koompi';
 
     await sdk.api.initAttendant();
     notifyListeners();
@@ -483,19 +489,25 @@ class ContractProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setEtherMarket(String currentPrice, String priceChange24h) {
+  void setEtherMarket(
+      Market ethMarket, String currentPrice, String priceChange24h) {
+    etherNative.marketData = ethMarket;
     etherNative.marketPrice = currentPrice;
     etherNative.change24h = priceChange24h;
     notifyListeners();
   }
 
-  void setBnbMarket(String currentPrice, String priceChange24h) {
+  void setBnbMarket(
+      Market bnbMarket, String currentPrice, String priceChange24h) {
+    bnbNative.marketData = bnbMarket;
     bnbNative.marketPrice = currentPrice;
     bnbNative.change24h = priceChange24h;
     notifyListeners();
   }
 
-  void setkiwigoMarket(String currentPrice, String priceChange24h) {
+  void setkiwigoMarket(
+      Market kgoMarket, String currentPrice, String priceChange24h) {
+    kgoNative.marketData = kgoMarket;
     kgoNative.marketPrice = currentPrice;
     kgoNative.change24h = priceChange24h;
     notifyListeners();
@@ -511,15 +523,17 @@ class ContractProvider with ChangeNotifier {
     atd = Atd();
     kmpi = Kmpi();
     bscNative = NativeM(
+      id: 'selendra',
       symbol: 'SEL',
       logo: 'assets/SelendraCircle-Blue.png',
       org: 'BEP-20',
-      isContain: false,
+      isContain: true,
     );
     bnbNative = NativeM(
+      id: 'binance smart chain',
       logo: 'assets/bnb.png',
       symbol: 'BNB',
-     // org: 'Smart Chain',
+      // org: 'Smart Chain',
       isContain: true,
     );
 

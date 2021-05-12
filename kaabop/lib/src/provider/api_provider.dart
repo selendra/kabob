@@ -46,11 +46,13 @@ class ApiProvider with ChangeNotifier {
   ContractProvider contractProvider;
   AccountM accountM = AccountM();
   NativeM nativeM = NativeM(
+    id: 'selendra',
     logo: 'assets/SelendraCircle-White.png',
     symbol: 'SEL',
     org: 'Testnet',
   );
   NativeM dot = NativeM(
+    id: 'polkadot',
     symbol: 'DOT',
     logo: 'assets/icons/polkadot.png',
     isContain: false,
@@ -189,6 +191,7 @@ class ApiProvider with ChangeNotifier {
   void resetNativeObj() {
     accountM = AccountM();
     nativeM = NativeM(
+      id: 'selendra',
       logo: 'assets/SelendraCircle-White.png',
       symbol: 'SEL',
       org: 'Testnet',

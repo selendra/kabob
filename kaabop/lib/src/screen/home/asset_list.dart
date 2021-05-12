@@ -16,11 +16,13 @@ class AssetList extends StatelessWidget {
                   context,
                   RouteAnimation(
                     enterPage: AssetInfo(
+                      id: value.bscNative.id,
                       assetLogo: value.bscNative.logo,
                       balance:
                           value.bscNative.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.bscNative.symbol ?? '',
                       org: value.bscNative.org,
+                      
                       marketPrice: value.bscNative.marketPrice,
                       priceChange24h: value.bscNative.change24h,
                     ),
@@ -47,6 +49,7 @@ class AssetList extends StatelessWidget {
                   context,
                   RouteAnimation(
                     enterPage: AssetInfo(
+                      id: value.kgoNative.id,
                       assetLogo: value.kgoNative.logo,
                       balance:
                           value.kgoNative.balance ?? AppText.loadingPattern,
@@ -92,6 +95,7 @@ class AssetList extends StatelessWidget {
                               context,
                               RouteAnimation(
                                 enterPage: AssetInfo(
+                                  id: value.kmpi.id,
                                   assetLogo: value.kmpi.logo,
                                   balance: value.kmpi.balance ??
                                       AppText.loadingPattern,
@@ -132,6 +136,7 @@ class AssetList extends StatelessWidget {
                           context,
                           RouteAnimation(
                             enterPage: AssetInfo(
+                              id: value.atd.id,
                               assetLogo: value.atd.logo,
                               balance:
                                   value.atd.balance ?? AppText.loadingPattern,
@@ -161,10 +166,13 @@ class AssetList extends StatelessWidget {
                   context,
                   RouteAnimation(
                     enterPage: AssetInfo(
+                      id: value.bnbNative.id,
                       assetLogo: value.bnbNative.logo,
                       balance:
                           value.bnbNative.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.bnbNative.symbol ?? '',
+                      marketPrice: value.bnbNative.marketPrice,
+                      priceChange24h: value.bnbNative.change24h,
                     ),
                   ),
                 );
@@ -189,10 +197,13 @@ class AssetList extends StatelessWidget {
                 context,
                 RouteAnimation(
                   enterPage: AssetInfo(
+                    id: value.etherNative.id,
                     assetLogo: value.etherNative.logo,
                     balance: value.etherNative.balance,
                     tokenSymbol: value.etherNative.symbol,
                     org: value.etherNative.org,
+                    marketPrice: value.etherNative.marketPrice,
+                    priceChange24h: value.etherNative.change24h,
                   ),
                 ),
               );
@@ -216,10 +227,13 @@ class AssetList extends StatelessWidget {
                   context,
                   RouteAnimation(
                     enterPage: AssetInfo(
+                      id: value.dot.id,
                       assetLogo: value.dot.logo,
                       balance: value.dot.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.dot.symbol,
                       org: value.dot.org,
+                      marketPrice: value.dot.marketPrice,
+                      priceChange24h: value.dot.change24h,
                     ),
                   ),
                 );
@@ -244,6 +258,7 @@ class AssetList extends StatelessWidget {
                 context,
                 RouteAnimation(
                   enterPage: AssetInfo(
+                    id: value.nativeM.id,
                     assetLogo: value.nativeM.logo,
                     balance: value.nativeM.balance ?? AppText.loadingPattern,
                     tokenSymbol: value.nativeM.symbol,

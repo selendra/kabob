@@ -48,8 +48,8 @@ class MenuModel {
     {
       'title': "About",
       'sub': [
-        {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Privacy Policy'},
-        {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Term of Use'},
+        {'icon': "assets/icons/about.svg", 'subTitle': 'About'},
+       // {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Term of Use'},
       ]
     },
   ];

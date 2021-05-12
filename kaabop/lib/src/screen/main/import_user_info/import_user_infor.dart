@@ -77,6 +77,8 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         //isBscContain();
         isKgoContain();
 
+        MarketProvider().fetchTokenMarketPrice(context);
+
         Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
         Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
