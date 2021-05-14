@@ -115,7 +115,8 @@ class ApiProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void setDotMarket(String currentPrice, String priceChange24h) {
+  void setDotMarket(Market marketData,String currentPrice, String priceChange24h) {
+    dot.marketData = marketData;
     dot.marketPrice = currentPrice;
     dot.change24h = priceChange24h;
 

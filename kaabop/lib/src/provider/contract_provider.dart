@@ -34,7 +34,7 @@ class ContractProvider with ChangeNotifier {
   );
 
   NativeM etherNative = NativeM(
-    id: 'etheruem',
+    id: 'ethereum',
     logo: 'assets/eth.png',
     symbol: 'ETH',
     org: '',

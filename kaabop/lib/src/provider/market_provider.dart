@@ -60,6 +60,7 @@ class MarketProvider {
           } else if (i == 3) {
             contract.setReady();
             api.setDotMarket(
+                res,
                 jsonResponse[0]['current_price'].toString(),
                 jsonResponse[0]['price_change_percentage_24h']
                     .toStringAsFixed(2)

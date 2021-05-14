@@ -55,6 +55,8 @@ class AssetList extends StatelessWidget {
                           value.kgoNative.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.kgoNative.symbol ?? '',
                       org: value.kgoNative.org,
+                    
+                      marketData: value.kgoNative.marketData,
                       marketPrice: value.kgoNative.marketPrice,
                       priceChange24h: value.kgoNative.change24h,
                     ),
@@ -67,6 +69,7 @@ class AssetList extends StatelessWidget {
                 'BEP-20',
                 value.kgoNative.balance ?? AppText.loadingPattern,
                 Colors.transparent,
+                
                 marketPrice: value.kgoNative.marketPrice,
                 priceChange24h: value.kgoNative.change24h,
               ),
@@ -171,6 +174,7 @@ class AssetList extends StatelessWidget {
                       balance:
                           value.bnbNative.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.bnbNative.symbol ?? '',
+                      marketData: value.bnbNative.marketData,
                       marketPrice: value.bnbNative.marketPrice,
                       priceChange24h: value.bnbNative.change24h,
                     ),
@@ -202,6 +206,7 @@ class AssetList extends StatelessWidget {
                     balance: value.etherNative.balance,
                     tokenSymbol: value.etherNative.symbol,
                     org: value.etherNative.org,
+                    marketData: value.etherNative.marketData,
                     marketPrice: value.etherNative.marketPrice,
                     priceChange24h: value.etherNative.change24h,
                   ),
@@ -232,6 +237,7 @@ class AssetList extends StatelessWidget {
                       balance: value.dot.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.dot.symbol,
                       org: value.dot.org,
+                      marketData: value.dot.marketData,
                       marketPrice: value.dot.marketPrice,
                       priceChange24h: value.dot.change24h,
                     ),
