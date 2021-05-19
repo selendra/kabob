@@ -30,7 +30,7 @@ class MarketProvider {
         if (response.statusCode == 200) {
           final jsonResponse = convert.jsonDecode(response.body);
 
-          final parsed = jsonDecode(response.body).cast<Map<String, dynamic>>();
+        
 
           final res = parsePhotos(response.body);
 

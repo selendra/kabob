@@ -17,7 +17,7 @@ class AddAssetState extends State<AddAsset> {
 
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
   FlareControls flareController = FlareControls();
-  String _tokenSymbol = '';
+  String _tokenSymbol = '',initialValue = 'Ethereum';
 
   @override
   void initState() {
@@ -130,6 +130,12 @@ class AddAssetState extends State<AddAsset> {
     return null;
   }
 
+  void onChangeDropDown(String network){
+    setState(() {
+     initialValue = network;
+    });
+  }
+
   void qrRes(String value) {
     if (value != null) {
       setState(() {
@@ -166,6 +172,8 @@ class AddAssetState extends State<AddAsset> {
           children: [
             AddAssetBody(
               assetM: _modelAsset,
+              initialValue: initialValue,
+              onChangeDropDown: onChangeDropDown,
               addAsset: addAsset,
               popScreen: popScreen,
               onChanged: onChanged,

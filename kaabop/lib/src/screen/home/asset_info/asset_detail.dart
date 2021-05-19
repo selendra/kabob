@@ -1,15 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../index.dart';
 
-class AssetDetail extends StatelessWidget {
+class AssetDetail extends StatefulWidget {
   final Market marketData;
   const AssetDetail(this.marketData);
+
+  @override
+  _AssetDetailState createState() => _AssetDetailState();
+}
+
+class _AssetDetailState extends State<AssetDetail> {
+  String totalSupply = '';
+
+  String circulatingSupply = '';
+
+  String convert(String supply) {
+    var formatter = NumberFormat.decimalPattern();
+
+    if (supply != null) {
+      if (supply.contains('.')) {
+        var value = supply?.replaceFirst(RegExp(r"\.[^]*"), "");
+        return formatter.format(int.parse(value));
+      }
+    }
+
+    return supply;
+  }
+
+  @override
+  void initState() {
+    totalSupply = convert(widget.marketData.totalSupply);
+    circulatingSupply = convert(widget.marketData.circulatingSupply);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(30.0),
+      margin: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -20,15 +52,19 @@ class AssetDetail extends StatelessWidget {
               bottom: 16.0,
             ),
             line(),
-            textRow('Price', '\$${marketData.currentPrice}', ''),
+            textRow('Price', '\$${widget.marketData.currentPrice}', ''),
             line(),
-            textRow('Price Change 24h', '\$${marketData.priceChange24H} ',
-                ' ${marketData.priceChangePercentage24H}%'),
+            textRow(
+                'Price Change 24h',
+                '\$${widget.marketData.priceChange24H} ',
+                ' ${widget.marketData.priceChangePercentage24H}%'),
             line(),
-            textRow('24h Low / 24 High', '\$${marketData.low24H} / \$${marketData.high24H}',
+            textRow(
+                '24h Low / 24 High',
+                '\$${widget.marketData.low24H} / \$${widget.marketData.high24H}',
                 ''),
             line(),
-            textRow('Market Rank', '#${marketData.marketCapRank}', ''),
+            textRow('Market Rank', '#${widget.marketData.marketCapRank}', ''),
             const SizedBox(height: 20),
             const MyText(
               text: 'Market Cap',
@@ -37,10 +73,10 @@ class AssetDetail extends StatelessWidget {
               bottom: 16.0,
             ),
             line(),
-            textRow('Market Cap', '\$${marketData.marketCap}', ''),
+            textRow('Market Cap', '\$${widget.marketData.marketCap}', ''),
             line(),
             textRow('Market Cap Change 24h',
-                '\$${marketData.marketCapChange24H}', ''),
+                '\$${widget.marketData.marketCapChange24H}', ''),
             const SizedBox(height: 20),
             const MyText(
               text: 'Price History',
@@ -49,9 +85,9 @@ class AssetDetail extends StatelessWidget {
               bottom: 16.0,
             ),
             line(),
-            textRow('All Time High', '\$${marketData.ath}', ''),
+            textRow('All Time High', '\$${widget.marketData.ath}', ''),
             line(),
-            textRow('All Time Low', '\$${marketData.atl}', ''),
+            textRow('All Time Low', '\$${widget.marketData.atl}', ''),
             const SizedBox(height: 20),
             const MyText(
               text: 'Supply',
@@ -61,9 +97,14 @@ class AssetDetail extends StatelessWidget {
             ),
             line(),
             textRow(
-                'Circulating Supply', '\$${marketData.circulatingSupply}', ''),
+                'Circulating Supply',
+                '$circulatingSupply ${widget.marketData.symbol.toUpperCase()}',
+                ''),
             line(),
-            textRow('Total Supply', '\$${marketData.totalSupply}', ''),
+            textRow(
+                'Total Supply',
+                '$totalSupply ${widget.marketData.symbol.toUpperCase()}',
+                ''),
           ],
         ),
       ),
