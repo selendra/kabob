@@ -34,6 +34,8 @@ class AppState extends State<App> {
           Provider.of<ApiProvider>(context, listen: false).connectPolNon();
           Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+
+       
           isKgoContain();
 
           //isBscContain();
@@ -51,7 +53,7 @@ class AppState extends State<App> {
               });
 
               if (ApiProvider.keyring.keyPairs.isNotEmpty) {
-                initContract();
+                //initContract();
 
                 Provider.of<ApiProvider>(context, listen: false)
                     .getChainDecimal();
@@ -114,27 +116,27 @@ class AppState extends State<App> {
   //   Provider.of<ContractProvider>(context, listen: false).getBscBalance();
   // }
 
-  Future<void> initContract() async {
-    await StorageServices.readBool('KMPI').then((value) {
-      if (value) {
-        Provider.of<WalletProvider>(context, listen: false)
-            .addTokenSymbol('KMPI');
-        Provider.of<ContractProvider>(context, listen: false).initKmpi();
-      }
-    });
+  // Future<void> initContract() async {
+  //   await StorageServices.readBool('KMPI').then((value) {
+  //     if (value) {
+  //       Provider.of<WalletProvider>(context, listen: false)
+  //           .addTokenSymbol('KMPI');
+  //       Provider.of<ContractProvider>(context, listen: false).initKmpi();
+  //     }
+  //   });
 
-    await StorageServices.readBool('ATD').then(
-      (value) {
-        if (value) {
-          Provider.of<WalletProvider>(context, listen: false)
-              .addTokenSymbol('ATD');
-          Provider.of<ContractProvider>(context, listen: false).initAtd();
-          Provider.of<ContractProvider>(context, listen: false)
-              .fetchAtdBalance();
-        }
-      },
-    );
-  }
+  //   await StorageServices.readBool('ATD').then(
+  //     (value) {
+  //       if (value) {
+  //         Provider.of<WalletProvider>(context, listen: false)
+  //             .addTokenSymbol('ATD');
+  //         Provider.of<ContractProvider>(context, listen: false).initAtd();
+  //         Provider.of<ContractProvider>(context, listen: false)
+  //             .fetchAtdBalance();
+  //       }
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {

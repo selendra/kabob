@@ -6,6 +6,7 @@ class NativeM {
   String symbol;
   String balance;
   String logo;
+  String type;
   String org;
   Market marketData;
   String marketPrice;
@@ -19,6 +20,7 @@ class NativeM {
     this.symbol,
     this.balance,
     this.logo,
+    this.type,
     this.org,
     this.marketData,
     this.marketPrice,

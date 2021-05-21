@@ -16,6 +16,10 @@ class _AssetDetailState extends State<AssetDetail> {
 
   String circulatingSupply = '';
 
+  String marketCap = '';
+
+  String marketCapChange24h = '';
+
   String convert(String supply) {
     var formatter = NumberFormat.decimalPattern();
 
@@ -26,13 +30,15 @@ class _AssetDetailState extends State<AssetDetail> {
       }
     }
 
-    return supply;
+    return formatter.format(int.parse(supply));
   }
 
   @override
   void initState() {
     totalSupply = convert(widget.marketData.totalSupply);
     circulatingSupply = convert(widget.marketData.circulatingSupply);
+    marketCap = convert(widget.marketData.marketCap);
+    marketCapChange24h = convert(widget.marketData.marketCapChange24H);
     super.initState();
   }
 
@@ -73,10 +79,9 @@ class _AssetDetailState extends State<AssetDetail> {
               bottom: 16.0,
             ),
             line(),
-            textRow('Market Cap', '\$${widget.marketData.marketCap}', ''),
+            textRow('Market Cap', '\$$marketCap', ''),
             line(),
-            textRow('Market Cap Change 24h',
-                '\$${widget.marketData.marketCapChange24H}', ''),
+            textRow('Market Cap Change 24h', '\$$marketCapChange24h', ''),
             const SizedBox(height: 20),
             const MyText(
               text: 'Price History',
@@ -101,10 +106,8 @@ class _AssetDetailState extends State<AssetDetail> {
                 '$circulatingSupply ${widget.marketData.symbol.toUpperCase()}',
                 ''),
             line(),
-            textRow(
-                'Total Supply',
-                '$totalSupply ${widget.marketData.symbol.toUpperCase()}',
-                ''),
+            textRow('Total Supply',
+                '$totalSupply ${widget.marketData.symbol.toUpperCase()}', ''),
           ],
         ),
       ),

@@ -11,18 +11,18 @@ class ApiProvider with ChangeNotifier {
   static Keyring keyring = Keyring();
 
   static List<TokenModel> listToken = [
-    TokenModel(
-      logo: 'assets/FingerPrint1.png',
-      symbol: 'ATD',
-      org: 'KOOMPI',
-      color: Colors.black,
-    ),
-    TokenModel(
-      logo: 'assets/koompi_white_logo.png',
-      symbol: 'KMPI',
-      org: 'KOOMPI',
-      color: Colors.transparent,
-    ),
+    // TokenModel(
+    //   logo: 'assets/FingerPrint1.png',
+    //   symbol: 'ATD',
+    //   org: 'KOOMPI',
+    //   color: Colors.black,
+    // ),
+    // TokenModel(
+    //   logo: 'assets/koompi_white_logo.png',
+    //   symbol: 'KMPI',
+    //   org: 'KOOMPI',
+    //   color: Colors.transparent,
+    // ),
     TokenModel(
       logo: 'assets/icons/polkadot.png',
       symbol: 'DOT',

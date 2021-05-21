@@ -17,7 +17,7 @@ class AddAssetState extends State<AddAsset> {
 
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
   FlareControls flareController = FlareControls();
-  String _tokenSymbol = '',initialValue = 'Ethereum';
+  String _tokenSymbol = '', initialValue = 'Ethereum';
 
   @override
   void initState() {
@@ -96,13 +96,26 @@ class AddAssetState extends State<AddAsset> {
           });
         }
       } else {
-        final res = await Provider.of<ContractProvider>(context, listen: false)
-            .query(_modelAsset.controllerAssetCode.text, 'symbol', []);
-        if (res != null) {
-          setState(() {
-            _tokenSymbol = res[0].toString();
-            _modelAsset.loading = false;
-          });
+        if (initialValue == 'Ethereum') {
+          final res = await Provider.of<ContractProvider>(context,
+                  listen: false)
+              .queryEther(_modelAsset.controllerAssetCode.text, 'symbol', []);
+          if (res != null) {
+            setState(() {
+              _tokenSymbol = res[0].toString();
+              _modelAsset.loading = false;
+            });
+          }
+        } else {
+          final res =
+              await Provider.of<ContractProvider>(context, listen: false)
+                  .query(_modelAsset.controllerAssetCode.text, 'symbol', []);
+          if (res != null) {
+            setState(() {
+              _tokenSymbol = res[0].toString();
+              _modelAsset.loading = false;
+            });
+          }
         }
       }
     } else {
@@ -130,9 +143,9 @@ class AddAssetState extends State<AddAsset> {
     return null;
   }
 
-  void onChangeDropDown(String network){
+  void onChangeDropDown(String network) {
     setState(() {
-     initialValue = network;
+      initialValue = network;
     });
   }
 

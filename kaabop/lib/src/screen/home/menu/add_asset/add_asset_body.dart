@@ -63,12 +63,10 @@ class AddAssetBody extends StatelessWidget {
         const SizedBox(
           height: 20.0,
         ),
-        Expanded(
-          child: SvgPicture.asset(
-            'assets/icons/contract.svg',
-            width: 200,
-            height: 200,
-          ),
+        SvgPicture.asset(
+          'assets/icons/contract.svg',
+          width: 200,
+          height: 200,
         ),
         Expanded(
           child: Container(
@@ -149,10 +147,14 @@ class AddAssetBody extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: ReuseDropDown(
-                            style: TextStyle(color: hexaCodeToColor(AppColors.textColor)),
+                            style: TextStyle(
+                                color: hexaCodeToColor(AppColors.textColor)),
                             initialValue: initialValue,
-                            itemsList: const ['Ethereum', 'Binance Smart Chain'],
-                            onChanged: (value){
+                            itemsList: const [
+                              'Ethereum',
+                              'Binance Smart Chain'
+                            ],
+                            onChanged: (value) {
                               onChangeDropDown(value);
                             },
                           ),
@@ -205,13 +207,15 @@ class AddAssetBody extends StatelessWidget {
                       ),
                     )
                   else if (tokenSymbol != 'SEL' && tokenSymbol != '')
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: portFolioItemRow(
-                        'assets/circle.png',
-                        tokenSymbol,
-                        Colors.black,
-                        addAsset,
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: portFolioItemRow(
+                          'assets/circle.png',
+                          tokenSymbol,
+                          Colors.black,
+                          addAsset,
+                        ),
                       ),
                     )
                   else

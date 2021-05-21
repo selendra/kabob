@@ -79,6 +79,41 @@ class StorageServices {
     return _preferences;
   }
 
+  static Future<void> saveEthContractAddr(String contractAddr) async {
+    final List<String> contractAddrList = [];
+    final res = await fetchData('ethContractList');
+
+    if (res != null) {
+      contractAddrList.clear();
+      for (final i in res) {
+        contractAddrList.add(i.toString());
+      }
+      contractAddrList.add(contractAddr);
+      await setData(contractAddrList, 'ethContractList');
+    } else {
+      contractAddrList.add(contractAddr);
+
+      await setData(contractAddrList, 'ethContractList');
+    }
+  }
+
+  static Future<void> removeEthContractAddr(String contractAddr) async {
+    List contractAddrList = [];
+    final res = await fetchData('ethContractList');
+
+    if (res != null) {
+      contractAddrList = res as List;
+
+      contractAddrList.removeWhere((element) => element == contractAddr);
+
+      if (contractAddrList.isNotEmpty) {
+        await StorageServices.setData(contractAddrList, 'ethContractList');
+      } else {
+        await removeKey('ethContractList');
+      }
+    }
+  }
+
   static Future<void> saveContractAddr(String contractAddr) async {
     final List<String> contractAddrList = [];
     final res = await fetchData('contractList');

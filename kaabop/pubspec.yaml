@@ -54,7 +54,7 @@ dependencies:
   async: ^2.4.2
 
   # Image service
-  path_provider: ^1.6.22
+
   flutter_svg: ^0.19.3
   intl:
 

@@ -84,6 +84,64 @@ class ContractProvider with ChangeNotifier {
     return contract;
   }
 
+  Future<DeployedContract> initEtherContract(String contractAddr) async {
+    final String abiCode = await rootBundle.loadString('assets/abi/erc20.json');
+
+    final contract = DeployedContract(
+      ContractAbi.fromJson(abiCode, 'ERC-20'),
+      EthereumAddress.fromHex(contractAddr),
+    );
+
+    return contract;
+  }
+
+  // Future<BigInt> getEtherTokenBalance(String contractAddr, EthereumAddress from) async {
+  //   await initEtherClient();
+  //   final contract =
+  //       await initEtherContract(contractAddr);
+  //   final ethFunction = contract.function('balanceOf');
+  //   final response = await _etherClient.call(
+  //     contract: contract,
+  //     function: ethFunction,
+  //     params: [from],
+  //   );
+
+  //   print(response.first);
+
+  //   return response.first as BigInt;
+  // }
+
+  // Future<String> getEtherTokenSymbol(
+  //     String contractAddr, EthereumAddress from) async {
+  //   await initEtherClient();
+  //   final contract = await initEtherContract(contractAddr);
+  //   final ethFunction = contract.function('symbol');
+  //   final response = await _etherClient.call(
+  //     contract: contract,
+  //     function: ethFunction,
+  //     params: [],
+  //   );
+
+  //   print(response.first);
+
+  //   return response.first as String;
+  // }
+
+  Future<List> queryEther(
+      String contractAddress, String functionName, List args) async {
+    await initEtherClient();
+    final contract = await initEtherContract(contractAddress);
+
+    final ethFunction = contract.function(functionName);
+
+    final res = await _etherClient.call(
+      contract: contract,
+      function: ethFunction,
+      params: args,
+    );
+    return res;
+  }
+
   Future<List> query(
       String contractAddress, String functionName, List args) async {
     initClient();
@@ -328,7 +386,7 @@ class ContractProvider with ChangeNotifier {
   }
 
   Future<void> addToken(String symbol, BuildContext context,
-      {String contractAddr}) async {
+      {String contractAddr,String network}) async {
     if (symbol == 'KMPI') {
       if (!kmpi.isContain) {
         initKmpi().then((value) async {
@@ -391,6 +449,19 @@ class ContractProvider with ChangeNotifier {
         });
       }
     } else {
+      if(network!=null){
+        if(network=='Ethereum'){
+          final symbol = await queryEther(contractAddr,'symbol',[]);
+          final decimal = await queryEther(contractAddr,'decimal',[]);
+          final balance = await queryEther(contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+          
+
+          if(token.isNotEmpty){
+
+          }
+
+        }
+      }
       final symbol = await query(contractAddr, 'symbol', []);
       final decimal = await query(contractAddr, 'decimals', []);
       final balance = await query(
@@ -402,6 +473,8 @@ class ContractProvider with ChangeNotifier {
                 element.symbol.toLowerCase() ==
                 symbol[0].toString().toLowerCase(),
             orElse: () => null);
+       
+
 
         if (item == null) {
           addContractToken(
