@@ -70,9 +70,13 @@ class AddAssetState extends State<AddAsset> {
       Provider.of<ContractProvider>(context, listen: false)
           .addToken(ContractProvider().kmpi.symbol, context);
     } else {
+
+
+      print(initialValue);
       Provider.of<ContractProvider>(context, listen: false).addToken(
         _tokenSymbol,
         context,
+        network: initialValue,
         contractAddr: _modelAsset.controllerAssetCode.text,
       );
     }

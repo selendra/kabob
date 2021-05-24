@@ -35,19 +35,19 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     // if (ApiProvider.keyring.current.address != null &&
     //     widget.apiConnected == false) startNode(context);
 
-    Timer(const Duration(seconds: 30), () async {
-      if (!widget.apiConnected) {
-        await dialog(
-          AppUtils.globalKey.currentContext,
-          const Text('Failed to connect to Selendra remote node.'),
-          const Text('Connection Failed'),
-        );
-        // Timer(const Duration(milliseconds: 500), () {
-        //   setPortfolio();
-        //   showAirdrop();
-        // });
-      }
-    });
+    // Timer(const Duration(seconds: 30), () async {
+    //   if (!widget.apiConnected) {
+    //     await dialog(
+    //       AppUtils.globalKey.currentContext,
+    //       const Text('Failed to connect to Selendra remote node.'),
+    //       const Text('Connection Failed'),
+    //     );
+    //     // Timer(const Duration(milliseconds: 500), () {
+    //     //   setPortfolio();
+    //     //   showAirdrop();
+    //     // });
+    //   }
+    // });
 
     AppServices.noInternetConnection(_homeM.globalKey);
 

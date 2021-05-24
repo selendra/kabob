@@ -386,7 +386,7 @@ class ContractProvider with ChangeNotifier {
   }
 
   Future<void> addToken(String symbol, BuildContext context,
-      {String contractAddr,String network}) async {
+      {String contractAddr, String network}) async {
     if (symbol == 'KMPI') {
       if (!kmpi.isContain) {
         initKmpi().then((value) async {
@@ -449,66 +449,90 @@ class ContractProvider with ChangeNotifier {
         });
       }
     } else {
-      if(network!=null){
-        if(network=='Ethereum'){
-          final symbol = await queryEther(contractAddr,'symbol',[]);
-          final decimal = await queryEther(contractAddr,'decimal',[]);
-          final balance = await queryEther(contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
-          
+      if (network != null) {
+        if (network == 'Ethereum') {
+          print('ethernetwork');
+          final symbol = await queryEther(contractAddr, 'symbol', []);
+          final decimal = await queryEther(contractAddr, 'decimals', []);
+          final balance = await queryEther(
+              contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
-          if(token.isNotEmpty){
+          TokenModel mToken = TokenModel();
 
+          mToken.symbol = symbol.first.toString();
+          mToken.decimal = decimal.first.toString();
+          mToken.balance = balance.first.toString();
+          mToken.org = 'ERC-20';
+
+          if (token.isEmpty) {
+            addContractToken(mToken);
           }
 
+          if (token.isNotEmpty) {
+            if (!token.contains(mToken)) {
+              addContractToken(
+                TokenModel(
+                  contractAddr: contractAddr,
+                  decimal: mToken.decimal,
+                  symbol: mToken.symbol,
+                  balance: mToken.balance,
+                  org: 'ERC-20',
+                ),
+              );
+
+              // await StorageServices.saveContractAddr(contractAddr);
+              // Provider.of<WalletProvider>(context, listen: false)
+              //     .addTokenSymbol('${symbol[0]} (ERC-20)');
+            }
+          }
         }
       }
-      final symbol = await query(contractAddr, 'symbol', []);
-      final decimal = await query(contractAddr, 'decimals', []);
-      final balance = await query(
-          contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+      //   final symbol = await query(contractAddr, 'symbol', []);
+      //   final decimal = await query(contractAddr, 'decimals', []);
+      //   final balance = await query(
+      //       contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
-      if (token.isNotEmpty) {
-        final TokenModel item = token.firstWhere(
-            (element) =>
-                element.symbol.toLowerCase() ==
-                symbol[0].toString().toLowerCase(),
-            orElse: () => null);
-       
+      //   if (token.isNotEmpty) {
+      //     final TokenModel item = token.firstWhere(
+      //         (element) =>
+      //             element.symbol.toLowerCase() ==
+      //             symbol[0].toString().toLowerCase(),
+      //         orElse: () => null);
 
+      //     if (item == null) {
+      //       addContractToken(
+      //         TokenModel(
+      //           contractAddr: contractAddr,
+      //           decimal: decimal[0].toString(),
+      //           symbol: symbol[0].toString(),
+      //           balance: balance[0].toString(),
+      //           org: 'BEP-20',
+      //         ),
+      //       );
 
-        if (item == null) {
-          addContractToken(
-            TokenModel(
-              contractAddr: contractAddr,
-              decimal: decimal[0].toString(),
-              symbol: symbol[0].toString(),
-              balance: balance[0].toString(),
-              org: 'BEP-20',
-            ),
-          );
+      //       await StorageServices.saveContractAddr(contractAddr);
+      //       Provider.of<WalletProvider>(context, listen: false)
+      //           .addTokenSymbol('${symbol[0]} (BEP-20)');
+      //     }
+      //   } else {
+      //     token.add(TokenModel(
+      //         contractAddr: contractAddr,
+      //         decimal: decimal[0].toString(),
+      //         symbol: symbol[0].toString(),
+      //         balance: balance[0].toString(),
+      //         org: 'BEP-20'));
 
-          await StorageServices.saveContractAddr(contractAddr);
-          Provider.of<WalletProvider>(context, listen: false)
-              .addTokenSymbol('${symbol[0]} (BEP-20)');
-        }
-      } else {
-        token.add(TokenModel(
-            contractAddr: contractAddr,
-            decimal: decimal[0].toString(),
-            symbol: symbol[0].toString(),
-            balance: balance[0].toString(),
-            org: 'BEP-20'));
-
-        await StorageServices.saveContractAddr(contractAddr);
-        Provider.of<WalletProvider>(context, listen: false)
-            .addTokenSymbol(symbol[0].toString());
-      }
+      //     await StorageServices.saveContractAddr(contractAddr);
+      //     Provider.of<WalletProvider>(context, listen: false)
+      //         .addTokenSymbol(symbol[0].toString());
+      //   }
     }
     notifyListeners();
   }
 
   Future<void> addContractToken(TokenModel tokenModel) async {
     token.add(tokenModel);
+    print(token.length);
     notifyListeners();
   }
 

@@ -295,6 +295,8 @@ class AssetList extends StatelessWidget {
                       direction: DismissDirection.endToStart,
                       background: DismissibleBackground(),
                       onDismissed: (direct) {
+
+                        
                         value.removeToken(value.token[index].symbol, context);
                         //setPortfolio();
                       },
@@ -316,7 +318,7 @@ class AssetList extends StatelessWidget {
                         child: AssetItem(
                           'assets/circle.png',
                           value.token[index].symbol ?? '',
-                          'BEP-20',
+                          value.token[index].org??'',
                           value.token[index].balance ?? AppText.loadingPattern,
                           Colors.transparent,
                         ),

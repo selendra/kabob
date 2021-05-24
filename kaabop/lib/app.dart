@@ -42,6 +42,8 @@ class AppState extends State<App> {
 
           getSavedContractToken();
 
+          getEtherSavedContractToken();
+
           Provider.of<ContractProvider>(context, listen: false)
               .getEtherBalance();
         }
@@ -90,6 +92,36 @@ class AppState extends State<App> {
       }
     }
   }
+
+  Future<void> getEtherSavedContractToken() async {
+    final contractProvider =
+        Provider.of<ContractProvider>(context, listen: false);
+    final res = await StorageServices.fetchData('ethContractList');
+
+    if (res != null) {
+      for (final i in res) {
+        final symbol = await contractProvider.queryEther(i.toString(), 'symbol', []);
+        final decimal =
+            await contractProvider.queryEther(i.toString(), 'decimals', []);
+        final balance = await contractProvider.queryEther(i.toString(), 'balanceOf',
+            [EthereumAddress.fromHex(contractProvider.ethAdd)]);
+
+        contractProvider.addContractToken(TokenModel(
+          contractAddr: i.toString(),
+          decimal: decimal[0].toString(),
+          symbol: symbol[0].toString(),
+          balance: balance[0].toString(),
+          org: 'ERC-20',
+        ));
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol('${symbol[0]} (ERC-20)');
+      }
+    }
+  }
+
+
+
+  
 
   // Future<void> isBnbContain() async {
   //   // Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
