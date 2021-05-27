@@ -330,17 +330,25 @@ class SubmitTrxState extends State<SubmitTrx> {
             );
             break;
           default:
-            final contractAddr =
-                ContractProvider().findContractAddr(_scanPayM.asset);
-            final chainDecimal =
-                await ContractProvider().query(contractAddr, 'decimals', []);
-            sendTxAYF(
-              contractAddr,
-              chainDecimal[0].toString(),
-              _scanPayM.controlReceiverAddress.text,
-              _scanPayM.controlAmount.text,
-              value,
-            );
+            if (_scanPayM.asset.contains('ERC-20')) {
+              final contractAddr =
+                  ContractProvider().findContractAddr(_scanPayM.asset);
+              final chainDecimal =
+                  await ContractProvider().queryEther(contractAddr, 'decimals', []);
+            } else {
+              final contractAddr =
+                  ContractProvider().findContractAddr(_scanPayM.asset);
+              final chainDecimal =
+                  await ContractProvider().query(contractAddr, 'decimals', []);
+              sendTxAYF(
+                contractAddr,
+                chainDecimal[0].toString(),
+                _scanPayM.controlReceiverAddress.text,
+                _scanPayM.controlAmount.text,
+                value,
+              );
+            }
+
             break;
         }
       });

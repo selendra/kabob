@@ -209,7 +209,6 @@ class AddAssetBody extends StatelessWidget {
                   else if (tokenSymbol != 'SEL' && tokenSymbol != '')
                     Expanded(
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
                         child: portFolioItemRow(
                           'assets/circle.png',
                           tokenSymbol,

@@ -34,7 +34,10 @@ class HomeBody extends StatelessWidget {
           }
 
           if (contract.token.isNotEmpty) {
+
+            
             contract.fetchNonBalance();
+            contract.fetchEtherNonBalance();
           }
         });
       },

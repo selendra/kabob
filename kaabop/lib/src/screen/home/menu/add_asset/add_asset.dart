@@ -70,8 +70,6 @@ class AddAssetState extends State<AddAsset> {
       Provider.of<ContractProvider>(context, listen: false)
           .addToken(ContractProvider().kmpi.symbol, context);
     } else {
-
-
       print(initialValue);
       Provider.of<ContractProvider>(context, listen: false).addToken(
         _tokenSymbol,
@@ -101,15 +99,7 @@ class AddAssetState extends State<AddAsset> {
         }
       } else {
         if (initialValue == 'Ethereum') {
-          final res = await Provider.of<ContractProvider>(context,
-                  listen: false)
-              .queryEther(_modelAsset.controllerAssetCode.text, 'symbol', []);
-          if (res != null) {
-            setState(() {
-              _tokenSymbol = res[0].toString();
-              _modelAsset.loading = false;
-            });
-          }
+          searchEtherContract();
         } else {
           final res =
               await Provider.of<ContractProvider>(context, listen: false)
@@ -128,6 +118,22 @@ class AddAssetState extends State<AddAsset> {
       setState(() {
         _modelAsset.loading = false;
       });
+    }
+  }
+
+  Future<void> searchEtherContract() async {
+    try {
+      final res = await Provider.of<ContractProvider>(context, listen: false)
+          .queryEther(_modelAsset.controllerAssetCode.text, 'symbol', []);
+      print(res[0]);
+      if (res != null) {
+        setState(() {
+          _tokenSymbol = res[0].toString();
+          _modelAsset.loading = false;
+        });
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 

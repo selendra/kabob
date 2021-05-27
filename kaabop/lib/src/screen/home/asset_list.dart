@@ -22,7 +22,6 @@ class AssetList extends StatelessWidget {
                           value.bscNative.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.bscNative.symbol ?? '',
                       org: value.bscNative.org,
-                      
                       marketPrice: value.bscNative.marketPrice,
                       priceChange24h: value.bscNative.change24h,
                     ),
@@ -55,7 +54,6 @@ class AssetList extends StatelessWidget {
                           value.kgoNative.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.kgoNative.symbol ?? '',
                       org: value.kgoNative.org,
-                    
                       marketData: value.kgoNative.marketData,
                       marketPrice: value.kgoNative.marketPrice,
                       priceChange24h: value.kgoNative.change24h,
@@ -69,7 +67,6 @@ class AssetList extends StatelessWidget {
                 'BEP-20',
                 value.kgoNative.balance ?? AppText.loadingPattern,
                 Colors.transparent,
-                
                 marketPrice: value.kgoNative.marketPrice,
                 priceChange24h: value.kgoNative.change24h,
               ),
@@ -295,9 +292,13 @@ class AssetList extends StatelessWidget {
                       direction: DismissDirection.endToStart,
                       background: DismissibleBackground(),
                       onDismissed: (direct) {
+                        if (value.token[index].org == 'ERC-20') {
+                          value.removeEtherToken(
+                              value.token[index].symbol, context);
+                        } else {
+                          value.removeToken(value.token[index].symbol, context);
+                        }
 
-                        
-                        value.removeToken(value.token[index].symbol, context);
                         //setPortfolio();
                       },
                       child: GestureDetector(
@@ -318,7 +319,7 @@ class AssetList extends StatelessWidget {
                         child: AssetItem(
                           'assets/circle.png',
                           value.token[index].symbol ?? '',
-                          value.token[index].org??'',
+                          value.token[index].org ?? '',
                           value.token[index].balance ?? AppText.loadingPattern,
                           Colors.transparent,
                         ),

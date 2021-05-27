@@ -246,16 +246,39 @@ class ContractProvider with ChangeNotifier {
   Future<void> fetchNonBalance() async {
     initClient();
     for (int i = 0; i < token.length; i++) {
-      final contractAddr = findContractAddr(token[i].symbol);
-      final decimal = await query(contractAddr, 'decimals', []);
+      if (token[i].org == 'ERC-20') {
+        final contractAddr = findContractAddr(token[i].symbol);
+        final decimal = await query(contractAddr, 'decimals', []);
 
-      final balance = await query(
-          contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+        final balance = await query(
+            contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
-      token[i].balance = Fmt.bigIntToDouble(
-        balance[0] as BigInt,
-        int.parse(decimal[0].toString()),
-      ).toString();
+        token[i].balance = Fmt.bigIntToDouble(
+          balance[0] as BigInt,
+          int.parse(decimal[0].toString()),
+        ).toString();
+      }
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> fetchEtherNonBalance() async {
+    initEtherClient();
+    for (int i = 0; i < token.length; i++) {
+      if (token[i].org == 'ERC-20') {
+        final contractAddr = findContractAddr(token[i].symbol);
+
+        final decimal = await queryEther(contractAddr, 'decimals', []);
+
+        final balance = await queryEther(
+            contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+
+        token[i].balance = Fmt.bigIntToDouble(
+          balance[0] as BigInt,
+          int.parse(decimal[0].toString()),
+        ).toString();
+      }
     }
 
     notifyListeners();
@@ -320,6 +343,40 @@ class ContractProvider with ChangeNotifier {
     final credentials = await _web3client.credentialsFromPrivateKey(privateKey);
 
     final res = await _web3client.sendTransaction(
+      credentials,
+      Transaction.callContract(
+        contract: contract,
+        function: txFunction,
+        parameters: [
+          EthereumAddress.fromHex(reciever),
+          BigInt.from(
+            pow(
+              double.parse(amount) * 10,
+              int.parse(chainDecimal),
+            ),
+          ),
+        ],
+      ),
+      fetchChainIdFromNetworkId: true,
+    );
+
+    return res;
+  }
+
+  Future<String> sendTxEthCon(
+    String contractAddr,
+    String chainDecimal,
+    String privateKey,
+    String reciever,
+    String amount,
+  ) async {
+    initEtherClient();
+
+    final contract = await initEtherContract(contractAddr);
+    final txFunction = contract.function('transfer');
+    final credentials = await _etherClient.credentialsFromPrivateKey(privateKey);
+
+    final res = await _etherClient.sendTransaction(
       credentials,
       Transaction.callContract(
         contract: contract,
@@ -451,88 +508,100 @@ class ContractProvider with ChangeNotifier {
     } else {
       if (network != null) {
         if (network == 'Ethereum') {
-          print('ethernetwork');
           final symbol = await queryEther(contractAddr, 'symbol', []);
           final decimal = await queryEther(contractAddr, 'decimals', []);
           final balance = await queryEther(
               contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
-          TokenModel mToken = TokenModel();
+          final TokenModel mToken = TokenModel();
 
           mToken.symbol = symbol.first.toString();
           mToken.decimal = decimal.first.toString();
           mToken.balance = balance.first.toString();
+          mToken.contractAddr = contractAddr;
           mToken.org = 'ERC-20';
 
           if (token.isEmpty) {
             addContractToken(mToken);
+
+            await StorageServices.saveEthContractAddr(contractAddr);
+            Provider.of<WalletProvider>(context, listen: false)
+                .addTokenSymbol('${symbol[0]} (ERC-20)');
           }
 
           if (token.isNotEmpty) {
             if (!token.contains(mToken)) {
+              addContractToken(mToken);
+
+              await StorageServices.saveEthContractAddr(contractAddr);
+              Provider.of<WalletProvider>(context, listen: false)
+                  .addTokenSymbol('${symbol[0]} (ERC-20)');
+            }
+          }
+        } else {
+          final symbol = await query(contractAddr, 'symbol', []);
+          final decimal = await query(contractAddr, 'decimals', []);
+          final balance = await query(
+              contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+
+          if (token.isNotEmpty) {
+            final TokenModel item = token.firstWhere(
+                (element) =>
+                    element.symbol.toLowerCase() ==
+                    symbol[0].toString().toLowerCase(),
+                orElse: () => null);
+
+            if (item == null) {
               addContractToken(
                 TokenModel(
                   contractAddr: contractAddr,
-                  decimal: mToken.decimal,
-                  symbol: mToken.symbol,
-                  balance: mToken.balance,
-                  org: 'ERC-20',
+                  decimal: decimal[0].toString(),
+                  symbol: symbol[0].toString(),
+                  balance: balance[0].toString(),
+                  org: 'BEP-20',
                 ),
               );
 
-              // await StorageServices.saveContractAddr(contractAddr);
-              // Provider.of<WalletProvider>(context, listen: false)
-              //     .addTokenSymbol('${symbol[0]} (ERC-20)');
+              await StorageServices.saveContractAddr(contractAddr);
+              Provider.of<WalletProvider>(context, listen: false)
+                  .addTokenSymbol('${symbol[0]} (BEP-20)');
             }
+          } else {
+            token.add(TokenModel(
+                contractAddr: contractAddr,
+                decimal: decimal[0].toString(),
+                symbol: symbol[0].toString(),
+                balance: balance[0].toString(),
+                org: 'BEP-20'));
+
+            await StorageServices.saveContractAddr(contractAddr);
+            Provider.of<WalletProvider>(context, listen: false)
+                .addTokenSymbol(symbol[0].toString());
           }
         }
       }
-      //   final symbol = await query(contractAddr, 'symbol', []);
-      //   final decimal = await query(contractAddr, 'decimals', []);
-      //   final balance = await query(
-      //       contractAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
-
-      //   if (token.isNotEmpty) {
-      //     final TokenModel item = token.firstWhere(
-      //         (element) =>
-      //             element.symbol.toLowerCase() ==
-      //             symbol[0].toString().toLowerCase(),
-      //         orElse: () => null);
-
-      //     if (item == null) {
-      //       addContractToken(
-      //         TokenModel(
-      //           contractAddr: contractAddr,
-      //           decimal: decimal[0].toString(),
-      //           symbol: symbol[0].toString(),
-      //           balance: balance[0].toString(),
-      //           org: 'BEP-20',
-      //         ),
-      //       );
-
-      //       await StorageServices.saveContractAddr(contractAddr);
-      //       Provider.of<WalletProvider>(context, listen: false)
-      //           .addTokenSymbol('${symbol[0]} (BEP-20)');
-      //     }
-      //   } else {
-      //     token.add(TokenModel(
-      //         contractAddr: contractAddr,
-      //         decimal: decimal[0].toString(),
-      //         symbol: symbol[0].toString(),
-      //         balance: balance[0].toString(),
-      //         org: 'BEP-20'));
-
-      //     await StorageServices.saveContractAddr(contractAddr);
-      //     Provider.of<WalletProvider>(context, listen: false)
-      //         .addTokenSymbol(symbol[0].toString());
-      //   }
     }
     notifyListeners();
   }
 
   Future<void> addContractToken(TokenModel tokenModel) async {
     token.add(tokenModel);
-    print(token.length);
+    notifyListeners();
+  }
+
+  Future<void> removeEtherToken(String symbol, BuildContext context) async {
+    final mContractAddr = findContractAddr(symbol);
+    if (mContractAddr != null) {
+      await StorageServices.removeEthContractAddr(mContractAddr);
+      token.removeWhere(
+        (element) => element.symbol.toLowerCase().startsWith(
+              symbol.toLowerCase(),
+            ),
+      );
+
+      Provider.of<WalletProvider>(context, listen: false)
+          .removeTokenSymbol(symbol);
+    }
     notifyListeners();
   }
 
