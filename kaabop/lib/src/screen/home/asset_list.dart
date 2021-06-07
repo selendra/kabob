@@ -4,6 +4,31 @@ import 'package:provider/provider.dart';
 import '../../../index.dart';
 
 class AssetList extends StatelessWidget {
+  final _formKey = GlobalKey<FormFieldState>();
+  final passphraseController = TextEditingController();
+  final pinController = TextEditingController();
+  final focus = FocusNode();
+  final pinFocus = FocusNode();
+  Future<bool> validateMnemonic(String mnemonic) async {
+    final res = await ApiProvider.sdk.api.keyring.validateMnemonic(mnemonic);
+    return res;
+  }
+
+  String validate(String value) {
+    return null;
+  }
+
+  onSubmit(BuildContext context) {
+    validateMnemonic(passphraseController.text).then((value) async {
+      print(value);
+      if (!value) {}
+    });
+
+    //  if( _formKey.currentState.validate()){
+    //    print('valide');
+    //  }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -187,6 +212,124 @@ class AssetList extends StatelessWidget {
                 marketPrice: value.bnbNative.marketPrice,
                 priceChange24h: value.bnbNative.change24h,
                 size: 60,
+              ),
+            );
+          },
+        ),
+        Consumer<ApiProvider>(
+          builder: (context, value, child) {
+            return GestureDetector(
+              onTap: () async {
+                if (!value.btc.isContain) {
+                  showModalBottomSheet(
+                    isScrollControlled: true,
+                    enableDrag: true,
+                    context: context,
+                    builder: (context) {
+                      return Container(
+                        padding: const EdgeInsets.all(25.0),
+                        height: MediaQuery.of(context).size.height / 1.2,
+                        color: Color(
+                            AppUtils.convertHexaColor(AppColors.bgdColor)),
+                        child: Form(
+                          key: _formKey,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                const MyText(
+                                  top: 16.0,
+                                  bottom: 16.0,
+                                  fontSize: 22,
+                                  text: 'Create Bitcoin Wallet',
+                                  color: '#FFFFFFF',
+                                ),
+                                const SizedBox(height: 16.0),
+                                MyInputField(
+                                  focusNode: focus,
+                                  controller: passphraseController,
+                                  labelText: 'Passphrase',
+                                  //validateField: validate,
+                                  onSubmit: () {},
+                                ),
+                                const SizedBox(height: 16.0),
+                                MyInputField(
+                                  focusNode: pinFocus,
+                                  controller: pinController,
+                                  labelText: 'Pin',
+                                  obcureText: true,
+                                  validateField: (value) =>
+                                      value.isEmpty || value.length < 4
+                                          ? 'Please fill in old 4 digits pin'
+                                          : null,
+                                  textInputFormatter: [
+                                    LengthLimitingTextInputFormatter(4)
+                                  ],
+                                  onSubmit: onSubmit,
+                                ),
+                                const SizedBox(height: 25),
+                                MyFlatButton(
+                                  textButton: "Submit",
+                                  edgeMargin: const EdgeInsets.only(
+                                    top: 40,
+                                    left: 66,
+                                    right: 66,
+                                  ),
+                                  hasShadow: true,
+                                  action: () async {
+                                    await showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0)),
+                                          title: Align(
+                                            child: Text(''),
+                                          ),
+                                          content: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 15.0, bottom: 15.0),
+                                            child: Text(''),
+                                          ),
+                                          //actions: <Widget>[action],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                  // await
+                } else {
+                  Navigator.push(
+                    context,
+                    RouteAnimation(
+                      enterPage: AssetInfo(
+                        id: value.btc.id,
+                        assetLogo: value.btc.logo,
+                        balance: value.btc.balance ?? AppText.loadingPattern,
+                        tokenSymbol: value.btc.symbol,
+                        org: value.btc.org ?? '',
+                        marketData: value.btc.marketData,
+                      ),
+                    ),
+                  );
+                }
+              },
+              child: AssetItem(
+                value.btc.logo,
+                value.btc.symbol,
+                '',
+                value.btc.balance ?? AppText.loadingPattern,
+                Colors.transparent,
+                size: 60,
+                marketPrice: value.btc.marketPrice ?? '',
+                priceChange24h: value.btc.change24h ?? '',
               ),
             );
           },

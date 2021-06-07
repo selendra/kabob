@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:polkawallet_sdk/api/types/networkParams.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
@@ -5,10 +7,15 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/account.m.dart';
 import 'package:wallet_apps/src/models/native.m.dart';
 import 'package:wallet_apps/src/models/token.m.dart';
+import 'package:http/http.dart' as http;
+import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 
 class ApiProvider with ChangeNotifier {
   static WalletSDK sdk = WalletSDK();
   static Keyring keyring = Keyring();
+
+  static const int bitcoinDigit = 8;
+  num bitcoinSatFmt = pow(10, 8);
 
   static List<TokenModel> listToken = [
     // TokenModel(
@@ -56,6 +63,12 @@ class ApiProvider with ChangeNotifier {
     symbol: 'DOT',
     logo: 'assets/icons/polkadot.png',
     isContain: false,
+  );
+  NativeM btc = NativeM(
+    id: 'bitcoin',
+    symbol: 'BTC',
+    logo: 'assets/btc_logo.png',
+    isContain: false
   );
 
   bool _isConnected = false;
@@ -110,15 +123,67 @@ class ApiProvider with ChangeNotifier {
     return res;
   }
 
+  Future<bool> validateBtcAddr(String address) async {
+    return Address.validateAddress(address, testnet);
+  }
+
+  Future<void> btcTransaction(
+    String to,
+  ) async {}
+
+  Future<dynamic> getAddressUxto(String address) async {
+    final res = await http
+        .get('https://blockstream.info/testnet/api/address/$address/utxo');
+    return jsonDecode(res.body);
+  }
+
+  Future<void> getBtcFee() async {
+    final res =
+        await http.get('https://bitcoinfees.earn.com/api/v1/fees/recommended');
+
+    print(jsonDecode(res.body));
+  }
+
+  Future<void> getBtcBalance(String address) async {
+    int totalSatoshi = 0;
+    final res = await getAddressUxto(address);
+
+    for (final i in res) {
+      if (i['status']['confirmed'] == true) {
+        totalSatoshi += int.parse(i['value'].toString());
+      }
+    }
+
+    btc.balance = (totalSatoshi / bitcoinSatFmt).toString();
+    notifyListeners();
+  }
+
   // void isDotContain() {
   //   dot.isContain = true;
   //   notifyListeners();
   // }
 
-  void setDotMarket(Market marketData,String currentPrice, String priceChange24h) {
+  void setDotMarket(
+      Market marketData, String currentPrice, String priceChange24h) {
     dot.marketData = marketData;
     dot.marketPrice = currentPrice;
     dot.change24h = priceChange24h;
+
+    notifyListeners();
+  }
+
+
+  void isBtcAvailable(String contain) {
+    if(contain!=null){
+      btc.isContain = true;
+      notifyListeners();
+    }
+  } 
+
+  void setBtcMarket(Market marketData ,String currentPrice,String priceChange24h) {
+    btc.marketData = marketData;
+    btc.marketPrice = currentPrice;
+    btc.change24h = priceChange24h;
 
     notifyListeners();
   }

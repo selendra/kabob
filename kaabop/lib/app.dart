@@ -19,6 +19,7 @@ class AppState extends State<App> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       MarketProvider().fetchTokenMarketPrice(context);
       initApi();
+      //Provider.of<ApiProvider>(context,listen: false).isBtcAvailable('d');
       Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
     });
 

@@ -6,7 +6,13 @@ import 'package:wallet_apps/src/provider/contract_provider.dart';
 import '../../index.dart';
 
 class MarketProvider {
-  List<String> id = ['kiwigo', 'ethereum', 'binancecoin', 'polkadot'];
+  List<String> id = [
+    'kiwigo',
+    'ethereum',
+    'binancecoin',
+    'polkadot',
+    'bitcoin'
+  ];
 
   Market parsePhotos(String responseBody) {
     Market data;
@@ -30,41 +36,51 @@ class MarketProvider {
         if (response.statusCode == 200) {
           final jsonResponse = convert.jsonDecode(response.body);
 
-        
-
           final res = parsePhotos(response.body);
 
           //final market = Market.fromJson(jsonResponse);
 
           if (i == 0) {
             contract.setkiwigoMarket(
-                res,
-                jsonResponse[0]['current_price'].toString(),
-                jsonResponse[0]['price_change_percentage_24h']
-                    .toStringAsFixed(2)
-                    .toString());
+              res,
+              jsonResponse[0]['current_price'].toString(),
+              jsonResponse[0]['price_change_percentage_24h']
+                  .toStringAsFixed(2)
+                  .toString(),
+            );
           } else if (i == 1) {
             contract.setEtherMarket(
-                res,
-                jsonResponse[0]['current_price'].toString(),
-                jsonResponse[0]['price_change_percentage_24h']
-                    .toStringAsFixed(2)
-                    .toString());
+              res,
+              jsonResponse[0]['current_price'].toString(),
+              jsonResponse[0]['price_change_percentage_24h']
+                  .toStringAsFixed(2)
+                  .toString(),
+            );
           } else if (i == 2) {
             contract.setBnbMarket(
-                res,
-                jsonResponse[0]['current_price'].toString(),
-                jsonResponse[0]['price_change_percentage_24h']
-                    .toStringAsFixed(2)
-                    .toString());
+              res,
+              jsonResponse[0]['current_price'].toString(),
+              jsonResponse[0]['price_change_percentage_24h']
+                  .toStringAsFixed(2)
+                  .toString(),
+            );
           } else if (i == 3) {
-            contract.setReady();
             api.setDotMarket(
-                res,
-                jsonResponse[0]['current_price'].toString(),
-                jsonResponse[0]['price_change_percentage_24h']
-                    .toStringAsFixed(2)
-                    .toString());
+              res,
+              jsonResponse[0]['current_price'].toString(),
+              jsonResponse[0]['price_change_percentage_24h']
+                  .toStringAsFixed(2)
+                  .toString(),
+            );
+          } else if (i == 4) {
+            api.setBtcMarket(
+              res,
+              jsonResponse[0]['current_price'].toString(),
+              jsonResponse[0]['price_change_percentage_24h']
+                  .toStringAsFixed(2)
+                  .toString(),
+            );
+            contract.setReady();
           }
         } else {
           contract.setReady();
