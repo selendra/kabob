@@ -72,6 +72,7 @@ class ApiProvider with ChangeNotifier {
   );
 
   bool _isConnected = false;
+  String btcAdd = '';
 
   bool get isConnected => _isConnected;
 
@@ -127,13 +128,18 @@ class ApiProvider with ChangeNotifier {
     return Address.validateAddress(address, testnet);
   }
 
+  void setBtcAddr(String btcAddress){
+    btcAdd = btcAddress;
+    notifyListeners();
+  }
+
   Future<void> btcTransaction(
     String to,
   ) async {}
 
   Future<dynamic> getAddressUxto(String address) async {
     final res = await http
-        .get('https://blockstream.info/testnet/api/address/$address/utxo');
+        .get('https://blockstream.info/api/address/$address/utxo');
     return jsonDecode(res.body);
   }
 
@@ -155,6 +161,8 @@ class ApiProvider with ChangeNotifier {
     }
 
     btc.balance = (totalSatoshi / bitcoinSatFmt).toString();
+
+    print(btc.balance);
     notifyListeners();
   }
 

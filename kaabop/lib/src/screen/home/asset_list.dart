@@ -1,14 +1,17 @@
+import 'package:bitcoin_flutter/bitcoin_flutter.dart';
+import 'package:bip39/bip39.dart' as bip39;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../index.dart';
 
 class AssetList extends StatelessWidget {
-  final _formKey = GlobalKey<FormFieldState>();
+  final _formKey = GlobalKey<FormState>();
   final passphraseController = TextEditingController();
   final pinController = TextEditingController();
   final focus = FocusNode();
   final pinFocus = FocusNode();
+
   Future<bool> validateMnemonic(String mnemonic) async {
     final res = await ApiProvider.sdk.api.keyring.validateMnemonic(mnemonic);
     return res;
@@ -18,15 +21,122 @@ class AssetList extends StatelessWidget {
     return null;
   }
 
-  onSubmit(BuildContext context) {
-    validateMnemonic(passphraseController.text).then((value) async {
-      print(value);
-      if (!value) {}
-    });
+  Future<bool> checkPassword(String pin) async {
+    final res = await ApiProvider.sdk.api.keyring
+        .checkPassword(ApiProvider.keyring.current, pin);
+    return res;
+  }
 
-    //  if( _formKey.currentState.validate()){
-    //    print('valide');
-    //  }
+  Future<void> onSubmit(BuildContext context) async {
+    if (_formKey.currentState.validate()) {
+      dialogLoading(context);
+      final isValidSeed = await validateMnemonic(passphraseController.text);
+      final isValidPw = await checkPassword(pinController.text);
+
+      if (isValidSeed == false) {
+        Navigator.pop(context);
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              title: Align(
+                child: Text('Opps'),
+              ),
+              content: Padding(
+                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: Text('Invalid Seed phrase'),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+      // await dialog(
+      if (isValidPw == false) {
+        Navigator.pop(context);
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              title: Align(
+                child: Text('Opps'),
+              ),
+              content: Padding(
+                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: Text('PIN verification failed'),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+      }
+
+      if (isValidSeed && isValidPw) {
+        final seed = bip39.mnemonicToSeed(passphraseController.text);
+        final hdWallet = HDWallet.fromSeed(seed);
+
+        //await StorageServices.setData(hdWallet.address, 'btcaddress');
+        final res = await ApiProvider.keyring.store
+            .encryptPrivateKey(hdWallet.wif, pinController.text);
+
+        if (res != null) {
+          print(res);
+          //await StorageServices().writeSecure('btcwif', res);
+        }
+
+        Provider.of<ApiProvider>(context, listen: false)
+            .getBtcBalance(hdWallet.address);
+        Provider.of<ApiProvider>(context, listen: false)
+            .setBtcAddr(hdWallet.address);
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol('BTC');
+        Navigator.pop(context);
+        Navigator.pop(context);
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              title: Align(
+                child: Text('Success'),
+              ),
+              content: Padding(
+                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: Text('You have created bitcoin wallet.'),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
+
+        // => 12eUJoaWBENQ3tNZE52ZQaHqr3v4tTX4os
+        // print(hdWallet.pubKey);
+        // // => 0360729fb3c4733e43bf91e5208b0d240f8d8de239cff3f2ebd616b94faa0007f4
+        // print(hdWallet.privKey);
+        // => 01304181d699cd89db7de6337d597adf5f78dc1f0784c400e41a3bd829a5a226
+        //print(hdWallet.wif);
+      }
+    }
   }
 
   @override
@@ -247,8 +357,10 @@ class AssetList extends StatelessWidget {
                                 MyInputField(
                                   focusNode: focus,
                                   controller: passphraseController,
-                                  labelText: 'Passphrase',
-                                  //validateField: validate,
+                                  labelText: 'Seed phrase',
+                                  validateField: (value) => value.isEmpty
+                                      ? 'Please fill in passphrase'
+                                      : null,
                                   onSubmit: () {},
                                 ),
                                 const SizedBox(height: 16.0),
@@ -264,7 +376,7 @@ class AssetList extends StatelessWidget {
                                   textInputFormatter: [
                                     LengthLimitingTextInputFormatter(4)
                                   ],
-                                  onSubmit: onSubmit,
+                                  onSubmit: () {},
                                 ),
                                 const SizedBox(height: 25),
                                 MyFlatButton(
@@ -276,25 +388,7 @@ class AssetList extends StatelessWidget {
                                   ),
                                   hasShadow: true,
                                   action: () async {
-                                    await showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return AlertDialog(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0)),
-                                          title: Align(
-                                            child: Text(''),
-                                          ),
-                                          content: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 15.0, bottom: 15.0),
-                                            child: Text(''),
-                                          ),
-                                          //actions: <Widget>[action],
-                                        );
-                                      },
-                                    );
+                                    onSubmit(context);
                                   },
                                 ),
                               ],

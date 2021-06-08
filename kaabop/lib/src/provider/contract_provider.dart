@@ -13,6 +13,7 @@ class ContractProvider with ChangeNotifier {
   final WalletSDK sdk = ApiProvider.sdk;
   final Keyring keyring = ApiProvider.keyring;
   String ethAdd = '';
+  
 
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();

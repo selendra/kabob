@@ -44,13 +44,17 @@ class ReceiveWalletState extends State<ReceiveWallet> {
   }
 
   void changedEthAdd(String value) {
-    if (value != 'SEL' && value != 'DOT' && value != 'KMPI') {
+    if (value != 'SEL' && value != 'DOT' && value != 'KMPI' && value != 'BTC') {
       setState(() {
         wallet = Provider.of<ContractProvider>(context, listen: false).ethAdd;
       });
     } else {
-      wallet =
-          Provider.of<ApiProvider>(context, listen: false).accountM.address;
+      if (value == 'BTC') {
+        wallet = Provider.of<ApiProvider>(context, listen: false).btcAdd;
+      } else {
+        wallet =
+            Provider.of<ApiProvider>(context, listen: false).accountM.address;
+      }
     }
   }
 
