@@ -89,17 +89,19 @@ class AssetList extends StatelessWidget {
         final seed = bip39.mnemonicToSeed(passphraseController.text);
         final hdWallet = HDWallet.fromSeed(seed);
 
-        //await StorageServices.setData(hdWallet.address, 'btcaddress');
+        await StorageServices.setData(hdWallet.address, 'btcaddress');
         final res = await ApiProvider.keyring.store
             .encryptPrivateKey(hdWallet.wif, pinController.text);
 
         if (res != null) {
-          print(res);
-          //await StorageServices().writeSecure('btcwif', res);
+          await StorageServices().writeSecure('btcwif', res);
         }
 
         Provider.of<ApiProvider>(context, listen: false)
             .getBtcBalance(hdWallet.address);
+        Provider.of<ApiProvider>(context, listen: false)
+            .isBtcAvailable('contain');
+
         Provider.of<ApiProvider>(context, listen: false)
             .setBtcAddr(hdWallet.address);
         Provider.of<WalletProvider>(context, listen: false)

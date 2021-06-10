@@ -1,7 +1,9 @@
+import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:bip39/bip39.dart' as bip39;
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
@@ -200,6 +202,7 @@ class MyUserInfoState extends State<MyUserInfo> {
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();
 
           isKgoContain();
+          addBtcWallet();
 
           MarketProvider().fetchTokenMarketPrice(context);
 
@@ -279,6 +282,27 @@ class MyUserInfoState extends State<MyUserInfo> {
   //   //   }
   //   // });
   // }
+
+  Future<void> addBtcWallet() async {
+    final seed = bip39.mnemonicToSeed(widget.passPhrase);
+    final hdWallet = HDWallet.fromSeed(seed);
+
+    await StorageServices.setData(hdWallet.address, 'btcaddress');
+    final res = await ApiProvider.keyring.store
+        .encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
+
+    if (res != null) {
+      await StorageServices().writeSecure('btcwif', res);
+    }
+
+    Provider.of<ApiProvider>(context, listen: false)
+        .getBtcBalance(hdWallet.address);
+    Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
+
+    Provider.of<ApiProvider>(context, listen: false)
+        .setBtcAddr(hdWallet.address);
+    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BTC');
+  }
 
   Future<void> isKgoContain() async {
     // Provider.of<WalletProvider>(context, listen: false)

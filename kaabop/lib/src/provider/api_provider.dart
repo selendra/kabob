@@ -17,6 +17,8 @@ class ApiProvider with ChangeNotifier {
   static const int bitcoinDigit = 8;
   num bitcoinSatFmt = pow(10, 8);
 
+  double amount = 0.0008;
+
   static List<TokenModel> listToken = [
     // TokenModel(
     //   logo: 'assets/FingerPrint1.png',
@@ -65,11 +67,10 @@ class ApiProvider with ChangeNotifier {
     isContain: false,
   );
   NativeM btc = NativeM(
-    id: 'bitcoin',
-    symbol: 'BTC',
-    logo: 'assets/btc_logo.png',
-    isContain: false
-  );
+      id: 'bitcoin',
+      symbol: 'BTC',
+      logo: 'assets/btc_logo.png',
+      isContain: false);
 
   bool _isConnected = false;
   String btcAdd = '';
@@ -128,18 +129,79 @@ class ApiProvider with ChangeNotifier {
     return Address.validateAddress(address, testnet);
   }
 
-  void setBtcAddr(String btcAddress){
+  void setBtcAddr(String btcAddress) {
     btcAdd = btcAddress;
     notifyListeners();
   }
 
-  Future<void> btcTransaction(
-    String to,
-  ) async {}
+  Future<int> sendTxBtc(BuildContext context, String from, String to,
+      double amount, String wif) async {
+    int totalSatoshi = 0;
+    int input = 0;
+    final alice = ECPair.fromWIF(wif);
+
+    final txb = TransactionBuilder();
+    txb.setVersion(1);
+
+    final res = await getAddressUxto(from);
+
+    if (res.length != 0) {
+      for (final i in res) {
+        if (i['status']['confirmed'] == true) {
+          txb.addInput(
+            i['txid'],
+            int.parse(i['vout'].toString()),
+          );
+          totalSatoshi += int.parse(i['value'].toString());
+          input++;
+        }
+      }
+    }
+
+    final totaltoSend = (amount * bitcoinSatFmt).floor();
+
+    if (totalSatoshi < totaltoSend) {
+      await dialog(context, Text(''), Text(''));
+    }
+
+    final fee = calTrxSize(input, 2) * 102;
+
+    if (fee > (amount * bitcoinSatFmt).floor()) {
+      await dialog(context, Text(''), Text(''));
+    }
+
+    final change = totalSatoshi - ((amount * bitcoinSatFmt).floor() + fee);
+
+    txb.addOutput(to, totaltoSend);
+    txb.addOutput(from, change);
+
+    for (int i = 0; i < input; i++) {
+      txb.sign(vin: i, keyPair: alice);
+    }
+
+    print(txb.build().toHex());
+
+
+    final response = await pushTx(txb.build().toHex());
+
+    return response;
+  }
+
+  Future<int> pushTx(String hex) async {
+    final res = await http.post(
+        'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx',
+        //headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: json.encode({"hex": hex}));
+    return res.statusCode;
+  }
+
+  int calTrxSize(int nInput, int nOutput) {
+    return nInput * 180 + nOutput * 34 + 10 + nInput;
+  }
 
   Future<dynamic> getAddressUxto(String address) async {
-    final res = await http
-        .get('https://blockstream.info/api/address/$address/utxo');
+    final res =
+        await http.get('https://blockstream.info/api/address/$address/utxo');
     return jsonDecode(res.body);
   }
 
@@ -154,15 +216,18 @@ class ApiProvider with ChangeNotifier {
     int totalSatoshi = 0;
     final res = await getAddressUxto(address);
 
-    for (final i in res) {
-      if (i['status']['confirmed'] == true) {
-        totalSatoshi += int.parse(i['value'].toString());
+    if (res.length == 0) {
+      btc.balance = '0';
+    } else {
+      for (final i in res) {
+        if (i['status']['confirmed'] == true) {
+          totalSatoshi += int.parse(i['value'].toString());
+        }
       }
+
+      btc.balance = (totalSatoshi / bitcoinSatFmt).toString();
     }
 
-    btc.balance = (totalSatoshi / bitcoinSatFmt).toString();
-
-    print(btc.balance);
     notifyListeners();
   }
 
@@ -180,15 +245,15 @@ class ApiProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   void isBtcAvailable(String contain) {
-    if(contain!=null){
+    if (contain != null) {
       btc.isContain = true;
       notifyListeners();
     }
-  } 
+  }
 
-  void setBtcMarket(Market marketData ,String currentPrice,String priceChange24h) {
+  void setBtcMarket(
+      Market marketData, String currentPrice, String priceChange24h) {
     btc.marketData = marketData;
     btc.marketPrice = currentPrice;
     btc.change24h = priceChange24h;

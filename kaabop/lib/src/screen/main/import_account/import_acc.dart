@@ -1,5 +1,7 @@
+import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:bip39/bip39.dart' as bip39;
 import 'package:wallet_apps/src/models/m_import_acc.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart';
@@ -108,6 +110,9 @@ class ImportAccState extends State<ImportAcc> {
           await StorageServices().writeSecure('private', res);
         }
       }
+
+      addBtcWallet();
+      
       Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
       Provider.of<ApiProvider>(context, listen: false).connectPolNon();
       Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
@@ -132,6 +137,30 @@ class ImportAccState extends State<ImportAcc> {
     } else {
       Navigator.pop(context);
     }
+  }
+
+
+  Future<void> addBtcWallet() async{
+       final seed = bip39.mnemonicToSeed(_importAccModel.mnemonicCon.text);
+        final hdWallet = HDWallet.fromSeed(seed);
+
+        await StorageServices.setData(hdWallet.address, 'btcaddress');
+        final res = await ApiProvider.keyring.store
+            .encryptPrivateKey(hdWallet.wif, _importAccModel.pwCon.text);
+
+        if (res != null) {
+          await StorageServices().writeSecure('btcwif', res);
+        }
+
+        Provider.of<ApiProvider>(context, listen: false)
+            .getBtcBalance(hdWallet.address);
+        Provider.of<ApiProvider>(context, listen: false)
+            .isBtcAvailable('contain');
+
+        Provider.of<ApiProvider>(context, listen: false)
+            .setBtcAddr(hdWallet.address);
+        Provider.of<WalletProvider>(context, listen: false)
+            .addTokenSymbol('BTC');
   }
 
   Future<void> isDotContain() async {

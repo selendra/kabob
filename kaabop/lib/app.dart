@@ -19,6 +19,7 @@ class AppState extends State<App> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       MarketProvider().fetchTokenMarketPrice(context);
       initApi();
+      isBtcContain();
       //Provider.of<ApiProvider>(context,listen: false).isBtcAvailable('d');
       Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
     });
@@ -36,7 +37,6 @@ class AppState extends State<App> {
           Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();
 
-       
           isKgoContain();
 
           //isBscContain();
@@ -101,11 +101,12 @@ class AppState extends State<App> {
 
     if (res != null) {
       for (final i in res) {
-        final symbol = await contractProvider.queryEther(i.toString(), 'symbol', []);
+        final symbol =
+            await contractProvider.queryEther(i.toString(), 'symbol', []);
         final decimal =
             await contractProvider.queryEther(i.toString(), 'decimals', []);
-        final balance = await contractProvider.queryEther(i.toString(), 'balanceOf',
-            [EthereumAddress.fromHex(contractProvider.ethAdd)]);
+        final balance = await contractProvider.queryEther(i.toString(),
+            'balanceOf', [EthereumAddress.fromHex(contractProvider.ethAdd)]);
 
         contractProvider.addContractToken(TokenModel(
           contractAddr: i.toString(),
@@ -120,9 +121,20 @@ class AppState extends State<App> {
     }
   }
 
+  Future<void> isBtcContain() async {
+    final res = await StorageServices.fetchData('btcaddress');
 
+    if (res != null) {
+      Provider.of<ApiProvider>(context, listen: false)
+          .getBtcBalance(res.toString());
+      Provider.of<ApiProvider>(context, listen: false)
+          .isBtcAvailable('contain');
 
-  
+      Provider.of<ApiProvider>(context, listen: false)
+          .setBtcAddr(res.toString());
+      Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BTC');
+    }
+  }
 
   // Future<void> isBnbContain() async {
   //   // Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');

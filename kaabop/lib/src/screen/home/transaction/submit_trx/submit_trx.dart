@@ -329,12 +329,21 @@ class SubmitTrxState extends State<SubmitTrx> {
               value,
             );
             break;
+          case "BTC":
+            sendTxBtc(_scanPayM.controlReceiverAddress.text,  _scanPayM.controlAmount.text, value);
+            break;
           default:
             if (_scanPayM.asset.contains('ERC-20')) {
               final contractAddr =
                   ContractProvider().findContractAddr(_scanPayM.asset);
-              final chainDecimal =
-                  await ContractProvider().queryEther(contractAddr, 'decimals', []);
+              final chainDecimal = await ContractProvider()
+                  .queryEther(contractAddr, 'decimals', []);
+              sendTxErc(
+                  contractAddr,
+                  chainDecimal[0].toString(),
+                  _scanPayM.controlReceiverAddress.text,
+                  _scanPayM.controlAmount.text,
+                  value);
             } else {
               final contractAddr =
                   ContractProvider().findContractAddr(_scanPayM.asset);
@@ -373,6 +382,24 @@ class SubmitTrxState extends State<SubmitTrx> {
     } catch (e) {
       Navigator.pop(context);
       await dialog(context, Text(e.message.toString()), const Text("Opps"));
+    }
+  }
+
+  Future<void> sendTxBtc(
+      String to, String amount, String pin) async {
+    dialogLoading(context);
+
+    final api = Provider.of<ApiProvider>(context, listen: false);
+
+    final res = await api.validateBtcAddr(to);
+
+    final wif = await getBtcPrivateKey(pin);
+
+    if (res) {
+      api.sendTxBtc(context, api.btcAdd, to, double.parse(amount), wif);
+    } else {
+      await dialog(
+          context, const Text('Invalid Bitcoin Address'), const Text('Opps'));
     }
   }
 
@@ -425,9 +452,54 @@ class SubmitTrxState extends State<SubmitTrx> {
     }
   }
 
+  Future<void> sendTxErc(String contractAddr, String chainDecimal,
+      String reciever, String amount, String pin) async {
+    dialogLoading(context);
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+    try {
+      final res = await getPrivateKey(pin);
+      if (res != null) {
+        final hash = await contract.sendTxEthCon(
+          contractAddr,
+          chainDecimal,
+          res,
+          reciever,
+          amount,
+        );
+
+        if (hash != null) {
+          // Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+          enableAnimation();
+        } else {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+    }
+  }
+
   Future<String> getPrivateKey(String pin) async {
     String privateKey;
     final encrytKey = await StorageServices().readSecure('private');
+    try {
+      privateKey =
+          await ApiProvider.keyring.store.decryptPrivateKey(encrytKey, pin);
+    } catch (e) {
+      await dialog(
+        context,
+        const Text('PIN verification failed !'),
+        const Text("Opps"),
+      );
+    }
+
+    return privateKey;
+  }
+
+  Future<String> getBtcPrivateKey(String pin) async {
+    String privateKey;
+    final encrytKey = await StorageServices().readSecure('btcwif');
     try {
       privateKey =
           await ApiProvider.keyring.store.decryptPrivateKey(encrytKey, pin);
