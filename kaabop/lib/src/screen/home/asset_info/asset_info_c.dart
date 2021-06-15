@@ -61,15 +61,27 @@ class AssetInfoC {
                 child: symbol != null
                     ? Consumer<ContractProvider>(
                         builder: (context, value, child) {
+                          final api =
+                              Provider.of<ApiProvider>(context, listen: false)
+                                  .btcAdd;
+                          String wallet = '';
+                          if (symbol == 'BTC') {
+                            wallet = api;
+                          } else if (symbol == 'BNB' || org == 'BEP-20') {
+                            wallet = value.ethAdd;
+                          } else {
+                            wallet = ApiProvider.keyring.current.address;
+                          }
                           return ReceiveWalletBody(
                             method: _method,
                             globalKey: _globalKey,
                             keyQrShare: _keyQrShare,
                             name: ApiProvider.keyring.current.name,
                             assetInfo: 'assetInfo',
-                            wallet: symbol == 'BNB' || org == 'BEP-20'
-                                ? value.ethAdd
-                                : ApiProvider.keyring.current.address,
+                            wallet: wallet,
+                            // wallet: symbol == 'BNB' || org == 'BEP-20'
+                            //     ? value.ethAdd
+                            //     : ApiProvider.keyring.current.address,
                           );
                         },
                       )

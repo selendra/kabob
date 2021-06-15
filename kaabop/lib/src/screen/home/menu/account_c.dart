@@ -19,7 +19,7 @@ class AccountC {
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(25.0),
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery.of(context).size.height / 1.5,
           color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
           child: Form(
             key: _changePinKey,

@@ -1,7 +1,7 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:bip39/bip39.dart' as bip39;
+
 import 'package:wallet_apps/src/models/m_import_acc.dart';
 import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart';
@@ -33,6 +33,31 @@ class ImportAccState extends State<ImportAcc> {
     AppServices.noInternetConnection(globalKey);
     super.initState();
   }
+
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   String onChanged(String value) {
     validateMnemonic(value).then((value) {
@@ -85,13 +110,56 @@ class ImportAccState extends State<ImportAcc> {
     final isValidPw = await checkPassword(_importAccModel.pwCon.text);
 
     if (isValidSeed == false) {
-      await dialog(
-          context, const Text('Invalid seed phrases'), const Text('Opps'));
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text('Opps'),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text('Invalid seed phrases'),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+      //await dialog('Invalid seed phrases', 'Opps');
     }
 
     if (isValidPw == false) {
-      await dialog(
-          context, const Text('PIN verification failed'), const Text('Opps'));
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text('Opps'),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text('PIN  verification failed'),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+
+      //await dialog('PIN verification failed', 'Opps');
     }
 
     if (isValidSeed && isValidPw) {
@@ -99,6 +167,7 @@ class ImportAccState extends State<ImportAcc> {
       setState(() {
         enable = true;
       });
+
       final resPk =
           await ApiProvider().getPrivateKey(_importAccModel.mnemonicCon.text);
       if (resPk != null) {
@@ -111,14 +180,11 @@ class ImportAccState extends State<ImportAcc> {
         }
       }
 
-      addBtcWallet();
-      
       Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
       Provider.of<ApiProvider>(context, listen: false).connectPolNon();
       Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
       Provider.of<ContractProvider>(context, listen: false).getBscBalance();
       Provider.of<ContractProvider>(context, listen: false).getEtherBalance();
-      
 
       await dialogSuccess(
         context,
@@ -137,30 +203,6 @@ class ImportAccState extends State<ImportAcc> {
     } else {
       Navigator.pop(context);
     }
-  }
-
-
-  Future<void> addBtcWallet() async{
-       final seed = bip39.mnemonicToSeed(_importAccModel.mnemonicCon.text);
-        final hdWallet = HDWallet.fromSeed(seed);
-
-        await StorageServices.setData(hdWallet.address, 'btcaddress');
-        final res = await ApiProvider.keyring.store
-            .encryptPrivateKey(hdWallet.wif, _importAccModel.pwCon.text);
-
-        if (res != null) {
-          await StorageServices().writeSecure('btcwif', res);
-        }
-
-        Provider.of<ApiProvider>(context, listen: false)
-            .getBtcBalance(hdWallet.address);
-        Provider.of<ApiProvider>(context, listen: false)
-            .isBtcAvailable('contain');
-
-        Provider.of<ApiProvider>(context, listen: false)
-            .setBtcAddr(hdWallet.address);
-        Provider.of<WalletProvider>(context, listen: false)
-            .addTokenSymbol('BTC');
   }
 
   Future<void> isDotContain() async {

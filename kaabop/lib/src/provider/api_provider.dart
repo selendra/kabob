@@ -161,13 +161,17 @@ class ApiProvider with ChangeNotifier {
     final totaltoSend = (amount * bitcoinSatFmt).floor();
 
     if (totalSatoshi < totaltoSend) {
-      await dialog(context, Text(''), Text(''));
+      await customDialog(context,
+          'You do not have enough in your wallet to send that much.', 'Opps');
     }
 
-    final fee = calTrxSize(input, 2) * 102;
+    final fee = calTrxSize(input, 2) * 88;
 
     if (fee > (amount * bitcoinSatFmt).floor()) {
-      await dialog(context, Text(''), Text(''));
+      await customDialog(
+          context,
+          "BitCoin amount must be larger than the fee. (Ideally it should be MUCH larger)",
+          'Opps');
     }
 
     final change = totalSatoshi - ((amount * bitcoinSatFmt).floor() + fee);
@@ -179,19 +183,42 @@ class ApiProvider with ChangeNotifier {
       txb.sign(vin: i, keyPair: alice);
     }
 
-    print(txb.build().toHex());
-
-
     final response = await pushTx(txb.build().toHex());
 
     return response;
   }
 
+  Future<void> customDialog(
+      BuildContext context, String text1, String text2) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            child: Text(text1),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text(text2),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<int> pushTx(String hex) async {
-    final res = await http.post(
-        'https://testnet-api.smartbit.com.au/v1/blockchain/pushtx',
-        //headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-        body: json.encode({"hex": hex}));
+    final res =
+        await http.post('https://api.smartbit.com.au/v1/blockchain/pushtx',
+            //headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: json.encode({"hex": hex}));
     return res.statusCode;
   }
 
@@ -202,6 +229,7 @@ class ApiProvider with ChangeNotifier {
   Future<dynamic> getAddressUxto(String address) async {
     final res =
         await http.get('https://blockstream.info/api/address/$address/utxo');
+
     return jsonDecode(res.body);
   }
 
@@ -209,7 +237,7 @@ class ApiProvider with ChangeNotifier {
     final res =
         await http.get('https://bitcoinfees.earn.com/api/v1/fees/recommended');
 
-    print(jsonDecode(res.body));
+    //print(jsonDecode(res.body));
   }
 
   Future<void> getBtcBalance(String address) async {

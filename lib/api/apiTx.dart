@@ -52,7 +52,10 @@ class ApiTx {
     if (res['error'] != null) {
       throw Exception(res['error']);
     }
-    return res;
+
+    print('res $res');
+    
+    return res ?? null;
   }
 
   Future<Map> signAndSendDot(

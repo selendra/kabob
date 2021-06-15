@@ -4,8 +4,6 @@ import 'package:wallet_apps/src/screen/home/contact_book/contact_book_body.dart'
 import 'package:wallet_apps/src/screen/home/contact_book/edit_contact/edit_contact.dart';
 
 class ContactBook extends StatefulWidget {
- 
-
   static const String route = '/contactList';
 
   @override
@@ -16,6 +14,31 @@ class _ContactBookState extends State<ContactBook> {
   final ContactBookModel _contactBookModel = ContactBookModel();
 
   List<Map<String, dynamic>> contactData = [];
+
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<void> getContact() async {
     try {
@@ -38,11 +61,32 @@ class _ContactBookState extends State<ContactBook> {
       }
       setState(() {});
     } catch (e) {
-      await dialog(
-        context,
-        const Text("Cannot add contact"),
-        const Text("Message"),
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text('Opps'),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text('Cannot add contact'),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
       );
+      // await dialog(
+      //   "Cannot add contact",
+      //   "Message",
+      // );
     }
   }
 
@@ -95,7 +139,6 @@ class _ContactBookState extends State<ContactBook> {
         height: MediaQuery.of(context).size.height,
         child: ContactBookBody(
           model: _contactBookModel,
-      
           deleteContact: deleteContact,
           editContact: editContact,
           getContact: getContact,

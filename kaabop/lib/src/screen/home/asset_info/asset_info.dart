@@ -38,7 +38,7 @@ class _AssetInfoState extends State<AssetInfo> {
   PageController controller;
   String totalUsd = '';
 
-  int _pageIndex, _tabIndex = 0;
+  int _pageIndex = 0, _tabIndex = 0;
 
   final TxHistory _txHistoryModel = TxHistory();
 
@@ -258,17 +258,17 @@ class _AssetInfoState extends State<AssetInfo> {
 
   @override
   void initState() {
-    readTxHistory();
+    // readTxHistory();
 
     _globalKey = GlobalKey<ScaffoldState>();
     controller = PageController();
-    initATD();
+    // initATD();
     super.initState();
   }
 
   @override
   void dispose() {
-    controller.dispose();
+    //controller.dispose();
     super.dispose();
   }
 
@@ -325,7 +325,6 @@ class _AssetInfoState extends State<AssetInfo> {
                             ? widget.tokenSymbol
                             : widget.id.toUpperCase(),
                       ),
-
                     ],
                   ),
                 ),
@@ -544,15 +543,25 @@ class _AssetInfoState extends State<AssetInfo> {
               onPageChange(index);
             },
             children: <Widget>[
+              // Center(
+              //   child: SvgPicture.asset(
+              //     'assets/icons/no_data.svg',
+              //     width: 150,
+              //     height: 150,
+              //   ),
+              // ),
+
               if (widget.marketData != null)
                 AssetDetail(widget.marketData)
               else
                 Center(
-                    child: SvgPicture.asset(
-                  'assets/icons/no_data.svg',
-                  width: 150,
-                  height: 150,
-                )),
+                  child: SvgPicture.asset(
+                    'assets/icons/no_data.svg',
+                    width: 150,
+                    height: 150,
+                  ),
+                ),
+
               Center(
                   child: SvgPicture.asset(
                 'assets/icons/no_data.svg',

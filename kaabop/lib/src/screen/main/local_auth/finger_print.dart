@@ -22,6 +22,31 @@ class _FingerPrintState extends State<FingerPrint> {
     super.initState();
   }
 
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   Future<void> authenticate() async {
     bool authenticate = false;
 
@@ -36,8 +61,29 @@ class _FingerPrintState extends State<FingerPrint> {
       await Future.delayed(const Duration(milliseconds: 300), () {});
       AppServices.openSnackBar(globalkey, e.message);
     } catch (e) {
-      await dialog(context, Text("${e.message}", textAlign: TextAlign.center),
-          const Text("Message"));
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text('Message'),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text(e.message.toString()),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+      //await dialog(e.message.toString(), "Message");
     }
   }
 

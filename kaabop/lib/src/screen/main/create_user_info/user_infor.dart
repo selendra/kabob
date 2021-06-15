@@ -47,6 +47,31 @@ class MyUserInfoState extends State<MyUserInfo> {
     super.dispose();
   }
 
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   // ignore: avoid_positional_boolean_parameters
   Future<void> switchBiometric(bool switchValue) async {
     _localAuth = LocalAuthentication();
@@ -202,7 +227,7 @@ class MyUserInfoState extends State<MyUserInfo> {
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();
 
           isKgoContain();
-          addBtcWallet();
+          await addBtcWallet();
 
           MarketProvider().fetchTokenMarketPrice(context);
 
@@ -238,7 +263,28 @@ class MyUserInfoState extends State<MyUserInfo> {
         },
       );
     } catch (e) {
-      await dialog(context, Text(e.toString()), const Text("Message"));
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text('Opps'),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text(e.message.toString()),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -288,6 +334,7 @@ class MyUserInfoState extends State<MyUserInfo> {
     final hdWallet = HDWallet.fromSeed(seed);
 
     await StorageServices.setData(hdWallet.address, 'btcaddress');
+
     final res = await ApiProvider.keyring.store
         .encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
 

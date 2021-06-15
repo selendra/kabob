@@ -6,7 +6,6 @@ import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact
 class AddContact extends StatefulWidget {
   final PhoneContact contact;
 
-
   const AddContact({this.contact});
 
   @override
@@ -15,6 +14,31 @@ class AddContact extends StatefulWidget {
 
 class _AddContactState extends State<AddContact> {
   final ContactBookModel _addContactModel = ContactBookModel();
+
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<void> submitContact() async {
     try {
@@ -35,11 +59,33 @@ class _AddContactState extends State<AddContact> {
       Navigator.pop(context);
       //print("Close Dialog");
 
-      await dialog(
-          context,
-          const Text(
-              "Successfully add new contact!\n Please check your contact book"),
-          const Text("Congratualtion"));
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text("Congratualtion"),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text(
+                  "Successfully add new contact!\n Please check your contact book"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+
+      // await dialog(
+      //     "Successfully add new contact!\n Please check your contact book",
+      //     "Congratualtion");
       // Close Screen
       Navigator.pop(context, true);
     } catch (e) {
@@ -85,7 +131,6 @@ class _AddContactState extends State<AddContact> {
       });
     }
   }
-
 
   String validateAddress(String value) {
     return null;

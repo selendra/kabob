@@ -28,7 +28,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       //   handle();
       // }
       setPortfolio();
-      showAirdrop();
+      //showAirdrop();
     });
    
 
@@ -106,6 +106,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       'symbol': contract.bnbNative.symbol,
       'balance': contract.bnbNative.balance ?? '0',
     });
+
+    if(api.btc.isContain){
+        walletProvider.addAvaibleToken({
+        'symbol': api.btc.symbol,
+        'balance': api.btc.balance ?? '0',
+      });
+    }
 
     if (api.nativeM.balance == null) {
       walletProvider.addAvaibleToken({

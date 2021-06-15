@@ -2,7 +2,6 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:wallet_apps/index.dart';
 
-
 class MyBottomSheet {
   dynamic response;
 
@@ -72,8 +71,8 @@ class MyBottomSheet {
                         //     context, portfolioList);
                         await dialog(
                           context,
-                          const Text('Coming Soon !'),
-                          const Text('Invite friend'),
+                          'Coming Soon !',
+                          'Invite friend',
                         );
                       },
                     ),
@@ -82,6 +81,32 @@ class MyBottomSheet {
               )
             ],
           ),
+        );
+      },
+    );
+  }
+
+  Future<void> dialog(BuildContext context, String text1, String text2,
+      {Widget action}) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            child: Text(text1),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text(text2),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
         );
       },
     );

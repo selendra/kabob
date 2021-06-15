@@ -3,9 +3,7 @@ import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact.dart';
 
-class ContactBookBody extends StatelessWidget {
-
-
+class ContactBookBody extends StatefulWidget {
   final ContactBookModel model;
 
   final Function getContact;
@@ -17,10 +15,39 @@ class ContactBookBody extends StatelessWidget {
   const ContactBookBody({
     this.model,
     this.getContact,
-
     this.deleteContact,
     this.editContact,
   });
+
+  @override
+  _ContactBookBodyState createState() => _ContactBookBodyState();
+}
+
+class _ContactBookBodyState extends State<ContactBookBody> {
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +78,10 @@ class ContactBookBody extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => AddContact(
                           contact: result,
-                         
                         ),
                       ),
                     );
-                    if (response == true) await getContact();
+                    if (response == true) await widget.getContact();
                   }
                 },
                 child: const Icon(
@@ -68,7 +94,7 @@ class ContactBookBody extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: model.contactBookList == null
+          child: widget.model.contactBookList == null
               ? Center(
                   child: SvgPicture.asset(
                     'assets/icons/no_data.svg',
@@ -76,12 +102,12 @@ class ContactBookBody extends StatelessWidget {
                     height: 180,
                   ),
                 )
-              : model.contactBookList.isEmpty
+              : widget.model.contactBookList.isEmpty
                   ? const Center(child: CircularProgressIndicator())
                   : Padding(
                       padding: const EdgeInsets.all(16),
                       child: ListView.builder(
-                        itemCount: model.contactBookList.length,
+                        itemCount: widget.model.contactBookList.length,
                         itemBuilder: (context, int index) {
                           return GestureDetector(
                             onTap: () async {
@@ -99,8 +125,11 @@ class ContactBookBody extends StatelessWidget {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) => SubmitTrx(
-                                                  model.contactBookList[index]
-                                                      .address.text,
+                                                  widget
+                                                      .model
+                                                      .contactBookList[index]
+                                                      .address
+                                                      .text,
                                                   false,
                                                   const [],
                                                 ),
@@ -126,22 +155,49 @@ class ContactBookBody extends StatelessWidget {
                                     );
                                   });
                               if (options == 'delete') {
-                                await dialog(
-                                    context,
-                                    const Text(
-                                      "Do you really want to deleteContact this contact",
-                                    ),
-                                    const Text("Message"),
-                                    // ignore: deprecated_member_use
-                                    action: FlatButton(
-                                      onPressed: () async {
-                                        await deleteContact(index);
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("Yes"),
-                                    ));
+                                await showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0)),
+                                      content: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 15.0, bottom: 15.0),
+                                        child: Text(
+                                            "Do you really want to deleteContact this contact?"),
+                                      ),
+                                      actions: <Widget>[
+                                        FlatButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('Close'),
+                                        ),
+                                        FlatButton(
+                                          onPressed: () async {
+                                            await widget.deleteContact(index);
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("Yes"),
+                                        )
+                                      ],
+                                    );
+                                  },
+                                );
+                                // await dialog(
+                                //     "Do you really want to deleteContact this contact",
+                                //     "Message",
+                                //     // ignore: deprecated_member_use
+                                //     action: FlatButton(
+                                //       onPressed: () async {
+                                //         await widget.deleteContact(index);
+                                //         Navigator.pop(context);
+                                //       },
+                                //       child: const Text("Yes"),
+                                //     ));
                               } else if (options == 'edit') {
-                                await editContact(index);
+                                await widget.editContact(index);
                               }
                             },
                             child: Card(
@@ -167,14 +223,20 @@ class ContactBookBody extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         MyText(
-                                          text: model.contactBookList[index]
-                                              .userName.text,
+                                          text: widget
+                                              .model
+                                              .contactBookList[index]
+                                              .userName
+                                              .text,
                                           color: "#FFFFFF",
                                           fontSize: 20,
                                         ),
                                         MyText(
-                                          text: model.contactBookList[index]
-                                              .address.text,
+                                          text: widget
+                                              .model
+                                              .contactBookList[index]
+                                              .address
+                                              .text,
                                           color: AppColors.secondarytext,
                                           textAlign: TextAlign.start,
                                           fontWeight: FontWeight.bold,

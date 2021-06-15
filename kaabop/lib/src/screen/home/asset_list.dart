@@ -433,15 +433,31 @@ class AssetList extends StatelessWidget {
         Consumer<ContractProvider>(builder: (context, value, child) {
           return GestureDetector(
             onTap: () {
+              // Navigator.push(
+              //   context,
+              //   RouteAnimation(
+              //     enterPage: AssetInfo(
+              //       id: value.bnbNative.id,
+              //       assetLogo: value.bnbNative.logo,
+              //       balance: value.bnbNative.balance ?? AppText.loadingPattern,
+              //       tokenSymbol: value.bnbNative.symbol ?? '',
+              //       marketData: value.bnbNative.marketData,
+              //       marketPrice: value.bnbNative.marketPrice,
+              //       priceChange24h: value.bnbNative.change24h,
+              //     ),
+              //   ),
+              // );
+
               Navigator.push(
                 context,
                 RouteAnimation(
                   enterPage: AssetInfo(
                     id: value.etherNative.id,
                     assetLogo: value.etherNative.logo,
-                    balance: value.etherNative.balance,
-                    tokenSymbol: value.etherNative.symbol,
-                    org: value.etherNative.org,
+                    balance:
+                        value.etherNative.balance ?? AppText.loadingPattern,
+                    tokenSymbol: value.etherNative.symbol ?? '',
+                    org: value.etherNative.org ?? '',
                     marketData: value.etherNative.marketData,
                     marketPrice: value.etherNative.marketPrice,
                     priceChange24h: value.etherNative.change24h,

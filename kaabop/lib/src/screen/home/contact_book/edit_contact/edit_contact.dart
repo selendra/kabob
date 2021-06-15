@@ -17,6 +17,31 @@ class _EditContactState extends State<EditContact> {
 
   List<Map<String, dynamic>> contactData = [];
 
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   Future<void> submitContact() async {
     try {
       // Show Loading
@@ -24,41 +49,97 @@ class _EditContactState extends State<EditContact> {
 
       await Future.delayed(const Duration(seconds: 1), () {});
 
-      final result = await dialog(
-          context,
-          const Text("Are you sure to edit this contact?"),
-          const Text("Message"),
-          // ignore: deprecated_member_use
-          action: FlatButton(
-            onPressed: () async {
-              widget.contact[widget.index] = _addContactModel;
+      final result = await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text("Are you sure to edit this contact?"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+              FlatButton(
+                onPressed: () async {
+                  widget.contact[widget.index] = _addContactModel;
 
-              for (final data in widget.contact) {
-                contactData.add({
-                  'username': data.userName.text,
-                  'phone': data.contactNumber.text,
-                  'address': data.address.text,
-                  'memo': data.memo.text
-                });
-              }
-              await StorageServices.setData(contactData, 'contactList');
+                  for (final data in widget.contact) {
+                    contactData.add({
+                      'username': data.userName.text,
+                      'phone': data.contactNumber.text,
+                      'address': data.address.text,
+                      'memo': data.memo.text
+                    });
+                  }
+                  await StorageServices.setData(contactData, 'contactList');
 
-              Navigator.pop(context, true);
-            },
-            child: const Text("Yes"),
-          ));
+                  Navigator.pop(context, true);
+                },
+                child: const Text("Yes"),
+              )
+            ],
+          );
+        },
+      );
+
+      // await dialog("Are you sure to edit this contact?", "Message",
+      //     // ignore: deprecated_member_use
+      //     action: FlatButton(
+      //       onPressed: () async {
+      //         widget.contact[widget.index] = _addContactModel;
+
+      //         for (final data in widget.contact) {
+      //           contactData.add({
+      //             'username': data.userName.text,
+      //             'phone': data.contactNumber.text,
+      //             'address': data.address.text,
+      //             'memo': data.memo.text
+      //           });
+      //         }
+      //         await StorageServices.setData(contactData, 'contactList');
+
+      //         Navigator.pop(context, true);
+      //       },
+      //       child: const Text("Yes"),
+      //     ));
 
       // Close Dialog Loading
       Navigator.pop(context);
       //print("Close Dialog");
 
       if (result == true) {
-        await dialog(
-          context,
-          const Text(
-              "Successfully edit contact!\n Please check your contact book"),
-          const Text("Congratualtion"),
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              title: Align(
+                child: Text('Congratulation'),
+              ),
+              content: Padding(
+                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: Text(
+                    "Successfully edit contact!\n Please check your contact book"),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ],
+            );
+          },
         );
+        // await dialog(
+        //   "Successfully edit contact!\n Please check your contact book",
+        //   "Congratualtion",
+        // );
         // Close Screen
         Navigator.pop(context, true);
       } else {

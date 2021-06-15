@@ -28,6 +28,31 @@ class AddAssetState extends State<AddAsset> {
     super.initState();
   }
 
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   Future<bool> validateEtherAddress(String address) async {
     final res = await ApiProvider.sdk.api.validateEtherAddr(address);
     return res;
@@ -70,7 +95,6 @@ class AddAssetState extends State<AddAsset> {
       Provider.of<ContractProvider>(context, listen: false)
           .addToken(ContractProvider().kmpi.symbol, context);
     } else {
-      print(initialValue);
       Provider.of<ContractProvider>(context, listen: false).addToken(
         _tokenSymbol,
         context,
@@ -113,8 +137,30 @@ class AddAssetState extends State<AddAsset> {
         }
       }
     } else {
-      await dialog(context, const Text('Invalid token contract address!'),
-          const Text('Opps'));
+
+       await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            child: Text('Opps'),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text('Invalid token contract address!'),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+      //await dialog('Invalid token contract address!', 'Opps');
       setState(() {
         _modelAsset.loading = false;
       });
@@ -125,7 +171,7 @@ class AddAssetState extends State<AddAsset> {
     try {
       final res = await Provider.of<ContractProvider>(context, listen: false)
           .queryEther(_modelAsset.controllerAssetCode.text, 'symbol', []);
-      print(res[0]);
+
       if (res != null) {
         setState(() {
           _tokenSymbol = res[0].toString();

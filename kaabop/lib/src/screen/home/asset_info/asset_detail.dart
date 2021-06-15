@@ -35,10 +35,24 @@ class _AssetDetailState extends State<AssetDetail> {
 
   @override
   void initState() {
-    totalSupply = convert(widget.marketData.totalSupply);
-    circulatingSupply = convert(widget.marketData.circulatingSupply);
-    marketCap = convert(widget.marketData.marketCap);
-    marketCapChange24h = convert(widget.marketData.marketCapChange24H);
+    if (widget.marketData.totalSupply != 'null') {
+      totalSupply = convert(widget.marketData.totalSupply);
+    }
+    if (widget.marketData.circulatingSupply != 'null') {
+      circulatingSupply = convert(widget.marketData.circulatingSupply);
+    }
+
+    if (widget.marketData.marketCap != 'null') {
+      marketCap = convert(widget.marketData.marketCap);
+    }
+
+    if (widget.marketData.marketCapChange24H != 'null') {
+      marketCapChange24h = convert(widget.marketData.marketCapChange24H);
+    }
+    // totalSupply = convert(widget.marketData.totalSupply);
+    // circulatingSupply = convert(widget.marketData.circulatingSupply);
+    // marketCap = convert(widget.marketData.marketCap);
+    // marketCapChange24h = convert(widget.marketData.marketCapChange24H);
     super.initState();
   }
 

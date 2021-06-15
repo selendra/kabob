@@ -268,34 +268,33 @@ Future<void> startNode(BuildContext context) async {
   );
 }
 
-Future dialog(BuildContext context, Widget text, Widget title,
-    {Widget action, Color bgColor}) async {
-  final result = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: bgColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          title: Align(
-            child: title,
-          ),
-          content: Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-            child: text,
-          ),
-          actions: <Widget>[
-            // ignore: deprecated_member_use
-            FlatButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
-            ),
-            action
-          ],
-        );
-      });
-  return result;
-}
+// Future<void> dialog(BuildContext context, Widget text, Widget title,
+//     {Widget action, Color bgColor}) async {
+//   await showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           backgroundColor: bgColor,
+//           shape:
+//               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+//           title: Align(
+//             child: title,
+//           ),
+//           content: Padding(
+//             padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+//             child: text,
+//           ),
+//           actions: <Widget>[
+//             // ignore: deprecated_member_use
+//             FlatButton(
+//               onPressed: () => Navigator.pop(context),
+//               child: const Text('Close'),
+//             ),
+//             action
+//           ],
+//         );
+//       });
+// }
 
 Future dialogEvent(
   BuildContext context,

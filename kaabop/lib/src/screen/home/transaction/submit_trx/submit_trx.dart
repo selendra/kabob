@@ -174,52 +174,91 @@ class SubmitTrxState extends State<SubmitTrx> {
       }
     } catch (e) {
       Navigator.pop(context);
-      await dialog(context, Text(e.message.toString()), const Text('Opps!!'));
+      await customDialog('Opps', e.message.toString());
     }
   }
 
   Future<String> sendTx(String target, String amount, String pin) async {
     dialogLoading(context);
     String mhash;
-    final sender = TxSenderData(
-      ApiProvider.keyring.current.address,
-      ApiProvider.keyring.current.pubKey,
-    );
-    final txInfo = TxInfoData('balances', 'transfer', sender);
-    final chainDecimal =
-        Provider.of<ApiProvider>(context, listen: false).nativeM.chainDecimal;
-    try {
-      final hash = await ApiProvider.sdk.api.tx.signAndSend(
-          txInfo,
-          [
-            target,
-            Fmt.tokenInt(
-              amount.trim(),
-              int.parse(chainDecimal),
-            ).toString(),
-          ],
-          pin,
-          onStatusChange: (status) async {});
 
-      if (hash != null) {
-        saveTxHistory(TxHistory(
-          date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
-          symbol: 'SEL',
-          destination: target,
-          sender: ApiProvider.keyring.current.address,
-          org: 'SELENDRA',
-          amount: amount.trim(),
-        ));
+    final res = await validateAddress(target);
 
-        await enableAnimation();
+    if (res) {
+      final sender = TxSenderData(
+        ApiProvider.keyring.current.address,
+        ApiProvider.keyring.current.pubKey,
+      );
+      final txInfo = TxInfoData('balances', 'transfer', sender);
+      final chainDecimal =
+          Provider.of<ApiProvider>(context, listen: false).nativeM.chainDecimal;
+      try {
+        final hash = await ApiProvider.sdk.api.tx.signAndSend(
+            txInfo,
+            [
+              target,
+              Fmt.tokenInt(
+                amount.trim(),
+                int.parse(chainDecimal),
+              ).toString(),
+            ],
+            pin,
+            onStatusChange: (status) async {});
+
+        if (hash != null) {
+          saveTxHistory(TxHistory(
+            date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
+            symbol: 'SEL',
+            destination: target,
+            sender: ApiProvider.keyring.current.address,
+            org: 'SELENDRA',
+            amount: amount.trim(),
+          ));
+
+          await enableAnimation();
+        } else {
+          Navigator.pop(context);
+          await customDialog('Opps', 'Something went wrong!');
+          // await dialog(
+          //     context, const Text('Something went wrong!'), const Text("Opps"));
+        }
+      } catch (e) {
+        // print(e.message);
+        Navigator.pop(context);
+        await customDialog('Opps', e.message.toString());
+        // dialog(context, Text(e.message.toString()), const Text("Opps"));
       }
-    } catch (e) {
-      // print(e.message);
+    } else {
       Navigator.pop(context);
-      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+      await customDialog('Opps', 'Invalid Address');
     }
 
     return mhash;
+  }
+
+  Future<void> customDialog(String text1, String text2) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            child: Text(text1),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text(text2),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<String> sendTxDot(String target, String amount, String pin) async {
@@ -251,7 +290,9 @@ class SubmitTrxState extends State<SubmitTrx> {
     } catch (e) {
       // print(e.message);
       Navigator.pop(context);
-      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+
+      await customDialog('Opps', e.message.toString());
+      //await dialog(context, Text(e.message.toString()), const Text("Opps"));
     }
 
     return mhash;
@@ -330,7 +371,8 @@ class SubmitTrxState extends State<SubmitTrx> {
             );
             break;
           case "BTC":
-            sendTxBtc(_scanPayM.controlReceiverAddress.text,  _scanPayM.controlAmount.text, value);
+            sendTxBtc(_scanPayM.controlReceiverAddress.text,
+                _scanPayM.controlAmount.text, value);
             break;
           default:
             if (_scanPayM.asset.contains('ERC-20')) {
@@ -381,12 +423,11 @@ class SubmitTrxState extends State<SubmitTrx> {
       }
     } catch (e) {
       Navigator.pop(context);
-      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+      await customDialog('Opps', e.message.toString());
     }
   }
 
-  Future<void> sendTxBtc(
-      String to, String amount, String pin) async {
+  Future<void> sendTxBtc(String to, String amount, String pin) async {
     dialogLoading(context);
 
     final api = Provider.of<ApiProvider>(context, listen: false);
@@ -396,10 +437,16 @@ class SubmitTrxState extends State<SubmitTrx> {
     final wif = await getBtcPrivateKey(pin);
 
     if (res) {
-      api.sendTxBtc(context, api.btcAdd, to, double.parse(amount), wif);
+      final res =
+          api.sendTxBtc(context, api.btcAdd, to, double.parse(amount), wif);
+      if (res == 200) {
+        enableAnimation();
+      } else {
+        Navigator.pop(context);
+      }
     } else {
-      await dialog(
-          context, const Text('Invalid Bitcoin Address'), const Text('Opps'));
+      Navigator.pop(context);
+      await customDialog('Opps', 'Invalid Address');
     }
   }
 
@@ -420,7 +467,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       }
     } catch (e) {
       Navigator.pop(context);
-      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+      await customDialog('Opps', e.message.toString());
     }
   }
 
@@ -448,7 +495,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       }
     } catch (e) {
       Navigator.pop(context);
-      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+      await customDialog('Opps', e.message.toString());
     }
   }
 
@@ -476,7 +523,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       }
     } catch (e) {
       Navigator.pop(context);
-      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+      await customDialog('Opps', e.message.toString());
     }
   }
 
@@ -487,11 +534,12 @@ class SubmitTrxState extends State<SubmitTrx> {
       privateKey =
           await ApiProvider.keyring.store.decryptPrivateKey(encrytKey, pin);
     } catch (e) {
-      await dialog(
-        context,
-        const Text('PIN verification failed !'),
-        const Text("Opps"),
-      );
+      await customDialog('Opps', 'PIN verification failed');
+      // await dialog(
+      //   context,
+      //   const Text('PIN verification failed !'),
+      //   const Text("Opps"),
+      // );
     }
 
     return privateKey;
@@ -504,11 +552,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       privateKey =
           await ApiProvider.keyring.store.decryptPrivateKey(encrytKey, pin);
     } catch (e) {
-      await dialog(
-        context,
-        const Text('PIN verification failed !'),
-        const Text("Opps"),
-      );
+      await customDialog('Opps', 'PIN verification failed');
     }
 
     return privateKey;

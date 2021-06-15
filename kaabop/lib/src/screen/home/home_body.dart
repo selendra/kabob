@@ -14,6 +14,7 @@ class HomeBody extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async {
         final contract = Provider.of<ContractProvider>(context, listen: false);
+         final api = Provider.of<ApiProvider>(context, listen: false);
         await Future.delayed(const Duration(milliseconds: 300))
             .then((value) async {
           setPortfolio();
@@ -31,6 +32,10 @@ class HomeBody extends StatelessWidget {
 
           if (contract.kgoNative.isContain) {
             contract.getKgoBalance();
+          }
+
+          if(api.btc.isContain){
+            api.getBtcBalance(api.btcAdd);
           }
 
           if (contract.token.isNotEmpty) {

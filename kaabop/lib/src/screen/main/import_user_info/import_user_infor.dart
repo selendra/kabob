@@ -1,6 +1,8 @@
+import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:bip39/bip39.dart' as bip39;
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
@@ -38,6 +40,31 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     super.dispose();
   }
 
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   Future<void> _importFromMnemonic() async {
     try {
       final json = await ApiProvider.sdk.api.keyring.importAccount(
@@ -56,6 +83,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       );
 
       if (acc != null) {
+        addBtcWallet();
         final resPk = await ApiProvider().getPrivateKey(widget.passPhrase);
         if (resPk != null) {
           ContractProvider().extractAddress(resPk);
@@ -99,13 +127,56 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         );
       }
     } catch (e) {
-      await dialog(
-        context,
-        Text(e.message.toString()),
-        const Text('Message'),
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text('Message'),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text(e.message.toString()),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
       );
+      // await dialog(
+      //   e.message.toString(),
+      //   'Message',
+      // );
       Navigator.pop(context);
     }
+  }
+
+  Future<void> addBtcWallet() async {
+    final seed = bip39.mnemonicToSeed(widget.passPhrase);
+    final hdWallet = HDWallet.fromSeed(seed);
+
+    await StorageServices.setData(hdWallet.address, 'btcaddress');
+
+    final res = await ApiProvider.keyring.store
+        .encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
+
+    if (res != null) {
+      await StorageServices().writeSecure('btcwif', res);
+    }
+
+    Provider.of<ApiProvider>(context, listen: false)
+        .getBtcBalance(hdWallet.address);
+    Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
+
+    Provider.of<ApiProvider>(context, listen: false)
+        .setBtcAddr(hdWallet.address);
+    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BTC');
   }
 
   // Future<void> isDotContain() async {
