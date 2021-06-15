@@ -5,8 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/tx_history.dart';
-import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
   final String _walletKey;
@@ -276,15 +274,6 @@ class SubmitTrxState extends State<SubmitTrx> {
           onStatusChange: (status) async {});
 
       if (hash != null) {
-        // saveTxHistory(TxHistory(
-        //   date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
-        //   symbol: 'SEL',
-        //   destination: target,
-        //   sender: ApiProvider.keyring.current.address,
-        //   org: 'SELENDRA',
-        //   amount: amount.trim(),
-        // ));
-
         await enableAnimation();
       }
     } catch (e) {
@@ -292,7 +281,6 @@ class SubmitTrxState extends State<SubmitTrx> {
       Navigator.pop(context);
 
       await customDialog('Opps', e.message.toString());
-      //await dialog(context, Text(e.message.toString()), const Text("Opps"));
     }
 
     return mhash;
@@ -535,11 +523,6 @@ class SubmitTrxState extends State<SubmitTrx> {
           await ApiProvider.keyring.store.decryptPrivateKey(encrytKey, pin);
     } catch (e) {
       await customDialog('Opps', 'PIN verification failed');
-      // await dialog(
-      //   context,
-      //   const Text('PIN verification failed !'),
-      //   const Text("Opps"),
-      // );
     }
 
     return privateKey;

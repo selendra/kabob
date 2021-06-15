@@ -54,6 +54,7 @@ export 'package:wallet_apps/src/config/size_config/size_config.dart';
 export 'package:wallet_apps/src/components/asset_item.dart';
 export 'package:wallet_apps/src/components/portfolio_cus.dart';
 export 'package:wallet_apps/src/components/route_animation.dart';
+export 'package:wallet_apps/src/components/route_animation.dart';
 
 // Add Asset
 export 'package:wallet_apps/src/models/asset_m.dart';
@@ -64,6 +65,8 @@ export 'package:wallet_apps/src/models/home_m.dart';
 export 'package:wallet_apps/src/models/menu_m.dart';
 
 export 'package:wallet_apps/src/models/token.m.dart';
+
+export 'package:wallet_apps/src/models/m_import_acc.dart';
 // Dashboard
 
 export 'package:wallet_apps/src/models/atd.dart';
@@ -76,6 +79,10 @@ export 'package:wallet_apps/src/models/model_scan_pay.dart';
 /* Main Screen */
 
 export 'package:wallet_apps/src/models/model_user_info.dart';
+
+export 'package:wallet_apps/src/models/tx_history.dart';
+
+export 'package:wallet_apps/src/models/m_import_acc.dart';
 
 /* Home Screen */
 export 'package:wallet_apps/src/models/portfolio_m.dart';
@@ -127,11 +134,20 @@ export 'package:wallet_apps/src/screen/main/confirm_mnemonic/create_mnemoic.dart
 export 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
 export 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 export 'package:wallet_apps/src/screen/main/local_auth/finger_print.dart';
+export 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
 // Finger Print
 export 'package:wallet_apps/src/screen/main/splash_screen/splash_screen.dart';
+
+export 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart';
+export 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 // Main Screeen
 export 'package:wallet_apps/src/screen/main/welcome/welcome.dart';
 export 'package:wallet_apps/src/screen/main/welcome/welcome_body.dart';
+
+export 'package:wallet_apps/src/screen/home/asset_list.dart';
+
+export 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
+
 /* Local File */
 export 'package:wallet_apps/src/service/services.dart';
 export 'package:wallet_apps/src/service/services.dart';

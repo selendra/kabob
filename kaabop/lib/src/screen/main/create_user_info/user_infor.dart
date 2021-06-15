@@ -4,9 +4,6 @@ import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
-import 'package:wallet_apps/src/screen/main/create_user_info/user_info_body.dart';
 
 class MyUserInfo extends StatefulWidget {
   final String passPhrase;
@@ -46,31 +43,6 @@ class MyUserInfoState extends State<MyUserInfo> {
     _userInfoM.enable = false;
     super.dispose();
   }
-
-  // Future<void> dialog(String text1, String text2, {Widget action}) async {
-  //   await showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         shape:
-  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-  //         title: Align(
-  //           child: Text(text1),
-  //         ),
-  //         content: Padding(
-  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-  //           child: Text(text2),
-  //         ),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             onPressed: () => Navigator.pop(context),
-  //             child: const Text('Close'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   // ignore: avoid_positional_boolean_parameters
   Future<void> switchBiometric(bool switchValue) async {

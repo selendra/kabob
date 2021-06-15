@@ -1,11 +1,5 @@
-import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-
-import 'package:wallet_apps/src/models/m_import_acc.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/screen/main/import_account/import_acc_body.dart';
-import 'package:wallet_apps/src/screen/main/import_user_info/import_user_infor.dart';
 
 class ImportAcc extends StatefulWidget {
   final String reimport;
@@ -33,31 +27,6 @@ class ImportAccState extends State<ImportAcc> {
     AppServices.noInternetConnection(globalKey);
     super.initState();
   }
-
-  // Future<void> dialog(String text1, String text2, {Widget action}) async {
-  //   await showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         shape:
-  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-  //         title: Align(
-  //           child: Text(text1),
-  //         ),
-  //         content: Padding(
-  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-  //           child: Text(text2),
-  //         ),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             onPressed: () => Navigator.pop(context),
-  //             child: const Text('Close'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   String onChanged(String value) {
     validateMnemonic(value).then((value) {
@@ -116,11 +85,11 @@ class ImportAccState extends State<ImportAcc> {
           return AlertDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
-            title: Align(
+            title: const Align(
               child: Text('Opps'),
             ),
-            content: Padding(
-              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            content: const Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: Text('Invalid seed phrases'),
             ),
             actions: <Widget>[
@@ -142,11 +111,11 @@ class ImportAccState extends State<ImportAcc> {
           return AlertDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
-            title: Align(
+            title: const Align(
               child: Text('Opps'),
             ),
-            content: Padding(
-              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            content: const Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
               child: Text('PIN  verification failed'),
             ),
             actions: <Widget>[

@@ -1,7 +1,5 @@
 import 'package:wallet_apps/index.dart';
 
-import 'package:wallet_apps/src/screen/main/create_user_info/user_infor.dart';
-
 class ConfirmMnemonic extends StatefulWidget {
   final String passPhrase;
   final List passPhraseList;

@@ -1,5 +1,4 @@
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/tx_history.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // ignore: avoid_classes_with_only_static_members

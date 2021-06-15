@@ -1,6 +1,5 @@
 import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:bip39/bip39.dart' as bip39;
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../index.dart';
@@ -41,11 +40,11 @@ class AssetList extends StatelessWidget {
             return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
-              title: Align(
+              title: const Align(
                 child: Text('Opps'),
               ),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              content: const Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: Text('Invalid Seed phrase'),
               ),
               actions: <Widget>[
@@ -67,11 +66,11 @@ class AssetList extends StatelessWidget {
             return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
-              title: Align(
+              title: const Align(
                 child: Text('Opps'),
               ),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              content: const Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: Text('PIN verification failed'),
               ),
               actions: <Widget>[
@@ -114,11 +113,11 @@ class AssetList extends StatelessWidget {
             return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0)),
-              title: Align(
+              title: const Align(
                 child: Text('Success'),
               ),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              content: const Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
                 child: Text('You have created bitcoin wallet.'),
               ),
               actions: <Widget>[
@@ -130,13 +129,6 @@ class AssetList extends StatelessWidget {
             );
           },
         );
-
-        // => 12eUJoaWBENQ3tNZE52ZQaHqr3v4tTX4os
-        // print(hdWallet.pubKey);
-        // // => 0360729fb3c4733e43bf91e5208b0d240f8d8de239cff3f2ebd616b94faa0007f4
-        // print(hdWallet.privKey);
-        // => 01304181d699cd89db7de6337d597adf5f78dc1f0784c400e41a3bd829a5a226
-        //print(hdWallet.wif);
       }
     }
   }
@@ -433,21 +425,6 @@ class AssetList extends StatelessWidget {
         Consumer<ContractProvider>(builder: (context, value, child) {
           return GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   RouteAnimation(
-              //     enterPage: AssetInfo(
-              //       id: value.bnbNative.id,
-              //       assetLogo: value.bnbNative.logo,
-              //       balance: value.bnbNative.balance ?? AppText.loadingPattern,
-              //       tokenSymbol: value.bnbNative.symbol ?? '',
-              //       marketData: value.bnbNative.marketData,
-              //       marketPrice: value.bnbNative.marketPrice,
-              //       priceChange24h: value.bnbNative.change24h,
-              //     ),
-              //   ),
-              // );
-
               Navigator.push(
                 context,
                 RouteAnimation(

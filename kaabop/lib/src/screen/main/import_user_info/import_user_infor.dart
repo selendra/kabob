@@ -40,31 +40,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     super.dispose();
   }
 
-  // Future<void> dialog(String text1, String text2, {Widget action}) async {
-  //   await showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         shape:
-  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-  //         title: Align(
-  //           child: Text(text1),
-  //         ),
-  //         content: Padding(
-  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-  //           child: Text(text2),
-  //         ),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             onPressed: () => Navigator.pop(context),
-  //             child: const Text('Close'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
-
   Future<void> _importFromMnemonic() async {
     try {
       final json = await ApiProvider.sdk.api.keyring.importAccount(
@@ -100,9 +75,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
         Provider.of<ContractProvider>(context, listen: false).getBscBalance();
         Provider.of<ContractProvider>(context, listen: false).getEtherBalance();
-        //isDotContain();
-        //isBnbContain();
-        //isBscContain();
+
         isKgoContain();
 
         MarketProvider().fetchTokenMarketPrice(context);
@@ -133,7 +106,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
           return AlertDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
-            title: Align(
+            title: const Align(
               child: Text('Message'),
             ),
             content: Padding(
@@ -149,10 +122,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
           );
         },
       );
-      // await dialog(
-      //   e.message.toString(),
-      //   'Message',
-      // );
+
       Navigator.pop(context);
     }
   }

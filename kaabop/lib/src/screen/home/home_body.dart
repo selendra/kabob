@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/screen/home/asset_list.dart';
+
 
 class HomeBody extends StatelessWidget {
   final Function balanceOf;

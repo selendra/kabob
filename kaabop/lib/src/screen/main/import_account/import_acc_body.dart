@@ -1,5 +1,4 @@
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/m_import_acc.dart';
 
 class ImportAccBody extends StatelessWidget {
   final bool enable;
@@ -98,26 +97,29 @@ class ImportAccBody extends StatelessWidget {
                         maxLine: null,
                         onChanged: onChanged,
                         //inputAction: TextInputAction.done,
-                        onSubmit: reImport!=null ? (){} : onSubmit,
+                        onSubmit: reImport != null ? () {} : onSubmit,
                       ),
                     ),
-                    if (reImport!=null) MyInputField(
-                      pLeft: 0,
-                      pRight: 0,
-                      pBottom: 16.0,
-                      labelText: "Pin",
-                      textInputFormatter: [
-                        LengthLimitingTextInputFormatter(4)
-                      ],
-                      controller: importAccModel.pwCon,
-                      focusNode: importAccModel.pwNode,
-                      validateField: (value) =>
-                          value.isEmpty ? 'Please fill in pin' : null,
-                      maxLine: null,
-                      onChanged: onChanged,
-                      //inputAction: TextInputAction.done,
-                      onSubmit: onSubmit,
-                    ) else Container(),
+                    if (reImport != null)
+                      MyInputField(
+                        pLeft: 0,
+                        pRight: 0,
+                        pBottom: 16.0,
+                        labelText: "Pin",
+                        textInputFormatter: [
+                          LengthLimitingTextInputFormatter(4)
+                        ],
+                        controller: importAccModel.pwCon,
+                        focusNode: importAccModel.pwNode,
+                        validateField: (value) =>
+                            value.isEmpty ? 'Please fill in pin' : null,
+                        maxLine: null,
+                        onChanged: onChanged,
+                        //inputAction: TextInputAction.done,
+                        onSubmit: onSubmit,
+                      )
+                    else
+                      Container(),
                   ],
                 ),
               ),
