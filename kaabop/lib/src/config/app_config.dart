@@ -113,7 +113,6 @@ class AppConfig {
 
   //static const credentials = ' ';
 
- 
   //
   // sld_market net API
   // https://sld_marketnet-api.selendra.com/pub/v1

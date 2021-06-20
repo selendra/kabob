@@ -114,7 +114,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       });
     }
 
-    if (api.nativeM.balance == null) {
+    if (api.dot.balance == null) {
       walletProvider.addAvaibleToken({
         'symbol': api.dot.symbol,
         'balance': '0',

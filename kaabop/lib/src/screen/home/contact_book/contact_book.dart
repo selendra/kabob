@@ -91,6 +91,8 @@ class _ContactBookState extends State<ContactBook> {
   }
 
   Future<void> deleteContact(int index) async {
+    print('delete at $index');
+
     _contactBookModel.contactBookList.removeAt(index);
     //print("Empty ${_contactBookModel.contactBookList.isEmpty}");
     if (_contactBookModel.contactBookList.isEmpty) {
@@ -99,6 +101,7 @@ class _ContactBookState extends State<ContactBook> {
 
       setState(() {});
     } else {
+      print('not empty');
       for (final data in _contactBookModel.contactBookList) {
         contactData.add({
           'username': data.userName.text,

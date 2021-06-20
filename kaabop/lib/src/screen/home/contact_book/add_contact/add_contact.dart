@@ -75,7 +75,10 @@ class _AddContactState extends State<AddContact> {
             ),
             actions: <Widget>[
               FlatButton(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
                 child: const Text('Close'),
               ),
             ],
@@ -87,7 +90,7 @@ class _AddContactState extends State<AddContact> {
       //     "Successfully add new contact!\n Please check your contact book",
       //     "Congratualtion");
       // Close Screen
-      Navigator.pop(context, true);
+      // Navigator.pop(context, true);
     } catch (e) {
       // Close Dialog Loading
       Navigator.pop(context);
