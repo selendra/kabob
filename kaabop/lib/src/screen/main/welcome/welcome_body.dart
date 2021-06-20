@@ -1,7 +1,4 @@
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/screen/main/contents_backup.dart';
-import 'package:wallet_apps/src/screen/main/import_account/import_acc.dart';
-import '../import_account/import_acc.dart';
 
 class WelcomeBody extends StatelessWidget {
   @override
@@ -45,7 +42,7 @@ class WelcomeBody extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.2,
           ),
           SvgPicture.asset(
-            'assets/undraw_wallet.svg',
+            'assets/undraw_bear_market_ania.svg',
             height: MediaQuery.of(context).size.height * 0.2,
             width: MediaQuery.of(context).size.width * 0.2,
           ),
@@ -59,7 +56,7 @@ class WelcomeBody extends StatelessWidget {
                     const EdgeInsets.only(left: 42, right: 42, bottom: 16),
                 textButton: AppText.createAccTitle,
                 action: () {
-                  Navigator.pushNamed(context, ContentsBackup.route);
+                  Navigator.pushNamed(context, AppText.contentBackup);
                 },
               ),
               MyFlatButton(
@@ -67,7 +64,7 @@ class WelcomeBody extends StatelessWidget {
                     const EdgeInsets.only(left: 42, right: 42, bottom: 16),
                 textButton: AppText.importAccTitle,
                 action: () {
-                  Navigator.pushNamed(context, ImportAcc.route);
+                  Navigator.pushNamed(context, AppText.importAccView);
                 },
               )
             ],

@@ -1,68 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:polkawallet_sdk/api/types/networkParams.dart';
-import 'package:polkawallet_sdk/kabob_sdk.dart';
-import 'package:polkawallet_sdk/storage/keyring.dart';
-import 'package:wallet_apps/src/models/fmt.dart';
+import 'package:provider/provider.dart';
+
 import '../../index.dart';
 
 class WalletProvider with ChangeNotifier {
-  final WalletSDK _sdk = WalletSDK();
-  final Keyring _keyring = Keyring();
-  String _nativeBalance = '';
-  bool _isApiConnected = false;
-  bool _isSdkReady = false;
   final List<PortfolioM> _portfolioM = [];
   List<Map<String, String>> availableToken = [];
 
-  List<Color> pieColorList = [
-    hexaCodeToColor("#D65B09"),
-    hexaCodeToColor(AppColors.secondary),
-    hexaCodeToColor("#F0C90A"),
+  List<String> listSymbol = [
+    'SEL',
+    'DOT',
+    'BNB',
+    'ETH',
+    'SEL (BEP-20)',
+    'KGO (BEP-20)'
   ];
 
-  Map<String, double> dataMap = {
-    'SEL': 100.0,
-    'KMPI': 0.0,
-    'ATD': 0.0,
-  };
+  List<Color> pieColorList = const [
+    Color(0xFFff7675),
+    Color(0xFF74b9ff),
+    Color(0xFF55efc4),
+    Color(0xFFffeaa7),
+    Color(0xFFa29bfe),
+    Color(0xFFfd79a8),
+    Color(0xFFe17055),
+    Color(0xFF00b894),
+  ];
 
-  WalletSDK get sdk => _sdk;
-  Keyring get keyring => _keyring;
+  Map<String, double> dataMap = {};
   List<PortfolioM> get portfolio => _portfolioM;
-  String get nativeBalance => _nativeBalance;
-  bool get isApiConnected => _isApiConnected;
 
-  Future<void> initApi() async {
-    await keyring.init();
-    await sdk.init(keyring);
-
-    // ignore: join_return_with_assignment
-    _isSdkReady = true;
-    return _isSdkReady;
+  void setProfolio() {
+    clearPortfolio();
+    getPortfolio();
   }
 
-  Future<void> connectNetwork() async {
-    final node = NetworkParams();
-
-    node.name = 'Indranet hosted By Selendra';
-    node.endpoint = 'wss://rpc-testnet.selendra.org';
-    node.ss58 = 42;
-
-    final res = await sdk.api.connectNode(keyring, [node]);
-
-    if (res != null) {
-      _isApiConnected = true;
-    }
-
+  void addTokenSymbol(String symbol) {
+    listSymbol.add(symbol);
     notifyListeners();
   }
 
-  Future<void> subscribeBalance() async {
-    await sdk.api.account.subscribeBalance(keyring.current.address, (res) {
-      if (res != null) {
-        _nativeBalance = Fmt.balance(res.freeBalance.toString(), 18);
-      }
-    });
+  void removeTokenSymbol(String symbol) {
+    listSymbol.remove(symbol);
     notifyListeners();
   }
 
@@ -87,6 +66,12 @@ class WalletProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setPortfolio(BuildContext context) {
+    clearPortfolio();
+
+    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  }
+
   void clearPortfolio() {
     availableToken.clear();
     _portfolioM.clear();
@@ -94,11 +79,12 @@ class WalletProvider with ChangeNotifier {
   }
 
   Future<double> getTotal() async {
-    double total = 0;
+    double total = 0.0;
 
     for (int i = 0; i < availableToken.length; i++) {
       total = total + double.parse(availableToken[i]['balance']);
     }
+
     return total;
   }
 
@@ -111,50 +97,40 @@ class WalletProvider with ChangeNotifier {
 
   Future<void> getPortfolio() async {
     _portfolioM.clear();
+    dataMap.clear();
 
     double temp = 0.0;
 
+    await getTotal();
+
     await getTotal().then((total) {
       double percen = 0.0;
+
       for (int i = 0; i < availableToken.length; i++) {
         temp = double.parse(availableToken[i]['balance']) / total;
 
         if (total == 0.0) {
-          _portfolioM.add(PortfolioM(
-              color: pieColorList[i],
-              symbol: availableToken[i]['symbol'],
-              percentage: '0'));
+          _portfolioM.add(
+            PortfolioM(
+                color: pieColorList[i],
+                symbol: availableToken[i]['symbol'],
+                percentage: '0'),
+          );
         } else {
-          if (availableToken[i]['symbol'] == 'SEL') {
-            percen = temp * 100;
-            _portfolioM.add(PortfolioM(
-              color: pieColorList[0],
-              symbol: 'SEL',
-              percentage: percen.toStringAsFixed(4),
-            ));
-            dataMap.update('SEL',
-                (value) => value = double.parse(percen.toStringAsFixed(4)));
-          } else if (availableToken[i]['symbol'] == 'KMPI') {
-            percen = temp * 100;
-            _portfolioM.add(PortfolioM(
-                color: pieColorList[1],
-                symbol: 'KMPI',
-                percentage: percen.toStringAsFixed(4)));
-            dataMap.update('KMPI',
-                (value) => value = double.parse(percen.toStringAsFixed(4)));
-          } else if (availableToken[i]['symbol'] == 'ATD') {
-            percen = temp * 100;
-            _portfolioM.add(PortfolioM(
-                color: pieColorList[2],
-                symbol: 'ATD',
-                percentage: percen.toStringAsFixed(4)));
-            dataMap.update('ATD',
-                (value) => value = double.parse(percen.toStringAsFixed(4)));
-          }
+          percen = temp * 100;
+
+          _portfolioM.add(PortfolioM(
+            color: pieColorList[i],
+            symbol: availableToken[i]['symbol'],
+            percentage: percen.toStringAsFixed(2),
+          ));
+
+          dataMap.addAll({
+            availableToken[i]['symbol']: double.parse(percen.toStringAsFixed(4))
+          });
         }
+        notifyListeners();
       }
     });
-
-    notifyListeners();
   }
 }

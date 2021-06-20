@@ -2,7 +2,6 @@ import 'package:local_auth/local_auth.dart';
 import 'package:wallet_apps/index.dart';
 
 class FingerPrint extends StatefulWidget {
-
   @override
   _FingerPrintState createState() => _FingerPrintState();
 }
@@ -37,8 +36,29 @@ class _FingerPrintState extends State<FingerPrint> {
       await Future.delayed(const Duration(milliseconds: 300), () {});
       AppServices.openSnackBar(globalkey, e.message);
     } catch (e) {
-      await dialog(context, Text("${e.message}", textAlign: TextAlign.center),
-          const Text("Message"));
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: const Align(
+              child: Text('Message'),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text(e.message.toString()),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+      //await dialog(e.message.toString(), "Message");
     }
   }
 
@@ -59,11 +79,17 @@ class _FingerPrintState extends State<FingerPrint> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               const MyText(
-                  text: 'Kabob Locked',
+                  text: 'Bitriel Locked',
                   fontSize: 27.0,
                   fontWeight: FontWeight.bold),
-              SvgPicture.asset("assets/finger_print.svg",
-                  width: 300, height: 300),
+              const SizedBox(
+                height: 40.0,
+              ),
+              SvgPicture.asset("assets/undraw_secure.svg",
+                  width: 200, height: 200),
+              const SizedBox(
+                height: 40.0,
+              ),
               const MyText(top: 19.0, text: 'Authentication Required'),
             ],
           ),

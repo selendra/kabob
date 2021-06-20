@@ -4,17 +4,13 @@ import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/src/components/component.dart';
 import 'package:wallet_apps/src/components/route_animation.dart';
-import 'package:wallet_apps/src/models/contract.m.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
+import 'package:wallet_apps/src/provider/api_provider.dart';
 import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/home/menu/account_c.dart';
 import '../../../../index.dart';
 
 class Account extends StatefulWidget {
-  final CreateAccModel sdkModel;
-
-  const Account(this.sdkModel);
-  static const route = '/account';
+  //static const route = '/account';
   @override
   _AccountState createState() => _AccountState();
 }
@@ -70,33 +66,90 @@ class _AccountState extends State<Account> {
     }
   }
 
+  // Future<void> dialog(BuildContext context, String text1, String text2,
+  //     {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //           action
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
   Future<void> deleteAccout() async {
-    await dialog(
-      context, const Text('Are you sure to delete your account?'),
-      const Text('Delete Account'),
-      // ignore: deprecated_member_use
-      action: FlatButton(
-        onPressed: _deleteAccount,
-        child: const Text('Delete'),
-      ),
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          // title: const Align(
+          //   child: Text('Are you sure to delete your account'),
+          // ),
+          content: const Padding(
+            padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text('Are you sure to delete your account'),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+            FlatButton(
+              onPressed: _deleteAccount,
+              child: const Text('Delete'),
+            ),
+            // action
+          ],
+        );
+      },
     );
+
+    // await dialog(
+    //   context,
+    //   'Are you sure to delete your account?',
+    //   'Delete Account',
+    //   // ignore: deprecated_member_use
+    //   action: FlatButton(
+    //     onPressed: _deleteAccount,
+    //     child: const Text('Delete'),
+    //   ),
+    // );
   }
 
   Future<void> _deleteAccount() async {
     try {
-      await widget.sdkModel.sdk.api.keyring.deleteAccount(
-        widget.sdkModel.keyring,
+      await ApiProvider.sdk.api.keyring.deleteAccount(
+        ApiProvider.keyring,
         _currentAcc,
       );
       Navigator.pop(context);
       AppServices.clearStorage();
-      widget.sdkModel.contractModel = ContractModel();
-      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+      StorageServices().clearSecure();
+      //Provider.of<WalletProvider>(context, listen: false).resetDatamap();
       Provider.of<WalletProvider>(context, listen: false).clearPortfolio();
+      Provider.of<ContractProvider>(context, listen: false).resetConObject();
       Navigator.pushAndRemoveUntil(context,
           RouteAnimation(enterPage: Welcome()), ModalRoute.withName('/'));
     } catch (e) {
-      await dialog(context, Text(e.toString()), const Text('Opps'));
+      // await dialog(context, e.toString(), 'Opps');
     }
   }
 
@@ -104,27 +157,43 @@ class _AccountState extends State<Account> {
     Navigator.pop(context);
     try {
       final pairs = await KeyringPrivateStore()
-          .getDecryptedSeed(widget.sdkModel.keyring.keyPairs[0].pubKey, pass);
-      //print(pairs);
+          .getDecryptedSeed(ApiProvider.keyring.keyPairs[0].pubKey, pass);
 
       if (pairs['seed'] != null) {
-        await dialog(
-          context,
-          GestureDetector(
-              onTap: () {
-                copyToClipBoard(pairs['seed'].toString(), context);
-              },
-              child: Text(
-                pairs['seed'].toString(),
-              )),
-          const Text('Backup Key'),
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              title: Align(
+                child: Text('Backup Key'),
+              ),
+              content: Padding(
+                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: Text(pairs['seed'].toString()),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+                // action
+              ],
+            );
+          },
         );
+
+        // await dialog(
+        //   context,
+        //   pairs['seed'].toString(),
+        //   'Backup Key',
+        // );
       } else {
-        await dialog(
-            context, const Text('Incorrect Pin'), const Text('Backup Key'));
+        //await dialog(context, 'Incorrect Pin', 'Backup Key');
       }
     } catch (e) {
-      await dialog(context, Text(e.toString()), const Text('Opps'));
+      //await dialog(context, e.toString(), 'Opps');
     }
     _pinController.text = '';
   }
@@ -134,20 +203,69 @@ class _AccountState extends State<Account> {
     setState(() {
       _loading = true;
     });
-    final res = await widget.sdkModel.sdk.api.keyring
-        .changePassword(widget.sdkModel.keyring, oldPass, newPass);
+    final res = await ApiProvider.sdk.api.keyring
+        .changePassword(ApiProvider.keyring, oldPass, newPass);
     if (res != null) {
-      await dialog(
-        context,
-        const Text('You pin has changed!!'),
-        const Text('Change Pin'),
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: const Align(
+              child: Text('Change Pin'),
+            ),
+            content: const Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text('You pin has changed!!'),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+              // action
+            ],
+          );
+        },
       );
+
+      // await dialog(
+      //   context,
+      //   'You pin has changed!!',
+      //   'Change Pin',
+      // );
     } else {
-      await dialog(
-        context,
-        const Text('Change Failed'),
-        const Text('Opps'),
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: const Align(
+              child: Text('Opps'),
+            ),
+            content: const Padding(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text('Change Failed!!'),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+              // action
+            ],
+          );
+        },
       );
+
+      // await dialog(
+      //   context,
+      //   'Change Failed',
+      //   'Opps',
+      // );
+
       setState(() {
         _loading = false;
       });
@@ -164,20 +282,22 @@ class _AccountState extends State<Account> {
       ClipboardData(
         text: text,
       ),
-    ).then((value) => {
-          // ignore: deprecated_member_use
-          Scaffold.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Copied to Clipboard'),
-              duration: Duration(seconds: 3),
-            ),
+    ).then(
+      (value) => {
+        // ignore: deprecated_member_use
+        Scaffold.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Copied to Clipboard'),
+            duration: Duration(seconds: 3),
           ),
-        });
+        ),
+      },
+    );
   }
 
   @override
   void initState() {
-    _currentAcc = widget.sdkModel.keyring.keyPairs[0];
+    _currentAcc = ApiProvider.keyring.keyPairs[0];
     super.initState();
   }
 
@@ -227,23 +347,24 @@ class _AccountState extends State<Account> {
                                   children: [
                                     Row(
                                       children: [
-                                        Container(
-                                          alignment: Alignment.centerLeft,
-                                          margin: const EdgeInsets.only(
-                                            right: 16,
-                                          ),
-                                          width: 70,
-                                          height: 70,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: widget.sdkModel.profileIcon ==
-                                                  null
-                                              ? Container()
-                                              : SvgPicture.string(
-                                                  widget.sdkModel.profileIcon,
-                                                ),
+                                        Consumer<ApiProvider>(
+                                          builder: (context, value, child) {
+                                            return Container(
+                                              alignment: Alignment.centerLeft,
+                                              margin: const EdgeInsets.only(
+                                                right: 16,
+                                              ),
+                                              width: 70,
+                                              height: 70,
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                              ),
+                                              child: SvgPicture.string(
+                                                value.accountM.addressIcon,
+                                              ),
+                                            );
+                                          },
                                         ),
                                         Column(
                                           crossAxisAlignment:
@@ -254,16 +375,16 @@ class _AccountState extends State<Account> {
                                               color: "#FFFFFF",
                                               fontSize: 20,
                                             ),
-                                            const SizedBox(
-                                              width: 100,
-                                              child: MyText(
-                                                text: "Indracore",
-                                                color: AppColors.secondarytext,
-                                                textAlign: TextAlign.start,
-                                                fontWeight: FontWeight.bold,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
+                                            // const SizedBox(
+                                            //   width: 100,
+                                            //   child: MyText(
+                                            //     text: "Indracore",
+                                            //     color: AppColors.secondarytext,
+                                            //     textAlign: TextAlign.start,
+                                            //     fontWeight: FontWeight.bold,
+                                            //     overflow: TextOverflow.ellipsis,
+                                            //   ),
+                                            // ),
                                           ],
                                         ),
                                         Expanded(child: Container()),
@@ -272,71 +393,71 @@ class _AccountState extends State<Account> {
                                   ],
                                 ),
                               ),
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                margin: const EdgeInsets.only(
-                                  right: 16,
-                                  left: 16,
-                                  bottom: 16,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Builder(
-                                      builder: (context) => GestureDetector(
-                                        onTap: () {
-                                          copyToClipBoard(
-                                              _currentAcc.pubKey, context);
-                                        },
-                                        child: Row(
-                                          children: [
-                                            const MyText(
-                                              text: 'Public Key:  ',
-                                              color: "#FFFFFF",
-                                            ),
-                                            const SizedBox(height: 50),
-                                            Expanded(
-                                              child: MyText(
-                                                text: _currentAcc.pubKey,
-                                                color: "#FFFFFF",
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Builder(
-                                      builder: (context) => GestureDetector(
-                                        onTap: () {
-                                          copyToClipBoard(
-                                              _currentAcc.address, context);
-                                        },
-                                        child: Row(
-                                          children: [
-                                            const MyText(
-                                              text: 'Address:  ',
-                                              color: "#FFFFFF",
-                                            ),
-                                            Expanded(
-                                              child: MyText(
-                                                text: _currentAcc.address,
-                                                color: "#FFFFFF",
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                //child: SvgPicture.asset('assets/male_avatar.svg'),
-                              ),
-                              const SizedBox(height: 40),
+                              // Container(
+                              //   alignment: Alignment.centerLeft,
+                              //   margin: const EdgeInsets.only(
+                              //     right: 16,
+                              //     left: 16,
+                              //     bottom: 16,
+                              //   ),
+                              //   decoration: BoxDecoration(
+                              //     borderRadius: BorderRadius.circular(5),
+                              //   ),
+                              //   child: Column(
+                              //     crossAxisAlignment: CrossAxisAlignment.start,
+                              //     children: [
+                              //       Builder(
+                              //         builder: (context) => GestureDetector(
+                              //           onTap: () {
+                              //             copyToClipBoard(
+                              //                 _currentAcc.pubKey, context);
+                              //           },
+                              //           child: Row(
+                              //             children: [
+                              //               const MyText(
+                              //                 text: 'Public Key:  ',
+                              //                 color: "#FFFFFF",
+                              //               ),
+                              //               const SizedBox(height: 50),
+                              //               Expanded(
+                              //                 child: MyText(
+                              //                   text: _currentAcc.pubKey,
+                              //                   color: "#FFFFFF",
+                              //                   overflow: TextOverflow.ellipsis,
+                              //                 ),
+                              //               ),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //       ),
+                              //       Builder(
+                              //         builder: (context) => GestureDetector(
+                              //           onTap: () {
+                              //             copyToClipBoard(
+                              //                 _currentAcc.address, context);
+                              //           },
+                              //           child: Row(
+                              //             children: [
+                              //               const MyText(
+                              //                 text: 'Address:  ',
+                              //                 color: "#FFFFFF",
+                              //               ),
+                              //               Expanded(
+                              //                 child: MyText(
+                              //                   text: _currentAcc.address,
+                              //                   color: "#FFFFFF",
+                              //                   overflow: TextOverflow.ellipsis,
+                              //                 ),
+                              //               ),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              //   //child: SvgPicture.asset('assets/male_avatar.svg'),
+                              // ),
+                              // const SizedBox(height: 40),
                               GestureDetector(
                                 onTap: () {
                                   AccountC().showBackup(

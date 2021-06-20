@@ -1,21 +1,16 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:intl/intl.dart';
 import 'package:polkawallet_sdk/api/types/txInfoData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/models/fmt.dart';
-import 'package:wallet_apps/src/models/tx_history.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
-import 'package:wallet_apps/src/screen/home/asset_info/asset_info_c.dart';
 
 class SubmitTrx extends StatefulWidget {
   final String _walletKey;
   final String asset;
   final List<dynamic> _listPortfolio;
   final bool enableInput;
-  final CreateAccModel sdkModel;
 
   const SubmitTrx(
       // ignore: avoid_positional_boolean_parameters
@@ -23,7 +18,6 @@ class SubmitTrx extends StatefulWidget {
       // ignore: avoid_positional_boolean_parameters
       this.enableInput,
       this._listPortfolio,
-      this.sdkModel,
       {this.asset});
   @override
   State<StatefulWidget> createState() {
@@ -55,15 +49,6 @@ class SubmitTrxState extends State<SubmitTrx> {
     super.initState();
   }
 
-  List<Map<String, String>> list = [
-    {'asset_code': 'SEL'},
-    {'asset_code': 'KMPI'}
-  ];
-
-  List<Map<String, String>> nativeList = [
-    {'asset_code': 'SEL'},
-  ];
-
   void removeAllFocus() {
     _scanPayM.nodeAmount.unfocus();
     _scanPayM.nodeMemo.unfocus();
@@ -84,24 +69,31 @@ class SubmitTrxState extends State<SubmitTrx> {
   }
 
   Future<bool> validateAddress(String address) async {
-    final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
+    final res = await ApiProvider.sdk.api.keyring.validateAddress(address);
     return res;
   }
 
   String onChanged(String value) {
     if (_scanPayM.nodeReceiverAddress.hasFocus) {
-     // FocusScope.of(context).requestFocus(_scanPayM.nodeAmount);
     } else if (_scanPayM.nodeAmount.hasFocus) {
       _scanPayM.formStateKey.currentState.validate();
       if (_scanPayM.formStateKey.currentState.validate()) {
         enableButton();
-      }else{
+      } else {
         setState(() {
           _scanPayM.enable = false;
         });
       }
     }
     return value;
+  }
+
+  String validateField(String value) {
+    if (value == '' || double.parse(value.toString()) < 0 || value == '-0') {
+      return 'Please fill in positive amount';
+    }
+
+    return null;
   }
 
   void onSubmit(BuildContext context) {
@@ -129,7 +121,7 @@ class SubmitTrxState extends State<SubmitTrx> {
       disable = true;
     });
     flareController.play('Checkmark');
-    setPortfolio();
+
     Timer(const Duration(milliseconds: 2500), () {
       Navigator.pushNamedAndRemoveUntil(
           context, Home.route, ModalRoute.withName('/'));
@@ -148,27 +140,30 @@ class SubmitTrxState extends State<SubmitTrx> {
     enableButton();
   }
 
-  Future<void> transfer(String to, String pass, String value) async {
-    dialogLoading(context,
-        content: 'Please wait! This might take a little bit longer');
+  Future<void> sendTxKmpi(String to, String pass, String value) async {
+    dialogLoading(
+      context,
+      content: 'Please wait! This might be taking some time.',
+    );
 
     try {
-      final res = await widget.sdkModel.sdk.api.keyring.contractTransfer(
-        widget.sdkModel.keyring.keyPairs[0].pubKey,
+      final res = await ApiProvider.sdk.api.keyring.contractTransfer(
+        ApiProvider.keyring.keyPairs[0].pubKey,
         to,
         value,
         pass,
-        widget.sdkModel.contractModel.pHash,
+        Provider.of<ContractProvider>(context, listen: false).kmpi.hash,
       );
 
-      if (res['hash'] != null) {
-        await _balanceOfByPartition();
+      if (res['status'] != null) {
+        Provider.of<ContractProvider>(context, listen: false)
+            .fetchKmpiBalance();
 
         saveTxHistory(TxHistory(
           date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
           symbol: 'KMPI',
           destination: to,
-          sender: widget.sdkModel.keyring.current.address,
+          sender: ApiProvider.keyring.current.address,
           org: 'KOOMPI',
           amount: value.trim(),
         ));
@@ -177,145 +172,373 @@ class SubmitTrxState extends State<SubmitTrx> {
       }
     } catch (e) {
       Navigator.pop(context);
-      await dialog(context, Text(e.message.toString()), const Text('Opps!!'));
+      await customDialog('Opps', e.message.toString());
     }
   }
 
   Future<String> sendTx(String target, String amount, String pin) async {
     dialogLoading(context);
     String mhash;
-    final sender = TxSenderData(
-      widget.sdkModel.keyring.current.address,
-      widget.sdkModel.keyring.current.pubKey,
-    );
-    final txInfo = TxInfoData('balances', 'transfer', sender);
 
-    try {
-      final hash = await widget.sdkModel.sdk.api.tx.signAndSend(
-          txInfo,
-          [
-            target,
-            Fmt.tokenInt(amount.trim(), int.parse(widget.sdkModel.chainDecimal))
-                .toString(),
-          ],
-          pin,
-          onStatusChange: (status) async {});
+    final res = await validateAddress(target);
 
-      if (hash != null) {
-        saveTxHistory(TxHistory(
-          date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
-          symbol: 'SEL',
-          destination: target,
-          sender: widget.sdkModel.keyring.current.address,
-          org: 'SELENDRA',
-          amount: amount.trim(),
-        ));
+    if (res) {
+      final sender = TxSenderData(
+        ApiProvider.keyring.current.address,
+        ApiProvider.keyring.current.pubKey,
+      );
+      final txInfo = TxInfoData('balances', 'transfer', sender);
+      final chainDecimal =
+          Provider.of<ApiProvider>(context, listen: false).nativeM.chainDecimal;
+      try {
+        final hash = await ApiProvider.sdk.api.tx.signAndSend(
+            txInfo,
+            [
+              target,
+              Fmt.tokenInt(
+                amount.trim(),
+                int.parse(chainDecimal),
+              ).toString(),
+            ],
+            pin,
+            onStatusChange: (status) async {});
 
-        await enableAnimation();
+        if (hash != null) {
+          saveTxHistory(TxHistory(
+            date: DateFormat.yMEd().add_jms().format(DateTime.now()).toString(),
+            symbol: 'SEL',
+            destination: target,
+            sender: ApiProvider.keyring.current.address,
+            org: 'SELENDRA',
+            amount: amount.trim(),
+          ));
+
+          await enableAnimation();
+        } else {
+          Navigator.pop(context);
+          await customDialog('Opps', 'Something went wrong!');
+          // await dialog(
+          //     context, const Text('Something went wrong!'), const Text("Opps"));
+        }
+      } catch (e) {
+        // print(e.message);
+        Navigator.pop(context);
+        await customDialog('Opps', e.message.toString());
+        // dialog(context, Text(e.message.toString()), const Text("Opps"));
       }
-    } catch (e) {
-      // print(e.message);
+    } else {
       Navigator.pop(context);
-      await dialog(context, Text(e.message.toString()), const Text("Opps"));
+      await customDialog('Opps', 'Invalid Address');
     }
 
     return mhash;
   }
 
-  void setPortfolio() {
-    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-    walletProvider.clearPortfolio();
-
-    if (widget.sdkModel.contractModel.pHash != '') {
-      walletProvider.addAvaibleToken({
-        'symbol': widget.sdkModel.contractModel.pTokenSymbol,
-        'balance': widget.sdkModel.contractModel.pBalance,
-      });
-    }
-
-    if (widget.sdkModel.contractModel.attendantM.isAContain) {
-      walletProvider.addAvaibleToken({
-        'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
-        'balance': widget.sdkModel.contractModel.attendantM.aBalance,
-      });
-    }
-
-    walletProvider.availableToken.add({
-      'symbol': widget.sdkModel.nativeSymbol,
-      'balance': widget.sdkModel.nativeBalance,
-    });
-
-    if (!widget.sdkModel.contractModel.isContain &&
-        !widget.sdkModel.contractModel.attendantM.isAContain) {
-      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
-    }
-
-    Provider.of<WalletProvider>(context, listen: false).getPortfolio();
+  Future<void> customDialog(String text1, String text2) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            child: Text(text1),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text(text2),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  Future<void> _balanceOfByPartition() async {
-    try {
-      final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
-        widget.sdkModel.keyring.keyPairs[0].address,
-        widget.sdkModel.keyring.keyPairs[0].address,
-        widget.sdkModel.contractModel.pHash,
-      );
+  Future<String> sendTxDot(String target, String amount, String pin) async {
+    dialogLoading(context);
+    String mhash;
+    final sender = TxSenderData(
+      ApiProvider.keyring.current.address,
+      ApiProvider.keyring.current.pubKey,
+    );
+    final txInfo = TxInfoData('balances', 'transfer', sender);
 
-      widget.sdkModel.contractModel.pBalance =
-          BigInt.parse(res['output'].toString()).toString();
+    try {
+      final hash = await ApiProvider.sdk.api.tx.signAndSendDot(
+          txInfo, [target, pow(double.parse(amount) * 10, 12)], pin,
+          onStatusChange: (status) async {});
+
+      if (hash != null) {
+        await enableAnimation();
+      }
     } catch (e) {
-      // print(e.toString());
+      // print(e.message);
+      Navigator.pop(context);
+
+      await customDialog('Opps', e.message.toString());
     }
+
+    return mhash;
   }
 
   Future<void> clickSend() async {
-    String pin;
-
     if (_scanPayM.formStateKey.currentState.validate()) {
       /* Send payment */
-      // Navigator.push(context, MaterialPageRoute(builder: (contxt) => FillPin()));
+
       await Future.delayed(const Duration(milliseconds: 100), () {
         // Unfocus All Field Input
         unFocusAllField();
       });
 
-      await validateAddress(_scanPayM.controlReceiverAddress.text)
-          .then((value) async {
-        if (value) {
-          await dialogBox().then((value) async {
-            pin = value;
-            if (pin != null &&
-                _scanPayM.controlAmount.text != null &&
-                _scanPayM.controlReceiverAddress.text != null) {
-              if (_scanPayM.asset == 'SEL') {
-                sendTx(_scanPayM.controlReceiverAddress.text,
-                    _scanPayM.controlAmount.text, pin);
-              } else {
-                if (double.parse(widget.sdkModel.contractModel.pBalance) <
-                    double.parse(_scanPayM.controlAmount.text)) {
-                  await dialog(
-                      context,
-                      const Text(
-                          'Sorry, You do not have enough balance to make transaction '),
-                      const Text('Insufficient Balance'));
-                } else {
-                  transfer(_scanPayM.controlReceiverAddress.text, pin,
-                      _scanPayM.controlAmount.text);
-                }
-              }
-            } else {
-              // print('amount is null');
+      await dialogBox().then((value) async {
+        switch (_scanPayM.asset) {
+          case "SEL":
+            sendTx(
+              _scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text,
+              value,
+            );
+            break;
+          case "KMPI":
+            sendTxKmpi(
+              _scanPayM.controlReceiverAddress.text,
+              value,
+              _scanPayM.controlAmount.text,
+            );
+            break;
+          case "DOT":
+            sendTxDot(
+              _scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text,
+              value,
+            );
+            break;
+          case "SEL (BEP-20)":
+            final chainDecimal = await ContractProvider()
+                .query(AppConfig.bscMainnetAddr, 'decimals', []);
+            if (chainDecimal != null) {
+              sendTxAYF(
+                AppConfig.bscMainnetAddr,
+                chainDecimal[0].toString(),
+                _scanPayM.controlReceiverAddress.text,
+                _scanPayM.controlAmount.text,
+                value,
+              );
             }
-          });
-        } else {
-          await dialog(
-            context,
-            const Text('Please fill in a valid address'),
-            const Text('Invalid Address'),
-          );
+            break;
+          case "KGO (BEP-20)":
+            final chainDecimal = await ContractProvider()
+                .query(AppConfig.kgoAddr, 'decimals', []);
+            if (chainDecimal != null) {
+              sendTxAYF(
+                AppConfig.kgoAddr,
+                chainDecimal[0].toString(),
+                _scanPayM.controlReceiverAddress.text,
+                _scanPayM.controlAmount.text,
+                value,
+              );
+            }
+            break;
+          case "BNB":
+            sendTxBnb(
+              _scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text,
+              value,
+            );
+            break;
+          case "ETH":
+            sendTxEther(
+              _scanPayM.controlReceiverAddress.text,
+              _scanPayM.controlAmount.text,
+              value,
+            );
+            break;
+          case "BTC":
+            sendTxBtc(_scanPayM.controlReceiverAddress.text,
+                _scanPayM.controlAmount.text, value);
+            break;
+          default:
+            if (_scanPayM.asset.contains('ERC-20')) {
+              final contractAddr =
+                  ContractProvider().findContractAddr(_scanPayM.asset);
+              final chainDecimal = await ContractProvider()
+                  .queryEther(contractAddr, 'decimals', []);
+              sendTxErc(
+                  contractAddr,
+                  chainDecimal[0].toString(),
+                  _scanPayM.controlReceiverAddress.text,
+                  _scanPayM.controlAmount.text,
+                  value);
+            } else {
+              final contractAddr =
+                  ContractProvider().findContractAddr(_scanPayM.asset);
+              final chainDecimal =
+                  await ContractProvider().query(contractAddr, 'decimals', []);
+              sendTxAYF(
+                contractAddr,
+                chainDecimal[0].toString(),
+                _scanPayM.controlReceiverAddress.text,
+                _scanPayM.controlAmount.text,
+                value,
+              );
+            }
+
+            break;
         }
       });
     }
+  }
+
+  Future<void> sendTxBnb(String reciever, String amount, String pin) async {
+    dialogLoading(context);
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+    try {
+      final res = await getPrivateKey(pin);
+
+      if (res != null) {
+        final hash = await contract.sendTxBnb(res, reciever, amount);
+        if (hash != null) {
+          Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+          enableAnimation();
+        } else {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      await customDialog('Opps', e.message.toString());
+    }
+  }
+
+  Future<void> sendTxBtc(String to, String amount, String pin) async {
+    dialogLoading(context);
+
+    final api = Provider.of<ApiProvider>(context, listen: false);
+
+    final res = await api.validateBtcAddr(to);
+
+    final wif = await getBtcPrivateKey(pin);
+
+    if (res) {
+      final res =
+          api.sendTxBtc(context, api.btcAdd, to, double.parse(amount), wif);
+      if (res == 200) {
+        enableAnimation();
+      } else {
+        Navigator.pop(context);
+      }
+    } else {
+      Navigator.pop(context);
+      await customDialog('Opps', 'Invalid Address');
+    }
+  }
+
+  Future<void> sendTxEther(String reciever, String amount, String pin) async {
+    dialogLoading(context);
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+
+    try {
+      final res = await getPrivateKey(pin);
+
+      if (res != null) {
+        final hash = await contract.sendTxEther(res, reciever, amount);
+        if (hash != null) {
+          enableAnimation();
+        } else {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      await customDialog('Opps', e.message.toString());
+    }
+  }
+
+  Future<void> sendTxAYF(String contractAddr, String chainDecimal,
+      String reciever, String amount, String pin) async {
+    dialogLoading(context);
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+    try {
+      final res = await getPrivateKey(pin);
+      if (res != null) {
+        final hash = await contract.sendTxBsc(
+          contractAddr,
+          chainDecimal,
+          res,
+          reciever,
+          amount,
+        );
+
+        if (hash != null) {
+          Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+          enableAnimation();
+        } else {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      await customDialog('Opps', e.message.toString());
+    }
+  }
+
+  Future<void> sendTxErc(String contractAddr, String chainDecimal,
+      String reciever, String amount, String pin) async {
+    dialogLoading(context);
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+    try {
+      final res = await getPrivateKey(pin);
+      if (res != null) {
+        final hash = await contract.sendTxEthCon(
+          contractAddr,
+          chainDecimal,
+          res,
+          reciever,
+          amount,
+        );
+
+        if (hash != null) {
+          // Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+          enableAnimation();
+        } else {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      await customDialog('Opps', e.message.toString());
+    }
+  }
+
+  Future<String> getPrivateKey(String pin) async {
+    String privateKey;
+    final encrytKey = await StorageServices().readSecure('private');
+    try {
+      privateKey =
+          await ApiProvider.keyring.store.decryptPrivateKey(encrytKey, pin);
+    } catch (e) {
+      await customDialog('Opps', 'PIN verification failed');
+    }
+
+    return privateKey;
+  }
+
+  Future<String> getBtcPrivateKey(String pin) async {
+    String privateKey;
+    final encrytKey = await StorageServices().readSecure('btcwif');
+    try {
+      privateKey =
+          await ApiProvider.keyring.store.decryptPrivateKey(encrytKey, pin);
+    } catch (e) {
+      await customDialog('Opps', 'PIN verification failed');
+    }
+
+    return privateKey;
   }
 
   Future<void> saveTxHistory(TxHistory txHistory) async {
@@ -328,15 +551,16 @@ class SubmitTrxState extends State<SubmitTrx> {
     _scanPayM.nodeReceiverAddress.unfocus();
   }
 
-  PopupMenuItem item(Map<String, dynamic> list) {
+  PopupMenuItem item(List list) {
     /* Display Drop Down List */
     return PopupMenuItem(
-        value: list["asset_code"],
-        child: Align(
-          child: Text(
-            list["asset_code"].toString(),
-          ),
-        ));
+      value: list,
+      child: Align(
+        child: Text(
+          list.toString(),
+        ),
+      ),
+    );
   }
 
   @override
@@ -351,19 +575,20 @@ class SubmitTrxState extends State<SubmitTrx> {
               height: MediaQuery.of(context).size.height,
               child: Stack(
                 children: <Widget>[
-                  SubmitTrxBody(
-                    enableInput: widget.enableInput,
-                    dialog: dialogBox,
-                    scanPayM: _scanPayM,
-                    onChanged: onChanged,
-                    onSubmit: onSubmit,
-                    clickSend: clickSend,
-                    resetAssetsDropDown: resetAssetsDropDown,
-                    sdkModel: widget.sdkModel,
-                    item: item,
-                    list: widget.sdkModel.contractModel.pHash != ''
-                        ? list
-                        : nativeList,
+                  Consumer<WalletProvider>(
+                    builder: (context, value, child) {
+                      return SubmitTrxBody(
+                        enableInput: widget.enableInput,
+                        dialog: dialogBox,
+                        scanPayM: _scanPayM,
+                        onChanged: onChanged,
+                        onSubmit: onSubmit,
+                        clickSend: clickSend,
+                        validateField: validateField,
+                        resetAssetsDropDown: resetAssetsDropDown,
+                        list: value.listSymbol,
+                      );
+                    },
                   ),
                   if (_scanPayM.isPay == false)
                     Container()

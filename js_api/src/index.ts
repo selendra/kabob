@@ -5,6 +5,7 @@ import keyring from "./service/keyring";
 import account from "./service/account";
 //import staking from "./service/staking";
 //import gov from "./service/gov";
+import wallets from "./service/wallet";
 import { genLinks } from "./utils/config/config";
 import { Abi, ContractPromise } from '@polkadot/api-contract';
 import metadata from "./metadata.json";
@@ -34,6 +35,25 @@ async function connect(nodes: string[]) {
         provider: wsProvider,
       });
       (<any>window).api = res;
+      const url = nodes[(<any>res)._options.provider.__private_9_endpointIndex];
+      send("log", `${url} wss connected success`);
+      resolve(url);
+    } catch (err) {
+      send("log", `connect failed`);
+      wsProvider.disconnect();
+      resolve(null);
+    }
+  });
+}
+
+async function connectNon(nodes: string[]) {
+  return new Promise(async (resolve, reject) => {
+    const wsProvider = new WsProvider(nodes);
+    try {
+      const res = await ApiPromise.create({
+        provider: wsProvider,
+      });
+      (<any>window).apiNon = res;
       const url = nodes[(<any>res)._options.provider.__private_9_endpointIndex];
       send("log", `${url} wss connected success`);
       resolve(url);
@@ -255,6 +275,7 @@ const test = async () => {
 const settings = {
   test,
   connect,
+  connectNon,
   getChainDecimal,
   callContract,
   initAttendant,
@@ -279,6 +300,7 @@ const settings = {
 (<any>window).settings = settings;
 (<any>window).keyring = keyring;
 (<any>window).account = account;
+(<any>window).wallets = wallets;
 //(<any>window).staking = staking;
 //(<any>window).gov = gov;
 

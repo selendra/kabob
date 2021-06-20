@@ -40,12 +40,10 @@ class WebViewRunner {
     }
     _subscription = _web.onStateChanged.listen((viewState) async {
       if (viewState.type == WebViewState.finishLoad) {
-        // print('webview loaded');
         final js = jsCode ??
             await rootBundle
                 .loadString('packages/polkawallet_sdk/js_api/dist/main.js');
 
-        // print('js file loaded');
         await _startJSCode(js, keyring, keyringStorage);
       }
     });
@@ -79,6 +77,7 @@ class WebViewRunner {
             }),
       ].toSet(),
       ignoreSSLErrors: true,
+      clearCache: true,
 //        withLocalUrl: true,
 //        localUrlScope: 'lib/polkadot_js_service/dist/',
       hidden: true,
@@ -146,8 +145,33 @@ class WebViewRunner {
     return null;
   }
 
-  Future<int> getChainDecimal() async {
+  Future<NetworkParams> connectNon(List<NetworkParams> nodes) async {
+    final String res = await evalJavascript(
+        'settings.connectNon(${jsonEncode(nodes.map((e) => e.endpoint).toList())})');
+    if (res != null) {
+      final node = nodes.firstWhere((e) => e.endpoint == res);
+      return node;
+    }
+    return null;
+  }
+
+  Future<String> getPrivateKey(String mnemonic) async {
+    final res = await evalJavascript('wallets.getPrivateKey("$mnemonic")');
+    return res;
+  }
+
+  Future<bool> validateEtherAddr(String address) async {
+    final res = await evalJavascript('wallets.validateEtherAddr("$address")');
+    return res;
+  }
+
+  Future<List> getChainDecimal() async {
     final res = await evalJavascript('settings.getChainDecimal(api)');
+    return res;
+  }
+
+  Future<List> getNChainDecimal() async {
+    final res = await evalJavascript('settings.getChainDecimal(apiNon)');
     return res;
   }
 
@@ -155,41 +179,47 @@ class WebViewRunner {
     final res = await evalJavascript('settings.callContract(api)');
     return res;
   }
-  Future<String> initAttendant() async{
+
+  Future<String> initAttendant() async {
     final res = await evalJavascript('settings.initAttendant(api)');
     return res;
   }
-  
-  Future<String> getAToken(String attendent) async{
-    final res = await evalJavascript('settings.getAToken(aContract,"$attendent")');
+
+  Future<String> getAToken(String attendent) async {
+    final res =
+        await evalJavascript('settings.getAToken(aContract,"$attendent")');
     return res.toString();
   }
 
-  Future<bool> getAStatus(String attendent) async{
-    final res = await evalJavascript('settings.getAStatus(aContract,"$attendent")');
+  Future<bool> getAStatus(String attendent) async {
+    final res =
+        await evalJavascript('settings.getAStatus(aContract,"$attendent")');
     return res;
   }
 
-  Future<List> getCheckInList(String attendent)async{
-    final res = await evalJavascript('settings.getCheckInList(aContract,"$attendent")');
+  Future<List> getCheckInList(String attendent) async {
+    final res =
+        await evalJavascript('settings.getCheckInList(aContract,"$attendent")');
     return res;
   }
 
-  Future<List> getCheckOutList(String attendent)async{
-    final res = await evalJavascript('settings.getCheckOutList(aContract,"$attendent")');
+  Future<List> getCheckOutList(String attendent) async {
+    final res = await evalJavascript(
+        'settings.getCheckOutList(aContract,"$attendent")');
     return res;
   }
 
   Future<List> contractSymbol(String from) async {
-    final res = await evalJavascript('settings.contractSymbol(apiContract,"$from")');
-    // print('contract res $res');
+    final res =
+        await evalJavascript('settings.contractSymbol(apiContract,"$from")');
+
     return res;
   }
 
   Future<dynamic> totalSupply(String from) async {
     final res =
         await evalJavascript('settings.totalSupply(apiContract,"$from")');
-    // print('exec js');
+
     return res;
   }
 
@@ -204,7 +234,6 @@ class WebViewRunner {
       String from, String who, String hash) async {
     final res = await evalJavascript(
         'settings.balanceOfByPartition(apiContract,"$from","$who","$hash")');
-    // print(res);
     return res;
   }
 
@@ -237,7 +266,6 @@ class WebViewRunner {
   }
 
   void unsubscribeMessage(String channel) {
-    // print('unsubscribe $channel');
     final unsubCall = 'unsub$channel';
     _web.evalJavascript('$unsubCall && $unsubCall()');
   }

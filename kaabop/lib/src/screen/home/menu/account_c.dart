@@ -19,7 +19,7 @@ class AccountC {
       builder: (context) {
         return Container(
           padding: const EdgeInsets.all(25.0),
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery.of(context).size.height / 1.5,
           color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
           child: Form(
             key: _changePinKey,
@@ -45,7 +45,7 @@ class AccountC {
                     focusNode: _newNode,
                     
                     obcureText: true,
-                    validateField: (value) => value.isEmpty|| value.length < 4
+                    validateField: (value) => value.isEmpty|| value.length < 6
                         ? 'Please fill in new 4 digits pin'
                         : null,
                     textInputFormatter: [LengthLimitingTextInputFormatter(4)],

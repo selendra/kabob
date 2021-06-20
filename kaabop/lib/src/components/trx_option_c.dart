@@ -3,7 +3,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
+
 
 class MyBottomSheetItem extends StatelessWidget {
   final String subTitle;
@@ -98,20 +98,20 @@ class TrxOptionMethod {
     List<dynamic> portfolioList,
     WalletSDK sdk,
     Keyring keyring,
-    CreateAccModel sdkModel,
+ 
   ) async {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
-                SubmitTrx("", true, portfolioList, sdkModel)));
+                SubmitTrx("", true, portfolioList)));
   }
 
   /* Scan QR Code */
   static Future scanQR(
     BuildContext context,
     List<dynamic> portfolioList,
-    CreateAccModel sdkModel,
+  
   ) async {
     final String _response = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => QrScanner()));
@@ -122,7 +122,7 @@ class TrxOptionMethod {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  SubmitTrx(_response, false, portfolioList, sdkModel)));
+                  SubmitTrx(_response, false, portfolioList)));
     }
   }
 }

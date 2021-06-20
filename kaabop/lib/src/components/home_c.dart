@@ -1,7 +1,5 @@
 import 'package:wallet_apps/index.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/screen/home/contact_book/contact_book.dart';
 
 const fontSizePort = 17.0;
 const fontColorPort = Colors.white;
@@ -107,30 +105,35 @@ final portfolioChart = LineChartData(
 );
 
 Widget homeAppBar(BuildContext context) {
-  return AppBar(
-    toolbarHeight: 60,
-    leadingWidth: 300,
-    backgroundColor: hexaCodeToColor(AppColors.bgdColor),
-    leading: Padding(
-      padding: const EdgeInsets.only(left: 16.0),
-      child: Image.asset(
-        'assets/bitriel.png',
-        width: 300,
-        height: 300,
-      ),
-    ),
-    actions: [
-      Align(
-        alignment: Alignment.centerRight,
-        child: IconButton(
-          iconSize: 30,
-          icon: const Icon(LineAwesomeIcons.bell),
-          onPressed: () async {
-            await MyBottomSheet().notification(context: context);
-          },
+  return Container(
+    height: 70,
+    color: hexaCodeToColor(AppColors.bgdColor),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Image.asset(
+          'assets/bitriel_home.png',
+          width: 170,
+          height: 170,
         ),
-      ),
-    ],
+        Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: IconButton(
+            iconSize: 30,
+            color: Colors.white,
+            icon: const Icon(Icons.add_circle_outline),
+            onPressed: () async {
+              Navigator.push(
+                context,
+                RouteAnimation(
+                  enterPage: AddAsset(),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    ),
   );
 }
 
@@ -207,7 +210,7 @@ class AddAssetRowButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, AddAsset.route);
+        //Navigator.pushNamed(context, AddAsset.route);
       },
       child: rowDecorationStyle(
         child: Row(
@@ -241,115 +244,109 @@ class AddAssetRowButton extends StatelessWidget {
   }
 }
 
-/* Build Portfolio If Have List Of Portfolio */
-Widget buildRowList(
-    List<dynamic> portfolioData, int rate, CreateAccModel sdkModel) {
-  return ListView.builder(
-    shrinkWrap: true,
-    itemCount: 1,
-    physics: const BouncingScrollPhysics(),
-    itemBuilder: (BuildContext context, int index) {
-      return portFolioItemRow(portfolioData, index, rate, sdkModel);
-    },
-  );
-}
+// /* Build Portfolio If Have List Of Portfolio */
+// Widget buildRowList(
+//     List<dynamic> portfolioData, int rate, CreateAccModel sdkModel) {
+//   return ListView.builder(
+//     shrinkWrap: true,
+//     itemCount: 1,
+//     physics: const BouncingScrollPhysics(),
+//     itemBuilder: (BuildContext context, int index) {
+//       return portFolioItemRow(portfolioData, index, rate, sdkModel);
+//     },
+//   );
+// }
 
-Widget portFolioItemRow(
-    List<dynamic> portfolioData, int index, int rate, CreateAccModel sdkModel) {
-  // print(rate.isEven);
-  return rowDecorationStyle(
-      child: Row(
-    children: <Widget>[
-      Container(
-        width: 50,
-        height: 50,
-        padding: const EdgeInsets.all(6),
-        margin: const EdgeInsets.only(right: 20),
-        decoration: BoxDecoration(
-            color: hexaCodeToColor(AppColors.secondary),
-            borderRadius: BorderRadius.circular(40)),
-        child: Image.asset('assets/koompi_white_logo.png'),
-      ),
-      Expanded(
-        child: Container(
-          margin: const EdgeInsets.only(right: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MyText(
-                text: sdkModel.contractModel.pTokenSymbol,
-                color: "#FFFFFF",
-              ),
-              const MyText(text: ModelAsset.assetOrganization, fontSize: 15),
-            ],
-          ),
-        ),
-      ),
-      Expanded(
-        child: Container(
-          margin: const EdgeInsets.only(right: 16),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              MyText(
-                  width: double.infinity,
-                  text: sdkModel.contractModel
-                      .pBalance, //portfolioData[0]["data"]['balance'],
-                  color: "#FFFFFF",
-                  textAlign: TextAlign.right,
-                  overflow: TextOverflow.ellipsis),
-            ],
-          ),
-        ),
-      ),
-    ],
-  ));
-}
+// Widget portFolioItemRow(
+//     List<dynamic> portfolioData, int index, int rate, CreateAccModel sdkModel) {
+//   // print(rate.isEven);
+//   return rowDecorationStyle(
+//       child: Row(
+//     children: <Widget>[
+//       Container(
+//         width: 50,
+//         height: 50,
+//         padding: const EdgeInsets.all(6),
+//         margin: const EdgeInsets.only(right: 20),
+//         decoration: BoxDecoration(
+//             color: hexaCodeToColor(AppColors.secondary),
+//             borderRadius: BorderRadius.circular(40)),
+//         child: Image.asset('assets/koompi_white_logo.png'),
+//       ),
+//       Expanded(
+//         child: Container(
+//           margin: const EdgeInsets.only(right: 16),
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               MyText(
+//                 text: sdkModel.contractModel.pTokenSymbol,
+//                 color: "#FFFFFF",
+//               ),
+//               const MyText(text: ModelAsset.assetOrganization, fontSize: 15),
+//             ],
+//           ),
+//         ),
+//       ),
+//       Expanded(
+//         child: Container(
+//           margin: const EdgeInsets.only(right: 16),
+//           child: Column(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: [
+//               MyText(
+//                   width: double.infinity,
+//                   text: sdkModel.contractModel
+//                       .pBalance, //portfolioData[0]["data"]['balance'],
+//                   color: "#FFFFFF",
+//                   textAlign: TextAlign.right,
+//                   overflow: TextOverflow.ellipsis),
+//             ],
+//           ),
+//         ),
+//       ),
+//     ],
+//   ));
+// }
 
 // Portfolow Row Decoration
 Widget rowDecorationStyle(
     {Widget child, double mTop = 0, double mBottom = 16}) {
   return Container(
-      margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
-      padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
-      height: 90,
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-              color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
-        ],
-        color: hexaCodeToColor(AppColors.cardColor),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: child);
+    margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
+    padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
+    height: 90,
+    decoration: BoxDecoration(
+      boxShadow: const [
+        BoxShadow(
+            color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
+      ],
+      color: hexaCodeToColor(AppColors.cardColor),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: child,
+  );
 }
 
 class MyBottomAppBar extends StatelessWidget {
   final bool apiStatus;
   final HomeModel homeM;
-  final PortfolioM portfolioM;
   final Function scanReceipt;
-
   final Function toReceiveToken;
-  final Function opacityController;
   final Function fillAddress;
   final Function contactPiker;
   final void Function() openDrawer;
-  final CreateAccModel sdkModel;
 
   const MyBottomAppBar({
     this.apiStatus,
     this.homeM,
-    this.portfolioM,
     this.scanReceipt,
     this.toReceiveToken,
-    this.opacityController,
     this.fillAddress,
     this.contactPiker,
     this.openDrawer,
-    this.sdkModel,
   });
 
   @override
@@ -361,29 +358,27 @@ class MyBottomAppBar extends StatelessWidget {
         shape: const CircularNotchedRectangle(),
         notchMargin: 8.0,
         child: SizedBox(
-          height: 60,
+          height: 65,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Expanded(
                   child: MyIconButton(
                 icon: 'telegram.svg',
-                iconSize: 32,
+                iconSize: 36,
                 onPressed: !apiStatus
                     ? null
                     : () async {
                         await MyBottomSheet().trxOptions(
-                            context: context,
-                            portfolioList: homeM.portfolioList,
-                            sdk: sdkModel.sdk,
-                            keyring: sdkModel.keyring,
-                            sdkModel: sdkModel);
+                          context: context,
+                          portfolioList: homeM.portfolioList,
+                        );
                       },
               )),
               Expanded(
                   child: MyIconButton(
                 icon: 'wallet.svg',
-                iconSize: 32,
+                iconSize: 36,
                 onPressed: !apiStatus
                     ? null
                     : () async {
@@ -392,22 +387,20 @@ class MyBottomAppBar extends StatelessWidget {
               )),
               Expanded(child: Container()),
               Expanded(
-                  child: MyIconButton(
-                icon: 'contact_list.svg',
-                iconSize: 25,
-                onPressed: !apiStatus
-                    ? null
-                    : () async {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ContactBook(sdkModel)));
-                      },
-              )),
+                child: MyIconButton(
+                  icon: 'contact_list.svg',
+                  iconSize: 26,
+                  onPressed: !apiStatus
+                      ? null
+                      : () async {
+                          Navigator.pushNamed(context, AppText.contactBookView);
+                        },
+                ),
+              ),
               Expanded(
                 child: MyIconButton(
                   icon: 'menu.svg',
-                  iconSize: 25,
+                  iconSize: 27,
                   onPressed: !apiStatus ? null : openDrawer,
                 ),
               )

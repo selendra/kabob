@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../index.dart';
 
 class AttActivity extends StatelessWidget {
   final List<Map> _checkAll;
-  final CreateAccModel sdkModel;
+ 
   final Future<void> Function() _onRefresh;
 
   const AttActivity(
     this._checkAll,
-    this.sdkModel,
+    
     this._onRefresh,
   );
 
   @override
   Widget build(BuildContext context) {
+    final atd = Provider.of<ContractProvider>(context).atd;
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
@@ -22,9 +24,9 @@ class AttActivity extends StatelessWidget {
           child: _checkAll.isEmpty
               ? Center(
                   child: SvgPicture.asset(
-                    'assets/no_data.svg',
-                    width: 250,
-                    height: 250,
+                    'assets/icons/no_data.svg',
+                    width: 180,
+                    height: 180,
                   ),
                 )
               : ListView.builder(
@@ -66,7 +68,7 @@ class AttActivity extends StatelessWidget {
                               borderRadius: BorderRadius.circular(40),
                             ),
                             child: Image.asset(
-                              sdkModel.contractModel.attendantM.attLogo,
+                              atd.logo,
                             ),
                           ),
                           Expanded(
@@ -77,8 +79,7 @@ class AttActivity extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   MyText(
-                                    text: sdkModel
-                                        .contractModel.attendantM.aSymbol,
+                                    text: atd.symbol,
                                     color: "#FFFFFF",
                                   ),
                                   MyText(
@@ -119,9 +120,7 @@ class AttActivity extends StatelessWidget {
                                           shape: BoxShape.circle,
                                           color:
                                               _checkAll[index]['status'] == true
-                                                  ? hexaCodeToColor(
-                                                      AppColors.secondary,
-                                                    )
+                                                  ? Colors.green
                                                   : Colors.red,
                                         ),
                                       ),

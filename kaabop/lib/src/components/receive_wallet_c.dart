@@ -68,7 +68,7 @@ class GetWalletMethod {
       final file = await File("${tempDir.path}/selendra.png").create();
       await file.writeAsBytes(pngBytes);
 
-      Share.shareFiles([file.path], subject: _wallet);
+      Share.shareFiles([file.path], text: _wallet);
     } catch (e) {
       //print(e.toString());
     }

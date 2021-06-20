@@ -1,14 +1,12 @@
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact_body.dart';
 
 class AddContact extends StatefulWidget {
   final PhoneContact contact;
-  final CreateAccModel sdkModel;
 
-  const AddContact({this.contact, this.sdkModel});
+  const AddContact({this.contact});
 
   @override
   _AddContactState createState() => _AddContactState();
@@ -16,6 +14,31 @@ class AddContact extends StatefulWidget {
 
 class _AddContactState extends State<AddContact> {
   final ContactBookModel _addContactModel = ContactBookModel();
+
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   Future<void> submitContact() async {
     try {
@@ -36,13 +59,38 @@ class _AddContactState extends State<AddContact> {
       Navigator.pop(context);
       //print("Close Dialog");
 
-      await dialog(
-          context,
-          const Text(
-              "Successfully add new contact!\n Please check your contact book"),
-          const Text("Congratualtion"));
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text("Congratualtion"),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text(
+                  "Successfully add new contact!\n Please check your contact book"),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                },
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
+
+      // await dialog(
+      //     "Successfully add new contact!\n Please check your contact book",
+      //     "Congratualtion");
       // Close Screen
-      Navigator.pop(context, true);
+      // Navigator.pop(context, true);
     } catch (e) {
       // Close Dialog Loading
       Navigator.pop(context);
@@ -57,7 +105,7 @@ class _AddContactState extends State<AddContact> {
   }
 
   Future<bool> validateAddressF(String address) async {
-    final res = await widget.sdkModel.sdk.api.keyring.validateAddress(address);
+    final res = await ApiProvider.sdk.api.keyring.validateAddress(address);
     return res;
   }
 
@@ -86,7 +134,6 @@ class _AddContactState extends State<AddContact> {
       });
     }
   }
-
 
   String validateAddress(String value) {
     return null;

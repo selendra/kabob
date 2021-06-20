@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.6.8+8
+version: 2.0.12+21
 #6 feature
 #8 debug
 #1 refactor
@@ -32,12 +32,17 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
  
 
-  rxdart: ^0.25.0
 
   geolocator: ^5.3.2+2
-  
 
+  url_launcher: ^6.0.3
+  
   latlong: ^0.6.1
+  web_socket_channel: ^1.1.0
+
+  webview_flutter: ^1.0.7
+
+  gsheets: ^0.2.7
   
   # Database
   shared_preferences: ^0.5.12+2
@@ -46,27 +51,16 @@ dependencies:
   http: 
   connectivity:
   connectivity_wrapper:
-  # firebase_remote_config: ^0.4.0+2
   async: ^2.4.2
 
   # Image service
-  #image_picker:
-  path_provider: ^1.6.22
-  # image:
-  
+
   flutter_svg: ^0.19.3
   intl:
 
-  #image_cropper: ^1.4.0
-  #flutter_image_compress:
- 
   # Camera
-  #barcode_scan:
   qr_flutter: 
-  qr_code_scanner: ^0.3.4
-
-  # Share
-  #share_extend: ^1.1.9
+  qr_code_scanner: ^0.4.0
 
   # Chart
   flutter_circular_chart:
@@ -79,40 +73,37 @@ dependencies:
   percent_indicator:
 
   # Icons
-  # outline_material_icons:
-  # line_icons: ^0.2.0
-  # line_awesome_icons:
   line_awesome_flutter:
-
   pinput: ^1.0.0
-  # flutter_datetime_picker:
   transparent_image: 
-  slider_button:
-  # pull_to_refresh:  
   autocomplete_textfield:
   date_format:
-  flutter_launcher_icons: ^0.8.0
+ 
   device_preview:
   store_redirect:
-  # fluttercontactpicker: ^3.1.0
   share: ^2.0.0
-  flutter_sms: ^2.1.1
 
+  vibration: ^1.7.3
+ 
   # Apps Configuration
   rename: ^1.3.0
   package_info: 
+  shimmer: ^1.1.2
 
   #Authenticatioin & Verification
-  local_auth: ^0.6.3+3
-  sms_autofill:
+  local_auth: ^0.6.3+4
   permission_handler: ^5.0.1+1
 
   #for secure wallet function
-  # polkawallet_sdk: ^0.0.8
+
   polkawallet_sdk:
     path: ../
   animations: ^1.1.2
   provider: ^4.3.3
+  web3dart: ^1.2.3
+  bitcoin_flutter: ^2.0.2
+
+  flutter_secure_storage: ^4.1.0
   flutter_screenshot_switcher: ^1.2.0
 
   #Contact
@@ -121,10 +112,9 @@ dependencies:
   
   #animation
   flare_flutter:
-
   responsive_framework: ^0.0.8
-
   circular_check_box: ^1.0.4
+
 
 
 dev_dependencies:
@@ -132,10 +122,6 @@ dev_dependencies:
     sdk: flutter
   lint: ^1.0.0
 
-flutter_icons:
-  image_path: "assets/kabob.png"
-  ios: true
-  android: true
 
   
 
@@ -156,8 +142,9 @@ flutter:
 
   assets:
     - assets/
+    - assets/abi/
     - assets/icons/
-    - assets/images_slide/
+  
 
     # Animation Flare
     - assets/animation/

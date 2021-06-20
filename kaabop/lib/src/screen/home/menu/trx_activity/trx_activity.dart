@@ -158,11 +158,8 @@ class TrxActivityState extends State<TrxActivity> {
                                           hexaCodeToColor(AppColors.secondary),
                                       borderRadius: BorderRadius.circular(40),
                                     ),
-                                    child: const MyLogo(
-                                      width: 50,
-                                      height: 50,
-                                      logoPath: "assets/sld_logo.svg",
-                                    ),
+                                    child:
+                                        Image.asset('assets/SelendraCircle-White.png'),
                                   ),
                                   Container(
                                     margin: const EdgeInsets.only(right: 16),

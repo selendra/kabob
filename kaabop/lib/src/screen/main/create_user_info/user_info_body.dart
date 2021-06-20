@@ -186,10 +186,11 @@ class MyUserInfoBody extends StatelessWidget {
           child: Container(),
         ),
         MyFlatButton(
-            textButton: "Submit",
-            edgeMargin: const EdgeInsets.only(top: 29, left: 66, right: 66),
-            hasShadow: modelUserInfo.enable,
-            action: modelUserInfo.enable == false ? null : submitProfile)
+          textButton: "Submit",
+          edgeMargin: const EdgeInsets.only(top: 29, left: 66, right: 66),
+          hasShadow: modelUserInfo.enable,
+          action: modelUserInfo.enable == false ? null : submitProfile,
+        )
       ],
     );
   }

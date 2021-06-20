@@ -33,6 +33,7 @@ ios/Runner.xcworkspace/contents.xcworkspacedata
 android/app/google-services.json
 android/key.properties
 
+/lib/config/app_config.dart
 
 # User-specific
 .idea/**/workspace.xml

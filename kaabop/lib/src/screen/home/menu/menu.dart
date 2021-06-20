@@ -16,7 +16,7 @@ class Menu extends StatefulWidget {
 class MenuState extends State<Menu> {
   final MenuModel _menuModel = MenuModel();
 
-  LocalAuthentication _localAuth;
+  final LocalAuthentication _localAuth = LocalAuthentication();
 
   /* Login Inside Dialog */
   bool isProgress = false,
@@ -29,16 +29,26 @@ class MenuState extends State<Menu> {
   @override
   void initState() {
     _menuModel.globalKey = GlobalKey<ScaffoldState>();
-    //AppServices.noInternetConnection(_menuModel.globalKey);
 
     readBio();
     checkAvailableBio();
+    checkPasscode();
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
+  }
+
+  Future<void> checkPasscode() async {
+    final res = await StorageServices().readSecure('passcode');
+
+    if (res != null) {
+      setState(() {
+        _menuModel.switchPasscode = true;
+      });
+    }
   }
 
   Future<void> checkAvailableBio() async {
@@ -63,46 +73,59 @@ class MenuState extends State<Menu> {
     });
   }
 
-  // ignore: avoid_positional_boolean_parameters
-  Future<void> switchBiometric(bool switchValue) async {
-    
-    _localAuth = LocalAuthentication();
+  Future<bool> _checkBiometrics() async {
+    bool canCheckBiometrics;
+    try {
+      canCheckBiometrics = await _localAuth.canCheckBiometrics;
+      // ignore: unused_catch_clause
+    } on PlatformException catch (e) {
+      canCheckBiometrics = false;
+    }
 
-    await _localAuth.canCheckBiometrics.then((value) async {
-      if (value == false) {
-        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
-      } else {
-        if (switchValue) {
-          await authenticateBiometric(_localAuth).then((values) async {
-            //print('value 1: $values');
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.saveBio(_menuModel.switchBio);
-            }
-          });
-        } else {
-          await authenticateBiometric(_localAuth).then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.removeKey('bio');
-            }
-          });
-        }
-      }
-    });
+    return canCheckBiometrics;
   }
 
-  Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
+  // ignore: avoid_positional_boolean_parameters
+  Future<void> switchBiometric(bool switchValue) async {
+    final canCheck = await _checkBiometrics();
+
+    if (canCheck == false) {
+      snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
+    } else {
+      if (switchValue) {
+        await authenticateBiometric().then((values) async {
+          if (_menuModel.authenticated) {
+            setState(() {
+              _menuModel.switchBio = switchValue;
+            });
+            await StorageServices.saveBio(_menuModel.switchBio);
+          }
+        });
+      } else {
+        await authenticateBiometric().then((values) async {
+          if (_menuModel.authenticated) {
+            setState(() {
+              _menuModel.switchBio = switchValue;
+            });
+            await StorageServices.removeKey('bio');
+          }
+        });
+      }
+    }
+  }
+
+  Future<bool> authenticateBiometric() async {
     try {
       // Trigger Authentication By Finger Print
+      // ignore: deprecated_member_use
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-          localizedReason: '',  stickyAuth: true);
-    // ignore: empty_catches
+        localizedReason: '',
+        stickyAuth: true,
+      );
+
+      // ignore: empty_catches
     } on PlatformException {}
+
     return _menuModel.authenticated;
   }
 
@@ -114,13 +137,15 @@ class MenuState extends State<Menu> {
       key: _menuModel.globalKey,
       child: SafeArea(
         child: Container(
-            color: hexaCodeToColor(AppColors.bgdColor),
-            child: SingleChildScrollView(
-                child: MenuBody(
+          color: hexaCodeToColor(AppColors.bgdColor),
+          child: SingleChildScrollView(
+            child: MenuBody(
               userInfo: widget._userData,
               model: _menuModel,
               switchBio: switchBiometric,
-            ))),
+            ),
+          ),
+        ),
       ),
     );
   }

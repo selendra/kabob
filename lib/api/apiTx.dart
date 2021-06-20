@@ -52,6 +52,31 @@ class ApiTx {
     if (res['error'] != null) {
       throw Exception(res['error']);
     }
+
+    print('res $res');
+    
+    return res ?? null;
+  }
+
+  Future<Map> signAndSendDot(
+    TxInfoData txInfo,
+    List params,
+    String password, {
+    Function(String) onStatusChange,
+    String rawParam,
+  }) async {
+    final param = rawParam != null ? rawParam : jsonEncode(params);
+    final Map tx = txInfo.toJson();
+
+    final res = await service.signAndSendDot(
+      tx,
+      param,
+      password,
+      onStatusChange ?? (status) => print(status),
+    );
+    if (res['error'] != null) {
+      throw Exception(res['error']);
+    }
     return res;
   }
 }

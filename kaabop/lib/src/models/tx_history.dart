@@ -5,6 +5,7 @@ class TxHistory {
   String sender;
   String amount;
   String org;
+  String logo;
 
   TxHistory({
     this.date,
@@ -13,6 +14,7 @@ class TxHistory {
     this.sender,
     this.amount,
     this.org,
+    this.logo,
   });
 
   List<TxHistory> tx = [];

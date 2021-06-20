@@ -1,168 +1,139 @@
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/components/asset_item.dart';
-import 'package:wallet_apps/src/components/portfolio_cus.dart';
-import 'package:wallet_apps/src/components/profile_card.dart';
-import 'package:wallet_apps/src/components/route_animation.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'asset_info/asset_info.dart';
+
 
 class HomeBody extends StatelessWidget {
-  final CreateAccModel sdkModel;
   final Function balanceOf;
-  final Function onDismiss;
-  final Function onDismissATT;
+  final Function setPortfolio;
 
-  const HomeBody({
-    this.sdkModel,
-    this.balanceOf,
-    this.onDismiss,
-    this.onDismissATT,
-  });
+  const HomeBody({this.balanceOf, this.setPortfolio});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              ProfileCard(sdkModel),
-              PortFolioCus(),
-              Container(
-                margin: const EdgeInsets.only(top: 16),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 5,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: hexaCodeToColor(AppColors.secondary)),
-                    ),
-                    const MyText(
-                      text: 'Assets',
-                      fontSize: 27,
-                      color: AppColors.whiteColorHexa,
-                      left: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(context, AddAsset.route);
-                        },
-                        child: const Align(
-                          alignment: Alignment.bottomRight,
-                          child: Icon(
-                            Icons.add_circle_outline,
-                            color: Colors.white,
-                            size: 30,
+    return RefreshIndicator(
+      onRefresh: () async {
+        final contract = Provider.of<ContractProvider>(context, listen: false);
+         final api = Provider.of<ApiProvider>(context, listen: false);
+        await Future.delayed(const Duration(milliseconds: 300))
+            .then((value) async {
+          setPortfolio();
+          MarketProvider().fetchTokenMarketPrice(context);
+          if (contract.bnbNative.isContain) {
+            contract.getBnbBalance();
+          }
+          if (contract.bscNative.isContain) {
+            contract.getBscBalance();
+          }
+
+          if (contract.etherNative.isContain) {
+            contract.getEtherBalance();
+          }
+
+          if (contract.kgoNative.isContain) {
+            contract.getKgoBalance();
+          }
+
+          if(api.btc.isContain){
+            api.getBtcBalance(api.btcAdd);
+          }
+
+          if (contract.token.isNotEmpty) {
+
+            
+            contract.fetchNonBalance();
+            contract.fetchEtherNonBalance();
+          }
+        });
+      },
+      child: ListView(
+        children: [
+          homeAppBar(context),
+          // const SizedBox(height: 200,),
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            child: PortFolioCus(),
+          ),
+
+          Consumer<ContractProvider>(builder: (context, value, child) {
+            return value.isReady
+                ? AnimatedOpacity(
+                    opacity: value.isReady ? 1.0 : 0.0,
+                    duration: const Duration(milliseconds: 500),
+                    child: AssetList(),
+                  )
+                : Shimmer.fromColors(
+                    period: const Duration(seconds: 2),
+                    baseColor: hexaCodeToColor(AppColors.cardColor),
+                    highlightColor:hexaCodeToColor(AppColors.bgdColor), //Colors.grey[50],
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemBuilder: (_, __) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 2),
+                          padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
+                          height: 100,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 65, //size ?? 65,
+                                height: 65, //size ?? 65,
+                                padding: const EdgeInsets.all(6),
+                                margin: const EdgeInsets.only(right: 20),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Container(
+                                      width: double.infinity,
+                                      height: 8.0,
+                                      color: Colors.white,
+                                    ),
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 2.0),
+                                    ),
+                                    Container(
+                                      width: double.infinity,
+                                      height: 8.0,
+                                      color: Colors.white,
+                                    ),
+                                    const Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 2.0),
+                                    ),
+                                    Container(
+                                      width: 40.0,
+                                      height: 8.0,
+                                      color: Colors.white,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
+                      itemCount: 6,
                     ),
-                  ],
-                ),
-              ),
-            ],
+                  );
+          }),
+
+          const SizedBox(
+            height: 40,
           ),
-        ),
-        Expanded(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.3,
-            child: ListView(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      RouteAnimation(
-                        enterPage: AssetInfo(
-                          sdkModel: sdkModel,
-                          assetLogo: sdkModel.nativeToken,
-                          balance: sdkModel.nativeBalance,
-                          tokenSymbol: sdkModel.nativeSymbol,
-                        ),
-                      ),
-                    );
-                  },
-                  child: AssetItem(sdkModel.nativeToken, sdkModel.nativeSymbol,
-                      sdkModel.nativeOrg, sdkModel.nativeBalance, Colors.white),
-                ),
-                if (sdkModel.contractModel.isContain)
-                  Dismissible(
-                    key: Key(sdkModel.nativeSymbol),
-                    direction: DismissDirection.endToStart,
-                    background: DismissibleBackground(),
-                    onDismissed: (direct) {
-                      onDismiss();
-                    },
-                    child: GestureDetector(
-                      onTap: () {
-                        balanceOf();
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                              sdkModel: sdkModel,
-                              assetLogo: sdkModel.contractModel.ptLogo,
-                              balance: sdkModel.contractModel.pBalance,
-                              tokenSymbol: sdkModel.contractModel.pTokenSymbol,
-                            ),
-                          ),
-                        );
-                      },
-                      child: AssetItem(
-                          sdkModel.contractModel.ptLogo,
-                          sdkModel.contractModel.pTokenSymbol,
-                          sdkModel.contractModel.pOrg,
-                          sdkModel.contractModel.pBalance,
-                          Colors.black),
-                    ),
-                  )
-                else
-                  Container(),
-                if (sdkModel.contractModel.attendantM.isAContain)
-                  Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    background: DismissibleBackground(),
-                    onDismissed: (direct) {
-                      onDismissATT();
-                    },
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          RouteAnimation(
-                            enterPage: AssetInfo(
-                              sdkModel: sdkModel,
-                              assetLogo:
-                                  sdkModel.contractModel.attendantM.attLogo,
-                              balance:
-                                  sdkModel.contractModel.attendantM.aBalance,
-                              tokenSymbol:
-                                  sdkModel.contractModel.attendantM.aSymbol,
-                            ),
-                          ),
-                        );
-                      },
-                      child: AssetItem(
-                          sdkModel.contractModel.attendantM.attLogo,
-                          sdkModel.contractModel.attendantM.aSymbol,
-                          sdkModel.contractModel.attendantM.aOrg,
-                          sdkModel.contractModel.attendantM.aBalance,
-                          Colors.black),
-                    ),
-                  )
-                else
-                  Container(),
-              ],
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

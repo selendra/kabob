@@ -70,7 +70,7 @@ class Keyring {
 class KeyringPrivateStore {
   final KeyringStorage _storage = KeyringStorage();
   final LocalStorage _storageOld = LocalStorage();
-  final List<int> ss58List = [0, 2, 42];
+  final List<int> ss58List = [42];
 
   Map<String, Map> _pubKeyAddressMap = {};
   Map<String, String> _iconsMap = {};
@@ -237,6 +237,20 @@ class KeyringPrivateStore {
     final ls = _storage.contacts.val.toList();
     ls.removeWhere((e) => e['pubKey'] == pubKey);
     _storage.contacts.val = ls;
+  }
+
+  Future<String> encryptPrivateKey(String privateKey, String password) async {
+    final String key = Encrypt.passwordToEncryptKey(password);
+    final String encryted =
+        await FlutterAesEcbPkcs5.encryptString(privateKey, key);
+    return encryted;
+  }
+
+  Future<String> decryptPrivateKey(String privateKey, String password) async {
+    final String key = Encrypt.passwordToEncryptKey(password);
+    final String decryted =
+        await FlutterAesEcbPkcs5.decryptString(privateKey, key);
+    return decryted;
   }
 
   Future<void> encryptSeedAndSave(

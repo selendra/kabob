@@ -27,7 +27,7 @@ class PortfolioBody extends StatelessWidget {
               child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset('assets/no_data.svg', height: 200),
+              SvgPicture.asset('assets/icons/no_data.svg', height: 200),
               const MyText(text: "There are no portfolio found")
             ],
           ))
@@ -91,16 +91,16 @@ class PortfolioBody extends StatelessWidget {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: List.generate(
-                              value.portfolio.length,
-                              (index) {
-                                return MyPieChartRow(
-                                  color: value.portfolio[index].color,
-                                  centerText: value.portfolio[index].symbol,
-                                  endText: value.portfolio[index].percentage,
-                                );
-                              },
-                            ),
+                            // children: List.generate(
+                            //   value.portfolio.length,
+                            //   (index) {
+                            //     return MyPieChartRow(
+                            //       color: value.portfolio[index].color,
+                            //       centerText: value.portfolio[index].symbol,
+                            //       endText: value.portfolio[index].percentage,
+                            //     );
+                            //   },
+                            // ),
                           );
                         },
                       ),

@@ -2,6 +2,7 @@ import 'package:wallet_apps/index.dart';
 
 class MenuModel {
   bool switchBio = false;
+  bool switchPasscode = false;
   bool authenticated;
 
   GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
@@ -24,17 +25,31 @@ class MenuModel {
       ]
     },
     {
+      'title': "Airdrop",
+      'sub': [
+        {'icon': "assets/icons/form.svg", 'subTitle': 'Claim SEL'},
+        {'icon': "assets/icons/form.svg", 'subTitle': 'Claim KGO'},
+        {'icon': "assets/icons/add_people.svg", 'subTitle': 'Invite Friends'},
+      ]
+    },
+    {
       'title': "Security",
       'sub': [
-        {'icon': "assets/icons/pin_code.svg", 'subTitle': 'PIN'},
-        {'icon': "assets/icons/password.svg", 'subTitle': 'Password'},
+        {'icon': "assets/icons/password.svg", 'subTitle': 'Passcode'},
         {'icon': "assets/icons/finger_print.svg", 'subTitle': 'Fingerprint'}
       ]
     },
     {
-      'title': "Account",
+      'title': "Join community",
       'sub': [
         {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Account'},
+      ]
+    },
+    {
+      'title': "About",
+      'sub': [
+        {'icon': "assets/icons/about.svg", 'subTitle': 'About'},
+       // {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Term of Use'},
       ]
     },
   ];

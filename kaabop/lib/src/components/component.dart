@@ -263,7 +263,7 @@ class MyAppBar extends StatelessWidget {
         height: 65.0,
         width: MediaQuery.of(context).size.width,
         margin: margin,
-        color: hexaCodeToColor(AppColors.cardColor),
+        color: color ?? hexaCodeToColor(AppColors.cardColor),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -327,23 +327,26 @@ class MyIconButton extends StatelessWidget {
   final String icon;
   final double iconSize;
   final void Function() onPressed;
-  final EdgeInsetsGeometry padding;
+  // final EdgeInsetsGeometry padding;
 
   const MyIconButton({
     this.icon,
     this.iconSize,
-    this.padding = const EdgeInsets.all(0),
+    // this.padding = const EdgeInsets.all(0),
     this.onPressed,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: padding,
-      child: GestureDetector(
-        onTap: onPressed,
-        child: SvgPicture.asset('assets/icons/$icon',
-            width: iconSize ?? 30, height: iconSize ?? 30, color: Colors.white),
+    return InkWell(
+      highlightColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      onTap: onPressed,
+      child: SvgPicture.asset(
+        'assets/icons/$icon',
+        width: iconSize ?? 30,
+        height: iconSize ?? 30,
+        color: Colors.white,
       ),
     );
   }

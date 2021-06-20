@@ -1,7 +1,6 @@
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 
 class MyBottomSheet {
   dynamic response;
@@ -11,7 +10,6 @@ class MyBottomSheet {
     List portfolioList,
     WalletSDK sdk,
     Keyring keyring,
-    CreateAccModel sdkModel,
   }) {
     return showModalBottomSheet(
       context: context,
@@ -43,7 +41,6 @@ class MyBottomSheet {
                           await TrxOptionMethod.scanQR(
                             context,
                             portfolioList,
-                            sdkModel,
                           );
                         } catch (e) {
                           //  print(e.message);
@@ -61,7 +58,6 @@ class MyBottomSheet {
                           portfolioList,
                           sdk,
                           keyring,
-                          sdkModel,
                         );
                       },
                     ),
@@ -75,8 +71,8 @@ class MyBottomSheet {
                         //     context, portfolioList);
                         await dialog(
                           context,
-                          const Text('Coming Soon !'),
-                          const Text('Invite friend'),
+                          'Coming Soon !',
+                          'Invite friend',
                         );
                       },
                     ),
@@ -85,6 +81,32 @@ class MyBottomSheet {
               )
             ],
           ),
+        );
+      },
+    );
+  }
+
+  Future<void> dialog(BuildContext context, String text1, String text2,
+      {Widget action}) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            child: Text(text1),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text(text2),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
         );
       },
     );
@@ -112,7 +134,7 @@ class MyBottomSheet {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset('assets/no_data.svg', height: 200),
+                    SvgPicture.asset('assets/icons/no_data.svg', height: 200),
                     const MyText(text: "There are no notification found")
                   ],
                 ),

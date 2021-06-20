@@ -1,12 +1,9 @@
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact.dart';
 
-class ContactBookBody extends StatelessWidget {
-  final CreateAccModel sdkModel;
-
+class ContactBookBody extends StatefulWidget {
   final ContactBookModel model;
 
   final Function getContact;
@@ -15,12 +12,42 @@ class ContactBookBody extends StatelessWidget {
 
   final Function editContact;
 
-  const ContactBookBody(
-      {this.model,
-      this.getContact,
-      this.sdkModel,
-      this.deleteContact,
-      this.editContact});
+  const ContactBookBody({
+    this.model,
+    this.getContact,
+    this.deleteContact,
+    this.editContact,
+  });
+
+  @override
+  _ContactBookBodyState createState() => _ContactBookBodyState();
+}
+
+class _ContactBookBodyState extends State<ContactBookBody> {
+  // Future<void> dialog(String text1, String text2, {Widget action}) async {
+  //   await showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  //         title: Align(
+  //           child: Text(text1),
+  //         ),
+  //         content: Padding(
+  //           padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+  //           child: Text(text2),
+  //         ),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             onPressed: () => Navigator.pop(context),
+  //             child: const Text('Close'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +78,10 @@ class ContactBookBody extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => AddContact(
                           contact: result,
-                          sdkModel: sdkModel,
                         ),
                       ),
                     );
-                    if (response == true) await getContact();
+                    if (response == true) await widget.getContact();
                   }
                 },
                 child: const Icon(
@@ -68,128 +94,171 @@ class ContactBookBody extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: model.contactBookList == null
-              ? const Center(
-                  child: MyText(
-                    text: 'No contact',
-                    color: "#FFFFFF",
-                    fontSize: 25,
+          child: widget.model.contactBookList == null
+              ? Center(
+                  child: SvgPicture.asset(
+                    'assets/icons/no_data.svg',
+                    width: 180,
+                    height: 180,
                   ),
                 )
-              : model.contactBookList.isEmpty
+              : widget.model.contactBookList.isEmpty
                   ? const Center(child: CircularProgressIndicator())
                   : Padding(
                       padding: const EdgeInsets.all(16),
-                      child: ListView.builder(
-                        itemCount: model.contactBookList.length,
-                        itemBuilder: (context, int index) {
-                          return GestureDetector(
-                            onTap: () async {
-                              final options = await showDialog(
-                                  context: context,
-                                  builder: (ctx) {
-                                    return SimpleDialog(
-                                      title: const Text('Options'),
-                                      children: [
-                                        SimpleDialogItem(
-                                          icon: Icons.near_me,
-                                          text: 'Send',
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => SubmitTrx(
-                                                  model.contactBookList[index]
-                                                      .address.text,
-                                                  false,
-                                                  const [],
-                                                  sdkModel,
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          await widget.getContact();
+                        },
+                        child: ListView.builder(
+                          itemCount: widget.model.contactBookList.length,
+                          itemBuilder: (context, int index) {
+                            return GestureDetector(
+                              onTap: () async {
+                                final options = await showDialog(
+                                    context: context,
+                                    builder: (ctx) {
+                                      return SimpleDialog(
+                                        title: const Text('Options'),
+                                        children: [
+                                          SimpleDialogItem(
+                                            icon: Icons.near_me,
+                                            text: 'Send',
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SubmitTrx(
+                                                    widget
+                                                        .model
+                                                        .contactBookList[index]
+                                                        .address
+                                                        .text,
+                                                    false,
+                                                    const [],
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                          },
+                                              );
+                                            },
+                                          ),
+                                          SimpleDialogItem(
+                                            icon: Icons.edit,
+                                            text: 'Edit',
+                                            onPressed: () {
+                                              Navigator.pop(context, 'edit');
+                                            },
+                                          ),
+                                          SimpleDialogItem(
+                                            icon: Icons.delete,
+                                            text: 'Delete',
+                                            onPressed: () {
+                                              Navigator.pop(context, 'delete');
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    });
+                                if (options == 'delete') {
+                                  await showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10.0)),
+                                        content: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 15.0, bottom: 15.0),
+                                          child: Text(
+                                              "Do you really want to deleteContact this contact?"),
                                         ),
-                                        SimpleDialogItem(
-                                          icon: Icons.edit,
-                                          text: 'Edit',
-                                          onPressed: () {
-                                            Navigator.pop(context, 'edit');
-                                          },
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text('Close'),
+                                          ),
+                                          FlatButton(
+                                            onPressed: () async {
+                                              await widget.deleteContact(index);
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text("Yes"),
+                                          )
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  // await dialog(
+                                  //     "Do you really want to deleteContact this contact",
+                                  //     "Message",
+                                  //     // ignore: deprecated_member_use
+                                  //     action: FlatButton(
+                                  //       onPressed: () async {
+                                  //         await widget.deleteContact(index);
+                                  //         Navigator.pop(context);
+                                  //       },
+                                  //       child: const Text("Yes"),
+                                  //     ));
+                                } else if (options == 'edit') {
+                                  await widget.editContact(index);
+                                }
+                              },
+                              child: Card(
+                                color: hexaCodeToColor(AppColors.cardColor),
+                                margin: const EdgeInsets.only(bottom: 16.0),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.centerLeft,
+                                        margin:
+                                            const EdgeInsets.only(right: 16),
+                                        width: 70,
+                                        height: 70,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
                                         ),
-                                        SimpleDialogItem(
-                                          icon: Icons.delete,
-                                          text: 'Delete',
-                                          onPressed: () {
-                                            Navigator.pop(context, 'delete');
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  });
-                              if (options == 'delete') {
-                                await dialog(
-                                    context,
-                                    const Text(
-                                      "Do you really want to deleteContact this contact",
-                                    ),
-                                    const Text("Message"),
-                                    // ignore: deprecated_member_use
-                                    action: FlatButton(
-                                      onPressed: () async {
-                                        await deleteContact(index);
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text("Yes"),
-                                    ));
-                              } else if (options == 'edit') {
-                                await editContact(index);
-                              }
-                            },
-                            child: Card(
-                              color: hexaCodeToColor(AppColors.cardColor),
-                              margin: const EdgeInsets.only(bottom: 16.0),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      alignment: Alignment.centerLeft,
-                                      margin: const EdgeInsets.only(right: 16),
-                                      width: 70,
-                                      height: 70,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
+                                        child: SvgPicture.asset(
+                                            'assets/male_avatar.svg'),
                                       ),
-                                      child: SvgPicture.asset(
-                                          'assets/male_avatar.svg'),
-                                    ),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        MyText(
-                                          text: model.contactBookList[index]
-                                              .userName.text,
-                                          color: "#FFFFFF",
-                                          fontSize: 20,
-                                        ),
-                                        MyText(
-                                          text: model.contactBookList[index]
-                                              .address.text,
-                                          color: AppColors.secondarytext,
-                                          textAlign: TextAlign.start,
-                                          fontWeight: FontWeight.bold,
-                                          overflow: TextOverflow.ellipsis,
-                                          width: 300,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          MyText(
+                                            text: widget
+                                                .model
+                                                .contactBookList[index]
+                                                .userName
+                                                .text,
+                                            color: "#FFFFFF",
+                                            fontSize: 20,
+                                          ),
+                                          MyText(
+                                            text: widget
+                                                .model
+                                                .contactBookList[index]
+                                                .address
+                                                .text,
+                                            color: AppColors.secondarytext,
+                                            textAlign: TextAlign.start,
+                                            fontWeight: FontWeight.bold,
+                                            overflow: TextOverflow.ellipsis,
+                                            width: 300,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
+                            );
+                          },
+                        ),
                       ),
                     ),
         ),

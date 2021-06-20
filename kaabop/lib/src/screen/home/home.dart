@@ -1,14 +1,10 @@
-import 'dart:ui';
-import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/attendant.m.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class Home extends StatefulWidget {
-  final CreateAccModel sdkModel;
-  const Home(this.sdkModel);
+  final bool apiConnected;
+  // ignore: avoid_positional_boolean_parameters
+  const Home({this.apiConnected});
 
   static const route = '/home';
 
@@ -19,280 +15,208 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
-  // GlobalKey<AnimatedCircularChartState> chartKey = GlobalKey<AnimatedCircularChartState>();
   MenuModel menuModel = MenuModel();
   final HomeModel _homeM = HomeModel();
-  final PortfolioM _portfolioM = PortfolioM();
   BuildContext dialogContext;
-  String action = "no_action";
+
   String status = '';
-
-  Future<void> getCurrentAccount() async {
-    final List<KeyPairData> ls = widget.sdkModel.keyring.keyPairs;
-    setState(() {
-      widget.sdkModel.userModel.username =
-          widget.sdkModel.keyring.keyPairs[0].name;
-      widget.sdkModel.userModel.address =
-          widget.sdkModel.keyring.keyPairs[0].address;
-
-      _homeM.userData['first_name'] = ls[0].name;
-      _homeM.userData['wallet'] = ls[0].address;
-    });
-  }
 
   @override
   void initState() {
-    _homeM.portfolioList = null;
-    _portfolioM.list = [];
-    if (mounted) {
-      _homeM.result = {};
-      _homeM.globalKey = GlobalKey<ScaffoldState>();
-      _homeM.total = 0;
-      _homeM.userData = {};
-      getCurrentAccount();
-      
-    }
+    Timer(const Duration(seconds: 4), () {
+      // if (!widget.apiConnected) {
+      //   handle();
+      // }
+      setPortfolio();
+      //showAirdrop();
+    });
+   
 
-    menuModel.result.addAll({"pin": '', "confirm": '', "error": ''});
+    // if (ApiProvider.keyring.current.address != null &&
+    //     widget.apiConnected == false) startNode(context);
 
-    if (widget.sdkModel.apiConnected) {
-      status = null;
-    }
+    // Timer(const Duration(seconds: 30), () async {
+    //   if (!widget.apiConnected) {
+    //     await dialog(
+    //       AppUtils.globalKey.currentContext,
+    //       const Text('Failed to connect to Selendra remote node.'),
+    //       const Text('Connection Failed'),
+    //     );
+    //     // Timer(const Duration(milliseconds: 500), () {
+    //     //   setPortfolio();
+    //     //   showAirdrop();
+    //     // });
+    //   }
+    // });
 
-    if (!widget.sdkModel.apiConnected) {
-      startNode();
-    }
+    AppServices.noInternetConnection(_homeM.globalKey);
 
     super.initState();
   }
 
-  Future<void> startNode() async {
-    await Future.delayed(const Duration(milliseconds: 50), () {
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) {
-            dialogContext = context;
-            return disableNativePopBackButton(AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              title: Column(
-                children: [
-                  CircularProgressIndicator(
-                      backgroundColor: Colors.transparent,
-                      valueColor: AlwaysStoppedAnimation(
-                          hexaCodeToColor(AppColors.secondary))),
-                  const Align(
-                    child: MyText(
-                        text: "\nConnecting to Remote Node...",
-                        color: "#000000",
-                        fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-              content: const Padding(
-                padding:  EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: MyText(
-                  text: "Please wait ! this might take a bit longer",
-                  color: "#000000",
-                ),
-              ),
-            ));
-          });
-    });
-  }
-
-  Future<void> handleConnectNode() async {
-    if (widget.sdkModel.contractModel.isContain &&
-        widget.sdkModel.contractModel.attendantM.isAContain) {
-      if (widget.sdkModel.apiConnected &&
-          widget.sdkModel.dataReady &&
-          widget.sdkModel.kmpiReady &&
-          widget.sdkModel.atdReady) {
-        await Future.delayed(const Duration(milliseconds: 200), () {
-          status = null;
-        });
-
-        Navigator.of(dialogContext).pop();
-        setPortfolio();
-      }
-      // ignore: invariant_booleans
-    } else if (widget.sdkModel.contractModel.isContain ||
-        widget.sdkModel.contractModel.attendantM.isAContain) {
-      if (widget.sdkModel.apiConnected &&
-              widget.sdkModel.dataReady &&
-              widget.sdkModel.kmpiReady ||
-          widget.sdkModel.apiConnected &&
-              widget.sdkModel.dataReady &&
-              widget.sdkModel.atdReady) {
-        await Future.delayed(const Duration(milliseconds: 200), () {
-          status = null;
-        });
-
-        Navigator.of(dialogContext).pop();
-        setPortfolio();
-      }
-    } else {
-      if (widget.sdkModel.apiConnected && widget.sdkModel.dataReady) {
-        await Future.delayed(const Duration(milliseconds: 200), () {
-          status = null;
-        });
-
-        Navigator.of(dialogContext).pop();
-        setPortfolio();
-      }
-    }
-  }
-
-  // ignore: avoid_positional_boolean_parameters
-  void opacityController(bool visible) {
-    if (mounted) {
-      setState(() {
-        if (visible) {
-          _homeM.visible = false;
-        } else if (visible == false) {
-          _homeM.visible = true;
-        }
-      });
-    }
-  }
-
-  Future<void> _balanceOf() async {
-    try {
-      final res = await widget.sdkModel.sdk.api.balanceOfByPartition(
-        widget.sdkModel.keyring.keyPairs[0].address,
-        widget.sdkModel.keyring.keyPairs[0].address,
-        widget.sdkModel.contractModel.pHash,
-      );
-
-      setState(() {
-        widget.sdkModel.contractModel.pBalance =
-            BigInt.parse(res['output'].toString()).toString();
-      });
-    } catch (e) {
-      // print(e.toString());
+  Future<void> handleDialog() async {
+    if (!Provider.of<ApiProvider>(context, listen: false).isConnected) {
+      startNode(context);
     }
   }
 
   Future<void> toReceiveToken() async {
-    await Navigator.pushNamed(context, ReceiveWallet.route);
+    await Navigator.pushNamed(context, AppText.recieveWalletView);
   }
 
   void openMyDrawer() {
     _homeM.globalKey.currentState.openDrawer();
   }
 
-  Future<void> onRefresh() async {
-    await Future.delayed(const Duration(milliseconds: 300)).then((value) {
-      setPortfolio();
-      if (widget.sdkModel.contractModel.pHash != '') {
-        _balanceOf();
-      }
-    });
-  }
-
   void setPortfolio() {
     final walletProvider = Provider.of<WalletProvider>(context, listen: false);
     walletProvider.clearPortfolio();
 
-    if (widget.sdkModel.contractModel.pHash != '') {
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+
+    final api = Provider.of<ApiProvider>(context, listen: false);
+
+    if (api.nativeM.balance == null) {
       walletProvider.addAvaibleToken({
-        'symbol': widget.sdkModel.contractModel.pTokenSymbol,
-        'balance': widget.sdkModel.contractModel.pBalance,
+        'symbol': api.nativeM.symbol,
+        'balance': '0',
+      });
+    } else {
+      walletProvider.addAvaibleToken({
+        'symbol': api.nativeM.symbol,
+        'balance': api.nativeM.balance.replaceAll(RegExp(','), '') ?? '0',
       });
     }
 
-    if (widget.sdkModel.contractModel.attendantM.isAContain) {
+    if (contract.kmpi.isContain) {
       walletProvider.addAvaibleToken({
-        'symbol': widget.sdkModel.contractModel.attendantM.aSymbol,
-        'balance': widget.sdkModel.contractModel.attendantM.aBalance,
+        'symbol': contract.kmpi.symbol,
+        'balance': contract.kmpi.balance ?? '0',
       });
     }
 
-    walletProvider.availableToken.add({
-      'symbol': widget.sdkModel.nativeSymbol,
-      'balance': widget.sdkModel.nativeBalance,
+    if (contract.atd.isContain) {
+      walletProvider.addAvaibleToken({
+        'symbol': contract.atd.symbol,
+        'balance': contract.atd.balance ?? '0',
+      });
+    }
+
+    walletProvider.addAvaibleToken({
+      'symbol': contract.bnbNative.symbol,
+      'balance': contract.bnbNative.balance ?? '0',
     });
 
-    if (!widget.sdkModel.contractModel.isContain &&
-        !widget.sdkModel.contractModel.attendantM.isAContain) {
-      Provider.of<WalletProvider>(context, listen: false).resetDatamap();
+    if(api.btc.isContain){
+        walletProvider.addAvaibleToken({
+        'symbol': api.btc.symbol,
+        'balance': api.btc.balance ?? '0',
+      });
+    }
+
+    if (api.dot.balance == null) {
+      walletProvider.addAvaibleToken({
+        'symbol': api.dot.symbol,
+        'balance': '0',
+      });
+    } else {
+      walletProvider.addAvaibleToken({
+        'symbol': api.dot.symbol,
+        'balance': api.dot.balance.replaceAll(RegExp(','), '') ?? '0',
+      });
+    }
+
+    walletProvider.addAvaibleToken({
+      'symbol': '${contract.bscNative.symbol} (BEP-20)',
+      'balance': contract.bscNative.balance ?? '0',
+    });
+
+    walletProvider.addAvaibleToken({
+      'symbol': '${contract.kgoNative.symbol} (BEP-20)',
+      'balance': contract.kgoNative.balance ?? '0',
+    });
+
+    walletProvider.addAvaibleToken({
+      'symbol': '${contract.etherNative.symbol} (BEP-20)',
+      'balance': contract.etherNative.balance ?? '0',
+    });
+
+    if (contract.token.isNotEmpty) {
+      for (int i = 0; i < contract.token.length; i++) {
+        walletProvider.addAvaibleToken({
+          'symbol': '${contract.token[i].symbol} (BEP-20)',
+          'balance': contract.token[i].balance ?? '0',
+        });
+      }
     }
 
     Provider.of<WalletProvider>(context, listen: false).getPortfolio();
   }
 
-  Future<void> onDismiss() async {
-    widget.sdkModel.contractModel.isContain = false;
-    widget.sdkModel.contractModel.pHash = '';
-    setPortfolio();
-
-    await StorageServices.removeKey('KMPI');
+  Future<void> onClosed() async {
+    await StorageServices.setUserID('claim', 'claim');
+    Navigator.pop(context);
   }
 
-  Future<void> onDismissATT() async {
-    widget.sdkModel.contractModel.attendantM = AttendantModel();
-    setPortfolio();
-    await StorageServices.removeKey('ATD');
+  Future<void> onClaim() async {
+    Navigator.pop(context);
+    await StorageServices.setUserID('claim', 'claim');
+    Navigator.push(context, RouteAnimation(enterPage: ClaimAirDrop()));
+  }
+
+  Future<void> handle() async {
+    Navigator.of(context).pop();
+    Timer(const Duration(seconds: 1), () async {
+      setPortfolio();
+      showAirdrop();
+    });
+  }
+
+  Future<void> showAirdrop() async {
+    Timer(const Duration(seconds: 1), () async {
+      final res = await StorageServices.fetchData('claim');
+      if (res == null) {
+        await dialogEvent(context, 'assets/bep20.png', onClosed, onClaim);
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (status != null) handleConnectNode();
     return Scaffold(
       key: _homeM.globalKey,
       drawer: Theme(
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
         child: Menu(_homeM.userData),
       ),
-      appBar: homeAppBar(context) as PreferredSizeWidget,
-      body: RefreshIndicator(
-        onRefresh: onRefresh,
-        child: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: HomeBody(
-            sdkModel: widget.sdkModel,
-            balanceOf: _balanceOf,
-            onDismiss: onDismiss,
-            onDismissATT: onDismissATT,
-          ),
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: HomeBody(
+          setPortfolio: setPortfolio,
         ),
       ),
       floatingActionButton: SizedBox(
         width: 64,
         height: 64,
         child: FloatingActionButton(
-          backgroundColor: hexaCodeToColor(AppColors.secondary)
-              .withOpacity(!widget.sdkModel.apiConnected ? 0.3 : 1.0),
+          backgroundColor:
+              hexaCodeToColor(AppColors.secondary).withOpacity(1.0),
           onPressed: () async {
             await TrxOptionMethod.scanQR(
               context,
               _homeM.portfolioList,
-              widget.sdkModel,
             );
           },
-          child: SvgPicture.asset(
-            'assets/icons/qr_code.svg',
-            width: 30,
-            height: 30,
-            color: !widget.sdkModel.apiConnected
-                ? Colors.white.withOpacity(0.2)
-                : Colors.white,
-          ),
+          child: SvgPicture.asset('assets/icons/qr_code.svg',
+              width: 30, height: 30, color: Colors.white),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: MyBottomAppBar(
-        apiStatus: widget.sdkModel.apiConnected,
+        apiStatus: true,
         homeM: _homeM,
-        portfolioM: _portfolioM,
-        // Bottom Center Button
         toReceiveToken: toReceiveToken,
-        opacityController: opacityController,
         openDrawer: openMyDrawer,
-        sdkModel: widget.sdkModel,
       ),
     );
   }

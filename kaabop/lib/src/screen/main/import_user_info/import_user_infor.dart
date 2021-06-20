@@ -1,17 +1,16 @@
+import 'package:bitcoin_flutter/bitcoin_flutter.dart';
 import 'package:polkawallet_sdk/api/apiKeyring.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/models/createAccountM.dart';
-import 'package:wallet_apps/src/models/fmt.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
+import 'package:bip39/bip39.dart' as bip39;
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
-  final CreateAccModel importAccModel;
+  final String passPhrase;
 
   static const route = '/importUserInfo';
 
-  const ImportUserInfo(this.importAccModel);
+  const ImportUserInfo(this.passPhrase);
 
   @override
   State<StatefulWidget> createState() {
@@ -41,44 +40,49 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     super.dispose();
   }
 
-  Future<void> _subscribeBalance() async {
-    final walletProvider = Provider.of<WalletProvider>(context, listen: false);
-
-    final channel = await widget.importAccModel.sdk.api.account
-        .subscribeBalance(widget.importAccModel.keyring.current.address, (res) {
-      widget.importAccModel.balance = res;
-      widget.importAccModel.nativeBalance =
-          Fmt.balance(widget.importAccModel.balance.freeBalance.toString(), 18);
-      walletProvider.addAvaibleToken({
-        'symbol': widget.importAccModel.nativeSymbol,
-        'balance': widget.importAccModel.nativeBalance,
-      });
-
-      Provider.of<WalletProvider>(context, listen: false).getPortfolio();
-    });
-    widget.importAccModel.msgChannel = channel;
-  }
-
   Future<void> _importFromMnemonic() async {
     try {
-      final json = await widget.importAccModel.sdk.api.keyring.importAccount(
-        widget.importAccModel.keyring,
+      final json = await ApiProvider.sdk.api.keyring.importAccount(
+        ApiProvider.keyring,
         keyType: KeyType.mnemonic,
-        key: widget.importAccModel.mnemonic,
+        key: widget.passPhrase,
         name: _userInfoM.userNameCon.text,
         password: _userInfoM.confirmPasswordCon.text,
       );
 
-      final acc = await widget.importAccModel.sdk.api.keyring.addAccount(
-        widget.importAccModel.keyring,
+      final acc = await ApiProvider.sdk.api.keyring.addAccount(
+        ApiProvider.keyring,
         keyType: KeyType.mnemonic,
         acc: json,
         password: _userInfoM.confirmPasswordCon.text,
       );
 
       if (acc != null) {
-        widget.importAccModel.mnemonic = '';
-        _subscribeBalance();
+        addBtcWallet();
+        final resPk = await ApiProvider().getPrivateKey(widget.passPhrase);
+        if (resPk != null) {
+          ContractProvider().extractAddress(resPk);
+          final res = await ApiProvider.keyring.store
+              .encryptPrivateKey(resPk, _userInfoM.confirmPasswordCon.text);
+
+          if (res != null) {
+            await StorageServices().writeSecure('private', res);
+          }
+        }
+        Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
+
+        Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+        Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
+        Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+        Provider.of<ContractProvider>(context, listen: false).getEtherBalance();
+
+        isKgoContain();
+
+        MarketProvider().fetchTokenMarketPrice(context);
+
+        Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
+        Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
+        Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
 
         await dialogSuccess(
           context,
@@ -96,14 +100,86 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         );
       }
     } catch (e) {
-      // print(e.toString());
-      await dialog(
-        context,
-        const Text("Invalid mnemonic"),
-        const Text('Message'),
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            title: const Align(
+              child: Text('Message'),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text(e.message.toString()),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
       );
+
       Navigator.pop(context);
     }
+  }
+
+  Future<void> addBtcWallet() async {
+    final seed = bip39.mnemonicToSeed(widget.passPhrase);
+    final hdWallet = HDWallet.fromSeed(seed);
+
+    await StorageServices.setData(hdWallet.address, 'btcaddress');
+
+    final res = await ApiProvider.keyring.store
+        .encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
+
+    if (res != null) {
+      await StorageServices().writeSecure('btcwif', res);
+    }
+
+    Provider.of<ApiProvider>(context, listen: false)
+        .getBtcBalance(hdWallet.address);
+    Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
+
+    Provider.of<ApiProvider>(context, listen: false)
+        .setBtcAddr(hdWallet.address);
+    Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BTC');
+  }
+
+  // Future<void> isDotContain() async {
+  //   // Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
+  //   // Provider.of<ApiProvider>(context, listen: false).isDotContain();
+  //   Provider.of<ApiProvider>(context, listen: false).connectPolNon();
+  // }
+
+  // Future<void> isBnbContain() async {
+  //   Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
+
+  // }
+
+  // Future<void> isBscContain() async {
+  //   Provider.of<WalletProvider>(context, listen: false)
+  //       .addTokenSymbol('SEL (BEP-20)');
+  //   Provider.of<ContractProvider>(context, listen: false).getSymbol();
+  //   Provider.of<ContractProvider>(context, listen: false)
+  //       .getBscDecimal()
+  //       .then((value) {
+  //     Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+  //   });
+  // }
+
+  Future<void> isKgoContain() async {
+    // Provider.of<WalletProvider>(context, listen: false)
+    //     .addTokenSymbol('KGO (BEP-20)');
+    // Provider.of<ContractProvider>(context, listen: false).getKgoSymbol();
+    Provider.of<ContractProvider>(context, listen: false)
+        .getKgoDecimal()
+        .then((value) {
+      Provider.of<ContractProvider>(context, listen: false).getKgoBalance();
+    });
   }
 
   // ignore: avoid_void_async
@@ -141,9 +217,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     // Trigger Authentication By Finger Print
     // ignore: join_return_with_assignment
     _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-        localizedReason: 'Scan your fingerprint to authenticate',
-
-        stickyAuth: true);
+      localizedReason: '',
+      stickyAuth: true,
+    );
 
     return _menuModel.authenticated;
   }
@@ -151,8 +227,6 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   void popScreen() {
     Navigator.pop(context);
   }
-
-
 
   Future<void> onSubmit() async {
     if (_userInfoM.userNameNode.hasFocus) {
@@ -186,7 +260,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validatePassword(String value) {
     if (_userInfoM.passwordNode.hasFocus) {
-      if (value.isEmpty || value.length<4) {
+      if (value.isEmpty || value.length < 4) {
         return 'Please fill in 4-digits password';
       }
     }
@@ -195,7 +269,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   String validateConfirmPassword(String value) {
     if (_userInfoM.confirmPasswordNode.hasFocus) {
-      if (value.isEmpty||value.length<4) {
+      if (value.isEmpty || value.length < 4) {
         return 'Please fill in 4-digits confirm pin';
       } else if (_userInfoM.confirmPasswordCon.text !=
           _userInfoM.passwordCon.text) {

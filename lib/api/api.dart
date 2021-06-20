@@ -60,7 +60,7 @@ class KabobApi {
       Keyring keyringStorage, List<NetworkParams> nodes) async {
     _connectedNode = null;
     final NetworkParams res = await service.webView.connectNode(nodes);
-   // print('api');
+    // print('api');
     if (res != null) {
       _connectedNode = res;
 
@@ -69,13 +69,44 @@ class KabobApi {
     }
     return res;
   }
-  Future<int> getChainDecimal() async {
-   final res =  await service.webView.getChainDecimal();
+
+  Future<NetworkParams> connectNon(
+      Keyring keyringStorage, List<NetworkParams> nodes) async {
+    _connectedNode = null;
+    final NetworkParams res = await service.webView.connectNon(nodes);
+
+    if (res != null) {
+      _connectedNode = res;
+
+      // update indices of keyPairs after connect
+      keyring.updateIndicesMap(keyringStorage);
+    }
+    return res;
+  }
+
+  Future<String> getPrivateKey(String mnemonic) async {
+    final res = await service.webView.getPrivateKey(mnemonic);
+    return res;
+  }
+
+
+  Future<bool> validateEtherAddr(String address) async {
+    final res = await service.webView.validateEtherAddr(address);
+    return res;
+  }
+
+  Future<List> getChainDecimal() async {
+    final res = await service.webView.getChainDecimal();
+    return res;
+  }
+
+  Future<List> getNChainDecimal() async {
+    final res = await service.webView.getNChainDecimal();
     return res;
   }
 
   Future<String> callContract() async {
-   final res =  await service.webView.callContract();
+    final res = await service.webView.callContract();
     return res;
   }
 
@@ -84,12 +115,12 @@ class KabobApi {
     return res;
   }
 
-  Future<String> getAToken(String attender) async{
+  Future<String> getAToken(String attender) async {
     final res = await service.webView.getAToken(attender);
     return res;
   }
 
-  Future<bool> getAStatus(String attender) async{
+  Future<bool> getAStatus(String attender) async {
     final res = await service.webView.getAStatus(attender);
     return res;
   }
@@ -103,8 +134,6 @@ class KabobApi {
     final res = await service.webView.getCheckOutList(attender);
     return res;
   }
-
-
 
   Future<List> contractSymbol(String from) async {
     final res = await service.webView.contractSymbol(from);
@@ -133,7 +162,7 @@ class KabobApi {
     return res;
   }
 
-  Future<String> getHashBySymbol(String from,String symbol) async{
+  Future<String> getHashBySymbol(String from, String symbol) async {
     final res = await service.webView.getHashBySymbol(from, symbol);
     return res;
   }

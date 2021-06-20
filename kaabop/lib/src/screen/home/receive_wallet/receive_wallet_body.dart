@@ -1,20 +1,28 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/components/reuse_dropdown.dart';
 
 class ReceiveWalletBody extends StatelessWidget {
   final GlobalKey keyQrShare;
   final GlobalKey<ScaffoldState> globalKey;
   final HomeModel homeM;
   final GetWalletMethod method;
+  final Function(String) onChanged;
   final String name;
   final String wallet;
+  final String initialValue;
+  final String assetInfo;
 
   const ReceiveWalletBody({
     this.keyQrShare,
     this.globalKey,
     this.homeM,
     this.method,
+    this.onChanged,
     this.name,
     this.wallet,
+    this.initialValue,
+    this.assetInfo,
   });
 
   @override
@@ -32,7 +40,7 @@ class ReceiveWalletBody extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset('assets/no_data.svg', height: 200),
+                SvgPicture.asset('assets/icons/no_data.svg', height: 200),
                 const MyText(text: "There are no wallet found")
               ],
             ),
@@ -64,6 +72,47 @@ class ReceiveWalletBody extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
+                            Stack(
+                              children: [
+                                Align(
+                                  child: Container(
+                                    padding: const EdgeInsets.only(top: 14.0),
+                                    margin: const EdgeInsets.only(bottom: 36.0),
+                                    child: const MyText(
+                                      text: 'Wallet',
+                                      fontSize: 20.0,
+                                      color: "#FFFFFF",
+                                    ),
+                                  ),
+                                ),
+                                if (assetInfo != null)
+                                  Container()
+                                else
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Container(
+                                      padding:
+                                          const EdgeInsets.only(right: 16.0),
+                                      margin:
+                                          const EdgeInsets.only(bottom: 36.0),
+                                      child: Consumer<WalletProvider>(
+                                        builder: (context, value, child) {
+                                          return ReuseDropDown(
+                                            initialValue: initialValue,
+                                            onChanged: onChanged,
+                                            itemsList: value.listSymbol,
+                                            style: TextStyle(
+                                              color: hexaCodeToColor(
+                                                AppColors.textColor,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
                             qrCodeGenerator(
                               wallet,
                               AppConfig.logoQrEmbedded,

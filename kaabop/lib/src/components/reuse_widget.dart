@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/tx_history.dart';
 
@@ -212,30 +213,187 @@ BoxDecoration signOutColor() {
 
 /* Dialog of response from server */
 // ignore: type_annotate_public_apis
-Future dialog(BuildContext context, Widget text, Widget title,
-    {Widget action, Color bgColor}) async {
+
+Future<void> startNode(BuildContext context) async {
+  await Future.delayed(
+    const Duration(milliseconds: 50),
+    () {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          // ignore: parameter_assignments
+
+          return disableNativePopBackButton(
+            AlertDialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              title: Column(
+                children: [
+                  CircularProgressIndicator(
+                    backgroundColor: Colors.transparent,
+                    valueColor: AlwaysStoppedAnimation(
+                      hexaCodeToColor(
+                        AppColors.secondary,
+                      ),
+                    ),
+                  ),
+                  Shimmer.fromColors(
+                    baseColor: Colors.red,
+                    highlightColor: Colors.yellow,
+                    child: const Align(
+                      child: MyText(
+                        text: "\nConnecting to Remote Node...",
+                        color: "#000000",
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              content: const Padding(
+                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: MyText(
+                  text: "Please wait ! This might be taking some time.",
+                  color: "#000000",
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
+}
+
+// Future<void> dialog(BuildContext context, Widget text, Widget title,
+//     {Widget action, Color bgColor}) async {
+//   await showDialog(
+//       context: context,
+//       builder: (BuildContext context) {
+//         return AlertDialog(
+//           backgroundColor: bgColor,
+//           shape:
+//               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+//           title: Align(
+//             child: title,
+//           ),
+//           content: Padding(
+//             padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+//             child: text,
+//           ),
+//           actions: <Widget>[
+//             // ignore: deprecated_member_use
+//             FlatButton(
+//               onPressed: () => Navigator.pop(context),
+//               child: const Text('Close'),
+//             ),
+//             action
+//           ],
+//         );
+//       });
+// }
+
+Future dialogEvent(
+  BuildContext context,
+  String url,
+  void Function() onClosed,
+  void Function() onClaim,
+) async {
   final result = await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: bgColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          title: Align(
-            child: title,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
           ),
-          content: Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-            child: text,
-          ),
-          actions: <Widget>[
-            // ignore: deprecated_member_use
-            FlatButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
+          contentPadding: const EdgeInsets.all(0),
+          content: SizedBox(
+            height: MediaQuery.of(context).size.height / 1.9,
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: ListView(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10.0),
+                    topRight: Radius.circular(10.0),
+                  ),
+                  child: Image.asset(
+                    url,
+                    height: 200,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(
+                  height: 24,
+                ),
+                const MyText(
+                  text: 'Selendra Airdrop',
+                  //color: '#000000',
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                const MyText(
+                  text:
+                      'Selendra will conduct 3 airdrops. Each drop will have 6 sessions with a total of 31,415,927 SEL tokens. Each session will last as long as 3 months to distribute to as many people as possible. The first airdrop will take place in April 2021, during Khmer New Year. Enjoy the airdrop, everyone.',
+                  textAlign: TextAlign.start,
+                  right: 16,
+                  left: 16,
+                  fontSize: 16,
+                ),
+                const SizedBox(
+                  height: 28,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // ignore: deprecated_member_use
+                    SizedBox(
+                      height: 50,
+                      width: 100,
+                      child: RaisedButton(
+                        onPressed: onClosed,
+                        color: Colors.grey[50],
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          'Cancel',
+                          style: TextStyle(
+                            color: hexaCodeToColor(AppColors.textColor),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // ignore: deprecated_member_use
+                    SizedBox(
+                      height: 50,
+                      width: 100,
+                      child: RaisedButton(
+                        onPressed: onClaim,
+                        color: hexaCodeToColor(AppColors.secondary),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          'Claim',
+                          style: TextStyle(
+                            color: hexaCodeToColor('#ffffff'),
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
             ),
-            action
-          ],
+          ),
         );
       });
   return result;
@@ -499,14 +657,6 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
     mainAxisSize: MainAxisSize.min,
     children: <Widget>[
       Container(
-        margin: const EdgeInsets.only(bottom: 36.0),
-        child: const MyText(
-          text: 'Wallet',
-          fontSize: 20.0,
-          color: "#FFFFFF",
-        ),
-      ),
-      Container(
         decoration: BoxDecoration(
           border: Border.all(
             width: 2,
@@ -519,8 +669,8 @@ Widget qrCodeGenerator(String wallet, String logoName, GlobalKey _keyQrShare) {
         height: 300.0,
         child: QrImage(
           backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          embeddedImage: AssetImage(logoName),
+
+          //embeddedImage: AssetImage(logoName),
           embeddedImageStyle: QrEmbeddedImageStyle(
             size: const Size(70, 70),
           ),
@@ -568,8 +718,9 @@ Widget fieldPicker(BuildContext context, String labelText, String widgetName,
             right: 26.0,
           ),
           decoration: BoxDecoration(
-              color: hexaCodeToColor("#FFFFFF").withOpacity(0.1),
-              borderRadius: BorderRadius.circular(size5)),
+            color: hexaCodeToColor("#FFFFFF").withOpacity(0.1),
+            borderRadius: BorderRadius.circular(size5),
+          ),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -581,7 +732,7 @@ Widget fieldPicker(BuildContext context, String labelText, String widgetName,
               Icon(
                 icons,
                 color: Colors.white,
-              )
+              ),
             ],
           ),
         ),
@@ -707,7 +858,7 @@ Widget customDropDown(
                     }).toList();
             },
           ),
-        )
+        ),
       ],
     ),
   );
@@ -763,9 +914,14 @@ Widget textDropDown(String text) {
 
 Widget drawerText(String text, Color colors, double fontSize) {
   /* Drawer Text */
-  return Text(text,
-      style: TextStyle(
-          color: colors, fontSize: fontSize, fontWeight: FontWeight.bold));
+  return Text(
+    text,
+    style: TextStyle(
+      color: colors,
+      fontSize: fontSize,
+      fontWeight: FontWeight.bold,
+    ),
+  );
 }
 
 Widget warningTitleDialog() {

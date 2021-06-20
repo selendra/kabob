@@ -193,6 +193,7 @@ class ApiKeyring {
   /// check password of account
   Future<bool> checkPassword(KeyPairData account, String pass) async {
     final res = await service.checkPassword(account.pubKey, pass);
+
     return res;
   }
 
@@ -283,7 +284,6 @@ class ApiKeyring {
     final res =
         await service.contractTranfer(senderPubKey, to, value, password, hash);
 
-    // print("apiKeyring: $value");
     if (res['error'] != null) {
       throw Exception(res['error']);
     }
