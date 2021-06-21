@@ -164,7 +164,6 @@ export 'package:wallet_apps/theme/style.dart';
 export 'src/provider/api_provider.dart';
 export 'src/provider/contract_provider.dart';
 export 'src/provider/wallet_provider.dart';
-export 'src/provider/market_provider.dart';
 // Asset Info
 export 'src/screen/home/asset_info/asset_checkin.dart';
 export 'src/screen/home/asset_info/asset_history.dart';
