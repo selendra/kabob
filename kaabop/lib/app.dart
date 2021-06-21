@@ -191,7 +191,6 @@ class AppState extends State<App> {
           builder: (context, orientation) {
             SizeConfig().init(constraints, orientation);
             return MaterialApp(
-              debugShowCheckedModeBanner: false,
               navigatorKey: AppUtils.globalKey,
               title: AppText.appName,
               theme: AppStyle.myTheme(),

@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
 
-
 class HomeBody extends StatelessWidget {
   final Function balanceOf;
   final Function setPortfolio;
