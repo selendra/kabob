@@ -111,7 +111,7 @@ class AppConfig {
 
   static const baseInviteLink = 'https://airdrop.selendra.org/claim-\$sel?ref=';
 
-  //static const credentials = ' ';
+  static const credentials = ' ';
 
   //
   // sld_market net API

@@ -25,6 +25,9 @@ void main() {
         ChangeNotifierProvider<ContractProvider>(
           create: (context) => ContractProvider(),
         ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(),
+        ),
       ],
       child: App(),
     ),

@@ -12,7 +12,7 @@ class NativeM {
   String marketPrice;
   String change24h;
   bool isContain;
-
+  List<List<double>> lineChartData;
 
   NativeM({
     this.id,
@@ -26,5 +26,6 @@ class NativeM {
     this.marketPrice,
     this.change24h,
     this.isContain,
+    this.lineChartData,
   });
 }

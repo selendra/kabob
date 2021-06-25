@@ -165,6 +165,7 @@ class AssetList extends StatelessWidget {
                 Colors.transparent,
                 marketPrice: value.bscNative.marketPrice,
                 priceChange24h: value.bscNative.change24h,
+               
               ),
             );
           },
@@ -196,8 +197,9 @@ class AssetList extends StatelessWidget {
                 'BEP-20',
                 value.kgoNative.balance ?? AppText.loadingPattern,
                 Colors.transparent,
-                marketPrice: value.kgoNative.marketPrice,
+                marketPrice: value.kgoNative.marketPrice.substring(0,8),
                 priceChange24h: value.kgoNative.change24h,
+                lineChartData: value.kgoNative.lineChartData,
               ),
             );
           },
@@ -303,6 +305,7 @@ class AssetList extends StatelessWidget {
                       marketData: value.bnbNative.marketData,
                       marketPrice: value.bnbNative.marketPrice,
                       priceChange24h: value.bnbNative.change24h,
+                      
                     ),
                   ),
                 );
@@ -316,6 +319,7 @@ class AssetList extends StatelessWidget {
                 marketPrice: value.bnbNative.marketPrice,
                 priceChange24h: value.bnbNative.change24h,
                 size: 60,
+                lineChartData: value.bnbNative.lineChartData,
               ),
             );
           },
@@ -418,6 +422,7 @@ class AssetList extends StatelessWidget {
                 size: 60,
                 marketPrice: value.btc.marketPrice ?? '',
                 priceChange24h: value.btc.change24h ?? '',
+                lineChartData: value.btc.lineChartData,
               ),
             );
           },
@@ -450,6 +455,7 @@ class AssetList extends StatelessWidget {
               Colors.transparent,
               marketPrice: value.etherNative.marketPrice,
               priceChange24h: value.etherNative.change24h,
+              lineChartData: value.etherNative.lineChartData,
             ),
           );
         }),
@@ -482,6 +488,7 @@ class AssetList extends StatelessWidget {
                 size: 60,
                 marketPrice: value.dot.marketPrice,
                 priceChange24h: value.dot.change24h,
+                lineChartData: value.dot.lineChartData,
               ),
             );
           },

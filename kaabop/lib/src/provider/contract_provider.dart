@@ -13,7 +13,6 @@ class ContractProvider with ChangeNotifier {
   final WalletSDK sdk = ApiProvider.sdk;
   final Keyring keyring = ApiProvider.keyring;
   String ethAdd = '';
-  
 
   Atd atd = Atd();
   Kmpi kmpi = Kmpi();
@@ -375,7 +374,8 @@ class ContractProvider with ChangeNotifier {
 
     final contract = await initEtherContract(contractAddr);
     final txFunction = contract.function('transfer');
-    final credentials = await _etherClient.credentialsFromPrivateKey(privateKey);
+    final credentials =
+        await _etherClient.credentialsFromPrivateKey(privateKey);
 
     final res = await _etherClient.sendTransaction(
       credentials,
@@ -656,25 +656,28 @@ class ContractProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setEtherMarket(
-      Market ethMarket, String currentPrice, String priceChange24h) {
+  void setEtherMarket(Market ethMarket, List<List<double>> lineChart,
+      String currentPrice, String priceChange24h) {
     etherNative.marketData = ethMarket;
     etherNative.marketPrice = currentPrice;
     etherNative.change24h = priceChange24h;
+    etherNative.lineChartData = lineChart;
     notifyListeners();
   }
 
-  void setBnbMarket(
-      Market bnbMarket, String currentPrice, String priceChange24h) {
+  void setBnbMarket(Market bnbMarket, List<List<double>> lineChart,
+      String currentPrice, String priceChange24h) {
     bnbNative.marketData = bnbMarket;
     bnbNative.marketPrice = currentPrice;
     bnbNative.change24h = priceChange24h;
+    bnbNative.lineChartData = lineChart;
     notifyListeners();
   }
 
-  void setkiwigoMarket(
-      Market kgoMarket, String currentPrice, String priceChange24h) {
+  void setkiwigoMarket(Market kgoMarket, List<List<double>> lineChart,
+      String currentPrice, String priceChange24h) {
     kgoNative.marketData = kgoMarket;
+    kgoNative.lineChartData = lineChart;
     kgoNative.marketPrice = currentPrice;
     kgoNative.change24h = priceChange24h;
     notifyListeners();

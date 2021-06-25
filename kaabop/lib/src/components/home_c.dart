@@ -4,7 +4,7 @@ import 'package:fl_chart/fl_chart.dart';
 const fontSizePort = 17.0;
 const fontColorPort = Colors.white;
 
-List<Color> gradientColors = [
+List<Color> _gradientColors = [
   hexaCodeToColor(AppColors.secondary),
   hexaCodeToColor("#00ff6b")
 ];
@@ -90,7 +90,7 @@ final portfolioChart = LineChartData(
         FlSpot(6, 1),
       ],
       isCurved: true,
-      colors: gradientColors,
+      colors: _gradientColors,
       barWidth: 2.5,
       // isStrokeCapRound: true,
       dotData: FlDotData(
@@ -98,7 +98,7 @@ final portfolioChart = LineChartData(
       ),
       belowBarData: BarAreaData(
         show: false,
-        colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+        colors: _gradientColors.map((color) => color.withOpacity(0.3)).toList(),
       ),
     ),
   ],
@@ -581,7 +581,7 @@ LineChartData mainData() {
           FlSpot(6, 1),
         ],
         isCurved: true,
-        colors: gradientColors,
+        colors: _gradientColors,
         barWidth: 3,
         // isStrokeCapRound: true,
         dotData: FlDotData(
@@ -590,7 +590,7 @@ LineChartData mainData() {
         belowBarData: BarAreaData(
           show: true,
           colors:
-              gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+             _gradientColors.map((color) => color.withOpacity(0.3)).toList(),
         ),
       ),
     ],

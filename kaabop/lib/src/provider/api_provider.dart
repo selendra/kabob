@@ -265,10 +265,11 @@ class ApiProvider with ChangeNotifier {
   // }
 
   void setDotMarket(
-      Market marketData, String currentPrice, String priceChange24h) {
+      Market marketData,List<List<double>> lineChartData, String currentPrice, String priceChange24h) {
     dot.marketData = marketData;
     dot.marketPrice = currentPrice;
     dot.change24h = priceChange24h;
+    dot.lineChartData = lineChartData;
 
     notifyListeners();
   }
@@ -281,10 +282,11 @@ class ApiProvider with ChangeNotifier {
   }
 
   void setBtcMarket(
-      Market marketData, String currentPrice, String priceChange24h) {
+      Market marketData, List<List<double>> lineChartData, String currentPrice, String priceChange24h) {
     btc.marketData = marketData;
     btc.marketPrice = currentPrice;
     btc.change24h = priceChange24h;
+    btc.lineChartData = lineChartData;
 
     notifyListeners();
   }
