@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Bitriel</string>
+	<string>SELENDRA</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIcons</key>
@@ -24,10 +24,6 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>Camera description</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

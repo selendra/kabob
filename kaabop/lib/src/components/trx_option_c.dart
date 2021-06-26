@@ -113,16 +113,21 @@ class TrxOptionMethod {
     List<dynamic> portfolioList,
   
   ) async {
-    final String _response = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => QrScanner()));
 
-    //print("Scan qr reponse $_response");
-    if (_response != null) {
-      await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) =>
-                  SubmitTrx(_response, false, portfolioList)));
+    if (await Permission.camera.request().isGranted) {
+      print(await Permission.camera.request().isGranted);
+      print(await Permission.camera.status);
+      final String _response = await Navigator.push(
+          context, MaterialPageRoute(builder: (context) => QrScanner()));
+
+      //print("Scan qr reponse $_response");
+      if (_response != null) {
+        await Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    SubmitTrx(_response, false, portfolioList)));
+      }
     }
   }
 }
