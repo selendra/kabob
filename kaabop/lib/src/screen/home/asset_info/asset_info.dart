@@ -190,13 +190,13 @@ class _AssetInfoState extends State<AssetInfo> {
   }
 
   Future<String> addressName(LatLng place) async {
-    final List<Placemark> placemark = await Geolocator()
-        .placemarkFromCoordinates(place.latitude, place.longitude);
+    // final List<Placemark> placemark = await Geolocator()
+    //     .placemarkFromCoordinates(place.latitude, place.longitude);
 
-    return placemark[0].thoroughfare ??
-        '' + ", " + placemark[0].subLocality ??
-        '' + ", " + placemark[0].administrativeArea ??
-        '';
+    // return placemark[0].thoroughfare ??
+    //     '' + ", " + placemark[0].subLocality ??
+    //     '' + ", " + placemark[0].administrativeArea ??
+    //     '';
   }
 
   Future<String> dateConvert(int millisecond) async {
