@@ -54,7 +54,11 @@ class _CheckInState extends State<CheckIn> {
   }
 
   Future<void> _getCurrentLocation() async {
-    // final geoLocator = Geolocator()..forceAndroidLocationManager;
+    final geoLocator = Geolocator.requestPermission();
+    geoLocator.then((value) {
+      print("My location $value");
+      // if (value == )
+    });
     // geoLocator
     //     .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
     //     .then((Position position) {

@@ -122,7 +122,7 @@ dev_dependencies:
   lint: ^1.0.0
 
 flutter_icons:
-  image_path: "assets/bitriel_icon.png"
+  image_path: "assets/bitriel_icon.svg"
   ios: true
   android: true
 
