@@ -299,15 +299,29 @@ class _AssetInfoState extends State<AssetInfo> {
           headerSliverBuilder: (BuildContext context, bool innerBox) {
             return [
               SliverAppBar(
+                automaticallyImplyLeading: false,
+                leading: Container(),
                 pinned: true,
-                expandedHeight: 65,
+                expandedHeight: 75,
                 forceElevated: innerBox,
                 flexibleSpace: FlexibleSpaceBar(
                   title: Row(
                     children: [
+                      IconButton(
+                        /* Menu Icon */
+
+                        // padding: edgePadding,
+                        padding: const EdgeInsets.only(left: 15),
+                        iconSize: 20.0,
+                        icon: const Icon(LineAwesomeIcons.arrow_left,
+                            color: Colors.white, size: 30),
+                        onPressed: (){
+                          Navigator.pop(context);
+                        },
+                      ),
                       Container(
                         alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.only(right: 16),
+                        margin: const EdgeInsets.only(left: 15, right: 16),
                         width: 30,
                         height: 30,
                         decoration: BoxDecoration(

@@ -87,30 +87,56 @@ class MenuState extends State<Menu> {
 
   // ignore: avoid_positional_boolean_parameters
   Future<void> switchBiometric(bool switchValue) async {
-    final canCheck = await _checkBiometrics();
+    try{
 
-    if (canCheck == false) {
-      snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
-    } else {
-      if (switchValue) {
-        await authenticateBiometric().then((values) async {
-          if (_menuModel.authenticated) {
-            setState(() {
-              _menuModel.switchBio = switchValue;
-            });
-            await StorageServices.saveBio(_menuModel.switchBio);
-          }
-        });
+      final canCheck = await _checkBiometrics();
+
+      if (canCheck == false) {
+        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
       } else {
-        await authenticateBiometric().then((values) async {
-          if (_menuModel.authenticated) {
-            setState(() {
-              _menuModel.switchBio = switchValue;
-            });
-            await StorageServices.removeKey('bio');
-          }
-        });
+        if (switchValue) {
+          await authenticateBiometric().then((values) async {
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.saveBio(_menuModel.switchBio);
+            }
+          });
+        } else {
+          await authenticateBiometric().then((values) async {
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.removeKey('bio');
+            }
+          });
+        }
       }
+    } catch (e){
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text("Message"),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text("This feature is under maintanance!", textAlign: TextAlign.center),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 

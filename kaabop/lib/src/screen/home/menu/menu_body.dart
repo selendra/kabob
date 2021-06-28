@@ -115,6 +115,7 @@ class MenuBody extends StatelessWidget {
           trailing: Switch(
             value: model.switchBio,
             onChanged: (value) {
+              print("$value");
               switchBio(value);
             },
           ),
