@@ -74,25 +74,51 @@ class MenuState extends State<Menu> {
   }
 
   Future<bool> _checkBiometrics() async {
-    bool canCheckBiometrics;
+    bool canCheckBiometrics = false;
     try {
       canCheckBiometrics = await _localAuth.canCheckBiometrics;
+      print("Check bio $canCheckBiometrics");
       // ignore: unused_catch_clause
     } on PlatformException catch (e) {
-      canCheckBiometrics = false;
+      print("Erorr $e");
+      // canCheckBiometrics = false;
     }
 
     return canCheckBiometrics;
   }
 
   // ignore: avoid_positional_boolean_parameters
-  Future<void> switchBiometric(bool switchValue) async {
+  Future<void> switchBiometric(BuildContext context, bool switchValue) async {
     try{
 
       final canCheck = await _checkBiometrics();
+      print("After check $canCheck");
 
       if (canCheck == false) {
-        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
+        // snackBar(context, "Your device doesn't have finger print");
+
+        await showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              shape:
+                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              title: Align(
+                child: Text("Oops"),
+              ),
+              content: Padding(
+                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                child: Text("Your device doesn't have finger print!", textAlign: TextAlign.center),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Close'),
+                ),
+              ],
+            );
+          },
+        );
       } else {
         if (switchValue) {
           await authenticateBiometric().then((values) async {
@@ -122,11 +148,11 @@ class MenuState extends State<Menu> {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             title: Align(
-              child: Text("Message"),
+              child: Text("Oops"),
             ),
             content: Padding(
               padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: Text("This feature is under maintanance!", textAlign: TextAlign.center),
+              child: Text("$e!", textAlign: TextAlign.center),
             ),
             actions: <Widget>[
               FlatButton(

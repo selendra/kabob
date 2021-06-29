@@ -116,7 +116,7 @@ class MenuBody extends StatelessWidget {
             value: model.switchBio,
             onChanged: (value) {
               print("$value");
-              switchBio(value);
+              switchBio(context, value);
             },
           ),
           onTap: null,

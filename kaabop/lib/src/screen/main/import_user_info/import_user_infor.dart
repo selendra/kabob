@@ -188,7 +188,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
     await _localAuth.canCheckBiometrics.then((value) async {
       if (value == false) {
-        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
+        snackBar(context, "Your device doesn't have finger print");
       } else {
         if (switchValue) {
           await authenticateBiometric(_localAuth).then((values) async {

@@ -494,13 +494,14 @@ class MyTabBar extends StatelessWidget {
 }
 
 /* Trigger Snack Bar Function */
-void snackBar(GlobalKey<ScaffoldState> globalKey, String contents) {
+void snackBar(BuildContext context, String contents) {
   final snackbar = SnackBar(
     duration: const Duration(seconds: 2),
     content: Text(contents),
   );
   // ignore: deprecated_member_use
-  globalKey.currentState.showSnackBar(snackbar);
+  ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  // globalKey.currentState.showSnackBar(snackbar);
 }
 
 class MyPinput extends StatelessWidget {
