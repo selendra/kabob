@@ -146,6 +146,10 @@ class _PasscodeState extends State<Passcode> {
             child: Center(
               child: Column(
                 children: <Widget>[
+                  MyAppBar(title: "Set passcode", onPressed: (){
+                    Navigator.pop(context);
+                  },),
+
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.1,
                   ),

@@ -89,70 +89,69 @@ class MenuState extends State<Menu> {
 
   // ignore: avoid_positional_boolean_parameters
   Future<void> switchBiometric(BuildContext context, bool switchValue) async {
-    try{
+    // try{
 
-      final canCheck = await _checkBiometrics();
-      print("After check $canCheck");
+    //   final canCheck = await _checkBiometrics();
+    //   print("After check $canCheck");
 
-      if (canCheck == false) {
-        // snackBar(context, "Your device doesn't have finger print");
+    //   if (canCheck == false) {
+    //     // snackBar(context, "Your device doesn't have finger print");
 
-        await showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              shape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-              title: Align(
-                child: Text("Oops"),
-              ),
-              content: Padding(
-                padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: Text("Your device doesn't have finger print!", textAlign: TextAlign.center),
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Close'),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        if (switchValue) {
-          await authenticateBiometric().then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.saveBio(_menuModel.switchBio);
-            }
-          });
-        } else {
-          await authenticateBiometric().then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.removeKey('bio');
-            }
-          });
-        }
-      }
-    } catch (e){
+    //     await showDialog(
+    //       context: context,
+    //       builder: (context) {
+    //         return AlertDialog(
+    //           shape:
+    //               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    //           title: Align(
+    //             child: Text("Oops"),
+    //           ),
+    //           content: Padding(
+    //             padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+    //             child: Text("Your device doesn't have finger print!", textAlign: TextAlign.center),
+    //           ),
+    //           actions: <Widget>[
+    //             FlatButton(
+    //               onPressed: () => Navigator.pop(context),
+    //               child: const Text('Close'),
+    //             ),
+    //           ],
+      //       );
+      //     },
+      //   );
+      // } else {
+      //   if (switchValue) {
+      //     await authenticateBiometric().then((values) async {
+      //       if (_menuModel.authenticated) {
+      //         setState(() {
+      //           _menuModel.switchBio = switchValue;
+      //         });
+      //         await StorageServices.saveBio(_menuModel.switchBio);
+      //       }
+      //     });
+      //   } else {
+      //     await authenticateBiometric().then((values) async {
+      //       if (_menuModel.authenticated) {
+      //         setState(() {
+      //           _menuModel.switchBio = switchValue;
+      //         });
+      //         await StorageServices.removeKey('bio');
+      //       }
+      //     });
+      //   }
+      // }
+    // } catch (e){
       await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             title: Align(
               child: Text("Oops"),
             ),
             content: Padding(
               padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: Text("$e!", textAlign: TextAlign.center),
+              child: Text("This Feature has not implemented yet!", textAlign: TextAlign.center),
             ),
             actions: <Widget>[
               FlatButton(
@@ -163,7 +162,7 @@ class MenuState extends State<Menu> {
           );
         },
       );
-    }
+    // }
   }
 
   Future<bool> authenticateBiometric() async {
