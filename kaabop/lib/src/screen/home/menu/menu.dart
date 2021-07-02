@@ -151,7 +151,7 @@ class MenuState extends State<Menu> {
             ),
             content: Padding(
               padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: Text("This Feature has not implemented yet!", textAlign: TextAlign.center),
+              child: Text("This feature has not implemented yet!", textAlign: TextAlign.center),
             ),
             actions: <Widget>[
               FlatButton(

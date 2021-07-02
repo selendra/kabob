@@ -3,7 +3,8 @@ import 'package:vibration/vibration.dart';
 
 class Passcode extends StatefulWidget {
   final String isHome;
-  const Passcode({this.isHome});
+  final bool isAppBar;
+  const Passcode({this.isHome, this.isAppBar});
   //static const route = '/passcode';
 
   @override
@@ -146,7 +147,7 @@ class _PasscodeState extends State<Passcode> {
             child: Center(
               child: Column(
                 children: <Widget>[
-                  MyAppBar(title: "Set passcode", onPressed: (){
+                  widget.isAppBar ? Container() : MyAppBar(title: "Set passcode", onPressed: (){
                     Navigator.pop(context);
                   },),
 
