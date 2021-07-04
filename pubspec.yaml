@@ -10,15 +10,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.12.0
-  webview_flutter: ^1.0.7
-  flutter_webview_plugin: ^0.3.11
-  shared_preferences: ^0.5.6
-  get_storage: ^1.4.0
-  json_annotation: ^3.0.1
-  flutter_aes_ecb_pkcs5: ^0.1.1
-  convert: ^2.1.1
-  mobx: ^1.2.1+2
+  http:
+  webview_flutter:
+  flutter_webview_plugin:
+  shared_preferences:
+  get_storage:
+  json_annotation:
+  flutter_aes_ecb_pkcs5: 
+  convert: 
+  mobx: 
  
 
 dev_dependencies:

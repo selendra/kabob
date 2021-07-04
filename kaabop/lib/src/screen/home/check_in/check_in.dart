@@ -54,6 +54,7 @@ class _CheckInState extends State<CheckIn> {
   }
 
   Future<void> _getCurrentLocation() async {
+<<<<<<< HEAD
     final geoLocator = Geolocator.requestPermission();
     geoLocator.then((value) {
       print("My location $value");
@@ -68,21 +69,33 @@ class _CheckInState extends State<CheckIn> {
     //     addressName(LatLng(position.latitude, position.longitude));
     //   }
     // });
+=======
+    final geoLocator = Geolocator()..forceAndroidLocationManager;
+    geoLocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      if (mounted) {
+        _location = '${position.latitude},${position.longitude}';
+
+        addressName(LatLng(position.latitude, position.longitude));
+      }
+    });
+>>>>>>> 16f1951207c8e196227ccb591d0081a6368beff0
   }
 
   Future<void> addressName(LatLng place) async {
-    // final List<Placemark> placemark = await Geolocator()
-    //     .placemarkFromCoordinates(place.latitude, place.longitude);
+    final List<Placemark> placemark = await Geolocator()
+        .placemarkFromCoordinates(place.latitude, place.longitude);
 
-    // setState(() {
-    //   _checkInModel.locationController.text =
-    //       "${placemark[0].thoroughfare}, ${placemark[0].subLocality}, ${placemark[0].administrativeArea}";
-    //   if (_checkInModel.hashController.text.isNotEmpty) {
-    //     setState(() {
-    //       _checkInModel.isEnable = true;
-    //     });
-    //   }
-    // });
+    setState(() {
+      _checkInModel.locationController.text =
+          "${placemark[0].thoroughfare}, ${placemark[0].subLocality}, ${placemark[0].administrativeArea}";
+      if (_checkInModel.hashController.text.isNotEmpty) {
+        setState(() {
+          _checkInModel.isEnable = true;
+        });
+      }
+    });
   }
 
   Future enableAnimation() async {

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Bitriel</string>
+	<string>SELENDRA</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIcons</key>
@@ -37,29 +37,19 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FacebookAppID</key>
 	<string>2000018596961531</string>
 	<key>FacebookDisplayName</key>
 	<string>Flutter2</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Play using while you are hiking</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Calender is required to set match reminders.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Used to scan qr codes</string>
-	<key>NSContactsUsageDescription</key>
-	<string>This app requires contacts access to function properly.</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Bitriel authentication with TouchId or FaceID</string>
-	<key>NSMotionUsageDescription</key>
-	<string>This app needs to be able to access your motion use</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>recognize speech</string>
+	<string>Camera permission is required for barcode scanning.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSContactsUsageDescription</key>  
+	<string>This app requires contacts access to function properly.</string>  
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
@@ -77,7 +67,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Why is my app authenticating using face id?</string>
 </dict>
 </plist>
+
