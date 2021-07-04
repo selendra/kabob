@@ -109,10 +109,10 @@ class AddAssetState extends State<AddAsset> {
     setState(() {
       _modelAsset.loading = true;
     });
-    final resEther =
-        await validateEtherAddress(_modelAsset.controllerAssetCode.text);
+    final resEther = await validateEtherAddress(_modelAsset.controllerAssetCode.text);
     final res = await validateAddress(_modelAsset.controllerAssetCode.text);
-
+    print("ResEther $resEther");
+    print("Res $res");
     if (res || resEther) {
       if (res) {
         if (_modelAsset.controllerAssetCode.text == AppConfig.kmpiAddr) {
@@ -138,7 +138,7 @@ class AddAssetState extends State<AddAsset> {
       }
     } else {
 
-       await showDialog(
+      await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(

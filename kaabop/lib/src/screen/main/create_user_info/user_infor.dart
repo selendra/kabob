@@ -46,33 +46,55 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   // ignore: avoid_positional_boolean_parameters
   Future<void> switchBiometric(bool switchValue) async {
-    _localAuth = LocalAuthentication();
+    // _localAuth = LocalAuthentication();
 
-    await _localAuth.canCheckBiometrics.then((value) async {
-      if (value == false) {
-        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
-      } else {
-        if (switchValue) {
-          await authenticateBiometric(_localAuth).then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.saveBio(_menuModel.switchBio);
-            }
-          });
-        } else {
-          await authenticateBiometric(_localAuth).then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.removeKey('bio');
-            }
-          });
-        }
-      }
-    });
+    // await _localAuth.canCheckBiometrics.then((value) async {
+    //   if (value == false) {
+    //     snackBar(context, "Your device doesn't have finger print");
+    //   } else {
+    //     if (switchValue) {
+    //       await authenticateBiometric(_localAuth).then((values) async {
+    //         if (_menuModel.authenticated) {
+    //           setState(() {
+    //             _menuModel.switchBio = switchValue;
+    //           });
+    //           await StorageServices.saveBio(_menuModel.switchBio);
+    //         }
+    //       });
+    //     } else {
+    //       await authenticateBiometric(_localAuth).then((values) async {
+    //         if (_menuModel.authenticated) {
+    //           setState(() {
+    //             _menuModel.switchBio = switchValue;
+    //           });
+    //           await StorageServices.removeKey('bio');
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            child: Text("Oops"),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text("This feature has not implemented yet!", textAlign: TextAlign.center),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
@@ -135,7 +157,6 @@ class MyUserInfoState extends State<MyUserInfo> {
     }
     return null;
   }
-
   void validateAll() {
     if (_userInfoM.userNameCon.text.isNotEmpty &&
         _userInfoM.passwordCon.text.isNotEmpty &&
@@ -259,7 +280,6 @@ class MyUserInfoState extends State<MyUserInfo> {
       );
     }
   }
-
   // Future<void> isDotContain() async {
   //   // Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
   //   // Provider.of<ApiProvider>(context, listen: false).isDotContain();

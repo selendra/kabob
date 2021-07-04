@@ -5,7 +5,7 @@ class MenuModel {
   bool switchPasscode = false;
   bool authenticated;
 
-  GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> globalKey;
 
   Map result = {};
 
