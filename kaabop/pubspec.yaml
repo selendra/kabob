@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.12+21
+version: 2.0.13+31
 #6 feature
 #8 debug
 #1 refactor
@@ -114,6 +114,7 @@ dependencies:
   flare_flutter:
   responsive_framework: ^0.0.8
   circular_check_box: ^1.0.4
+  flutter_launcher_icons: ^0.8.1
 
 
 
@@ -123,7 +124,10 @@ dev_dependencies:
   lint: ^1.0.0
 
 
-  
+flutter_icons:
+  image_path: "assets/bitriel_icon.png"
+  ios: true
+  android: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
