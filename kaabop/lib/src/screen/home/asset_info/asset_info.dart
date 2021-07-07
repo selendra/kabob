@@ -300,43 +300,66 @@ class _AssetInfoState extends State<AssetInfo> {
             return [
               SliverAppBar(
                 pinned: true,
-                expandedHeight: 65,
+                expandedHeight: 77,
                 forceElevated: innerBox,
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Row(
+                automaticallyImplyLeading: false,
+                leading: Container(),
+                flexibleSpace: Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Column(
                     children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.only(right: 16),
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Image.asset(
-                          widget.assetLogo,
-                          fit: BoxFit.contain,
-                        ),
+                      Flexible(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.pop(context);
+                              }, 
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(right: 15, left: 10),
+                                child: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios, color: Colors.white, size: 28)
+                              )
+                            ),
+
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(right: 8),
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Image.asset(
+                                widget.assetLogo,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            MyText(
+                              fontSize: 18.0,
+                              color: "#FFFFFF",
+                              text: widget.id == null
+                                  ? widget.tokenSymbol
+                                  : widget.id.toUpperCase(),
+                            ),
+
+                            Expanded(child: Container()),
+
+                            // Right Text 
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: MyText(
+                                fontSize: 16.0,
+                                text: widget.org == 'BEP-20' ? 'BEP-20' : '',
+                              )
+                            ),
+                          ],
+                        )
                       ),
-                      MyText(
-                        fontSize: 16.0,
-                        color: "#FFFFFF",
-                        text: widget.id == null
-                            ? widget.tokenSymbol
-                            : widget.id.toUpperCase(),
-                      ),
-                    ],
-                  ),
+                    ]
+                  )
                 ),
-                
-                actions: <Widget>[
-                  MyText(
-                    top: 12.0,
-                    right: 16.0,
-                    fontSize: 16.0,
-                    text: widget.org == 'BEP-20' ? 'BEP-20' : '',
-                  ),
-                ],
               ),
 
               SliverList(
