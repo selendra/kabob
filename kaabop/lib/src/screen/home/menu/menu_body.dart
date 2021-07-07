@@ -103,7 +103,7 @@ class MenuBody extends StatelessWidget {
             value: model.switchPasscode,
             onChanged: (value) {
               // Navigator.pushNamed(context, AppText.passcodeView);
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Passcode(isAppBar: true,)));
+              Navigator.push(context, MaterialPageRoute(builder: (context)=> const Passcode()));
             },
           ),
           onTap: null,

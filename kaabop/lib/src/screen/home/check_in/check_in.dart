@@ -54,22 +54,6 @@ class _CheckInState extends State<CheckIn> {
   }
 
   Future<void> _getCurrentLocation() async {
-<<<<<<< HEAD
-    final geoLocator = Geolocator.requestPermission();
-    geoLocator.then((value) {
-      print("My location $value");
-      // if (value == )
-    });
-    // geoLocator
-    //     .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-    //     .then((Position position) {
-    //   if (mounted) {
-    //     _location = '${position.latitude},${position.longitude}';
-
-    //     addressName(LatLng(position.latitude, position.longitude));
-    //   }
-    // });
-=======
     final geoLocator = Geolocator()..forceAndroidLocationManager;
     geoLocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
@@ -80,7 +64,6 @@ class _CheckInState extends State<CheckIn> {
         addressName(LatLng(position.latitude, position.longitude));
       }
     });
->>>>>>> 16f1951207c8e196227ccb591d0081a6368beff0
   }
 
   Future<void> addressName(LatLng place) async {

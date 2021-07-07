@@ -30,89 +30,90 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+ 
+
 
   geolocator: ^5.3.2+2
 
-  url_launcher:
+  url_launcher: ^6.0.3
   
-  latlong:
-  web_socket_channel:
+  latlong: ^0.6.1
+  web_socket_channel: ^1.1.0
 
-  webview_flutter:
+  webview_flutter: ^1.0.7
 
-  gsheets:
+  gsheets: ^0.2.7
   
   # Database
-  shared_preferences:
+  shared_preferences: ^0.5.12+2
 
   # Backend
   http: 
   connectivity:
   connectivity_wrapper:
-  async:
+  async: ^2.4.2
 
   # Image service
 
-  flutter_svg:
+  flutter_svg: ^0.19.3
   intl:
 
   # Camera
   qr_flutter: 
-  qr_code_scanner:
+  qr_code_scanner: ^0.4.0
 
   # Chart
   flutter_circular_chart:
   syncfusion_flutter_charts:
   charts_flutter:
-  fl_chart:
-  pie_chart:
+  fl_chart: ^0.12.0
+  pie_chart: ^5.0.0
 
   #Indecator
   percent_indicator:
 
   # Icons
   line_awesome_flutter:
-  pinput:
+  pinput: ^1.0.0
   transparent_image: 
   autocomplete_textfield:
   date_format:
  
   device_preview:
   store_redirect:
-  share:
+  share: ^2.0.0
 
-  vibration:
+  vibration: ^1.7.3
  
   # Apps Configuration
-  rename:
+  rename: ^1.3.0
   package_info: 
-  shimmer:
+  shimmer: ^1.1.2
 
   #Authenticatioin & Verification
-  local_auth:
-  permission_handler:
+  local_auth: ^0.6.3+4
+  permission_handler: ^5.0.1+1
 
   #for secure wallet function
 
   polkawallet_sdk:
     path: ../
-  animations:
-  provider:
-  web3dart:
-  bitcoin_flutter:
+  animations: ^1.1.2
+  provider: ^4.3.3
+  web3dart: ^1.2.3
+  bitcoin_flutter: ^2.0.2
 
-  flutter_secure_storage:
-  flutter_screenshot_switcher:
+  flutter_secure_storage: ^4.1.0
+  flutter_screenshot_switcher: ^1.2.0
 
   #Contact
-  contacts_service:
-  fluttercontactpicker: 
+  contacts_service: ^0.4.6 
+  fluttercontactpicker: ^4.2.1
   
   #animation
   flare_flutter:
-  responsive_framework:
-  circular_check_box:
-  flutter_launcher_icons:
+  responsive_framework: ^0.0.8
+  circular_check_box: ^1.0.4
 
 
 
@@ -121,10 +122,8 @@ dev_dependencies:
     sdk: flutter
   lint: ^1.0.0
 
-flutter_icons:
-  image_path: "assets/bitriel_icon.svg"
-  ios: true
-  android: true
+
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

@@ -400,8 +400,13 @@ class SubmitTrxState extends State<SubmitTrx> {
     try {
       final res = await getPrivateKey(pin);
 
+      print("Response get key $res");
+
       if (res != null) {
+
         final hash = await contract.sendTxBnb(res, reciever, amount);
+        print("Contract $hash");
+
         if (hash != null) {
           Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
           enableAnimation();
@@ -410,8 +415,9 @@ class SubmitTrxState extends State<SubmitTrx> {
         }
       }
     } catch (e) {
+      print("Error $e");
       Navigator.pop(context);
-      await customDialog('Opps', e.message.toString());
+      await customDialog('Oops', e.message.toString());
     }
   }
 
@@ -569,8 +575,8 @@ class SubmitTrxState extends State<SubmitTrx> {
       key: _scanPayM.globalKey,
       body: _loading
           ? const Center(
-              child: CircularProgressIndicator(),
-            )
+            child: CircularProgressIndicator(),
+          )
           : BodyScaffold(
               height: MediaQuery.of(context).size.height,
               child: Stack(
