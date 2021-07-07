@@ -39,9 +39,13 @@ class MyPieChartRow extends StatelessWidget{
           ),
 
           Expanded(
-            child: MyText(
-              text: "$endText%",
-              fontSize: 14.0,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: MyText(
+                right: 15,
+                text: "$endText%",
+                fontSize: 14.0,
+              )
             ),
           ),
         ],

@@ -151,7 +151,7 @@ class _PasscodeState extends State<Passcode> {
 
                   // Show AppBar Only In Landing Pages
                   if(widget.isAppBar) MyAppBar(
-                    title: "Set Pin",
+                    title: "Set Passcode",
                     onPressed: () {
                       Navigator.pop(context);
                     },
