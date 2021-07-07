@@ -2,8 +2,10 @@ import 'package:wallet_apps/index.dart';
 import 'package:vibration/vibration.dart';
 
 class Passcode extends StatefulWidget {
+
   final String isHome;
-  const Passcode({this.isHome});
+  final bool isAppBar;
+  const Passcode({this.isAppBar = false, this.isHome});
   //static const route = '/passcode';
 
   @override
@@ -146,12 +148,16 @@ class _PasscodeState extends State<Passcode> {
             child: Center(
               child: Column(
                 children: <Widget>[
-                  MyAppBar(
-                    title: "Receive wallet",
+
+                  // Show AppBar Only In Landing Pages
+                  if(widget.isAppBar) MyAppBar(
+                    title: "Set Pin",
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                  ),
+                  ) 
+                  else Container(),
+
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.1,
                   ),
