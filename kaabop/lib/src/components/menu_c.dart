@@ -24,6 +24,7 @@ class MenuHeader extends StatelessWidget {
             builder: (context, value, child) {
               return Row(
                 children: [
+
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -37,13 +38,15 @@ class MenuHeader extends StatelessWidget {
                       child: SvgPicture.string(acc.addressIcon),
                     ),
                   ),
+
                   const SizedBox(width: 5),
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       MyText(
-                        text: acc.name,
+                        text: acc.name ?? '',
                         color: "#FFFFFF",
                         fontSize: 16,
                       ),
@@ -104,10 +107,11 @@ class MyListTile extends StatelessWidget {
       enabled: enable,
       onTap: onTap,
       leading: SvgPicture.asset(
-          MenuModel.listTile[index]['sub'][subIndex]['icon'].toString(),
-          color: Colors.white,
-          width: 30,
-          height: 30),
+        MenuModel.listTile[index]['sub'][subIndex]['icon'].toString(),
+        color: Colors.white,
+        width: 30,
+        height: 30
+      ),
       title: MyText(
         text: MenuModel.listTile[index]['sub'][subIndex]['subTitle'].toString(),
         color: "#FFFFFF",

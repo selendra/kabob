@@ -48,7 +48,7 @@ class SubmitTrxBody extends StatelessWidget {
           textInputFormatter: [
             LengthLimitingTextInputFormatter(TextField.noMaxLength)
           ],
-          inputType: Platform.isAndroid ? TextInputType.number : TextInputType.phone,
+          inputType: Platform.isAndroid ? TextInputType.number : TextInputType.text,
           controller: scanPayM.controlAmount,
           focusNode: scanPayM.nodeAmount,
           validateField: validateField,

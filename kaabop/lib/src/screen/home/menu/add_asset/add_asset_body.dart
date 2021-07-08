@@ -70,7 +70,7 @@ class AddAssetBody extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            height: 120,
+            height: 250,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Form(
               key: assetM.formStateAsset,
@@ -264,14 +264,11 @@ class AddAssetBody extends StatelessWidget {
     );
   }
 
-  Widget portFolioItemRow(
-      String logo, String tokenSymbol, Color color, Function addAsset) {
+  Widget portFolioItemRow(String logo, String tokenSymbol, Color color, Function addAsset) {
     return rowDecorationStyle(
       child: Row(
         children: <Widget>[
           Container(
-            width: 50,
-            height: 50,
             padding: const EdgeInsets.all(6),
             margin: const EdgeInsets.only(right: 20),
             decoration: BoxDecoration(
@@ -327,7 +324,7 @@ class AddAssetBody extends StatelessWidget {
     return Container(
         margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
         padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
-        height: 110,
+        height: 150,
         decoration: BoxDecoration(
           boxShadow: const [
             BoxShadow(
