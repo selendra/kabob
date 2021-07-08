@@ -70,6 +70,7 @@ class AddAssetBody extends StatelessWidget {
         ),
         Expanded(
           child: Container(
+            height: 120,
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Form(
               key: assetM.formStateAsset,
@@ -130,8 +131,7 @@ class AddAssetBody extends StatelessWidget {
                   // ),
 
                   Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 16.0, vertical: 8.0),
+                    margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     height: 65,
                     width: double.infinity,
                     decoration: BoxDecoration(
@@ -162,6 +162,7 @@ class AddAssetBody extends StatelessWidget {
                       ],
                     ),
                   ),
+
                   MyInputField(
                     pBottom: 16.0,
                     labelText: "Token Contract Address",
@@ -176,6 +177,7 @@ class AddAssetBody extends StatelessWidget {
                     onChanged: onChanged,
                     onSubmit: onSubmit,
                   ),
+
                   if (assetM.match)
                     Container(
                       padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -223,6 +225,7 @@ class AddAssetBody extends StatelessWidget {
                     const CircularProgressIndicator()
                   else
                     Container(),
+                    
                   Align(
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
@@ -244,6 +247,7 @@ class AddAssetBody extends StatelessWidget {
                       ),
                     ),
                   ),
+                  
                 ],
               ),
             ),
@@ -323,7 +327,7 @@ class AddAssetBody extends StatelessWidget {
     return Container(
         margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
         padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
-        height: 90,
+        height: 110,
         decoration: BoxDecoration(
           boxShadow: const [
             BoxShadow(
