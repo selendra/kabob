@@ -1,6 +1,7 @@
 import 'package:wallet_apps/index.dart';
 
 class MyUserInfoBody extends StatelessWidget {
+  
   final ModelUserInfo modelUserInfo;
   final Function onSubmit;
   final String Function(String) onChanged;
@@ -67,8 +68,7 @@ class MyUserInfoBody extends StatelessWidget {
                       obscureText: true,
                       controller: modelUserInfo.passwordCon,
                       textInputAction: TextInputAction.next,
-                      style: TextStyle(
-                          color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
+                      style: TextStyle(color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
                       decoration: InputDecoration(
                         labelText: "Pin",
                         labelStyle: TextStyle(
