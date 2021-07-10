@@ -216,7 +216,9 @@ class AddAssetBody extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () async {
                       final _response = await Navigator.push(
-                          context, transitionRoute(QrScanner()));
+                          context, 
+                          MaterialPageRoute(builder: (context) =>QrScanner()));
+                          // transitionRoute(QrScanner()));
                       if (_response != null) {
                         qrRes(_response.toString());
                       }
