@@ -1,7 +1,7 @@
 import 'package:wallet_apps/index.dart';
 
 class MyUserInfoBody extends StatelessWidget {
-  
+
   final ModelUserInfo modelUserInfo;
   final Function onSubmit;
   final String Function(String) onChanged;
@@ -167,8 +167,29 @@ class MyUserInfoBody extends StatelessWidget {
                           width: 50,
                           child: Switch(
                             value: model.switchBio,
-                            onChanged: (value) {
-                              switchBio(value);
+                            onChanged: (value) async {
+                              // switchBio(value);
+                              await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                                    title: Align(
+                                      child: Text("Oops"),
+                                    ),
+                                    content: Padding(
+                                      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                      child: Text("This feature has not implemented yet!", textAlign: TextAlign.center),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('Close'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
                         ),
