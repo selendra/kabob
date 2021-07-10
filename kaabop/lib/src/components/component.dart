@@ -298,6 +298,7 @@ class BodyScaffold extends StatelessWidget {
   final Widget child;
   final double width;
   final double height;
+  final ScrollPhysics physic;
 
   const BodyScaffold({
     this.left = 0,
@@ -307,12 +308,13 @@ class BodyScaffold extends StatelessWidget {
     this.child,
     this.height,
     this.width,
+    this.physic
   });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: physic,
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: height,

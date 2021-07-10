@@ -44,6 +44,7 @@ class QrScannerState extends State<QrScanner> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BodyScaffold(
+        physic: const NeverScrollableScrollPhysics(),
         height: MediaQuery.of(context).size.height,
         bottom: 0,
         child: Column(
@@ -55,7 +56,6 @@ class QrScannerState extends State<QrScanner> {
               },
             ),
             Expanded(
-              flex: 5,
               child: QRView(
                 key: qrKey,
                 onQRViewCreated: _onQrViewCreated,
@@ -63,7 +63,7 @@ class QrScannerState extends State<QrScanner> {
                   borderRadius: 10,
                   borderWidth: 10,
                 ),
-              ),
+              )
             ),
           ],
         ),
