@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/reuse_dropdown.dart';
 
@@ -54,13 +55,15 @@ class SubmitTrxBody extends StatelessWidget {
           validateField: validateField,
           onChanged: onChanged,
           onSubmit: () {}),
-    
     ];
-
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: [
         MyAppBar(
           title: "Send wallet",
+          color: isDarkTheme
+              ? hexaCodeToColor(AppColors.darkCard)
+              : hexaCodeToColor(AppColors.cardColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -88,15 +91,20 @@ class SubmitTrxBody extends StatelessWidget {
                       right: 14.0,
                     ),
                     decoration: BoxDecoration(
-                      color: hexaCodeToColor(AppColors.cardColor),
+                      color: isDarkTheme
+                          ? hexaCodeToColor(AppColors.darkCard)
+                          : hexaCodeToColor(AppColors.cardColor),
                       borderRadius: BorderRadius.circular(size5),
                     ),
                     child: Row(
                       children: <Widget>[
-                        const Expanded(
+                        Expanded(
                           child: MyText(
                             text: 'Asset',
                             textAlign: TextAlign.left,
+                            color: isDarkTheme
+                                ? AppColors.darkSecondaryText
+                                : AppColors.textColor,
                           ),
                         ),
                         ReuseDropDown(
@@ -104,7 +112,7 @@ class SubmitTrxBody extends StatelessWidget {
                           onChanged: resetAssetsDropDown,
                           itemsList: list,
                           style: TextStyle(
-                            color: hexaCodeToColor(AppColors.textColor),
+                            color: hexaCodeToColor(AppColors.darkSecondaryText),
                           ),
                         ),
                       ],

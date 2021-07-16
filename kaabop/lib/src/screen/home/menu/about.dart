@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/src/components/component.dart';
-import 'package:wallet_apps/src/components/route_animation.dart';
-import 'package:wallet_apps/src/screen/home/menu/privacy.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../index.dart';
 
 class About extends StatelessWidget {
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Future<void> _launchInBrowser(String url) async {
     if (await canLaunch(url)) {
@@ -24,6 +23,7 @@ class About extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       key: _scaffoldKey,
       body: BodyScaffold(
@@ -32,6 +32,9 @@ class About extends StatelessWidget {
           children: [
             MyAppBar(
               title: "About",
+              color: isDarkTheme
+                  ? hexaCodeToColor(AppColors.darkCard)
+                  : hexaCodeToColor(AppColors.cardColor),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -49,10 +52,12 @@ class About extends StatelessWidget {
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     MyText(
                       text: 'Privacy Policy',
-                      color: '#FFFFFF',
+                      color: isDarkTheme
+                          ? AppColors.whiteColorHexa
+                          : AppColors.textColor,
                       textAlign: TextAlign.left,
                     ),
                     MyText(
@@ -60,6 +65,9 @@ class About extends StatelessWidget {
                       text: 'Read our full Privacy Policy',
                       fontSize: 16,
                       textAlign: TextAlign.left,
+                      color: isDarkTheme
+                          ? AppColors.darkSecondaryText
+                          : AppColors.textColor,
                     ),
                   ],
                 ),
@@ -75,17 +83,22 @@ class About extends StatelessWidget {
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     MyText(
                       text: 'Terms of Use',
-                      color: '#FFFFFF',
                       textAlign: TextAlign.left,
+                      color: isDarkTheme
+                          ? AppColors.whiteColorHexa
+                          : AppColors.textColor,
                     ),
                     MyText(
                       top: 4.0,
                       text: 'Read our term of use for Bitriel app',
                       fontSize: 16,
                       textAlign: TextAlign.left,
+                      color: isDarkTheme
+                          ? AppColors.darkSecondaryText
+                          : AppColors.textColor,
                     ),
                   ],
                 ),
@@ -101,8 +114,10 @@ class About extends StatelessWidget {
                   children: [
                     MyText(
                       text: 'Contact',
-                      color: '#FFFFFF',
                       textAlign: TextAlign.left,
+                      color: isDarkTheme
+                          ? AppColors.whiteColorHexa
+                          : AppColors.textColor,
                     ),
                     MyText(
                       top: 4.0,
@@ -110,6 +125,9 @@ class About extends StatelessWidget {
                           'For questions, concerns, or comments can be address to: ',
                       fontSize: 16,
                       textAlign: TextAlign.left,
+                      color: isDarkTheme
+                          ? AppColors.darkSecondaryText
+                          : AppColors.textColor,
                     ),
                     Row(
                       children: [
@@ -117,17 +135,19 @@ class About extends StatelessWidget {
                           top: 4.0,
                           text: 'info@bitriel.com',
                           fontSize: 16,
-                          color: '#FFFFFF',
                           textAlign: TextAlign.left,
+                          color: isDarkTheme
+                              ? AppColors.whiteColorHexa
+                              : AppColors.textColor,
                         ),
                         IconButton(
                           onPressed: () {
                             Clipboard.setData(
-                             const ClipboardData(text: 'info@bitriel.com'),
+                              const ClipboardData(text: 'info@bitriel.com'),
                             ).then(
                               (value) => {
                                 // ignore: deprecated_member_use
-                               _scaffoldKey.currentState.showSnackBar(
+                                _scaffoldKey.currentState.showSnackBar(
                                   const SnackBar(
                                     content: Text('Copied to Clipboard'),
                                   ),
@@ -137,7 +157,7 @@ class About extends StatelessWidget {
                           },
                           icon: Icon(
                             Icons.copy,
-                            color: Colors.white,
+                            color: isDarkTheme ? Colors.white : Colors.black,
                           ),
                         )
                       ],
@@ -146,7 +166,6 @@ class About extends StatelessWidget {
                 ),
               ),
             ),
-
             InkWell(
               onTap: () {},
               child: Container(
@@ -155,11 +174,13 @@ class About extends StatelessWidget {
                 width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     MyText(
                       text: 'About',
-                      color: '#FFFFFF',
                       textAlign: TextAlign.left,
+                      color: isDarkTheme
+                          ? AppColors.whiteColorHexa
+                          : AppColors.textColor,
                     ),
                     MyText(
                       top: 6.0,
@@ -167,13 +188,14 @@ class About extends StatelessWidget {
                           'Bitriel Wallets are used to store and transact SEL tokens and multiple other cryptocoins. Wallets can be integrated into any application where a use case exists, connecting the application to the Selendra main chain.',
                       fontSize: 16,
                       textAlign: TextAlign.left,
+                      color: isDarkTheme
+                          ? AppColors.darkSecondaryText
+                          : AppColors.textColor,
                     ),
                   ],
                 ),
               ),
             ),
-
-      
           ],
         ),
       ),

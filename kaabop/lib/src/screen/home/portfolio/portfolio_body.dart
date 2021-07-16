@@ -118,19 +118,19 @@ class PortfolioBody extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                          const MyText(bottom: 16, text: "Wallet"),
-                         const MyPercentText(
-                            value: "+10.5",
-                          ),
-                          LinearPercentIndicator(
-                            alignment: MainAxisAlignment.center,
-                            width: 100.0,
-                            percent: 0.5,
-                            backgroundColor:
-                                hexaCodeToColor(AppColors.cardColor),
-                            progressColor:
-                                hexaCodeToColor(AppColors.secondarytext),
-                            animation: true,
-                          )
+                        //  const MyPercentText(
+                        //     value: "+10.5",
+                        //   ),
+                        //   LinearPercentIndicator(
+                        //     alignment: MainAxisAlignment.center,
+                        //     width: 100.0,
+                        //     percent: 0.5,
+                        //     backgroundColor:
+                        //         hexaCodeToColor(AppColors.cardColor),
+                        //     progressColor:
+                        //         hexaCodeToColor(AppColors.secondarytext),
+                        //     animation: true,
+                        //   )
                         ],
                       ),
                     ),
@@ -143,18 +143,18 @@ class PortfolioBody extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const MyText(bottom: 16, text: "Market"),
-                          const MyPercentText(
-                            value: "0.0",
-                          ),
-                          LinearPercentIndicator(
-                            alignment: MainAxisAlignment.center,
-                            width: 100.0,
-                            percent: 0.5,
-                            backgroundColor:
-                                hexaCodeToColor(AppColors.cardColor),
-                            progressColor: hexaCodeToColor("#00FFF0"),
-                            animation: true,
-                          )
+                          // const MyPercentText(
+                          //   value: "0.0",
+                          // ),
+                          // LinearPercentIndicator(
+                          //   alignment: MainAxisAlignment.center,
+                          //   width: 100.0,
+                          //   percent: 0.5,
+                          //   backgroundColor:
+                          //       hexaCodeToColor(AppColors.cardColor),
+                          //   progressColor: hexaCodeToColor("#00FFF0"),
+                          //   animation: true,
+                          // )
                         ],
                       ),
                     )

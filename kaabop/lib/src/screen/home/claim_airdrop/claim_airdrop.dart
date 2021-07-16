@@ -335,6 +335,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
   @override
   Widget build(BuildContext context) {
     _walletController.text = Provider.of<ContractProvider>(context).ethAdd;
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
@@ -344,6 +345,9 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
               children: [
                 MyAppBar(
                   title: 'Claim Airdrop',
+                  color: isDarkTheme
+                      ? hexaCodeToColor(AppColors.darkCard)
+                      : hexaCodeToColor(AppColors.cardColor),
                   onPressed: () {
                     Navigator.pop(context);
                   },

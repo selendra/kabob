@@ -24,7 +24,7 @@ class AssetInfoC {
                 iconSize: 40.0,
                 icon: const Icon(
                   LineAwesomeIcons.arrow_left,
-                  color: Colors.white,
+                  color: Colors.black,
                   size: 30,
                 ),
                 onPressed: leadingFunction,
@@ -49,7 +49,7 @@ class AssetInfoC {
       builder: (BuildContext context) {
         final _keyQrShare = GlobalKey();
         final _globalKey = GlobalKey<ScaffoldState>();
-
+        final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
           child: Scaffold(
@@ -57,7 +57,7 @@ class AssetInfoC {
             body: Container(
                 height: MediaQuery.of(context).size.height,
                 padding: const EdgeInsets.only(top: 27.0),
-                color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
+                color: isDarkTheme ? Color(AppUtils.convertHexaColor(AppColors.darkBgd)) : Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
                 child: symbol != null
                     ? Consumer<ContractProvider>(
                         builder: (context, value, child) {

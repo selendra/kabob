@@ -19,6 +19,9 @@ void main() {
         ChangeNotifierProvider<WalletProvider>(
           create: (context) => WalletProvider(),
         ),
+          ChangeNotifierProvider<MarketProvider>(
+          create: (context) => MarketProvider(),
+        ),
         ChangeNotifierProvider<ApiProvider>(
           create: (context) => ApiProvider(),
         ),

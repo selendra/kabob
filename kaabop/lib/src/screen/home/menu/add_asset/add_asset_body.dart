@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/reuse_dropdown.dart';
 
@@ -34,11 +35,15 @@ class AddAssetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: [
         Flexible(
           child: MyAppBar(
             title: "Add asset",
+            color: isDarkTheme
+                ? hexaCodeToColor(AppColors.darkCard)
+                : hexaCodeToColor(AppColors.cardColor),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -49,7 +54,11 @@ class AddAssetBody extends StatelessWidget {
                 // padding: edgePadding,
                 padding: const EdgeInsets.only(left: 30),
                 iconSize: 40.0,
-                icon: const Icon(Icons.search, color: Colors.white, size: 30),
+                icon: Icon(
+                  Icons.search,
+                  color: isDarkTheme ? Colors.white : Colors.black,
+                  size: 30,
+                ),
                 onPressed: () {
                   showSearch(
                     context: context,
@@ -76,79 +85,33 @@ class AddAssetBody extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Container(
-                  //   /* Type of payment */
-                  //   margin: const EdgeInsets.only(
-                  //     bottom: 16.0,
-                  //     left: 16,
-                  //     right: 16,
-                  //   ),
-                  //   child: Container(
-                  //     padding: const EdgeInsets.only(
-                  //       top: 11.0,
-                  //       bottom: 11.0,
-                  //       left: 26.0,
-                  //       right: 14.0,
-                  //     ),
-                  //     decoration: BoxDecoration(
-                  //       color: hexaCodeToColor(AppColors.cardColor),
-                  //       borderRadius: BorderRadius.circular(size5),
-                  //     ),
-                  //     child: Row(
-                  //       children: <Widget>[
-                  //         const Expanded(
-                  //           child: MyText(
-                  //             text: 'Asset',
-                  //             textAlign: TextAlign.left,
-                  //           ),
-                  //         ),
-                  //         ReuseDropDown(
-                  //           initialValue: "Asset name",
-                  //           onChanged: (value) {},
-                  //           itemsList: [],
-                  //           style: TextStyle(
-                  //             color: hexaCodeToColor(AppColors.textColor),
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // MyInputField(
-                  //   pBottom: 16.0,
-                  //   labelText: "Token Contract Address",
-                  //   textInputFormatter: [
-                  //     LengthLimitingTextInputFormatter(TextField.noMaxLength)
-                  //   ],
-                  //   controller: assetM.controllerAssetCode,
-                  //   focusNode: assetM.nodeAssetCode,
-                  //   validateField: (value) => value.isEmpty
-                  //       ? 'Please fill in token contract address'
-                  //       : null,
-                  //   onChanged: onChanged,
-                  //   onSubmit: onSubmit,
-                  // ),
-
                   Container(
                     margin: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8.0),
                     height: 65,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                        color: hexaCodeToColor(AppColors.cardColor),
+                        color: isDarkTheme
+                            ? hexaCodeToColor(AppColors.darkCard)
+                            : hexaCodeToColor(AppColors.cardColor),
                         borderRadius: BorderRadius.circular(8.0)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const MyText(
+                        MyText(
                           left: 16.0,
                           text: 'Select Network',
+                          color: isDarkTheme
+                              ? AppColors.darkSecondaryText
+                              : AppColors.textColor,
                         ),
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: ReuseDropDown(
                             style: TextStyle(
-                                color: hexaCodeToColor(AppColors.textColor)),
+                              color:
+                                  hexaCodeToColor(AppColors.darkSecondaryText),
+                            ),
                             initialValue: initialValue,
                             itemsList: const [
                               'Ethereum',

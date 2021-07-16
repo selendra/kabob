@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:wallet_apps/index.dart';
 
-
 class HomeBody extends StatelessWidget {
   final Function balanceOf;
   final Function setPortfolio;
@@ -11,19 +10,25 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return RefreshIndicator(
       onRefresh: () async {
         final contract = Provider.of<ContractProvider>(context, listen: false);
-         final api = Provider.of<ApiProvider>(context, listen: false);
+        final api = Provider.of<ApiProvider>(context, listen: false);
+        final market = Provider.of<MarketProvider>(context, listen: false);
         await Future.delayed(const Duration(milliseconds: 300))
             .then((value) async {
           setPortfolio();
-          MarketProvider().fetchTokenMarketPrice(context);
+          market.fetchTokenMarketPrice(context);
           if (contract.bnbNative.isContain) {
             contract.getBnbBalance();
           }
           if (contract.bscNative.isContain) {
             contract.getBscBalance();
+          }
+
+          if (contract.bscNativeV2.isContain) {
+            contract.getBscV2Balance();
           }
 
           if (contract.etherNative.isContain) {
@@ -34,13 +39,11 @@ class HomeBody extends StatelessWidget {
             contract.getKgoBalance();
           }
 
-          if(api.btc.isContain){
+          if (api.btc.isContain) {
             api.getBtcBalance(api.btcAdd);
           }
 
           if (contract.token.isNotEmpty) {
-
-            
             contract.fetchNonBalance();
             contract.fetchEtherNonBalance();
           }
@@ -49,12 +52,9 @@ class HomeBody extends StatelessWidget {
       child: ListView(
         children: [
           homeAppBar(context),
-          // const SizedBox(height: 200,),
           Container(
-            padding: const EdgeInsets.all(16.0),
             child: PortFolioCus(),
           ),
-
           Consumer<ContractProvider>(builder: (context, value, child) {
             return value.isReady
                 ? AnimatedOpacity(
@@ -64,8 +64,12 @@ class HomeBody extends StatelessWidget {
                   )
                 : Shimmer.fromColors(
                     period: const Duration(seconds: 2),
-                    baseColor: hexaCodeToColor(AppColors.cardColor),
-                    highlightColor:hexaCodeToColor(AppColors.bgdColor), //Colors.grey[50],
+                    baseColor: isDarkTheme
+                        ? hexaCodeToColor(AppColors.darkCard)
+                        : hexaCodeToColor(AppColors.cardColor),
+                    highlightColor: isDarkTheme
+                        ? hexaCodeToColor(AppColors.darkBgd)
+                        : hexaCodeToColor(AppColors.bgdColor),
                     child: ListView.builder(
                       shrinkWrap: true,
                       itemBuilder: (_, __) => Padding(
@@ -78,8 +82,8 @@ class HomeBody extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: 65, //size ?? 65,
-                                height: 65, //size ?? 65,
+                                width: 65,
+                                height: 65,
                                 padding: const EdgeInsets.all(6),
                                 margin: const EdgeInsets.only(right: 20),
                                 decoration: BoxDecoration(
@@ -128,7 +132,6 @@ class HomeBody extends StatelessWidget {
                     ),
                   );
           }),
-
           const SizedBox(
             height: 40,
           ),

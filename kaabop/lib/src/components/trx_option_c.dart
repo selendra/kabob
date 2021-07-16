@@ -2,8 +2,8 @@ import 'package:fluttercontactpicker/fluttercontactpicker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
 import 'package:polkawallet_sdk/storage/keyring.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-
 
 class MyBottomSheetItem extends StatelessWidget {
   final String subTitle;
@@ -15,16 +15,23 @@ class MyBottomSheetItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return GestureDetector(
         onTap: action,
         child: Column(
           children: [
-            SvgPicture.asset('assets/$icon',
-                width: 30, height: 30, color: Colors.white),
+            SvgPicture.asset(
+              'assets/$icon',
+              width: 30,
+              height: 30,
+              color: isDarkTheme ? Colors.white : Colors.black,
+            ),
             MyText(
               top: 6,
               text: subTitle,
               fontSize: 12,
+              color:
+                  isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
             )
           ],
         ));
@@ -98,20 +105,17 @@ class TrxOptionMethod {
     List<dynamic> portfolioList,
     WalletSDK sdk,
     Keyring keyring,
- 
   ) async {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                SubmitTrx("", true, portfolioList)));
+            builder: (context) => SubmitTrx("", true, portfolioList)));
   }
 
   /* Scan QR Code */
   static Future scanQR(
     BuildContext context,
     List<dynamic> portfolioList,
-  
   ) async {
     final String _response = await Navigator.push(
         context, MaterialPageRoute(builder: (context) => QrScanner()));

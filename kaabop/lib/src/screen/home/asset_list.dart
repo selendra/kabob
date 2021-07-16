@@ -87,8 +87,14 @@ class AssetList extends StatelessWidget {
       if (isValidSeed && isValidPw) {
         final seed = bip39.mnemonicToSeed(passphraseController.text);
         final hdWallet = HDWallet.fromSeed(seed);
+        final keyPair = ECPair.fromWIF(hdWallet.wif);
+        final bech32Address = new P2WPKH(
+                data: new PaymentData(pubkey: keyPair.publicKey),
+                network: bitcoin)
+            .data
+            .address;
 
-        await StorageServices.setData(hdWallet.address, 'btcaddress');
+        await StorageServices.setData(bech32Address, 'bech32');
         final res = await ApiProvider.keyring.store
             .encryptPrivateKey(hdWallet.wif, pinController.text);
 
@@ -102,7 +108,7 @@ class AssetList extends StatelessWidget {
             .isBtcAvailable('contain');
 
         Provider.of<ApiProvider>(context, listen: false)
-            .setBtcAddr(hdWallet.address);
+            .setBtcAddr(bech32Address);
         Provider.of<WalletProvider>(context, listen: false)
             .addTokenSymbol('BTC');
         Navigator.pop(context);
@@ -165,7 +171,38 @@ class AssetList extends StatelessWidget {
                 Colors.transparent,
                 marketPrice: value.bscNative.marketPrice,
                 priceChange24h: value.bscNative.change24h,
-               
+              ),
+            );
+          },
+        ),
+        Consumer<ContractProvider>(
+          builder: (context, value, child) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  RouteAnimation(
+                    enterPage: AssetInfo(
+                      id: value.bscNativeV2.id,
+                      assetLogo: value.bscNativeV2.logo,
+                      balance:
+                          value.bscNativeV2.balance ?? AppText.loadingPattern,
+                      tokenSymbol: value.bscNativeV2.symbol ?? '',
+                      org: value.bscNativeV2.org,
+                      marketPrice: value.bscNativeV2.marketPrice,
+                      priceChange24h: value.bscNativeV2.change24h,
+                    ),
+                  ),
+                );
+              },
+              child: AssetItem(
+                value.bscNativeV2.logo,
+                value.bscNativeV2.symbol ?? '',
+                'BEP-20',
+                value.bscNativeV2.balance ?? AppText.loadingPattern,
+                Colors.transparent,
+                marketPrice: value.bscNativeV2.marketPrice,
+                priceChange24h: value.bscNativeV2.change24h,
               ),
             );
           },
@@ -197,7 +234,7 @@ class AssetList extends StatelessWidget {
                 'BEP-20',
                 value.kgoNative.balance ?? AppText.loadingPattern,
                 Colors.transparent,
-                marketPrice: value.kgoNative.marketPrice.substring(0,8),
+                marketPrice: value.kgoNative.marketPrice,
                 priceChange24h: value.kgoNative.change24h,
                 lineChartData: value.kgoNative.lineChartData,
               ),
@@ -305,7 +342,6 @@ class AssetList extends StatelessWidget {
                       marketData: value.bnbNative.marketData,
                       marketPrice: value.bnbNative.marketPrice,
                       priceChange24h: value.bnbNative.change24h,
-                      
                     ),
                   ),
                 );
@@ -326,6 +362,7 @@ class AssetList extends StatelessWidget {
         ),
         Consumer<ApiProvider>(
           builder: (context, value, child) {
+            final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
             return GestureDetector(
               onTap: () async {
                 if (!value.btc.isContain) {
@@ -337,19 +374,26 @@ class AssetList extends StatelessWidget {
                       return Container(
                         padding: const EdgeInsets.all(25.0),
                         height: MediaQuery.of(context).size.height / 1.2,
-                        color: Color(
-                            AppUtils.convertHexaColor(AppColors.bgdColor)),
+                        color: isDarkTheme
+                            ? Color(
+                                AppUtils.convertHexaColor(AppColors.darkBgd),
+                              )
+                            : Color(
+                                AppUtils.convertHexaColor(AppColors.bgdColor),
+                              ),
                         child: Form(
                           key: _formKey,
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                const MyText(
+                                MyText(
                                   top: 16.0,
                                   bottom: 16.0,
                                   fontSize: 22,
                                   text: 'Create Bitcoin Wallet',
-                                  color: '#FFFFFFF',
+                                  color: isDarkTheme
+                                      ? AppColors.whiteColorHexa
+                                      : AppColors.textColor,
                                 ),
                                 const SizedBox(height: 16.0),
                                 MyInputField(
@@ -408,6 +452,8 @@ class AssetList extends StatelessWidget {
                         tokenSymbol: value.btc.symbol,
                         org: value.btc.org ?? '',
                         marketData: value.btc.marketData,
+                        marketPrice: value.btc.marketPrice,
+                        priceChange24h: value.btc.change24h,
                       ),
                     ),
                   );
@@ -420,8 +466,8 @@ class AssetList extends StatelessWidget {
                 value.btc.balance ?? AppText.loadingPattern,
                 Colors.transparent,
                 size: 60,
-                marketPrice: value.btc.marketPrice ?? '',
-                priceChange24h: value.btc.change24h ?? '',
+                marketPrice: value.btc.marketPrice,
+                priceChange24h: value.btc.change24h,
                 lineChartData: value.btc.lineChartData,
               ),
             );

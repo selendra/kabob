@@ -24,6 +24,13 @@ class ContractProvider with ChangeNotifier {
     org: 'BEP-20',
     isContain: true,
   );
+   NativeM bscNativeV2 = NativeM(
+    id: 'selendra v2',
+    logo: 'assets/SelendraCircle-Blue.png',
+    symbol: 'SEL (v2)',
+    org: 'BEP-20',
+    isContain: true,
+  );
 
   NativeM kgoNative = NativeM(
     id: 'kiwigo',
@@ -84,6 +91,16 @@ class ContractProvider with ChangeNotifier {
     return contract;
   }
 
+  Future<DeployedContract> initSwapSel(String contractAddr) async {
+    final String abiCode = await rootBundle.loadString('assets/abi/swap.json');
+    final contract = DeployedContract(
+      ContractAbi.fromJson(abiCode, 'Swap'),
+      EthereumAddress.fromHex(contractAddr),
+    );
+
+    return contract;
+  }
+
   Future<DeployedContract> initEtherContract(String contractAddr) async {
     final String abiCode = await rootBundle.loadString('assets/abi/erc20.json');
 
@@ -93,6 +110,57 @@ class ContractProvider with ChangeNotifier {
     );
 
     return contract;
+  }
+
+  Future<String> approveSwap(String privateKey) async {
+    final String oldSelAddr = "0x288d3A87a87C284Ed685E0490E5C4cC0883a060a";
+    final String newSelAddr = "0x54419268c31678C31e94dB494C509193d7d2BB5D";
+
+    final contract = await initBsc(oldSelAddr);
+    final ethFunction = contract.function('approve');
+
+    // final credentials = EthPrivateKey('0x5f64cd3fe9ed1f0639e2ce4f072ca8f58a5947b6f55ff92c456dbe005b614687'as Uint8List);
+    final credentials = await _web3client.credentialsFromPrivateKey(privateKey);
+
+    final approve = await _web3client.sendTransaction(
+      credentials,
+      Transaction.callContract(
+        contract: contract,
+        function: ethFunction,
+        parameters: [
+          EthereumAddress.fromHex(newSelAddr),
+          BigInt.from(
+            pow(
+              double.parse('18') * 10,
+              int.parse('18'),
+            ),
+          ),
+        ],
+      ),
+      fetchChainIdFromNetworkId: true,
+    );
+
+    return approve;
+  }
+
+  Future<String> swap(String amount, String privateKey) async {
+    final contract =
+        await initSwapSel('0x54419268c31678C31e94dB494C509193d7d2BB5D');
+    final ethFunction = contract.function('swap');
+
+    final credentials = await _web3client.credentialsFromPrivateKey(privateKey);
+
+    final swap = await _web3client.sendTransaction(
+      credentials,
+      Transaction.callContract(
+        contract: contract,
+        function: ethFunction,
+        parameters: [Fmt.tokenInt(amount, 18)],
+      ),
+      fetchChainIdFromNetworkId: true,
+    );
+
+    return swap;
   }
 
   // Future<BigInt> getEtherTokenBalance(String contractAddr, EthereumAddress from) async {
@@ -173,13 +241,16 @@ class ContractProvider with ChangeNotifier {
 
   Future<void> getKgoBalance() async {
     bscNative.isContain = true;
-    final res = await query(
-        AppConfig.kgoAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
 
-    kgoNative.balance = Fmt.bigIntToDouble(
-      res[0] as BigInt,
-      int.parse(kgoNative.chainDecimal),
-    ).toString();
+    if (ethAdd != '') {
+      final res = await query(
+          AppConfig.kgoAddr, 'balanceOf', [EthereumAddress.fromHex(ethAdd)]);
+
+      kgoNative.balance = Fmt.bigIntToDouble(
+        res[0] as BigInt,
+        int.parse(kgoNative.chainDecimal),
+      ).toString();
+    }
 
     notifyListeners();
   }
@@ -230,15 +301,33 @@ class ContractProvider with ChangeNotifier {
     notifyListeners();
   }
 
+
+  Future<void> getBscV2Balance() async {
+    bscNativeV2.isContain = true;
+    await getBscDecimal();
+    if (ethAdd != '') {
+      final res = await query(AppConfig.bscMainnetV2Addr, 'balanceOf',
+          [EthereumAddress.fromHex(ethAdd)]);
+      bscNativeV2.balance = Fmt.bigIntToDouble(
+        res[0] as BigInt,
+        int.parse(bscNative.chainDecimal),
+      ).toString();
+    }
+
+    notifyListeners();
+  }
+
   Future<void> getBscBalance() async {
     bscNative.isContain = true;
     await getBscDecimal();
-    final res = await query(AppConfig.bscMainnetAddr, 'balanceOf',
-        [EthereumAddress.fromHex(ethAdd)]);
-    bscNative.balance = Fmt.bigIntToDouble(
-      res[0] as BigInt,
-      int.parse(bscNative.chainDecimal),
-    ).toString();
+    if (ethAdd != '') {
+      final res = await query(AppConfig.bscMainnetAddr, 'balanceOf',
+          [EthereumAddress.fromHex(ethAdd)]);
+      bscNative.balance = Fmt.bigIntToDouble(
+        res[0] as BigInt,
+        int.parse(bscNative.chainDecimal),
+      ).toString();
+    }
 
     notifyListeners();
   }

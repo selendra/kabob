@@ -1,4 +1,5 @@
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class FingerPrint extends StatefulWidget {
@@ -64,6 +65,7 @@ class _FingerPrintState extends State<FingerPrint> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       key: globalkey,
       body: GestureDetector(
@@ -78,10 +80,14 @@ class _FingerPrintState extends State<FingerPrint> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const MyText(
-                  text: 'Bitriel Locked',
-                  fontSize: 27.0,
-                  fontWeight: FontWeight.bold),
+              MyText(
+                text: 'Bitriel Locked',
+                fontSize: 27.0,
+                fontWeight: FontWeight.bold,
+                color: isDarkTheme
+                    ? AppColors.whiteColorHexa
+                    : AppColors.textColor,
+              ),
               const SizedBox(
                 height: 40.0,
               ),
@@ -90,7 +96,13 @@ class _FingerPrintState extends State<FingerPrint> {
               const SizedBox(
                 height: 40.0,
               ),
-              const MyText(top: 19.0, text: 'Authentication Required'),
+              MyText(
+                top: 19.0,
+                text: 'Authentication Required',
+                color: isDarkTheme
+                    ? AppColors.whiteColorHexa
+                    : AppColors.textColor,
+              ),
             ],
           ),
         ),

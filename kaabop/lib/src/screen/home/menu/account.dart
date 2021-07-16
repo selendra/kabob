@@ -3,9 +3,6 @@ import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/src/components/component.dart';
-import 'package:wallet_apps/src/components/route_animation.dart';
-import 'package:wallet_apps/src/provider/api_provider.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
 import 'package:wallet_apps/src/screen/home/menu/account_c.dart';
 import '../../../../index.dart';
 
@@ -303,6 +300,7 @@ class _AccountState extends State<Account> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
@@ -316,6 +314,9 @@ class _AccountState extends State<Account> {
                     children: [
                       MyAppBar(
                         title: "Account",
+                        color: isDarkTheme
+                            ? hexaCodeToColor(AppColors.darkCard)
+                            : hexaCodeToColor(AppColors.cardColor),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -326,7 +327,9 @@ class _AccountState extends State<Account> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5),
-                            color: hexaCodeToColor(AppColors.cardColor),
+                            color: isDarkTheme
+                                ? hexaCodeToColor(AppColors.darkCard)
+                                : hexaCodeToColor(AppColors.cardColor),
                           ),
                           child: Column(
                             children: [
@@ -340,7 +343,9 @@ class _AccountState extends State<Account> {
                                 ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(5),
-                                  color: hexaCodeToColor(AppColors.cardColor),
+                                  color: isDarkTheme
+                                      ? hexaCodeToColor(AppColors.darkCard)
+                                      : hexaCodeToColor(AppColors.cardColor),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -372,92 +377,19 @@ class _AccountState extends State<Account> {
                                           children: [
                                             MyText(
                                               text: _currentAcc.name,
-                                              color: "#FFFFFF",
+                                              color: isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
                                               fontSize: 20,
                                             ),
-                                            // const SizedBox(
-                                            //   width: 100,
-                                            //   child: MyText(
-                                            //     text: "Indracore",
-                                            //     color: AppColors.secondarytext,
-                                            //     textAlign: TextAlign.start,
-                                            //     fontWeight: FontWeight.bold,
-                                            //     overflow: TextOverflow.ellipsis,
-                                            //   ),
-                                            // ),
                                           ],
                                         ),
-                                        Expanded(child: Container()),
+                                        Expanded(
+                                          child: Container(),
+                                        ),
                                       ],
                                     ),
                                   ],
                                 ),
                               ),
-                              // Container(
-                              //   alignment: Alignment.centerLeft,
-                              //   margin: const EdgeInsets.only(
-                              //     right: 16,
-                              //     left: 16,
-                              //     bottom: 16,
-                              //   ),
-                              //   decoration: BoxDecoration(
-                              //     borderRadius: BorderRadius.circular(5),
-                              //   ),
-                              //   child: Column(
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     children: [
-                              //       Builder(
-                              //         builder: (context) => GestureDetector(
-                              //           onTap: () {
-                              //             copyToClipBoard(
-                              //                 _currentAcc.pubKey, context);
-                              //           },
-                              //           child: Row(
-                              //             children: [
-                              //               const MyText(
-                              //                 text: 'Public Key:  ',
-                              //                 color: "#FFFFFF",
-                              //               ),
-                              //               const SizedBox(height: 50),
-                              //               Expanded(
-                              //                 child: MyText(
-                              //                   text: _currentAcc.pubKey,
-                              //                   color: "#FFFFFF",
-                              //                   overflow: TextOverflow.ellipsis,
-                              //                 ),
-                              //               ),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //       ),
-                              //       Builder(
-                              //         builder: (context) => GestureDetector(
-                              //           onTap: () {
-                              //             copyToClipBoard(
-                              //                 _currentAcc.address, context);
-                              //           },
-                              //           child: Row(
-                              //             children: [
-                              //               const MyText(
-                              //                 text: 'Address:  ',
-                              //                 color: "#FFFFFF",
-                              //               ),
-                              //               Expanded(
-                              //                 child: MyText(
-                              //                   text: _currentAcc.address,
-                              //                   color: "#FFFFFF",
-                              //                   overflow: TextOverflow.ellipsis,
-                              //                 ),
-                              //               ),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              //   //child: SvgPicture.asset('assets/male_avatar.svg'),
-                              // ),
-                              // const SizedBox(height: 40),
                               GestureDetector(
                                 onTap: () {
                                   AccountC().showBackup(
@@ -477,9 +409,9 @@ class _AccountState extends State<Account> {
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   height: 70,
-                                  child: const MyText(
+                                  child:  MyText(
                                     text: 'Backup Key',
-                                    color: "#FFFFFF",
+                                   color: isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -506,9 +438,9 @@ class _AccountState extends State<Account> {
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   height: 70,
-                                  child: const MyText(
+                                  child: MyText(
                                     text: 'Change Pin',
-                                    color: "#FFFFFF",
+                                    color: isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),

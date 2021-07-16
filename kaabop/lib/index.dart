@@ -110,6 +110,10 @@ export 'package:wallet_apps/src/screen/home/menu/add_asset/add_asset_body.dart';
 /* Menu Screen */
 export 'package:wallet_apps/src/screen/home/menu/menu.dart';
 export 'package:wallet_apps/src/screen/home/menu/menu_body.dart';
+
+export 'package:wallet_apps/src/screen/home/menu/about.dart';
+export 'package:wallet_apps/src/screen/home/menu/swap.dart';
+
 // Transaction Activiity
 export 'package:wallet_apps/src/screen/home/menu/trx_activity/reuse_activity_widget.dart';
 export 'package:wallet_apps/src/screen/home/menu/trx_activity/trx_activity.dart';

@@ -5,7 +5,7 @@ import 'package:wallet_apps/src/provider/contract_provider.dart';
 
 import '../../index.dart';
 
-class MarketProvider {
+class MarketProvider with ChangeNotifier {
   List<String> id = [
     'kiwigo',
     'ethereum',
@@ -22,7 +22,6 @@ class MarketProvider {
       data = Market.fromJson(i as Map<String, dynamic>);
     }
     return data;
-    //print(parsed);
   }
 
   Future<List<List<double>>> fetchLineChartData(String id) async {
@@ -116,5 +115,6 @@ class MarketProvider {
         contract.setReady();
       }
     }
+    notifyListeners();
   }
 }

@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 2.0.12+21
+version: 2.0.13+23
 #6 feature
 #8 debug
 #1 refactor
@@ -34,6 +34,8 @@ dependencies:
 
 
   geolocator: ^5.3.2+2
+
+  minimize_app: ^0.1.1
 
   url_launcher: ^6.0.3
   
@@ -120,7 +122,18 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_native_splash: ^0.3.2
+
+  # run: flutter clean && flutter pub get && flutter pub run flutter_native_splash:create
+flutter_native_splash:
+  color: "#F5F5F5"
+  color_dark: "#090D28"
   
+  image: assets/bitriel_splash_500.png
+  android: true
+  ios: true
+ 
+
 
 
   

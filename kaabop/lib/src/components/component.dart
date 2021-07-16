@@ -1,4 +1,5 @@
 // import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/get_wallet.m.dart';
 
@@ -259,6 +260,7 @@ class MyAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Container(
         height: 65.0,
         width: MediaQuery.of(context).size.width,
@@ -272,15 +274,19 @@ class MyAppBar extends StatelessWidget {
                 IconButton(
                   /* Menu Icon */
 
-                  // padding: edgePadding,
                   padding: const EdgeInsets.only(left: 30),
                   iconSize: 40.0,
-                  icon: const Icon(LineAwesomeIcons.arrow_left,
-                      color: Colors.white, size: 30),
+                  icon: Icon(
+                    LineAwesomeIcons.arrow_left,
+                    color: isDarkTheme ? Colors.white : Colors.black,
+                    size: 30,
+                  ),
                   onPressed: onPressed,
                 ),
                 MyText(
-                  color: "#FFFFFF",
+                  color: isDarkTheme
+                      ? AppColors.whiteColorHexa
+                      : AppColors.textColor,
                   text: title,
                   left: 15,
                   fontSize: 22,
@@ -311,12 +317,15 @@ class BodyScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: height,
-          color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
+          color: isDarkTheme
+              ? Color(AppUtils.convertHexaColor(AppColors.darkBgd))
+              : Color(AppUtils.convertHexaColor("#F5F5F5")),
           padding: EdgeInsets.fromLTRB(left, top, right, bottom),
           child: SafeArea(child: child),
         ));
@@ -338,6 +347,7 @@ class MyIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return InkWell(
       highlightColor: Colors.transparent,
       splashColor: Colors.transparent,
@@ -346,7 +356,7 @@ class MyIconButton extends StatelessWidget {
         'assets/icons/$icon',
         width: iconSize ?? 30,
         height: iconSize ?? 30,
-        color: Colors.white,
+        color: isDarkTheme ? Colors.white : Colors.black,
       ),
     );
   }

@@ -197,11 +197,14 @@ class MyUserInfoState extends State<MyUserInfo> {
           Provider.of<ApiProvider>(context, listen: false).connectPolNon();
           Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+          Provider.of<ContractProvider>(context, listen: false)
+              .getBscV2Balance();
 
           isKgoContain();
           await addBtcWallet();
 
-          MarketProvider().fetchTokenMarketPrice(context);
+          Provider.of<MarketProvider>(context, listen: false)
+              .fetchTokenMarketPrice(context);
 
           Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
           Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
@@ -305,7 +308,13 @@ class MyUserInfoState extends State<MyUserInfo> {
     final seed = bip39.mnemonicToSeed(widget.passPhrase);
     final hdWallet = HDWallet.fromSeed(seed);
 
-    await StorageServices.setData(hdWallet.address, 'btcaddress');
+    final keyPair = ECPair.fromWIF(hdWallet.wif);
+    final bech32Address = new P2WPKH(
+            data: new PaymentData(pubkey: keyPair.publicKey), network: bitcoin)
+        .data
+        .address;
+
+    await StorageServices.setData(bech32Address, 'bech32');
 
     final res = await ApiProvider.keyring.store
         .encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
@@ -318,8 +327,7 @@ class MyUserInfoState extends State<MyUserInfo> {
         .getBtcBalance(hdWallet.address);
     Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
 
-    Provider.of<ApiProvider>(context, listen: false)
-        .setBtcAddr(hdWallet.address);
+    Provider.of<ApiProvider>(context, listen: false).setBtcAddr(bech32Address);
     Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BTC');
   }
 
@@ -347,7 +355,11 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
+      backgroundColor: isDarkTheme
+          ? hexaCodeToColor(AppColors.darkCard)
+          : hexaCodeToColor("#F5F5F5"),
       key: _userInfoM.globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,

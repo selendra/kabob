@@ -1,5 +1,6 @@
 import 'package:polkawallet_sdk/storage/keyring.dart';
 import 'package:polkawallet_sdk/kabob_sdk.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class MyBottomSheet {
@@ -11,20 +12,21 @@ class MyBottomSheet {
     WalletSDK sdk,
     Keyring keyring,
   }) {
+     final isDarkTheme = Provider.of<ThemeProvider>(context,listen: false).isDark;
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (context) {
         return Container(
           decoration: BoxDecoration(
-            color: hexaCodeToColor(AppColors.bgdColor),
+            color: isDarkTheme ? hexaCodeToColor(AppColors.darkBgd) : hexaCodeToColor(AppColors.bgdColor),
           ),
           height: 153,
           child: Column(
             children: [
-              const Align(
+              Align(
                 child: MyText(
-                  color: "#FFFFFF",
+                  color: isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
                   top: 20,
                   bottom: 33,
                   text: "Transaction options",

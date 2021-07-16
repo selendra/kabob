@@ -8,13 +8,21 @@ class AppColors {
   static const String darkGrey = "#302f34";
 
   /* Background Color */
-  static const String bgdColor = "#090D28"; //AppConfig.bgdColor;
-  static const String cardColor = "#181C35";
-  static const String textColor = "#585D86";
+  static const String bgdColor = "#FFFFFF";//"#090D28"; //AppConfig.bgdColor;
+  static const String cardColor = "#FFFFFF";//"#181C35";
+  static const String textColor = "#0F1112";//"#585D86";
   static const String textBtnColor = "#000000";
   static const String secondary = "#F39D0C"; // "#08B952";
   static const String secondarytext = "#F39D0C"; //"#40FF90";
   static const String selected = "#00642A";
+
+
+  //dark theme
+  static const String darkBgd = "#090D28";
+  static const String darkCard = "#181C35";
+  static const String darkText = "#08B952";
+  static const String darkSecondaryText = "B3B3B3";
+  
 
   //blue
   static const String primary = "#03A9F4";
@@ -46,4 +54,7 @@ class AppColors {
 
   /* Card Color */
   static const String borderColor = "#363c4e";
+
+
+  //final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
 }
