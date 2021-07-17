@@ -1,4 +1,5 @@
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact.dart';
@@ -51,10 +52,14 @@ class _ContactBookBodyState extends State<ContactBookBody> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: [
         MyAppBar(
           title: "Contact List",
+          color: isDarkTheme
+              ? hexaCodeToColor(AppColors.darkCard)
+              : hexaCodeToColor(AppColors.cardColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -84,9 +89,9 @@ class _ContactBookBodyState extends State<ContactBookBody> {
                     if (response == true) await widget.getContact();
                   }
                 },
-                child: const Icon(
+                child: Icon(
                   Icons.add,
-                  color: Colors.white,
+                  color: isDarkTheme ? Colors.white : Colors.black,
                   size: 25,
                 ),
               ),
@@ -206,7 +211,9 @@ class _ContactBookBodyState extends State<ContactBookBody> {
                                 }
                               },
                               child: Card(
-                                color: hexaCodeToColor(AppColors.cardColor),
+                                color: isDarkTheme
+                                    ? hexaCodeToColor(AppColors.darkCard)
+                                    : hexaCodeToColor(AppColors.cardColor),
                                 margin: const EdgeInsets.only(bottom: 16.0),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8),
@@ -235,7 +242,9 @@ class _ContactBookBodyState extends State<ContactBookBody> {
                                                 .contactBookList[index]
                                                 .userName
                                                 .text,
-                                            color: "#FFFFFF",
+                                            color: isDarkTheme
+                                                ? AppColors.whiteColorHexa
+                                                : AppColors.textColor,
                                             fontSize: 20,
                                           ),
                                           MyText(

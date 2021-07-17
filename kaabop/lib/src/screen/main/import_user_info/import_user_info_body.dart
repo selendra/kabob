@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class ImportUserInfoBody extends StatelessWidget {
@@ -30,10 +31,14 @@ class ImportUserInfoBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: <Widget>[
         MyAppBar(
           title: "User Information",
+          color: isDarkTheme
+              ? hexaCodeToColor(AppColors.darkCard)
+              : hexaCodeToColor(AppColors.cardColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -76,7 +81,9 @@ class ImportUserInfoBody extends StatelessWidget {
                         controller: modelUserInfo.passwordCon,
                         textInputAction: TextInputAction.next,
                         style: TextStyle(
-                          color: hexaCodeToColor("#FFFFFF"),
+                          color: isDarkTheme
+                              ? hexaCodeToColor(AppColors.whiteColorHexa)
+                              : hexaCodeToColor(AppColors.textColor),
                           fontSize: 18.0,
                         ),
                         decoration: InputDecoration(
@@ -85,8 +92,12 @@ class ImportUserInfoBody extends StatelessWidget {
                             fontSize: 18.0,
                             color: modelUserInfo.passwordNode.hasFocus ||
                                     modelUserInfo.passwordCon.text != ""
-                                ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
-                                : hexaCodeToColor(AppColors.textColor),
+                                ? isDarkTheme
+                                    ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                        .withOpacity(0.3)
+                                    : hexaCodeToColor(AppColors.textColor)
+                                        .withOpacity(0.3)
+                                : hexaCodeToColor(AppColors.darkSecondaryText),
                           ),
                           prefixStyle: TextStyle(
                             color: hexaCodeToColor(AppColors.textColor),
@@ -94,20 +105,30 @@ class ImportUserInfoBody extends StatelessWidget {
                           ),
                           /* Prefix Text */
                           filled: true,
-                          fillColor: hexaCodeToColor(
-                            AppColors.cardColor,
-                          ),
+                          fillColor: isDarkTheme
+                              ? hexaCodeToColor(AppColors.darkCard)
+                              : hexaCodeToColor(AppColors.cardColor),
                           enabledBorder: myTextInputBorder(
-                              modelUserInfo.passwordCon.text != ""
-                                  ? hexaCodeToColor("#FFFFFF").withOpacity(0.3)
-                                  : Colors.transparent),
+                            modelUserInfo.passwordCon.text != ""
+                                ? isDarkTheme
+                                    ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                        .withOpacity(0.3)
+                                    : hexaCodeToColor(AppColors.textColor)
+                                        .withOpacity(0.3)
+                                : hexaCodeToColor(AppColors.secondary)
+                                    .withOpacity(0.3),
+                          ),
                           /* Enable Border But Not Show Error */
                           border: errorOutline(),
                           /* Show Error And Red Border */
-                          focusedBorder: myTextInputBorder(
-                              hexaCodeToColor("#FFFFFF").withOpacity(0.3)),
+                          focusedBorder: myTextInputBorder(isDarkTheme
+                              ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                  .withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.secondary)),
                           /* Default Focuse Border Color*/
-                          focusColor: hexaCodeToColor("#ffffff"),
+                          focusColor: isDarkTheme
+                              ? hexaCodeToColor("#ffffff")
+                              : hexaCodeToColor(AppColors.textColor),
                           /* Border Color When Focusing */
                           contentPadding: const EdgeInsets.fromLTRB(
                               21, 23, 21, 23), // Default padding =
@@ -131,33 +152,52 @@ class ImportUserInfoBody extends StatelessWidget {
                         obscureText: true,
                         textInputAction: TextInputAction.done,
                         style: TextStyle(
-                            color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
+                            color: isDarkTheme
+                                ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                : hexaCodeToColor(AppColors.textColor),
+                            fontSize: 18.0),
                         decoration: InputDecoration(
                           labelText: "Confirm Pin",
                           labelStyle: TextStyle(
-                              fontSize: 18.0,
-                              color: modelUserInfo
-                                          .confirmPasswordNode.hasFocus ||
-                                      modelUserInfo.passwordCon.text != ""
-                                  ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
-                                  : hexaCodeToColor(AppColors.textColor)),
+                            fontSize: 18.0,
+                            color: modelUserInfo.confirmPasswordNode.hasFocus ||
+                                    modelUserInfo.passwordCon.text != ""
+                                ? isDarkTheme
+                                    ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                        .withOpacity(0.3)
+                                    : hexaCodeToColor(AppColors.textColor)
+                                        .withOpacity(0.3)
+                                : hexaCodeToColor(AppColors.darkSecondaryText),
+                          ),
                           prefixStyle: TextStyle(
                               color: hexaCodeToColor(AppColors.textColor),
                               fontSize: 18.0),
                           /* Prefix Text */
                           filled: true,
-                          fillColor: hexaCodeToColor(AppColors.cardColor),
-                          enabledBorder: myTextInputBorder(
-                              modelUserInfo.passwordCon.text != ""
-                                  ? hexaCodeToColor("#FFFFFF").withOpacity(0.3)
-                                  : Colors.transparent),
+                          fillColor: isDarkTheme
+                              ? hexaCodeToColor(AppColors.darkCard)
+                              : hexaCodeToColor(AppColors.cardColor),
+                          enabledBorder: myTextInputBorder(modelUserInfo
+                                      .passwordCon.text !=
+                                  ""
+                              ? isDarkTheme
+                                  ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                      .withOpacity(0.3)
+                                  : hexaCodeToColor(AppColors.textColor)
+                                      .withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.secondary)
+                                  .withOpacity(0.3)),
                           /* Enable Border But Not Show Error */
                           border: errorOutline(),
                           /* Show Error And Red Border */
-                          focusedBorder: myTextInputBorder(
-                              hexaCodeToColor("#FFFFFF").withOpacity(0.3)),
+                          focusedBorder: myTextInputBorder(isDarkTheme
+                              ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                  .withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.secondary)),
                           /* Default Focuse Border Color*/
-                          focusColor: hexaCodeToColor("#ffffff"),
+                          focusColor: isDarkTheme
+                              ? hexaCodeToColor("#ffffff")
+                              : hexaCodeToColor(AppColors.textColor),
                           /* Border Color When Focusing */
                           contentPadding: const EdgeInsets.fromLTRB(
                               21, 23, 21, 23), // Default padding =
@@ -182,9 +222,11 @@ class ImportUserInfoBody extends StatelessWidget {
                             },
                           ),
                         ),
-                        const MyText(
+                        MyText(
                           text: "Fingerprint",
-                          color: "#FFFFFF",
+                          color: isDarkTheme
+                              ? AppColors.whiteColorHexa
+                              : AppColors.textColor,
                         ),
                       ],
                     ),

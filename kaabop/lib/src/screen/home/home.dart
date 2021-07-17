@@ -23,31 +23,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    Timer(const Duration(seconds: 4), () {
-      // if (!widget.apiConnected) {
-      //   handle();
-      // }
+    Timer(const Duration(seconds: 2), () {
       setPortfolio();
-      //showAirdrop();
     });
-   
-
-    // if (ApiProvider.keyring.current.address != null &&
-    //     widget.apiConnected == false) startNode(context);
-
-    // Timer(const Duration(seconds: 30), () async {
-    //   if (!widget.apiConnected) {
-    //     await dialog(
-    //       AppUtils.globalKey.currentContext,
-    //       const Text('Failed to connect to Selendra remote node.'),
-    //       const Text('Connection Failed'),
-    //     );
-    //     // Timer(const Duration(milliseconds: 500), () {
-    //     //   setPortfolio();
-    //     //   showAirdrop();
-    //     // });
-    //   }
-    // });
 
     AppServices.noInternetConnection(_homeM.globalKey);
 
@@ -107,8 +85,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       'balance': contract.bnbNative.balance ?? '0',
     });
 
-    if(api.btc.isContain){
-        walletProvider.addAvaibleToken({
+    if (api.btc.isContain) {
+      walletProvider.addAvaibleToken({
         'symbol': api.btc.symbol,
         'balance': api.btc.balance ?? '0',
       });
@@ -207,8 +185,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
               _homeM.portfolioList,
             );
           },
-          child: SvgPicture.asset('assets/icons/qr_code.svg',
-              width: 30, height: 30, color: Colors.white),
+          child: SvgPicture.asset(
+            'assets/icons/qr_code.svg',
+            width: 30,
+            height: 30,
+            color: Colors.white,
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

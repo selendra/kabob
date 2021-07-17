@@ -19,11 +19,17 @@ void main() {
         ChangeNotifierProvider<WalletProvider>(
           create: (context) => WalletProvider(),
         ),
+          ChangeNotifierProvider<MarketProvider>(
+          create: (context) => MarketProvider(),
+        ),
         ChangeNotifierProvider<ApiProvider>(
           create: (context) => ApiProvider(),
         ),
         ChangeNotifierProvider<ContractProvider>(
           create: (context) => ContractProvider(),
+        ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(),
         ),
       ],
       child: App(),

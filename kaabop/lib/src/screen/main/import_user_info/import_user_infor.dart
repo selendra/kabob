@@ -69,16 +69,19 @@ class ImportUserInfoState extends State<ImportUserInfo> {
             await StorageServices().writeSecure('private', res);
           }
         }
+
         Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
 
         Provider.of<ApiProvider>(context, listen: false).connectPolNon();
         Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
         Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+        Provider.of<ContractProvider>(context, listen: false).getBscV2Balance();
         Provider.of<ContractProvider>(context, listen: false).getEtherBalance();
 
         isKgoContain();
 
-        MarketProvider().fetchTokenMarketPrice(context);
+        Provider.of<MarketProvider>(context, listen: false)
+            .fetchTokenMarketPrice(context);
 
         Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
@@ -130,8 +133,14 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   Future<void> addBtcWallet() async {
     final seed = bip39.mnemonicToSeed(widget.passPhrase);
     final hdWallet = HDWallet.fromSeed(seed);
+    final keyPair = ECPair.fromWIF(hdWallet.wif);
 
-    await StorageServices.setData(hdWallet.address, 'btcaddress');
+    final bech32Address = new P2WPKH(
+            data: new PaymentData(pubkey: keyPair.publicKey), network: bitcoin)
+        .data
+        .address;
+
+    await StorageServices.setData(bech32Address, 'bech32');
 
     final res = await ApiProvider.keyring.store
         .encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
@@ -144,37 +153,11 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         .getBtcBalance(hdWallet.address);
     Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
 
-    Provider.of<ApiProvider>(context, listen: false)
-        .setBtcAddr(hdWallet.address);
+    Provider.of<ApiProvider>(context, listen: false).setBtcAddr(bech32Address);
     Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BTC');
   }
 
-  // Future<void> isDotContain() async {
-  //   // Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
-  //   // Provider.of<ApiProvider>(context, listen: false).isDotContain();
-  //   Provider.of<ApiProvider>(context, listen: false).connectPolNon();
-  // }
-
-  // Future<void> isBnbContain() async {
-  //   Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BNB');
-
-  // }
-
-  // Future<void> isBscContain() async {
-  //   Provider.of<WalletProvider>(context, listen: false)
-  //       .addTokenSymbol('SEL (BEP-20)');
-  //   Provider.of<ContractProvider>(context, listen: false).getSymbol();
-  //   Provider.of<ContractProvider>(context, listen: false)
-  //       .getBscDecimal()
-  //       .then((value) {
-  //     Provider.of<ContractProvider>(context, listen: false).getBscBalance();
-  //   });
-  // }
-
   Future<void> isKgoContain() async {
-    // Provider.of<WalletProvider>(context, listen: false)
-    //     .addTokenSymbol('KGO (BEP-20)');
-    // Provider.of<ContractProvider>(context, listen: false).getKgoSymbol();
     Provider.of<ContractProvider>(context, listen: false)
         .getKgoDecimal()
         .then((value) {
@@ -339,7 +322,11 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
+      backgroundColor: isDarkTheme
+          ? hexaCodeToColor(AppColors.darkCard)
+          : hexaCodeToColor("#F5F5F5"),
       key: _userInfoM.globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,

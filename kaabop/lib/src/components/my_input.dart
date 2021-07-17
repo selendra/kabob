@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class MyInputField extends StatelessWidget {
@@ -52,13 +53,14 @@ class MyInputField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Container(
         padding: EdgeInsets.fromLTRB(pLeft, pTop, pRight, pBottom),
         child: TextFormField(
           key: key,
           enabled: enableInput,
           focusNode: focusNode,
-          autofocus: autoFocus??false,
+          autofocus: autoFocus ?? false,
           keyboardType: inputType,
           obscureText: obcureText,
           controller: controller,
@@ -66,38 +68,46 @@ class MyInputField extends StatelessWidget {
           textInputAction:
               // ignore: prefer_if_null_operators
               inputAction == null ? TextInputAction.next : inputAction,
-          style: TextStyle(color: hexaCodeToColor(textColor), fontSize: 18.0),
+         style: TextStyle(color: isDarkTheme ? hexaCodeToColor(AppColors.whiteColorHexa) : hexaCodeToColor(AppColors.textColor), fontSize: 18.0),
           validator: validateField,
           maxLines: maxLine,
           decoration: InputDecoration(
             labelText: labelText,
             labelStyle: TextStyle(
-                fontSize: 18.0,
-                color: focusNode.hasFocus || controller.text != ""
-                    ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
-                    : hexaCodeToColor(AppColors.textColor)),
+              fontSize: 18.0,
+              color: focusNode.hasFocus || controller.text != ""
+                  ? isDarkTheme
+                      ? hexaCodeToColor(AppColors.whiteColorHexa)
+                          .withOpacity(0.3)
+                      : hexaCodeToColor(AppColors.textColor).withOpacity(0.3)
+                  : hexaCodeToColor(AppColors.darkSecondaryText),
+            ),
             prefixText: prefixText,
             prefixStyle: TextStyle(
                 color: hexaCodeToColor(AppColors.textColor), fontSize: 18.0),
             /* Prefix Text */
             filled: true,
-            fillColor: hexaCodeToColor(AppColors.cardColor),
+            fillColor: isDarkTheme
+                ? hexaCodeToColor(AppColors.darkCard)
+                : hexaCodeToColor(AppColors.cardColor),
             enabledBorder: myTextInputBorder(controller.text != ""
-                ? hexaCodeToColor("#FFFFFF").withOpacity(0.3)
-                : Colors.transparent),
+                ? isDarkTheme
+                    ? hexaCodeToColor(AppColors.whiteColorHexa).withOpacity(0.3)
+                    : hexaCodeToColor(AppColors.textColor).withOpacity(0.3)
+                : hexaCodeToColor(AppColors.secondary).withOpacity(0.3)),
             /* Enable Border But Not Show Error */
             border: errorOutline(),
             /* Show Error And Red Border */
-            focusedBorder:
-                myTextInputBorder(hexaCodeToColor("#FFFFFF").withOpacity(0.3)),
+            focusedBorder: myTextInputBorder(isDarkTheme
+                ? hexaCodeToColor(AppColors.whiteColorHexa).withOpacity(0.3)
+                : hexaCodeToColor(AppColors.secondary)),
             /* Default Focuse Border Color*/
-            focusColor: hexaCodeToColor("#ffffff"),
+            focusColor: isDarkTheme ?  hexaCodeToColor("#ffffff") : hexaCodeToColor(AppColors.textColor),
             /* Border Color When Focusing */
-            contentPadding: const  EdgeInsets.fromLTRB(
+            contentPadding: const EdgeInsets.fromLTRB(
                 21, 23, 21, 23), // Default padding = -10.0 px
             suffixIcon: icon,
             suffix: suffix,
-            
           ),
           inputFormatters: textInputFormatter,
           /* Limit Length Of Text Input */
@@ -112,6 +122,8 @@ class MyInputField extends StatelessWidget {
 /* User input Outline Border */
 OutlineInputBorder myTextInputBorder(Color borderColor) {
   return OutlineInputBorder(
-      borderSide: BorderSide(color: borderColor,),
+      borderSide: BorderSide(
+        color: borderColor,
+      ),
       borderRadius: BorderRadius.circular(8));
 }

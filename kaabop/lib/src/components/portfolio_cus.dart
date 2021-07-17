@@ -3,18 +3,20 @@ import 'package:pie_chart/pie_chart.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/portfolio_c.dart';
-import 'package:wallet_apps/src/provider/wallet_provider.dart';
 
 class PortFolioCus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
+      margin: const EdgeInsets.only(bottom: 2.0),
+      padding: const EdgeInsets.only(left: 16, top: 32, bottom: 32),
       width: double.infinity,
       height: 200,
       decoration: BoxDecoration(
-        //color: hexaCodeToColor(AppColors.cardColor),
+        color: isDarkTheme
+          ? hexaCodeToColor(AppColors.darkBgd)
+          : hexaCodeToColor(AppColors.cardColor),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -73,10 +75,11 @@ class PortFolioCus extends StatelessWidget {
             child: Consumer<WalletProvider>(
               builder: (context, value, child) {
                 return value.portfolio.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: MyText(
                           text: "Portfolio...",
                           fontWeight: FontWeight.bold,
+                          color: AppColors.darkSecondaryText,
                         ),
                       )
                     : Column(

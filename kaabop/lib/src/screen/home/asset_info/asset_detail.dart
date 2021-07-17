@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../index.dart';
 
@@ -58,6 +59,7 @@ class _AssetDetailState extends State<AssetDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Container(
       margin: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
@@ -65,11 +67,13 @@ class _AssetDetailState extends State<AssetDetail> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const MyText(
+            MyText(
               text: 'Price Today',
               fontSize: 16.0,
               textAlign: TextAlign.left,
               bottom: 16.0,
+              color:
+                  isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
             ),
             line(),
             textRow('Price', '\$${widget.marketData.currentPrice}', ''),
@@ -86,33 +90,39 @@ class _AssetDetailState extends State<AssetDetail> {
             line(),
             textRow('Market Rank', '#${widget.marketData.marketCapRank}', ''),
             const SizedBox(height: 20),
-            const MyText(
+            MyText(
               text: 'Market Cap',
               fontSize: 16.0,
               textAlign: TextAlign.left,
               bottom: 16.0,
+              color:
+                  isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
             ),
             line(),
             textRow('Market Cap', '\$$marketCap', ''),
             line(),
             textRow('Market Cap Change 24h', '\$$marketCapChange24h', ''),
             const SizedBox(height: 20),
-            const MyText(
+            MyText(
               text: 'Price History',
               fontSize: 16.0,
               textAlign: TextAlign.left,
               bottom: 16.0,
+              color:
+                  isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
             ),
             line(),
             textRow('All Time High', '\$${widget.marketData.ath}', ''),
             line(),
             textRow('All Time Low', '\$${widget.marketData.atl}', ''),
             const SizedBox(height: 20),
-            const MyText(
+            MyText(
               text: 'Supply',
               fontSize: 16.0,
               textAlign: TextAlign.left,
               bottom: 16.0,
+              color:
+                  isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
             ),
             line(),
             textRow(
@@ -129,13 +139,19 @@ class _AssetDetailState extends State<AssetDetail> {
   }
 
   Widget line() {
+    final isDarkTheme =
+        Provider.of<ThemeProvider>(context, listen: false).isDark;
     return Container(
       height: 1,
-      color: hexaCodeToColor(AppColors.textColor),
+      color: isDarkTheme
+          ? hexaCodeToColor(AppColors.darkBgd)
+          : hexaCodeToColor(AppColors.textColor),
     );
   }
 
   Widget textRow(String leadingText, String trailingText, String endingText) {
+    final isDarkTheme =
+        Provider.of<ThemeProvider>(context, listen: false).isDark;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 24.0),
       child: Row(
@@ -143,7 +159,7 @@ class _AssetDetailState extends State<AssetDetail> {
         children: [
           MyText(
             text: leadingText,
-            color: '#FFFFFF',
+            color: isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
             fontSize: 16,
             overflow: TextOverflow.ellipsis,
           ),
@@ -151,7 +167,9 @@ class _AssetDetailState extends State<AssetDetail> {
             children: [
               MyText(
                 text: trailingText,
-                color: '#FFFFFF',
+                color: isDarkTheme
+                    ? AppColors.whiteColorHexa
+                    : AppColors.textColor,
                 fontSize: 16,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -159,7 +177,9 @@ class _AssetDetailState extends State<AssetDetail> {
                 text: endingText,
                 color: endingText != '' && endingText.substring(1, 2) == '-'
                     ? '#FF0000'
-                    : '#00FF00',
+                    : isDarkTheme
+                        ? '#00FF00'
+                        : '#66CD00',
                 fontSize: 16,
                 overflow: TextOverflow.ellipsis,
               ),

@@ -57,6 +57,8 @@ class AppConfig {
 
   static const bscMainnetAddr = '0x288d3A87a87C284Ed685E0490E5C4cC0883a060a';
 
+  static const bscMainnetV2Addr = '0x30bAb6B88dB781129c6a4e9B7926738e3314Cf1C';
+
   static const kgoAddr = '0x5d3AfBA1924aD748776E4Ca62213BF7acf39d773';
 
   static const kmpiAddr = '5GZ9uD6RgN84bpBuic1HWq9AP7k2SSFtK9jCVkrncZsuARQU';
@@ -111,7 +113,7 @@ class AppConfig {
 
   static const baseInviteLink = 'https://airdrop.selendra.org/claim-\$sel?ref=';
 
-  //static const credentials = ' ';
+  // static const credentials = ' ';
 
   //
   // sld_market net API

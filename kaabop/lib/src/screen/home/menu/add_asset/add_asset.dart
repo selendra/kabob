@@ -140,26 +140,26 @@ class AddAssetState extends State<AddAsset> {
 
       await showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-          title: Align(
-            child: Text('Opps'),
-          ),
-          content: Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-            child: Text('Invalid token contract address!'),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Close'),
+        builder: (context) {
+          return AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: Text('Opps'),
             ),
-          ],
-        );
-      },
-    );
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text('Invalid token contract address!'),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ]
+          );
+        },
+      );
       //await dialog('Invalid token contract address!', 'Opps');
       setState(() {
         _modelAsset.loading = false;
@@ -179,7 +179,7 @@ class AddAssetState extends State<AddAsset> {
         });
       }
     } catch (e) {
-      print(e.toString());
+      
     }
   }
 
@@ -233,7 +233,11 @@ class AddAssetState extends State<AddAsset> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
+      backgroundColor: isDarkTheme
+          ? hexaCodeToColor(AppColors.darkCard)
+          : hexaCodeToColor("#F5F5F5"),
       key: globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,

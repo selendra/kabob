@@ -1,18 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-import 'package:wallet_apps/src/screen/home/menu/about.dart';
 
 class MenuBody extends StatelessWidget {
   final Map<String, dynamic> userInfo;
   final MenuModel model;
   final Function switchBio;
+  final Function switchTheme;
 
   const MenuBody({
     this.userInfo,
     this.model,
     this.switchBio,
+    this.switchTheme,
   });
 
   // Future<void> _launchInBrowser(String url) async {
@@ -77,13 +78,13 @@ class MenuBody extends StatelessWidget {
             Navigator.pushNamed(context, AppText.claimAirdropView);
           },
         ),
-        // MyListTile(
-        //   index: 2,
-        //   subIndex: 2,
-        //   onTap: () {
-        //     Navigator.pushNamed(context, AppText.inviteFriendView);
-        //   },
-        // ),
+        MyListTile(
+          index: 2,
+          subIndex: 3,
+          onTap: () {
+            Navigator.push(context, RouteAnimation(enterPage: Swap()));
+          },
+        ),
         // MyListTile(
         //   index: 2,
         //   subIndex: 1,
@@ -122,15 +123,21 @@ class MenuBody extends StatelessWidget {
           ),
           onTap: null,
         ),
-        // const MenuSubTitle(index: 4),
+        const MenuSubTitle(index: 4),
 
-        // MyListTile(
-        //   index: 4,
-        //   subIndex: 0,
-        //   onTap: () async {
-        //     Navigator.popAndPushNamed(context, AppText.accountView);
-        //   },
-        // ),
+        MyListTile(
+          index: 4,
+          subIndex: 0,
+          onTap: null,
+          trailing: Consumer<ThemeProvider>(
+            builder: (context, value, child) => Switch(
+              value: value.isDark,
+              onChanged: (value) {
+                Provider.of<ThemeProvider>(context, listen: false).changeMode();
+              },
+            ),
+          ),
+        ),
 
         const MenuSubTitle(index: 5),
 
@@ -142,8 +149,6 @@ class MenuBody extends StatelessWidget {
             //_launchInBrowser('https://selendra.com/privacy');
           },
         ),
-
-       
       ],
     );
   }

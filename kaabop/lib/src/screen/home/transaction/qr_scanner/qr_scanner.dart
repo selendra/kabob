@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -42,6 +43,7 @@ class QrScannerState extends State<QrScanner> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: BodyScaffold(
         physic: const NeverScrollableScrollPhysics(),
@@ -51,6 +53,9 @@ class QrScannerState extends State<QrScanner> {
           children: [
             MyAppBar(
               title: "Scanning",
+              color: isDarkTheme
+                  ? hexaCodeToColor(AppColors.darkCard)
+                  : hexaCodeToColor(AppColors.cardColor),
               onPressed: () {
                 Navigator.pop(context);
               },

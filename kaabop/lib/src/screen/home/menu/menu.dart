@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class Menu extends StatefulWidget {
@@ -19,11 +20,8 @@ class MenuState extends State<Menu> {
   final LocalAuthentication _localAuth = LocalAuthentication();
 
   /* Login Inside Dialog */
-  bool isProgress = false,
-      isFetch = false,
-      isTick = false,
-      isSuccessPin = false,
-      isHaveWallet = false;
+  bool isDarkTheme = false;
+
 
   /* InitState */
   @override
@@ -180,20 +178,25 @@ class MenuState extends State<Menu> {
     return _menuModel.authenticated;
   }
 
+
+ 
+
   /* ----------------------Side Bar -------------------------*/
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context,listen: false).isDark;
     return Drawer(
       key: _menuModel.globalKey,
       child: SafeArea(
         child: Container(
-          color: hexaCodeToColor(AppColors.bgdColor),
+          color: isDarkTheme ?  hexaCodeToColor(AppColors.darkBgd) :  hexaCodeToColor(AppColors.bgdColor),
           child: SingleChildScrollView(
             child: MenuBody(
               userInfo: widget._userData,
               model: _menuModel,
               switchBio: switchBiometric,
+             
             ),
           ),
         ),

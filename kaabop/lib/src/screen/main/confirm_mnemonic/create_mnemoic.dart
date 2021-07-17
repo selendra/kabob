@@ -1,4 +1,5 @@
 import 'package:flutter_screenshot_switcher/flutter_screenshot_switcher.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class CreateMnemonic extends StatefulWidget {
@@ -28,13 +29,16 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             MyAppBar(
-              color: hexaCodeToColor(AppColors.cardColor),
+              color: isDarkTheme
+                  ? hexaCodeToColor(AppColors.darkCard)
+                  : hexaCodeToColor(AppColors.cardColor),
               title: AppText.createAccTitle,
               onPressed: enableScreenShot,
             ),
@@ -48,7 +52,9 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                         text: AppText.backupMnemonic,
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.whiteColorHexa,
+                        color: isDarkTheme
+                            ? AppColors.whiteColorHexa
+                            : AppColors.textColor,
                         bottom: 12,
                       )),
                   Align(
@@ -57,7 +63,9 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                       textAlign: TextAlign.left,
                       text: AppText.keepMnemonic,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.whiteColorHexa,
+                      color: isDarkTheme
+                          ? AppColors.whiteColorHexa
+                          : AppColors.textColor,
                       bottom: 12,
                     ),
                   ),
@@ -72,6 +80,9 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                     )
                   else
                     Card(
+                      color: isDarkTheme
+                          ? hexaCodeToColor(AppColors.darkCard)
+                          : hexaCodeToColor(AppColors.cardColor),
                       child: MyText(
                         text: widget.passPhrase ?? '',
                         textAlign: TextAlign.left,

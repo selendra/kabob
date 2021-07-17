@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/reuse_dropdown.dart';
 
@@ -34,11 +35,15 @@ class AddAssetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: [
         Flexible(
           child: MyAppBar(
             title: "Add asset",
+            color: isDarkTheme
+                ? hexaCodeToColor(AppColors.darkCard)
+                : hexaCodeToColor(AppColors.cardColor),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -49,7 +54,11 @@ class AddAssetBody extends StatelessWidget {
                 // padding: edgePadding,
                 padding: const EdgeInsets.only(left: 30),
                 iconSize: 40.0,
-                icon: const Icon(Icons.search, color: Colors.white, size: 30),
+                icon: Icon(
+                  Icons.search,
+                  color: isDarkTheme ? Colors.white : Colors.black,
+                  size: 30,
+                ),
                 onPressed: () {
                   showSearch(
                     context: context,

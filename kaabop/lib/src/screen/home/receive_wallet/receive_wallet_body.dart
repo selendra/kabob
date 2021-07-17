@@ -27,10 +27,14 @@ class ReceiveWalletBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: <Widget>[
         MyAppBar(
           title: "Receive wallet",
+          color: isDarkTheme
+              ? hexaCodeToColor(AppColors.darkCard)
+              : hexaCodeToColor(AppColors.cardColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -68,7 +72,9 @@ class ReceiveWalletBody extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
-                          color: hexaCodeToColor(AppColors.cardColor),
+                          color: isDarkTheme
+                              ? hexaCodeToColor(AppColors.darkCard)
+                              : hexaCodeToColor(AppColors.cardColor),
                         ),
                         child: Column(
                           children: [
@@ -78,10 +84,12 @@ class ReceiveWalletBody extends StatelessWidget {
                                   child: Container(
                                     padding: const EdgeInsets.only(top: 14.0),
                                     margin: const EdgeInsets.only(bottom: 36.0),
-                                    child: const MyText(
+                                    child: MyText(
                                       text: 'Wallet',
                                       fontSize: 20.0,
-                                      color: "#FFFFFF",
+                                      color: isDarkTheme
+                                          ? AppColors.whiteColorHexa
+                                          : AppColors.textColor,
                                     ),
                                   ),
                                 ),
@@ -100,11 +108,15 @@ class ReceiveWalletBody extends StatelessWidget {
                                           return ReuseDropDown(
                                             initialValue: initialValue,
                                             onChanged: onChanged,
+                                            
                                             itemsList: value.listSymbol,
                                             style: TextStyle(
-                                              color: hexaCodeToColor(
-                                                AppColors.textColor,
-                                              ),
+                                              color: isDarkTheme
+                                                  ? hexaCodeToColor(
+                                                      AppColors.darkSecondaryText)
+                                                  : hexaCodeToColor(
+                                                      AppColors.textColor,
+                                                    ),
                                             ),
                                           );
                                         },
@@ -122,7 +134,9 @@ class ReceiveWalletBody extends StatelessWidget {
                               text: name,
                               bottom: 16,
                               top: 16,
-                              // color: "#FFFFFF",
+                              color: isDarkTheme
+                                  ? AppColors.whiteColorHexa
+                                  : AppColors.textColor,
                             ),
                             MyText(
                               width: 300,
@@ -131,9 +145,12 @@ class ReceiveWalletBody extends StatelessWidget {
                               fontSize: 16,
                               bottom: 16,
                             ),
-                            const MyText(
+                            MyText(
                               text: "Scan the qr code to perform transaction",
                               fontSize: 16,
+                              color: isDarkTheme
+                                  ? AppColors.whiteColorHexa
+                                  : AppColors.textColor,
                             ),
                           ],
                         ),
@@ -150,15 +167,18 @@ class ReceiveWalletBody extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          const Icon(Icons.share,
-                              color: Colors.white, size: 30),
+                          Icon(
+                            Icons.share,
+                            color: hexaCodeToColor(AppColors.secondary),
+                            size: 30,
+                          ),
                           Container(
                             padding: const EdgeInsets.only(
                               left: 10.0,
                             ),
                             child: const MyText(
                               text: "SHARE MY CODE",
-                              color: "#FFFFFF",
+                              color: AppColors.secondary,
                             ),
                           )
                         ],
@@ -177,13 +197,16 @@ class ReceiveWalletBody extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        const Icon(Icons.content_copy,
-                            color: Colors.white, size: 30),
+                        Icon(
+                          Icons.content_copy,
+                          color: hexaCodeToColor(AppColors.secondary),
+                          size: 30,
+                        ),
                         Container(
                           padding: const EdgeInsets.only(left: 10.0),
                           child: const MyText(
                             text: "COPY ADDRESS",
-                            color: "#FFFFFF",
+                            color: AppColors.secondary,
                           ),
                         ),
                       ],

@@ -1,10 +1,11 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 const fontSizePort = 17.0;
 const fontColorPort = Colors.white;
 
-List<Color> gradientColors = [
+List<Color> _gradientColors = [
   hexaCodeToColor(AppColors.secondary),
   hexaCodeToColor("#00ff6b")
 ];
@@ -90,7 +91,7 @@ final portfolioChart = LineChartData(
         FlSpot(6, 1),
       ],
       isCurved: true,
-      colors: gradientColors,
+      colors: _gradientColors,
       barWidth: 2.5,
       // isStrokeCapRound: true,
       dotData: FlDotData(
@@ -98,16 +99,17 @@ final portfolioChart = LineChartData(
       ),
       belowBarData: BarAreaData(
         show: false,
-        colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+        colors: _gradientColors.map((color) => color.withOpacity(0.3)).toList(),
       ),
     ),
   ],
 );
 
 Widget homeAppBar(BuildContext context) {
+  final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
   return Container(
     height: 70,
-    color: hexaCodeToColor(AppColors.bgdColor),
+    color: isDarkTheme ? hexaCodeToColor(AppColors.darkBgd) : hexaCodeToColor(AppColors.cardColor),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -120,7 +122,7 @@ Widget homeAppBar(BuildContext context) {
           padding: const EdgeInsets.only(right: 16.0),
           child: IconButton(
             iconSize: 30,
-            color: Colors.white,
+            color: isDarkTheme ? Colors.white : Colors.black,
             icon: const Icon(Icons.add_circle_outline),
             onPressed: () async {
               Navigator.push(
@@ -351,10 +353,11 @@ class MyBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Container(
-      color: Colors.transparent,
+      color: isDarkTheme ? hexaCodeToColor(AppColors.darkBgd):  hexaCodeToColor(AppColors.whiteColorHexa),
       child: BottomAppBar(
-        color: hexaCodeToColor(AppColors.cardColor),
+        color: isDarkTheme  ? hexaCodeToColor(AppColors.darkCard) : hexaCodeToColor(AppColors.cardColor),
         shape: const CircularNotchedRectangle(),
         notchMargin: 8.0,
         child: SizedBox(
@@ -581,7 +584,7 @@ LineChartData mainData() {
           FlSpot(6, 1),
         ],
         isCurved: true,
-        colors: gradientColors,
+        colors: _gradientColors,
         barWidth: 3,
         // isStrokeCapRound: true,
         dotData: FlDotData(
@@ -590,7 +593,7 @@ LineChartData mainData() {
         belowBarData: BarAreaData(
           show: true,
           colors:
-              gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+             _gradientColors.map((color) => color.withOpacity(0.3)).toList(),
         ),
       ),
     ],

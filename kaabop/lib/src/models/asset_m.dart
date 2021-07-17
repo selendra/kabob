@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -26,65 +25,64 @@ class ModelAsset {
   FocusNode nodeIssuer = FocusNode();
 }
 
-
 class Market {
-    Market({
-        this.id,
-        this.symbol,
-        this.name,
-        this.image,
-        this.currentPrice,
-        this.marketCap,
-        this.marketCapRank,
-        this.fullyDilutedValuation,
-        this.totalVolume,
-        this.high24H,
-        this.low24H,
-        this.priceChange24H,
-        this.priceChangePercentage24H,
-        this.marketCapChange24H,
-        this.marketCapChangePercentage24H,
-        this.circulatingSupply,
-        this.totalSupply,
-        this.maxSupply,
-        this.ath,
-        this.athChangePercentage,
-        this.athDate,
-        this.atl,
-        this.atlChangePercentage,
-        this.atlDate,
-        this.roi,
-        this.lastUpdated,
-    });
+  Market({
+    this.id,
+    this.symbol,
+    this.name,
+    this.image,
+    this.currentPrice,
+    this.marketCap,
+    this.marketCapRank,
+    this.fullyDilutedValuation,
+    this.totalVolume,
+    this.high24H,
+    this.low24H,
+    this.priceChange24H,
+    this.priceChangePercentage24H,
+    this.marketCapChange24H,
+    this.marketCapChangePercentage24H,
+    this.circulatingSupply,
+    this.totalSupply,
+    this.maxSupply,
+    this.ath,
+    this.athChangePercentage,
+    this.athDate,
+    this.atl,
+    this.atlChangePercentage,
+    this.atlDate,
+    this.roi,
+    this.lastUpdated,
+  });
 
-    String id;
-    String symbol;
-    String name;
-    String image;
-    String currentPrice;
-    String marketCap;
-    String marketCapRank;
-    String fullyDilutedValuation;
-    String totalVolume;
-    String high24H;
-    String low24H;
-    String priceChange24H;
-    String priceChangePercentage24H;
-    String marketCapChange24H;
-    String marketCapChangePercentage24H;
-    String circulatingSupply;
-    String totalSupply;
-    String maxSupply;
-    String ath;
-    String athChangePercentage;
-    DateTime athDate;
-    String atl;
-    String atlChangePercentage;
-    DateTime atlDate;
-    String roi;
-    DateTime lastUpdated;
+  String id;
+  String symbol;
+  String name;
+  String image;
+  String currentPrice;
+  String marketCap;
+  String marketCapRank;
+  String fullyDilutedValuation;
+  String totalVolume;
+  String high24H;
+  String low24H;
+  String priceChange24H;
+  String priceChangePercentage24H;
+  String marketCapChange24H;
+  String marketCapChangePercentage24H;
+  String circulatingSupply;
+  String totalSupply;
+  String maxSupply;
+  String ath;
+  String athChangePercentage;
+  DateTime athDate;
+  String atl;
+  String atlChangePercentage;
+  DateTime atlDate;
+  String roi;
+  DateTime lastUpdated;
 
-    factory Market.fromJson(Map<String, dynamic> json) => Market(
+  factory Market.fromJson(Map<String, dynamic> json) => Market(
         id: json["id"].toString(),
         symbol: json["symbol"].toString(),
         name: json["name"].toString(),
@@ -97,9 +95,11 @@ class Market {
         high24H: json["high_24h"].toString(),
         low24H: json["low_24h"].toString(),
         priceChange24H: json["price_change_24h"].toString(),
-        priceChangePercentage24H: json["price_change_percentage_24h"].toString(),
+        priceChangePercentage24H:
+            json["price_change_percentage_24h"].toString(),
         marketCapChange24H: json["market_cap_change_24h"].toString(),
-        marketCapChangePercentage24H: json["market_cap_change_percentage_24h"].toString(),
+        marketCapChangePercentage24H:
+            json["market_cap_change_percentage_24h"].toString(),
         circulatingSupply: json["circulating_supply"].toString(),
         totalSupply: json["total_supply"].toString(),
         maxSupply: json["max_supply"].toString(),
@@ -111,9 +111,9 @@ class Market {
         atlDate: DateTime.parse(json["atl_date"].toString()),
         roi: json["roi"].toString(),
         lastUpdated: DateTime.parse(json["last_updated"].toString()),
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "symbol": symbol,
         "name": name,
@@ -140,6 +140,5 @@ class Market {
         "atl_date": atlDate.toIso8601String(),
         "roi": roi,
         "last_updated": lastUpdated.toIso8601String(),
-    };
+      };
 }
-

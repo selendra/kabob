@@ -59,6 +59,8 @@ export 'package:wallet_apps/src/components/route_animation.dart';
 // Add Asset
 export 'package:wallet_apps/src/models/asset_m.dart';
 
+export 'package:wallet_apps/src/models/crypto_data.dart';
+
 export 'package:wallet_apps/src/utils/fmt.dart';
 export 'package:wallet_apps/src/models/home_m.dart';
 /* Menu */
@@ -108,6 +110,10 @@ export 'package:wallet_apps/src/screen/home/menu/add_asset/add_asset_body.dart';
 /* Menu Screen */
 export 'package:wallet_apps/src/screen/home/menu/menu.dart';
 export 'package:wallet_apps/src/screen/home/menu/menu_body.dart';
+
+export 'package:wallet_apps/src/screen/home/menu/about.dart';
+export 'package:wallet_apps/src/screen/home/menu/swap.dart';
+
 // Transaction Activiity
 export 'package:wallet_apps/src/screen/home/menu/trx_activity/reuse_activity_widget.dart';
 export 'package:wallet_apps/src/screen/home/menu/trx_activity/trx_activity.dart';
@@ -164,7 +170,9 @@ export 'package:wallet_apps/theme/style.dart';
 export 'src/provider/api_provider.dart';
 export 'src/provider/contract_provider.dart';
 export 'src/provider/wallet_provider.dart';
-export 'package:wallet_apps/src/provider/market_provider.dart';
+export 'src/provider/market_provider.dart';
+export 'src/provider/theme_provider.dart';
+
 // Asset Info
 export 'src/screen/home/asset_info/asset_checkin.dart';
 export 'src/screen/home/asset_info/asset_history.dart';
