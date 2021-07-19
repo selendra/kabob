@@ -85,142 +85,143 @@ class _AssetItemState extends State<AssetItem> {
 
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return rowDecorationStyle(
-        color: isDarkTheme
-            ? hexaCodeToColor(AppColors.darkCard)
-            : hexaCodeToColor(AppColors.cardColor),
-        child: Row(
-          children: <Widget>[
-            Container(
-              width: 65, //size ?? 65,
-              height: 65, //size ?? 65,
-              padding: const EdgeInsets.all(6),
-              margin: const EdgeInsets.only(right: 20),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(40),
-              ),
-              child: Image.asset(
-                widget.asset,
-                fit: BoxFit.contain,
-              ),
+      color: isDarkTheme
+      ? hexaCodeToColor(AppColors.darkCard)
+      : hexaCodeToColor(AppColors.cardColor),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 65, //size ?? 65,
+            height: 65, //size ?? 65,
+            padding: const EdgeInsets.all(6),
+            margin: const EdgeInsets.only(right: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
             ),
-            Expanded(
+            child: Image.asset(
+              widget.asset,
+              fit: BoxFit.contain,
+            ),
+          ),
+
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                MyText(
+                  text: widget.tokenSymbol,
+                  fontWeight: FontWeight.bold,
+                  color: isDarkTheme
+                    ? AppColors.whiteColorHexa
+                    : AppColors.textColor,
+                  bottom: 4.0,
+                ),
+                if (widget.marketPrice == null) 
+
+                  if (widget.org == '') Container()
+                  else MyText(
+                    text: widget.org,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: isDarkTheme
+                      ? AppColors.darkSecondaryText
+                      : AppColors.darkSecondaryText,
+                  )
+                else
+                  Row(
+                    children: [
+
+                      widget.tokenSymbol == "KGO"
+                      ? MyText(
+                        text: '\$ ${widget.marketPrice.substring(0, 8)}' ?? '',
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkTheme
+                          ? AppColors.darkSecondaryText
+                          : AppColors.darkSecondaryText,
+                      )
+                      : MyText(
+                        text: '\$ ${widget.marketPrice}' ?? '',
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkTheme
+                          ? AppColors.darkSecondaryText
+                          : AppColors.darkSecondaryText,
+                      ),
+
+                      const SizedBox(width: 6.0),
+                      MyText(
+                        text: widget.priceChange24h.substring(0, 1) == '-'
+                          ? '${widget.priceChange24h}%'
+                          : '+${widget.priceChange24h}%',
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: widget.priceChange24h.substring(0, 1) == '-'
+                          ? '#FF0000'
+                          : isDarkTheme
+                            ? '#00FF00'
+                            : '#66CD00',
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 18.0),
+            child: SizedBox(
+              height: 50,
+              width: MediaQuery.of(context).size.width * 0.16,
+              child: widget.lineChartData == null || _leftTitlesInterval == 0
+                ? LineChart(avgData())
+                : LineChart(mainData()),
+            ),
+          ),
+          
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(right: 8.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   MyText(
-                    text: widget.tokenSymbol,
+                    width: double.infinity,
+                    text: widget.balance ?? '0',
                     fontWeight: FontWeight.bold,
                     color: isDarkTheme
-                        ? AppColors.whiteColorHexa
-                        : AppColors.textColor,
+                      ? AppColors.whiteColorHexa
+                      : AppColors.textColor,
+                    textAlign: TextAlign.right,
+                    overflow: TextOverflow.ellipsis,
                     bottom: 4.0,
                   ),
-                  if (widget.marketPrice == null)
-                    if (widget.org == '')
-                      Container()
-                    else
-                      MyText(
-                        text: widget.org,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: isDarkTheme
-                            ? AppColors.darkSecondaryText
-                            : AppColors.darkSecondaryText,
-                      )
-                  else
-                    Row(
-                      children: [
-                        widget.tokenSymbol == "KGO"
-                            ? MyText(
-                                text:
-                                    '\$ ${widget.marketPrice.substring(0, 8)}' ??
-                                        '',
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: isDarkTheme
-                                    ? AppColors.darkSecondaryText
-                                    : AppColors.darkSecondaryText,
-                              )
-                            : MyText(
-                                text: '\$ ${widget.marketPrice}' ?? '',
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                color: isDarkTheme
-                                    ? AppColors.darkSecondaryText
-                                    : AppColors.darkSecondaryText,
-                              ),
-                        const SizedBox(width: 6.0),
-                        MyText(
-                          text: widget.priceChange24h.substring(0, 1) == '-'
-                              ? '${widget.priceChange24h}%'
-                              : '+${widget.priceChange24h}%',
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: widget.priceChange24h.substring(0, 1) == '-'
-                              ? '#FF0000'
-                              : isDarkTheme
-                                  ? '#00FF00'
-                                  : '#66CD00',
-                        ),
-                      ],
-                    ),
+                  MyText(
+                    width: double.infinity,
+                    text: widget.balance != AppText.loadingPattern && widget.marketPrice != null
+                      ? '\$$totalUsd'
+                      : '\$0.00',
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    textAlign: TextAlign.right,
+                    overflow: TextOverflow.ellipsis,
+                    color: isDarkTheme
+                      ? AppColors.darkSecondaryText
+                      : AppColors.darkSecondaryText,
+                  )
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 18.0),
-              child: SizedBox(
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.16,
-                child: widget.lineChartData == null || _leftTitlesInterval == 0
-                    ? LineChart(avgData())
-                    : LineChart(mainData()),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(right: 8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    MyText(
-                      width: double.infinity,
-                      text: widget.balance ?? '0',
-                      fontWeight: FontWeight.bold,
-                      color: isDarkTheme
-                          ? AppColors.whiteColorHexa
-                          : AppColors.textColor,
-                      textAlign: TextAlign.right,
-                      overflow: TextOverflow.ellipsis,
-                      bottom: 4.0,
-                    ),
-                    MyText(
-                      width: double.infinity,
-                      text: widget.balance != AppText.loadingPattern &&
-                              widget.marketPrice != null
-                          ? '\$$totalUsd'
-                          : '\$0.00',
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      textAlign: TextAlign.right,
-                      overflow: TextOverflow.ellipsis,
-                      color: isDarkTheme
-                          ? AppColors.darkSecondaryText
-                          : AppColors.darkSecondaryText,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ));
+          ),
+        ],
+      )
+    );
   }
 
   LineChartData avgData() {
-    final isDarkTheme =
-        Provider.of<ThemeProvider>(context, listen: false).isDark;
+    final isDarkTheme = Provider.of<ThemeProvider>(context, listen: false).isDark;
     return LineChartData(
       lineTouchData: LineTouchData(enabled: false),
       gridData: FlGridData(
@@ -245,9 +246,10 @@ class _AssetItemState extends State<AssetItem> {
           showTitles: true,
           reservedSize: 22,
           getTextStyles: (value) => const TextStyle(
-              color: Color(0xff68737d),
-              fontWeight: FontWeight.bold,
-              fontSize: 16),
+            color: Color(0xff68737d),
+            fontWeight: FontWeight.bold,
+            fontSize: 16
+          ),
           getTitles: (value) {
             switch (value.toInt()) {
               case 2:
@@ -284,8 +286,9 @@ class _AssetItemState extends State<AssetItem> {
         ),
       ),
       borderData: FlBorderData(
-          show: false,
-          border: Border.all(color: const Color(0xff37434d), width: 1)),
+        show: false,
+        border: Border.all(color: const Color(0xff37434d), width: 1)
+      ),
       minX: 0,
       maxX: 11,
       minY: 0,
@@ -303,8 +306,8 @@ class _AssetItemState extends State<AssetItem> {
           ],
           isCurved: true,
           colors: isDarkTheme
-              ? [hexaCodeToColor('#00FF00')]
-              : [hexaCodeToColor('#66CD00')],
+            ? [hexaCodeToColor('#00FF00')]
+            : [hexaCodeToColor('#66CD00')],
           barWidth: 2,
           isStrokeCapRound: true,
           dotData: FlDotData(
@@ -312,11 +315,11 @@ class _AssetItemState extends State<AssetItem> {
           ),
           belowBarData: BarAreaData(show: true, colors: [
             ColorTween(begin: _gradientColors[0], end: _gradientColors[1])
-                .lerp(0.2)
-                .withOpacity(0.1),
+              .lerp(0.2)
+              .withOpacity(0.1),
             ColorTween(begin: _gradientColors[0], end: _gradientColors[1])
-                .lerp(0.2)
-                .withOpacity(0.1),
+              .lerp(0.2)
+              .withOpacity(0.1),
           ]),
         ),
       ],
@@ -355,9 +358,10 @@ class _AssetItemState extends State<AssetItem> {
           showTitles: true,
           reservedSize: 22,
           getTextStyles: (value) => const TextStyle(
-              color: Color(0xff68737d),
-              fontWeight: FontWeight.bold,
-              fontSize: 16),
+            color: Color(0xff68737d),
+            fontWeight: FontWeight.bold,
+            fontSize: 16
+          ),
           getTitles: (value) {
             switch (value.toInt()) {
               case 2:
@@ -394,8 +398,9 @@ class _AssetItemState extends State<AssetItem> {
             interval: _leftTitlesInterval),
       ),
       borderData: FlBorderData(
-          show: false,
-          border: Border.all(color: const Color(0xff37434d), width: 1)),
+        show: false,
+        border: Border.all(color: const Color(0xff37434d), width: 1)
+      ),
       minX: _minX,
       maxX: _maxX,
       minY: _minY,
@@ -405,10 +410,10 @@ class _AssetItemState extends State<AssetItem> {
           spots: _values,
           isCurved: true,
           colors: widget.priceChange24h.substring(0, 1) == '-'
-              ? [hexaCodeToColor('#FF0000')]
-              : isDarkTheme
-                  ? [hexaCodeToColor('#00FF00')]
-                  : [hexaCodeToColor('#66CD00')],
+            ? [hexaCodeToColor('#FF0000')]
+            : isDarkTheme
+              ? [hexaCodeToColor('#00FF00')]
+              : [hexaCodeToColor('#66CD00')],
           barWidth: 2,
           isStrokeCapRound: true,
           dotData: FlDotData(
@@ -420,14 +425,14 @@ class _AssetItemState extends State<AssetItem> {
             gradientFrom: const Offset(0.2, 1.2),
             gradientTo: const Offset(0.2, 0),
             colors: widget.priceChange24h.substring(0, 1) == '-'
-                ? [
-                    Colors.white.withOpacity(0.2),
-                    hexaCodeToColor('#FF0000').withOpacity(0.2)
-                  ]
-                : [
-                    Colors.white.withOpacity(0.2),
-                    hexaCodeToColor('#00FF00').withOpacity(0.2),
-                  ],
+              ? [
+                  Colors.white.withOpacity(0.2),
+                  hexaCodeToColor('#FF0000').withOpacity(0.2)
+                ]
+              : [
+                  Colors.white.withOpacity(0.2),
+                  hexaCodeToColor('#00FF00').withOpacity(0.2),
+                ],
             // colors:
             //     _gradientColors.map((color) => color.withOpacity(0.3)).toList(),
           ),
@@ -436,14 +441,14 @@ class _AssetItemState extends State<AssetItem> {
     );
   }
 
-  Widget rowDecorationStyle(
-      {Widget child, double mTop = 0, double mBottom = 16, Color color}) {
+  Widget rowDecorationStyle({Widget child, double mTop = 0, double mBottom = 16, Color color}) {
     return Container(
-        margin: EdgeInsets.only(top: mTop, bottom: 2),
-        padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
-        height: 100,
-        color: color ?? hexaCodeToColor(AppColors.cardColor),
-        child: child);
+      margin: EdgeInsets.only(top: mTop, bottom: 2),
+      padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
+      height: 100,
+      color: color ?? hexaCodeToColor(AppColors.cardColor),
+      child: child
+    );
   }
 }
 

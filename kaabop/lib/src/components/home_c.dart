@@ -109,7 +109,7 @@ Widget homeAppBar(BuildContext context) {
   final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
   return Container(
     height: 70,
-    color: isDarkTheme ? hexaCodeToColor(AppColors.darkBgd) : hexaCodeToColor(AppColors.cardColor),
+    color: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : hexaCodeToColor(AppColors.cardColor),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -123,7 +123,7 @@ Widget homeAppBar(BuildContext context) {
           child: IconButton(
             iconSize: 30,
             color: isDarkTheme ? Colors.white : Colors.black,
-            icon: const Icon(Icons.add_circle_outline),
+            icon: const Icon(LineAwesomeIcons.plus_circle),
             onPressed: () async {
               Navigator.push(
                 context,

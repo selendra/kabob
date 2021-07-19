@@ -52,8 +52,10 @@ class ImportAccBody extends StatelessWidget {
                     bottom: 16,
                   ),
                 ),
+
                 Row(
                   children: [
+
                     Expanded(
                       child: Container(
                         alignment: Alignment.center,
@@ -66,8 +68,18 @@ class ImportAccBody extends StatelessWidget {
                             ),
                           ),
                         ),
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 50,
+                          child: const MyText(
+                            text: "Mnemonic",
+                            color: AppColors.secondarytext,
+                            // color: "#FFFFFF",
+                          ),
+                        ),
                       ),
                     ),
+
                     Expanded(
                       child: GestureDetector(
                         onTap: () async {
@@ -84,7 +96,7 @@ class ImportAccBody extends StatelessWidget {
                                   child: Text("This feature has not implemented yet!", textAlign: TextAlign.center),
                                 ),
                                 actions: <Widget>[
-                                  FlatButton(
+                                  TextButton(
                                     onPressed: () => Navigator.pop(context),
                                     child: const Text('Close'),
                                   ),
@@ -105,6 +117,7 @@ class ImportAccBody extends StatelessWidget {
                     )
                   ],
                 ),
+                
                 Container(
                   margin: const EdgeInsets.only(top: 30),
                   child: MyInputField(

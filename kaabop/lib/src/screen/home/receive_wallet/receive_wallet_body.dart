@@ -33,8 +33,8 @@ class ReceiveWalletBody extends StatelessWidget {
         MyAppBar(
           title: "Receive wallet",
           color: isDarkTheme
-              ? hexaCodeToColor(AppColors.darkCard)
-              : hexaCodeToColor(AppColors.cardColor),
+            ? hexaCodeToColor(AppColors.darkCard)
+            : hexaCodeToColor(AppColors.cardColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -52,7 +52,9 @@ class ReceiveWalletBody extends StatelessWidget {
         else
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
+              child: Container(
+                color: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : hexaCodeToColor("#F5F5F5"),
+                child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
@@ -213,9 +215,10 @@ class ReceiveWalletBody extends StatelessWidget {
                     ),
                   ),
                 ],
-              ),
+              )
             ),
           ),
+        ),
       ],
     );
   }

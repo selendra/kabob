@@ -4,15 +4,12 @@ class AppStyle {
   static ThemeData myTheme() {
     return ThemeData(
       appBarTheme: AppBarTheme(
-          textTheme: TextTheme(
-              bodyText2:
-                  TextStyle(color: hexaCodeToColor(AppColors.appBarTextColor))),
-          color: Colors.transparent,
-          iconTheme:
-              IconThemeData(color: hexaCodeToColor(AppColors.appBarTextColor))),
+        textTheme: TextTheme(bodyText2: TextStyle(color: hexaCodeToColor(AppColors.appBarTextColor))),
+        color: Colors.transparent,
+        iconTheme: IconThemeData(color: hexaCodeToColor(AppColors.appBarTextColor))
+      ),
       /* Color All Text */
-      textTheme: TextTheme(
-          bodyText2: TextStyle(color: hexaCodeToColor(AppColors.textColor))),
+      textTheme: TextTheme(bodyText2: TextStyle(color: hexaCodeToColor(AppColors.textColor))),
       canvasColor: hexaCodeToColor("#FFFFFF"),
       //cardColor: hexaCodeToColor(AppConfig.darkBlue50.toString()),
 

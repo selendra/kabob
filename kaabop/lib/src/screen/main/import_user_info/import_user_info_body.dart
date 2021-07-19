@@ -15,19 +15,20 @@ class ImportUserInfoBody extends StatelessWidget {
   final MenuModel menuModel;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
-  const ImportUserInfoBody(
-      {this.modelUserInfo,
-      this.onSubmit,
-      this.onChanged,
-      this.changeGender,
-      this.validateFirstName,
-      this.validatepassword,
-      this.validateConfirmPassword,
-      this.submitProfile,
-      this.popScreen,
-      this.switchBio,
-      this.menuModel,
-      this.item});
+  const ImportUserInfoBody({
+    this.modelUserInfo,
+    this.onSubmit,
+    this.onChanged,
+    this.changeGender,
+    this.validateFirstName,
+    this.validatepassword,
+    this.validateConfirmPassword,
+    this.submitProfile,
+    this.popScreen,
+    this.switchBio,
+    this.menuModel,
+    this.item
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +38,8 @@ class ImportUserInfoBody extends StatelessWidget {
         MyAppBar(
           title: "User Information",
           color: isDarkTheme
-              ? hexaCodeToColor(AppColors.darkCard)
-              : hexaCodeToColor(AppColors.cardColor),
+            ? hexaCodeToColor(AppColors.darkCard)
+            : hexaCodeToColor(AppColors.cardColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -65,12 +66,7 @@ class ImportUserInfoBody extends StatelessWidget {
                     onSubmit: onSubmit,
                   ),
                   Container(
-                      padding: const EdgeInsets.fromLTRB(
-                        16,
-                        0,
-                        16,
-                        0,
-                      ),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0,),
                       child: TextFormField(
                         key: key,
                         enabled: true,
@@ -82,22 +78,19 @@ class ImportUserInfoBody extends StatelessWidget {
                         textInputAction: TextInputAction.next,
                         style: TextStyle(
                           color: isDarkTheme
-                              ? hexaCodeToColor(AppColors.whiteColorHexa)
-                              : hexaCodeToColor(AppColors.textColor),
+                            ? hexaCodeToColor(AppColors.whiteColorHexa)
+                            : hexaCodeToColor(AppColors.textColor),
                           fontSize: 18.0,
                         ),
                         decoration: InputDecoration(
                           labelText: "Pin",
                           labelStyle: TextStyle(
                             fontSize: 18.0,
-                            color: modelUserInfo.passwordNode.hasFocus ||
-                                    modelUserInfo.passwordCon.text != ""
-                                ? isDarkTheme
-                                    ? hexaCodeToColor(AppColors.whiteColorHexa)
-                                        .withOpacity(0.3)
-                                    : hexaCodeToColor(AppColors.textColor)
-                                        .withOpacity(0.3)
-                                : hexaCodeToColor(AppColors.darkSecondaryText),
+                            color: modelUserInfo.passwordNode.hasFocus || modelUserInfo.passwordCon.text != ""
+                              ? isDarkTheme
+                                ? hexaCodeToColor(AppColors.whiteColorHexa).withOpacity(0.3)
+                                : hexaCodeToColor(AppColors.textColor).withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.darkSecondaryText),
                           ),
                           prefixStyle: TextStyle(
                             color: hexaCodeToColor(AppColors.textColor),
@@ -106,17 +99,14 @@ class ImportUserInfoBody extends StatelessWidget {
                           /* Prefix Text */
                           filled: true,
                           fillColor: isDarkTheme
-                              ? hexaCodeToColor(AppColors.darkCard)
-                              : hexaCodeToColor(AppColors.cardColor),
+                            ? hexaCodeToColor(AppColors.darkCard)
+                            : hexaCodeToColor(AppColors.cardColor),
                           enabledBorder: myTextInputBorder(
                             modelUserInfo.passwordCon.text != ""
-                                ? isDarkTheme
-                                    ? hexaCodeToColor(AppColors.whiteColorHexa)
-                                        .withOpacity(0.3)
-                                    : hexaCodeToColor(AppColors.textColor)
-                                        .withOpacity(0.3)
-                                : hexaCodeToColor(AppColors.secondary)
-                                    .withOpacity(0.3),
+                              ? isDarkTheme
+                                ? hexaCodeToColor(AppColors.whiteColorHexa).withOpacity(0.3)
+                                : hexaCodeToColor(AppColors.textColor).withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.secondary).withOpacity(0.3),
                           ),
                           /* Enable Border But Not Show Error */
                           border: errorOutline(),
@@ -152,22 +142,20 @@ class ImportUserInfoBody extends StatelessWidget {
                         obscureText: true,
                         textInputAction: TextInputAction.done,
                         style: TextStyle(
-                            color: isDarkTheme
-                                ? hexaCodeToColor(AppColors.whiteColorHexa)
-                                : hexaCodeToColor(AppColors.textColor),
-                            fontSize: 18.0),
+                          color: isDarkTheme
+                            ? hexaCodeToColor(AppColors.whiteColorHexa)
+                            : hexaCodeToColor(AppColors.textColor),
+                          fontSize: 18.0
+                        ),
                         decoration: InputDecoration(
                           labelText: "Confirm Pin",
                           labelStyle: TextStyle(
                             fontSize: 18.0,
-                            color: modelUserInfo.confirmPasswordNode.hasFocus ||
-                                    modelUserInfo.passwordCon.text != ""
-                                ? isDarkTheme
-                                    ? hexaCodeToColor(AppColors.whiteColorHexa)
-                                        .withOpacity(0.3)
-                                    : hexaCodeToColor(AppColors.textColor)
-                                        .withOpacity(0.3)
-                                : hexaCodeToColor(AppColors.darkSecondaryText),
+                            color: modelUserInfo.confirmPasswordNode.hasFocus || modelUserInfo.passwordCon.text != ""
+                              ? isDarkTheme
+                                ? hexaCodeToColor(AppColors.whiteColorHexa).withOpacity(0.3)
+                                : hexaCodeToColor(AppColors.textColor).withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.darkSecondaryText),
                           ),
                           prefixStyle: TextStyle(
                               color: hexaCodeToColor(AppColors.textColor),

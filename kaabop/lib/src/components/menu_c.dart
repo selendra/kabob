@@ -36,7 +36,7 @@ class MenuHeader extends StatelessWidget {
                         color: hexaCodeToColor(AppColors.cardColor),
                         borderRadius: BorderRadius.circular(60),
                       ),
-                      child: SvgPicture.string(acc.addressIcon),
+                      child: SvgPicture.string(acc.addressIcon ?? 'hello world'),
                     ),
                   ),
 
@@ -47,7 +47,7 @@ class MenuHeader extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       MyText(
-                        text: acc.name,
+                        text: acc.name ?? '',
                         color: isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
                         fontSize: 16,
                       ),
@@ -110,10 +110,11 @@ class MyListTile extends StatelessWidget {
       enabled: enable,
       onTap: onTap,
       leading: SvgPicture.asset(
-          MenuModel.listTile[index]['sub'][subIndex]['icon'].toString(),
-          color: isDarkTheme ? Colors.white : Colors.black ,
-          width: 30,
-          height: 30),
+        MenuModel.listTile[index]['sub'][subIndex]['icon'].toString(),
+        color: isDarkTheme ? Colors.white : Colors.black ,
+        width: 30,
+        height: 30
+      ),
       title: MyText(
         text: MenuModel.listTile[index]['sub'][subIndex]['subTitle'].toString(),
         color: isDarkTheme ?   AppColors.whiteColorHexa : AppColors.textColor,

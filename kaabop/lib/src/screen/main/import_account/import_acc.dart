@@ -93,7 +93,7 @@ class ImportAccState extends State<ImportAcc> {
               child: Text('Invalid seed phrases'),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Close'),
               ),

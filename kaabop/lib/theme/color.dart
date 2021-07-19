@@ -22,7 +22,6 @@ class AppColors {
   static const String darkCard = "#181C35";
   static const String darkText = "#08B952";
   static const String darkSecondaryText = "B3B3B3";
-  
 
   //blue
   static const String primary = "#03A9F4";

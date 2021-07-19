@@ -9,6 +9,7 @@ import '../../../../index.dart';
 import 'asset_detail.dart';
 
 class AssetInfo extends StatefulWidget {
+
   final String id;
   final String assetLogo;
   final String balance;
@@ -18,15 +19,16 @@ class AssetInfo extends StatefulWidget {
   final String priceChange24h;
   final Market marketData;
 
-  const AssetInfo(
-      {this.id,
-      this.assetLogo,
-      this.balance,
-      this.tokenSymbol,
-      this.org,
-      this.marketPrice,
-      this.priceChange24h,
-      this.marketData});
+  const AssetInfo({
+    this.id,
+    this.assetLogo,
+    this.balance,
+    this.tokenSymbol,
+    this.org,
+    this.marketPrice,
+    this.priceChange24h,
+    this.marketData
+  });
   @override
   _AssetInfoState createState() => _AssetInfoState();
 }
@@ -272,6 +274,7 @@ class _AssetInfoState extends State<AssetInfo> {
 
   @override
   Widget build(BuildContext context) {
+    
     if (widget.balance != AppText.loadingPattern &&
         widget.marketPrice != null) {
       var res = double.parse(widget.balance) * double.parse(widget.marketPrice);
@@ -304,10 +307,12 @@ class _AssetInfoState extends State<AssetInfo> {
                 forceElevated: innerBox,
                 automaticallyImplyLeading: false,
                 leading: Container(),
+                backgroundColor: Colors.white,
                 flexibleSpace: Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Column(
                     children: [
+
                       Flexible(
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -319,7 +324,7 @@ class _AssetInfoState extends State<AssetInfo> {
                               child: Container(
                                 alignment: Alignment.centerLeft,
                                 padding: const EdgeInsets.only(right: 15, left: 10),
-                                child: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios, color: Colors.white, size: 28)
+                                child: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios, color: isDarkTheme ? Colors.white : Colors.black, size: 28)
                               )
                             ),
 
@@ -338,10 +343,10 @@ class _AssetInfoState extends State<AssetInfo> {
                             ),
                             MyText(
                               fontSize: 18.0,
-                              color: "#FFFFFF",
+                              color: isDarkTheme ? "#FFFFFF" : AppColors.blackColor,
                               text: widget.id == null
-                                  ? widget.tokenSymbol
-                                  : widget.id.toUpperCase(),
+                                ? widget.tokenSymbol
+                                : widget.id.toUpperCase(),
                             ),
 
                             Expanded(child: Container()),
@@ -357,6 +362,7 @@ class _AssetInfoState extends State<AssetInfo> {
                           ],
                         )
                       ),
+                      Divider(height: 3, color: Colors.grey.shade400)
                     ]
                   )
                 ),

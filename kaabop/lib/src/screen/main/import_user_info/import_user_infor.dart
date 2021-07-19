@@ -42,6 +42,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   Future<void> _importFromMnemonic() async {
     try {
+
       final json = await ApiProvider.sdk.api.keyring.importAccount(
         ApiProvider.keyring,
         keyType: KeyType.mnemonic,
@@ -58,12 +59,16 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       );
 
       if (acc != null) {
+
         addBtcWallet();
+
         final resPk = await ApiProvider().getPrivateKey(widget.passPhrase);
+
         if (resPk != null) {
+
           ContractProvider().extractAddress(resPk);
-          final res = await ApiProvider.keyring.store
-              .encryptPrivateKey(resPk, _userInfoM.confirmPasswordCon.text);
+          
+          final res = await ApiProvider.keyring.store.encryptPrivateKey(resPk, _userInfoM.confirmPasswordCon.text);
 
           if (res != null) {
             await StorageServices().writeSecure('private', res);
@@ -80,8 +85,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
         isKgoContain();
 
-        Provider.of<MarketProvider>(context, listen: false)
-            .fetchTokenMarketPrice(context);
+        Provider.of<MarketProvider>(context, listen: false).fetchTokenMarketPrice(context);
 
         Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
@@ -95,10 +99,9 @@ class ImportUserInfoState extends State<ImportUserInfo> {
           action: FlatButton(
             onPressed: () {
               Navigator.pop(context);
-              Navigator.pushNamedAndRemoveUntil(
-                  context, Home.route, ModalRoute.withName('/'));
+              Navigator.pushNamedAndRemoveUntil(context, Home.route, ModalRoute.withName('/'));
             },
-            child: const Text('Continue'),
+            child: const MyText(text: 'Continue', fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.secondarytext),
           ),
         );
       }
@@ -107,8 +110,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             title: const Align(
               child: Text('Message'),
             ),
@@ -117,7 +119,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
               child: Text(e.message.toString()),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Close'),
               ),
@@ -135,22 +137,17 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     final hdWallet = HDWallet.fromSeed(seed);
     final keyPair = ECPair.fromWIF(hdWallet.wif);
 
-    final bech32Address = new P2WPKH(
-            data: new PaymentData(pubkey: keyPair.publicKey), network: bitcoin)
-        .data
-        .address;
+    final bech32Address = new P2WPKH(data: new PaymentData(pubkey: keyPair.publicKey), network: bitcoin).data.address;
 
     await StorageServices.setData(bech32Address, 'bech32');
 
-    final res = await ApiProvider.keyring.store
-        .encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
+    final res = await ApiProvider.keyring.store.encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
 
     if (res != null) {
       await StorageServices().writeSecure('btcwif', res);
     }
 
-    Provider.of<ApiProvider>(context, listen: false)
-        .getBtcBalance(hdWallet.address);
+    Provider.of<ApiProvider>(context, listen: false).getBtcBalance(hdWallet.address);
     Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
 
     Provider.of<ApiProvider>(context, listen: false).setBtcAddr(bech32Address);
@@ -158,9 +155,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<void> isKgoContain() async {
-    Provider.of<ContractProvider>(context, listen: false)
-        .getKgoDecimal()
-        .then((value) {
+    Provider.of<ContractProvider>(context, listen: false).getKgoDecimal().then((value) {
       Provider.of<ContractProvider>(context, listen: false).getKgoBalance();
     });
   }
@@ -208,7 +203,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
             child: Text("This feature has not implemented yet!", textAlign: TextAlign.center),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Close'),
             ),
@@ -325,8 +320,8 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       backgroundColor: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkCard)
-          : hexaCodeToColor("#F5F5F5"),
+        ? hexaCodeToColor(AppColors.darkCard)
+        : hexaCodeToColor("#F5F5F5"),
       key: _userInfoM.globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,

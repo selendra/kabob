@@ -10,8 +10,11 @@ import 'package:flutter/services.dart';
 import '../../index.dart';
 
 class ContractProvider with ChangeNotifier {
+
   final WalletSDK sdk = ApiProvider.sdk;
+
   final Keyring keyring = ApiProvider.keyring;
+
   String ethAdd = '';
 
   Atd atd = Atd();
@@ -55,7 +58,9 @@ class ContractProvider with ChangeNotifier {
     org: 'Smart Chain',
     isContain: true,
   );
+
   Client _httpClient;
+
   Web3Client _web3client, _etherClient;
 
   List<TokenModel> token = [];
@@ -74,8 +79,7 @@ class ContractProvider with ChangeNotifier {
     initEtherClient();
 
     final ethAddr = await StorageServices().readSecure('etherAdd');
-    final EtherAmount ethbalance =
-        await _etherClient.getBalance(EthereumAddress.fromHex(ethAddr));
+    final EtherAmount ethbalance = await _etherClient.getBalance(EthereumAddress.fromHex(ethAddr));
     etherNative.balance = ethbalance.getValueInUnit(EtherUnit.ether).toString();
 
     notifyListeners();
