@@ -109,7 +109,7 @@ Widget homeAppBar(BuildContext context) {
   final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
   return Container(
     height: 70,
-    color: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : hexaCodeToColor(AppColors.cardColor),
+    color: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : hexaCodeToColor(AppColors.whiteHexaColor),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -325,7 +325,7 @@ Widget rowDecorationStyle(
         BoxShadow(
             color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
       ],
-      color: hexaCodeToColor(AppColors.cardColor),
+      color: hexaCodeToColor(AppColors.whiteHexaColor),
       borderRadius: BorderRadius.circular(8),
     ),
     child: child,
@@ -353,65 +353,67 @@ class MyBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
-    return Container(
-      color: isDarkTheme ? hexaCodeToColor(AppColors.darkBgd):  hexaCodeToColor(AppColors.whiteColorHexa),
-      child: BottomAppBar(
-        color: isDarkTheme  ? hexaCodeToColor(AppColors.darkCard) : hexaCodeToColor(AppColors.cardColor),
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        child: SizedBox(
-          height: 65,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                  child: MyIconButton(
-                icon: 'telegram.svg',
-                iconSize: 36,
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+    return BottomAppBar(
+      elevation: 10,
+      color: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : hexaCodeToColor(AppColors.whiteHexaColor),
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 8.0,
+      child: SizedBox(
+        height: 65,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: MyIconButton(
+              icon: 'telegram.svg',
+              iconSize: 36,
+              onPressed: !apiStatus
+                ? null
+                : () async {
+                  await MyBottomSheet().trxOptions(
+                    context: context,
+                    portfolioList: homeM.portfolioList,
+                  );
+                },
+            )),
+            Expanded(
+              child: MyIconButton(
+              icon: 'wallet.svg',
+              iconSize: 36,
+              onPressed: !apiStatus
+                ? null
+                : () async {
+                  toReceiveToken();
+                },
+            )),
+            Expanded(child: Container()),
+            Expanded(
+              child: MyIconButton(
+                icon: 'contact_list.svg',
+                iconSize: 26,
                 onPressed: !apiStatus
-                    ? null
-                    : () async {
-                        await MyBottomSheet().trxOptions(
-                          context: context,
-                          portfolioList: homeM.portfolioList,
-                        );
-                      },
-              )),
-              Expanded(
-                  child: MyIconButton(
-                icon: 'wallet.svg',
-                iconSize: 36,
-                onPressed: !apiStatus
-                    ? null
-                    : () async {
-                        toReceiveToken();
-                      },
-              )),
-              Expanded(child: Container()),
-              Expanded(
-                child: MyIconButton(
-                  icon: 'contact_list.svg',
-                  iconSize: 26,
-                  onPressed: !apiStatus
-                      ? null
-                      : () async {
-                          Navigator.pushNamed(context, AppText.contactBookView);
-                        },
-                ),
+                  ? null
+                  : () async {
+                    Navigator.pushNamed(context, AppText.contactBookView);
+                  },
               ),
-              Expanded(
-                child: MyIconButton(
-                  icon: 'menu.svg',
-                  iconSize: 27,
-                  onPressed: !apiStatus ? null : openDrawer,
-                ),
-              )
-            ],
-          ),
+            ),
+            Expanded(
+              child: MyIconButton(
+                icon: 'menu.svg',
+                iconSize: 27,
+                onPressed: !apiStatus ? null : openDrawer,
+              ),
+            )
+          ],
         ),
       ),
     );
+    // Container(
+    //   color: isDarkTheme ? hexaCodeToColor(AppColors.darkBgd):  hexaCodeToColor(AppColors.whiteColorHexa),
+    //   child: ,
+    // );
   }
 }
 

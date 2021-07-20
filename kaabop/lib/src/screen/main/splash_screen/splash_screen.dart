@@ -18,6 +18,8 @@ class MySplashScreenState extends State<MySplashScreen> with SingleTickerProvide
 
   Future<void> getCurrentAccount() async {
 
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ImportUserInfo("hello") ));
+
     // ApiProvider.keyring.keyPairs.toList().clear();
 
     await Future.delayed(const Duration(milliseconds: 1000), () async {
@@ -168,9 +170,6 @@ class MySplashScreenState extends State<MySplashScreen> with SingleTickerProvide
   Widget build(BuildContext context) {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
-      backgroundColor: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkBgd)
-          : hexaCodeToColor(AppColors.whiteColorHexa),
       body: Container(),
     );
   }

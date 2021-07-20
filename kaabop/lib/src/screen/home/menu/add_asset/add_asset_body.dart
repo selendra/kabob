@@ -38,12 +38,13 @@ class AddAssetBody extends StatelessWidget {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: [
+        
         Flexible(
           child: MyAppBar(
             title: "Add asset",
             color: isDarkTheme
-                ? hexaCodeToColor(AppColors.darkCard)
-                : hexaCodeToColor(AppColors.cardColor),
+              ? hexaCodeToColor(AppColors.darkCard)
+              : hexaCodeToColor(AppColors.whiteHexaColor),
             onPressed: () {
               Navigator.pop(context);
             },
@@ -69,6 +70,7 @@ class AddAssetBody extends StatelessWidget {
             ),
           ),
         ),
+
         const SizedBox(
           height: 20.0,
         ),
@@ -77,8 +79,9 @@ class AddAssetBody extends StatelessWidget {
           width: 200,
           height: 200,
         ),
+
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
           child: Form(
             key: assetM.formStateAsset,
             child: Column(
@@ -142,8 +145,10 @@ class AddAssetBody extends StatelessWidget {
                   height: 65,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: hexaCodeToColor(AppColors.cardColor),
-                      borderRadius: BorderRadius.circular(8.0)),
+                    color: hexaCodeToColor(AppColors.whiteHexaColor),
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(width: initialValue != null ? 1 : 0, color: initialValue != null ? hexaCodeToColor(AppColors.secondary) : Colors.transparent)
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -154,8 +159,7 @@ class AddAssetBody extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: ReuseDropDown(
-                          style: TextStyle(
-                              color: hexaCodeToColor(AppColors.textColor)),
+                          style: TextStyle(color: hexaCodeToColor(AppColors.textColor)),
                           initialValue: initialValue,
                           itemsList: const [
                             'Ethereum',
@@ -179,8 +183,8 @@ class AddAssetBody extends StatelessWidget {
                   controller: assetM.controllerAssetCode,
                   focusNode: assetM.nodeAssetCode,
                   validateField: (value) => value.isEmpty
-                      ? 'Please fill in token contract address'
-                      : null,
+                    ? 'Please fill in token contract address'
+                    : null,
                   onChanged: onChanged,
                   onSubmit: onSubmit,
                 ),
@@ -224,9 +228,7 @@ class AddAssetBody extends StatelessWidget {
                   alignment: Alignment.bottomRight,
                   child: GestureDetector(
                     onTap: () async {
-                      final _response = await Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) =>QrScanner()));
+                      final _response = await Navigator.push(context, MaterialPageRoute(builder: (context) =>QrScanner()));
                           // transitionRoute(QrScanner()));
                       if (_response != null) {
                         qrRes(_response.toString());
@@ -252,7 +254,7 @@ class AddAssetBody extends StatelessWidget {
         MyFlatButton(
           textButton: "Submit",
           edgeMargin: const EdgeInsets.only(left: 66, right: 66),
-          hasShadow: true,
+          hasShadow: assetM.enable,
           action: assetM.enable ? submitAsset : null,
         ),
       ],
@@ -327,7 +329,7 @@ class AddAssetBody extends StatelessWidget {
                 blurRadius: 2.0,
                 offset: Offset(1.0, 1.0))
           ],
-          color: hexaCodeToColor(AppColors.cardColor),
+          color: hexaCodeToColor(AppColors.whiteHexaColor),
           borderRadius: BorderRadius.circular(8),
         ),
         child: child);

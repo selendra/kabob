@@ -30,6 +30,7 @@ class MyBottomSheet {
                   top: 20,
                   bottom: 33,
                   text: "Transaction options",
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               Row(

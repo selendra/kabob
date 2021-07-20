@@ -28,8 +28,8 @@ class ImportAccBody extends StatelessWidget {
         MyAppBar(
           title: 'Import Account',
           color: isDarkTheme
-              ? hexaCodeToColor(AppColors.darkCard)
-              : hexaCodeToColor(AppColors.cardColor),
+            ? hexaCodeToColor(AppColors.darkCard)
+            : hexaCodeToColor(AppColors.whiteHexaColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -164,13 +164,14 @@ class ImportAccBody extends StatelessWidget {
           child: Container(),
         ),
         MyFlatButton(
+          hasShadow: enable,
           edgeMargin: const EdgeInsets.only(left: 66, right: 66, bottom: 16),
           textButton: AppText.next,
           action: enable == false
-              ? null
-              : () async {
-                  submit();
-                },
+            ? null
+            : () async {
+              submit();
+            },
         )
       ],
     );

@@ -62,17 +62,14 @@ class ReceiveWalletState extends State<ReceiveWallet> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _globalKey,
-      body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: ReceiveWalletBody(
-          keyQrShare: _keyQrShare,
-          globalKey: _globalKey,
-          method: _method,
-          name: name,
-          wallet: wallet,
-          initialValue: initialValue,
-          onChanged: onChanged,
-        ),
+      body: ReceiveWalletBody(
+        keyQrShare: _keyQrShare,
+        globalKey: _globalKey,
+        method: _method,
+        name: name,
+        wallet: wallet,
+        initialValue: initialValue,
+        onChanged: onChanged,
       ),
     );
   }

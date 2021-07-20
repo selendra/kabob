@@ -12,7 +12,7 @@ class MyShimmer extends StatelessWidget{
       period: const Duration(seconds: 2),
       baseColor: isDarkTheme
           ? hexaCodeToColor(AppColors.darkCard)
-          : hexaCodeToColor(AppColors.cardColor),
+          : hexaCodeToColor(AppColors.whiteHexaColor),
       highlightColor: isDarkTheme
           ? hexaCodeToColor(AppColors.darkBgd)
           : hexaCodeToColor(AppColors.bgdColor),

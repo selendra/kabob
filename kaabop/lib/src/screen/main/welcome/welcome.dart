@@ -26,7 +26,7 @@ class WelcomeState extends State<Welcome> {
     return Scaffold(
       key: globalKey,
       body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
+        bottom: 0,
         child: WelcomeBody(),
       ),
     );

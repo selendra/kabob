@@ -13,12 +13,13 @@ class SubmitTrx extends StatefulWidget {
   final bool enableInput;
 
   const SubmitTrx(
-      // ignore: avoid_positional_boolean_parameters
-      this._walletKey,
-      // ignore: avoid_positional_boolean_parameters
-      this.enableInput,
-      this._listPortfolio,
-      {this.asset});
+    // ignore: avoid_positional_boolean_parameters
+    this._walletKey,
+    // ignore: avoid_positional_boolean_parameters
+    this.enableInput,
+    this._listPortfolio,
+    {this.asset}
+  );
   @override
   State<StatefulWidget> createState() {
     return SubmitTrxState();
@@ -249,7 +250,7 @@ class SubmitTrxState extends State<SubmitTrx> {
             child: Text(text2),
           ),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               onPressed: () => Navigator.pop(context),
               child: const Text('Close'),
             ),
@@ -574,53 +575,50 @@ class SubmitTrxState extends State<SubmitTrx> {
     return Scaffold(
       key: _scanPayM.globalKey,
       body: _loading
-          ? const Center(
-            child: CircularProgressIndicator(),
-          )
-          : BodyScaffold(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: <Widget>[
-                  Consumer<WalletProvider>(
-                    builder: (context, value, child) {
-                      return SubmitTrxBody(
-                        enableInput: widget.enableInput,
-                        dialog: dialogBox,
-                        scanPayM: _scanPayM,
-                        onChanged: onChanged,
-                        onSubmit: onSubmit,
-                        clickSend: clickSend,
-                        validateField: validateField,
-                        resetAssetsDropDown: resetAssetsDropDown,
-                        list: value.listSymbol,
-                      );
-                    },
-                  ),
-                  if (_scanPayM.isPay == false)
-                    Container()
-                  else
-                    BackdropFilter(
-                      // Fill Blur Background
-                      filter: ImageFilter.blur(
-                        sigmaX: 5.0,
-                        sigmaY: 5.0,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Expanded(
-                            child: CustomAnimation.flareAnimation(
-                              flareController,
-                              "assets/animation/check.flr",
-                              "Checkmark",
-                            ),
-                          ),
-                        ],
+        ? const Center(
+          child: CircularProgressIndicator(),
+        )
+        : Stack(
+          children: <Widget>[
+            Consumer<WalletProvider>(
+              builder: (context, value, child) {
+                return SubmitTrxBody(
+                  enableInput: widget.enableInput,
+                  dialog: dialogBox,
+                  scanPayM: _scanPayM,
+                  onChanged: onChanged,
+                  onSubmit: onSubmit,
+                  clickSend: clickSend,
+                  validateField: validateField,
+                  resetAssetsDropDown: resetAssetsDropDown,
+                  list: value.listSymbol,
+                );
+              },
+            ),
+            if (_scanPayM.isPay == false)
+              Container()
+            else
+              BackdropFilter(
+                // Fill Blur Background
+                filter: ImageFilter.blur(
+                  sigmaX: 5.0,
+                  sigmaY: 5.0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                      child: CustomAnimation.flareAnimation(
+                        flareController,
+                        "assets/animation/check.flr",
+                        "Checkmark",
                       ),
                     ),
-                ],
+                  ],
+                ),
               ),
-            ),
+          ],
+        ),
     );
   }
 }

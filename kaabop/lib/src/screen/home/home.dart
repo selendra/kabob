@@ -208,8 +208,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
 
     return Scaffold(
-      
-      backgroundColor: isDarkTheme ? Color(AppUtils.convertHexaColor(AppColors.darkCard)) : Color(AppUtils.convertHexaColor("#F5F5F5")),
 
       key: _homeM.globalKey,
 
@@ -245,10 +243,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         ]
       ),
 
-      floatingActionButton: SizedBox(
-        width: 64,
-        height: 64,
+      floatingActionButton: Container(
+        width: 65,
+        height: 65,
+        // padding: EdgeInsets.all(5),
         child: FloatingActionButton(
+          elevation: 0,
           backgroundColor: hexaCodeToColor(AppColors.secondary).withOpacity(1.0),
           onPressed: () async {
             await TrxOptionMethod.scanQR(

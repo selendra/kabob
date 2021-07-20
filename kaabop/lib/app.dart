@@ -192,7 +192,7 @@ class AppState extends State<App> {
                   debugShowCheckedModeBanner: false,
                   navigatorKey: AppUtils.globalKey,
                   title: AppText.appName,
-                  theme: AppStyle.myTheme(),
+                  theme: AppStyle.myTheme(context),
                   onGenerateRoute: router.generateRoute,
                   routes: {
                     Home.route: (_) => Home(apiConnected: _apiConnected),

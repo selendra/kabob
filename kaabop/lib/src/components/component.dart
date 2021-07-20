@@ -145,9 +145,10 @@ class MyText extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-              fontWeight: fontWeight,
-              color: Color(AppUtils.convertHexaColor(color)),
-              fontSize: fontSize),
+            fontWeight: fontWeight,
+            color: Color(AppUtils.convertHexaColor(color)),
+            fontSize: fontSize
+          ),
           textAlign: textAlign,
           overflow: overflow,
         ),
@@ -261,11 +262,15 @@ class MyAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
-    return Container(
+    return SafeArea(
+      child: Container(
         height: 65.0,
         width: MediaQuery.of(context).size.width,
         margin: margin,
-        color: color ?? hexaCodeToColor(AppColors.cardColor),
+        color: isDarkTheme
+          ? hexaCodeToColor(AppColors.darkCard)
+          : hexaCodeToColor(AppColors.whiteHexaColor),
+        // color ?? hexaCodeToColor(AppColors.whiteHexaColor),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -296,7 +301,9 @@ class MyAppBar extends StatelessWidget {
             ),
             tile ?? Container()
           ],
-        ));
+        )
+      )
+    );
   }
 }
 
@@ -477,7 +484,7 @@ class MyTabBar extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
         decoration: BoxDecoration(
-            color: hexaCodeToColor(AppColors.cardColor),
+            color: hexaCodeToColor(AppColors.whiteHexaColor),
             borderRadius: BorderRadius.circular(8)),
         width: 125.0,
         height: 48,

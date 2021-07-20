@@ -16,7 +16,7 @@ class PortFolioCus extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDarkTheme
           ? hexaCodeToColor(AppColors.darkCard)
-          : hexaCodeToColor(AppColors.cardColor),
+          : hexaCodeToColor(AppColors.whiteHexaColor),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(

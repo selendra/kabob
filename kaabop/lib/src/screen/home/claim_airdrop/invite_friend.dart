@@ -47,11 +47,12 @@ class InviteFriend extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
+            
             MyAppBar(
               title: 'Invite Friends',
               color: isDarkTheme
                   ? hexaCodeToColor(AppColors.darkCard)
-                  : hexaCodeToColor(AppColors.cardColor),
+                  : hexaCodeToColor(AppColors.whiteHexaColor),
               onPressed: () {
                 Navigator.pop(context);
               },

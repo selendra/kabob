@@ -9,7 +9,7 @@ class AppColors {
 
   /* Background Color */
   static const String bgdColor = "#FFFFFF";//"#090D28"; //AppConfig.bgdColor;
-  static const String cardColor = "#FFFFFF";//"#181C35";
+  static const String whiteHexaColor = "#FFFFFF";//"#181C35";
   static const String textColor = "#0F1112";//"#585D86";
   static const String textBtnColor = "#000000";
   static const String secondary = "#F39D0C"; // "#08B952";
@@ -53,7 +53,6 @@ class AppColors {
 
   /* Card Color */
   static const String borderColor = "#363c4e";
-
 
   //final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
 }

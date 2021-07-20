@@ -347,7 +347,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                   title: 'Claim Airdrop',
                   color: isDarkTheme
                       ? hexaCodeToColor(AppColors.darkCard)
-                      : hexaCodeToColor(AppColors.cardColor),
+                      : hexaCodeToColor(AppColors.whiteHexaColor),
                   onPressed: () {
                     Navigator.pop(context);
                   },

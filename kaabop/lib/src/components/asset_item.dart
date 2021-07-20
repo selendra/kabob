@@ -87,7 +87,7 @@ class _AssetItemState extends State<AssetItem> {
     return rowDecorationStyle(
       color: isDarkTheme
       ? hexaCodeToColor(AppColors.darkCard)
-      : hexaCodeToColor(AppColors.cardColor),
+      : hexaCodeToColor(AppColors.whiteHexaColor),
       child: Row(
         children: <Widget>[
           Container(
@@ -446,7 +446,7 @@ class _AssetItemState extends State<AssetItem> {
       margin: EdgeInsets.only(top: mTop, bottom: 2),
       padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
       height: 100,
-      color: color ?? hexaCodeToColor(AppColors.cardColor),
+      color: color ?? hexaCodeToColor(AppColors.whiteHexaColor),
       child: child
     );
   }

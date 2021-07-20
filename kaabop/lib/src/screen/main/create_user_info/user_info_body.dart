@@ -38,7 +38,7 @@ class MyUserInfoBody extends StatelessWidget {
           title: "User Information",
           color: isDarkTheme
               ? hexaCodeToColor(AppColors.darkCard)
-              : hexaCodeToColor(AppColors.cardColor),
+              : hexaCodeToColor(AppColors.whiteHexaColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -94,7 +94,7 @@ class MyUserInfoBody extends StatelessWidget {
                         filled: true,
                         fillColor: isDarkTheme
                             ? hexaCodeToColor(AppColors.darkCard)
-                            : hexaCodeToColor(AppColors.cardColor),
+                            : hexaCodeToColor(AppColors.whiteHexaColor),
                         enabledBorder: myTextInputBorder(
                           modelUserInfo.passwordCon.text != ""
                               ? isDarkTheme
@@ -161,7 +161,7 @@ class MyUserInfoBody extends StatelessWidget {
                           filled: true,
                           fillColor: isDarkTheme
                               ? hexaCodeToColor(AppColors.darkCard)
-                              : hexaCodeToColor(AppColors.cardColor),
+                              : hexaCodeToColor(AppColors.whiteHexaColor),
                           enabledBorder: myTextInputBorder(
                             modelUserInfo.passwordCon.text != ""
                                 ? isDarkTheme

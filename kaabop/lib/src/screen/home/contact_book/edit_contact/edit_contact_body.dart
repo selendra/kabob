@@ -26,7 +26,7 @@ class EditContactBody extends StatelessWidget {
           title: "Edit Contact",
           color: isDarkTheme
               ? hexaCodeToColor(AppColors.darkCard)
-              : hexaCodeToColor(AppColors.cardColor),
+              : hexaCodeToColor(AppColors.whiteHexaColor),
           onPressed: () {
             //print("Dae");
             Navigator.pop(context);

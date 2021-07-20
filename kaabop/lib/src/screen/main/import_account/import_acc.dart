@@ -208,24 +208,23 @@ class ImportAccState extends State<ImportAcc> {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
 
     return Scaffold(
-        backgroundColor: isDarkTheme
-            ? hexaCodeToColor(AppColors.darkCard)
-            : hexaCodeToColor("#F5F5F5"),
-        key: globalKey,
-        body: BodyScaffold(
-            height: MediaQuery.of(context).size.height,
-            child: Stack(
-              children: [
-                ImportAccBody(
-                  reImport: widget.reimport,
-                  importAccModel: _importAccModel,
-                  onChanged: widget.reimport != null ? null : onChanged,
-                  onSubmit: widget.reimport != null ? onSubmitIm : submit,
-                  clearInput: clearInput,
-                  enable: enable,
-                  submit: widget.reimport != null ? onSubmitIm : submit,
-                ),
-              ],
-            )));
+      key: globalKey,
+      body: BodyScaffold(
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
+          children: [
+            ImportAccBody(
+              reImport: widget.reimport,
+              importAccModel: _importAccModel,
+              onChanged: widget.reimport != null ? null : onChanged,
+              onSubmit: widget.reimport != null ? onSubmitIm : submit,
+              clearInput: clearInput,
+              enable: enable,
+              submit: widget.reimport != null ? onSubmitIm : submit,
+            ),
+          ],
+        )
+      )
+    );
   }
 }

@@ -33,7 +33,7 @@ class MenuHeader extends StatelessWidget {
                       height: 60,
                       margin: const EdgeInsets.only(right: 5),
                       decoration: BoxDecoration(
-                        color: hexaCodeToColor(AppColors.cardColor),
+                        color: hexaCodeToColor(AppColors.whiteHexaColor),
                         borderRadius: BorderRadius.circular(60),
                       ),
                       child: SvgPicture.string(acc.addressIcon ?? 'hello world'),

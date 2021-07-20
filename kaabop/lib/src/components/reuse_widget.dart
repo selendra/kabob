@@ -826,7 +826,7 @@ Widget customDropDown(
       right: 14.0,
     ),
     decoration: BoxDecoration(
-      color: hexaCodeToColor(AppColors.cardColor),
+      color: hexaCodeToColor(AppColors.whiteHexaColor),
       borderRadius: BorderRadius.circular(size5),
     ),
     child: Row(

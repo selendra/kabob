@@ -39,201 +39,176 @@ class ImportUserInfoBody extends StatelessWidget {
           title: "User Information",
           color: isDarkTheme
             ? hexaCodeToColor(AppColors.darkCard)
-            : hexaCodeToColor(AppColors.cardColor),
+            : hexaCodeToColor(AppColors.whiteHexaColor),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        Container(
-            margin: const EdgeInsets.only(top: 16),
-            child: Form(
-              key: modelUserInfo.formStateAddUserInfo,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  MyInputField(
-                    pBottom: 16.0,
-                    labelText: "Username",
-                    textInputFormatter: [
-                      LengthLimitingTextInputFormatter(
-                        TextField.noMaxLength,
-                      )
-                    ],
-                    controller: modelUserInfo.userNameCon,
-                    focusNode: modelUserInfo.userNameNode,
-                    validateField: validateFirstName,
-                    onChanged: onChanged,
-                    onSubmit: onSubmit,
-                  ),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0,),
-                      child: TextFormField(
-                        key: key,
-                        enabled: true,
-                        focusNode: modelUserInfo.passwordNode,
-                        validator: validatepassword,
-                        keyboardType: TextInputType.text,
-                        obscureText: true,
-                        controller: modelUserInfo.passwordCon,
-                        textInputAction: TextInputAction.next,
-                        style: TextStyle(
-                          color: isDarkTheme
-                            ? hexaCodeToColor(AppColors.whiteColorHexa)
-                            : hexaCodeToColor(AppColors.textColor),
-                          fontSize: 18.0,
+        
+        Expanded(
+          child: BodyScaffold(
+            child: Column(
+              children: [
+
+                Container(
+                  margin: const EdgeInsets.only(top: 16),
+                  child: Form(
+                    key: modelUserInfo.formStateAddUserInfo,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        MyInputField(
+                          pBottom: 16.0,
+                          labelText: "Username",
+                          textInputFormatter: [
+                            LengthLimitingTextInputFormatter(
+                              TextField.noMaxLength,
+                            )
+                          ],
+                          controller: modelUserInfo.userNameCon,
+                          focusNode: modelUserInfo.userNameNode,
+                          validateField: validateFirstName,
+                          onChanged: onChanged,
+                          onSubmit: onSubmit,
                         ),
-                        decoration: InputDecoration(
-                          labelText: "Pin",
-                          labelStyle: TextStyle(
-                            fontSize: 18.0,
-                            color: modelUserInfo.passwordNode.hasFocus || modelUserInfo.passwordCon.text != ""
-                              ? isDarkTheme
-                                ? hexaCodeToColor(AppColors.whiteColorHexa).withOpacity(0.3)
-                                : hexaCodeToColor(AppColors.textColor).withOpacity(0.3)
-                              : hexaCodeToColor(AppColors.darkSecondaryText),
-                          ),
-                          prefixStyle: TextStyle(
-                            color: hexaCodeToColor(AppColors.textColor),
-                            fontSize: 18.0,
-                          ),
-                          /* Prefix Text */
-                          filled: true,
-                          fillColor: isDarkTheme
-                            ? hexaCodeToColor(AppColors.darkCard)
-                            : hexaCodeToColor(AppColors.cardColor),
-                          enabledBorder: myTextInputBorder(
-                            modelUserInfo.passwordCon.text != ""
-                              ? isDarkTheme
-                                ? hexaCodeToColor(AppColors.whiteColorHexa).withOpacity(0.3)
-                                : hexaCodeToColor(AppColors.textColor).withOpacity(0.3)
-                              : hexaCodeToColor(AppColors.secondary).withOpacity(0.3),
-                          ),
-                          /* Enable Border But Not Show Error */
-                          border: errorOutline(),
-                          /* Show Error And Red Border */
-                          focusedBorder: myTextInputBorder(isDarkTheme
-                              ? hexaCodeToColor(AppColors.whiteColorHexa)
-                                  .withOpacity(0.3)
-                              : hexaCodeToColor(AppColors.secondary)),
-                          /* Default Focuse Border Color*/
-                          focusColor: isDarkTheme
-                              ? hexaCodeToColor("#ffffff")
-                              : hexaCodeToColor(AppColors.textColor),
-                          /* Border Color When Focusing */
-                          contentPadding: const EdgeInsets.fromLTRB(
-                              21, 23, 21, 23), // Default padding =
+                        
+                        MyInputField(
+                          controller: modelUserInfo.passwordCon,
+                          focusNode: modelUserInfo.passwordNode, 
+                          obcureText: true,
+                          onChanged: onChanged,
+                          maxLength: 4,
+                          // textInputFormatter: [LengthLimitingTextInputFormatter(4)],
+                          onSubmit: onSubmit
                         ),
-                        inputFormatters: [LengthLimitingTextInputFormatter(4)],
-                        /* Limit Length Of Text Input */
-                        onChanged: onChanged,
-                        onFieldSubmitted: (value) {
-                          onSubmit();
-                        },
-                      )),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                      child: TextFormField(
-                        key: key,
-                        enabled: true,
-                        controller: modelUserInfo.confirmPasswordCon,
-                        focusNode: modelUserInfo.confirmPasswordNode,
-                        validator: validateConfirmPassword,
-                        keyboardType: TextInputType.text,
-                        obscureText: true,
-                        textInputAction: TextInputAction.done,
-                        style: TextStyle(
-                          color: isDarkTheme
-                            ? hexaCodeToColor(AppColors.whiteColorHexa)
-                            : hexaCodeToColor(AppColors.textColor),
-                          fontSize: 18.0
-                        ),
-                        decoration: InputDecoration(
-                          labelText: "Confirm Pin",
-                          labelStyle: TextStyle(
-                            fontSize: 18.0,
-                            color: modelUserInfo.confirmPasswordNode.hasFocus || modelUserInfo.passwordCon.text != ""
-                              ? isDarkTheme
-                                ? hexaCodeToColor(AppColors.whiteColorHexa).withOpacity(0.3)
-                                : hexaCodeToColor(AppColors.textColor).withOpacity(0.3)
-                              : hexaCodeToColor(AppColors.darkSecondaryText),
-                          ),
-                          prefixStyle: TextStyle(
-                              color: hexaCodeToColor(AppColors.textColor),
-                              fontSize: 18.0),
-                          /* Prefix Text */
-                          filled: true,
-                          fillColor: isDarkTheme
-                              ? hexaCodeToColor(AppColors.darkCard)
-                              : hexaCodeToColor(AppColors.cardColor),
-                          enabledBorder: myTextInputBorder(modelUserInfo
-                                      .passwordCon.text !=
-                                  ""
-                              ? isDarkTheme
+                        // Container(
+                        //     child: TextFormField(
+                        //       key: key,
+                        //       enabled: true,
+                        //       focusNode: modelUserInfo.passwordNode,
+                        //       validator: validatepassword,
+                        //       keyboardType: TextInputType.text,
+                        //       obscureText: true,
+                        //       controller: modelUserInfo.passwordCon,
+                        //       textInputAction: TextInputAction.next,
+                        //       style: TextStyle(
+                        //         color: isDarkTheme
+                        //           ? hexaCodeToColor(AppColors.whiteColorHexa)
+                        //           : hexaCodeToColor(AppColors.textColor),
+                        //         fontSize: 18.0,
+                        //       ),
+                        //     )),
+                        Container(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                            child: TextFormField(
+                              key: key,
+                              enabled: true,
+                              controller: modelUserInfo.confirmPasswordCon,
+                              focusNode: modelUserInfo.confirmPasswordNode,
+                              validator: validateConfirmPassword,
+                              keyboardType: TextInputType.text,
+                              obscureText: true,
+                              textInputAction: TextInputAction.done,
+                              style: TextStyle(
+                                color: isDarkTheme
                                   ? hexaCodeToColor(AppColors.whiteColorHexa)
-                                      .withOpacity(0.3)
-                                  : hexaCodeToColor(AppColors.textColor)
-                                      .withOpacity(0.3)
-                              : hexaCodeToColor(AppColors.secondary)
-                                  .withOpacity(0.3)),
-                          /* Enable Border But Not Show Error */
-                          border: errorOutline(),
-                          /* Show Error And Red Border */
-                          focusedBorder: myTextInputBorder(isDarkTheme
-                              ? hexaCodeToColor(AppColors.whiteColorHexa)
-                                  .withOpacity(0.3)
-                              : hexaCodeToColor(AppColors.secondary)),
-                          /* Default Focuse Border Color*/
-                          focusColor: isDarkTheme
-                              ? hexaCodeToColor("#ffffff")
-                              : hexaCodeToColor(AppColors.textColor),
-                          /* Border Color When Focusing */
-                          contentPadding: const EdgeInsets.fromLTRB(
-                              21, 23, 21, 23), // Default padding =
-                        ),
-                        inputFormatters: [LengthLimitingTextInputFormatter(4)],
-                        /* Limit Length Of Text Input */
-                        onChanged: onChanged,
-                        onFieldSubmitted: (value) {
-                          onSubmit();
-                        },
-                      )),
-                  Container(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 50,
-                          child: Switch(
-                            value: menuModel.switchBio,
-                            onChanged: (value) {
-                              switchBio(value);
-                            },
+                                  : hexaCodeToColor(AppColors.textColor),
+                                fontSize: 18.0
+                              ),
+                              decoration: InputDecoration(
+                                labelText: "Confirm Pin",
+                                labelStyle: TextStyle(
+                                  fontSize: 18.0,
+                                  color: modelUserInfo.confirmPasswordNode.hasFocus || modelUserInfo.passwordCon.text != ""
+                                    ? isDarkTheme
+                                      ? hexaCodeToColor(AppColors.whiteColorHexa).withOpacity(0.3)
+                                      : hexaCodeToColor(AppColors.textColor).withOpacity(0.3)
+                                    : hexaCodeToColor(AppColors.darkSecondaryText),
+                                ),
+                                prefixStyle: TextStyle(
+                                    color: hexaCodeToColor(AppColors.textColor),
+                                    fontSize: 18.0),
+                                /* Prefix Text */
+                                filled: true,
+                                fillColor: isDarkTheme
+                                    ? hexaCodeToColor(AppColors.darkCard)
+                                    : hexaCodeToColor(AppColors.whiteHexaColor),
+                                enabledBorder: myTextInputBorder(modelUserInfo
+                                            .passwordCon.text !=
+                                        ""
+                                    ? isDarkTheme
+                                        ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                            .withOpacity(0.3)
+                                        : hexaCodeToColor(AppColors.textColor)
+                                            .withOpacity(0.3)
+                                    : hexaCodeToColor(AppColors.secondary)
+                                        .withOpacity(0.3)),
+                                /* Enable Border But Not Show Error */
+                                border: errorOutline(),
+                                /* Show Error And Red Border */
+                                focusedBorder: myTextInputBorder(isDarkTheme
+                                    ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                        .withOpacity(0.3)
+                                    : hexaCodeToColor(AppColors.secondary)),
+                                /* Default Focuse Border Color*/
+                                focusColor: isDarkTheme
+                                    ? hexaCodeToColor("#ffffff")
+                                    : hexaCodeToColor(AppColors.textColor),
+                                /* Border Color When Focusing */
+                                contentPadding: const EdgeInsets.fromLTRB(
+                                    21, 23, 21, 23), // Default padding =
+                              ),
+                              inputFormatters: [LengthLimitingTextInputFormatter(4)],
+                              /* Limit Length Of Text Input */
+                              onChanged: onChanged,
+                              onFieldSubmitted: (value) {
+                                onSubmit();
+                              },
+                            )),
+                        Container(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 50,
+                                child: Switch(
+                                  value: menuModel.switchBio,
+                                  onChanged: (value) {
+                                    switchBio(value);
+                                  },
+                                ),
+                              ),
+                              MyText(
+                                text: "Fingerprint",
+                                color: isDarkTheme
+                                  ? AppColors.whiteColorHexa
+                                  : AppColors.textColor,
+                              ),
+                            ],
                           ),
-                        ),
-                        MyText(
-                          text: "Fingerprint",
-                          color: isDarkTheme
-                              ? AppColors.whiteColorHexa
-                              : AppColors.textColor,
-                        ),
+                        )
                       ],
                     ),
                   )
-                ],
-              ),
-            )),
-        Expanded(
-          child: Container(),
-        ),
-        MyFlatButton(
-          textButton: "Submit",
-          edgeMargin: const EdgeInsets.only(
-            top: 29,
-            left: 66,
-            right: 66,
-          ),
-          hasShadow: modelUserInfo.enable,
-          action: modelUserInfo.enable == false ? null : submitProfile,
+                ),
+
+                // Expanded(
+                //   child: Container(),
+                // ),
+                // MyFlatButton(
+                //   textButton: "Submit",
+                //   edgeMargin: const EdgeInsets.only(
+                //     top: 29,
+                //     left: 66,
+                //     right: 66,
+                //   ),
+                //   hasShadow: modelUserInfo.enable,
+                //   action: modelUserInfo.enable == false ? null : submitProfile,
+                // )
+
+              ]
+            ),
+          )
         )
       ],
     );

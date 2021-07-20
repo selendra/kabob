@@ -164,9 +164,6 @@ class _SwapState extends State<Swap> {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
 
     return Scaffold(
-      backgroundColor: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkBgd)
-          : hexaCodeToColor(AppColors.whiteColorHexa),
       body: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: Stack(
@@ -177,7 +174,7 @@ class _SwapState extends State<Swap> {
                     title: "Swap SEL v2",
                     color: isDarkTheme
                         ? hexaCodeToColor(AppColors.darkCard)
-                        : hexaCodeToColor(AppColors.cardColor),
+                        : hexaCodeToColor(AppColors.whiteHexaColor),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -192,7 +189,7 @@ class _SwapState extends State<Swap> {
                         decoration: BoxDecoration(
                           color: isDarkTheme
                               ? hexaCodeToColor(AppColors.darkCard)
-                              : hexaCodeToColor(AppColors.cardColor),
+                              : hexaCodeToColor(AppColors.whiteHexaColor),
                           borderRadius: BorderRadius.all(
                             Radius.circular(
                                 8.0), //                 <--- border radius here
@@ -207,7 +204,7 @@ class _SwapState extends State<Swap> {
                               decoration: BoxDecoration(
                                 color: isDarkTheme
                                     ? hexaCodeToColor(AppColors.darkBgd)
-                                    : hexaCodeToColor(AppColors.cardColor),
+                                    : hexaCodeToColor(AppColors.whiteHexaColor),
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(
                                       8.0), //                 <--- border radius here

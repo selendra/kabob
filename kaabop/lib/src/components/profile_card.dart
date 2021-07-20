@@ -21,7 +21,7 @@ class ProfileCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: hexaCodeToColor(AppColors.cardColor),
+          color: hexaCodeToColor(AppColors.whiteHexaColor),
         ),
         child: Consumer<ApiProvider>(
           builder: (context, value, child) {

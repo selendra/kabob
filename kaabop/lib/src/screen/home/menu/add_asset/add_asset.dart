@@ -235,9 +235,6 @@ class AddAssetState extends State<AddAsset> {
   Widget build(BuildContext context) {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
-      backgroundColor: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkCard)
-          : hexaCodeToColor("#F5F5F5"),
       key: globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,

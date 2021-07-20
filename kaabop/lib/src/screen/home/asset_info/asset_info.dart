@@ -374,7 +374,7 @@ class _AssetInfoState extends State<AssetInfo> {
                     Container(
                       color: isDarkTheme
                           ? hexaCodeToColor(AppColors.darkBgd)
-                          : hexaCodeToColor(AppColors.cardColor),
+                          : hexaCodeToColor(AppColors.whiteHexaColor),
                       child: Column(
                         children: [
                           if (widget.tokenSymbol == "ATD")
@@ -525,7 +525,7 @@ class _AssetInfoState extends State<AssetInfo> {
                       height: 32.0,
                       color: isDarkTheme
                           ? hexaCodeToColor(AppColors.darkBgd)
-                          : hexaCodeToColor(AppColors.cardColor),
+                          : hexaCodeToColor(AppColors.whiteHexaColor),
                     ),
                     Container(
                       //padding: const EdgeInsets.only(top: 32.0),
@@ -542,7 +542,7 @@ class _AssetInfoState extends State<AssetInfo> {
                                 decoration: BoxDecoration(
                                   color: isDarkTheme
                                       ? hexaCodeToColor(AppColors.darkCard)
-                                      : hexaCodeToColor(AppColors.cardColor),
+                                      : hexaCodeToColor(AppColors.whiteHexaColor),
                                   border: Border(
                                     bottom: BorderSide(
                                       color: _tabIndex == 0
@@ -574,7 +574,7 @@ class _AssetInfoState extends State<AssetInfo> {
                                 decoration: BoxDecoration(
                                   color: isDarkTheme
                                       ? hexaCodeToColor(AppColors.darkCard)
-                                      : hexaCodeToColor(AppColors.cardColor),
+                                      : hexaCodeToColor(AppColors.whiteHexaColor),
                                   border: Border(
                                     bottom: BorderSide(
                                       color: _tabIndex == 1
@@ -613,14 +613,14 @@ class _AssetInfoState extends State<AssetInfo> {
                 Container(
                   color: isDarkTheme
                       ? hexaCodeToColor(AppColors.darkCard)
-                      : hexaCodeToColor(AppColors.cardColor),
+                      : hexaCodeToColor(AppColors.whiteHexaColor),
                   child: AssetDetail(widget.marketData),
                 )
               else
                 Container(
                   color: isDarkTheme
                       ? hexaCodeToColor(AppColors.darkCard)
-                      : hexaCodeToColor(AppColors.cardColor),
+                      : hexaCodeToColor(AppColors.whiteHexaColor),
                   child: Center(
                     child: SvgPicture.asset(
                       'assets/icons/no_data.svg',
@@ -632,7 +632,7 @@ class _AssetInfoState extends State<AssetInfo> {
               Container(
                 color: isDarkTheme
                     ? hexaCodeToColor(AppColors.darkCard)
-                    : hexaCodeToColor(AppColors.cardColor),
+                    : hexaCodeToColor(AppColors.whiteHexaColor),
                 child: Center(
                     child: SvgPicture.asset(
                   'assets/icons/no_data.svg',
