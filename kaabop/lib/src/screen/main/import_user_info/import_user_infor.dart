@@ -6,6 +6,7 @@ import 'package:bip39/bip39.dart' as bip39;
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
+
   final String passPhrase;
 
   static const route = '/importUserInfo';

@@ -290,8 +290,8 @@ class MyAppBar extends StatelessWidget {
                 ),
                 MyText(
                   color: isDarkTheme
-                      ? AppColors.whiteColorHexa
-                      : AppColors.textColor,
+                    ? AppColors.whiteColorHexa
+                    : AppColors.textColor,
                   text: title,
                   left: 15,
                   fontSize: 22,

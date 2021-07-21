@@ -9,7 +9,6 @@ class MyInputField extends StatelessWidget {
   final String prefixText;
   final String textColor;
   final int maxLine;
-  final int maxLength;
   final double pLeft, pTop, pRight, pBottom;
   final bool obcureText;
   final bool enableInput;
@@ -40,7 +39,6 @@ class MyInputField extends StatelessWidget {
     this.inputType = TextInputType.text,
     this.inputAction,
     this.maxLine = 1,
-    this.maxLength,
     this.onTap,
     @required this.controller,
     @required this.focusNode,
@@ -67,7 +65,6 @@ class MyInputField extends StatelessWidget {
         obscureText: obcureText,
         controller: controller,
         onTap: onTap,
-        maxLength: maxLength,
         textInputAction:
           // ignore: prefer_if_null_operators
           inputAction == null ? TextInputAction.next : inputAction,
