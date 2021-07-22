@@ -87,20 +87,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
         Provider.of<ApiProvider>(context, listen: false).getCurrentAccount();
 
-        await dialogSuccess(
-          context,
-          const Text("You haved imported successfully"),
-          const Text('Congratulation'),
-          // ignore: deprecated_member_use
-          action: FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pushNamedAndRemoveUntil(
-                  context, Home.route, ModalRoute.withName('/'));
-            },
-            child: const Text('Continue'),
-          ),
-        );
+        await successDialog(context, "imported your account.");
       }
     } catch (e) {
       await showDialog(

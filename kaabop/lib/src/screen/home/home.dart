@@ -34,7 +34,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   Future<void> handleDialog() async {
     if (!Provider.of<ApiProvider>(context, listen: false).isConnected) {
-      startNode(context);
+     // startNode(context);
     }
   }
 

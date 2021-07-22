@@ -221,20 +221,7 @@ class MyUserInfoState extends State<MyUserInfo> {
           // Close Loading Process
           Navigator.pop(context);
           enableScreenshot();
-          await dialogSuccess(
-            context,
-            const Text("You haved imported successfully"),
-            const Text('Congratulation'),
-            // ignore: deprecated_member_use
-            action: FlatButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, Home.route, ModalRoute.withName('/'));
-              },
-              child: const Text('Continue'),
-            ),
-          );
+          await successDialog(context, "created your account.");
         },
       );
     } catch (e) {

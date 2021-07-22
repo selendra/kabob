@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:web3dart/web3dart.dart';
@@ -28,6 +27,7 @@ class AppState extends State<App> {
       MarketProvider().fetchTokenMarketPrice(context);
       initApi();
       isBtcContain();
+
       clearOldBtcAddr();
 
       Provider.of<ContractProvider>(context, listen: false).getEtherAddr();
@@ -45,7 +45,9 @@ class AppState extends State<App> {
           Provider.of<ApiProvider>(context, listen: false).connectPolNon();
           Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();
-          Provider.of<ContractProvider>(context, listen: false).getBscV2Balance();
+          Provider.of<ContractProvider>(context, listen: false)
+              .getBscV2Balance();
+         // ContractProvider().checkAllowance();
 
           isKgoContain();
 
@@ -78,7 +80,6 @@ class AppState extends State<App> {
     final res = await StorageServices.fetchData('dark');
     //final sysTheme = _checkIfDarkModeEnabled();
 
-   
     if (res != null) {
       Provider.of<ThemeProvider>(context, listen: false).changeMode();
     }

@@ -24,7 +24,7 @@ class ContractProvider with ChangeNotifier {
     org: 'BEP-20',
     isContain: true,
   );
-   NativeM bscNativeV2 = NativeM(
+  NativeM bscNativeV2 = NativeM(
     id: 'selendra v2',
     logo: 'assets/SelendraCircle-Blue.png',
     symbol: 'SEL (v2)',
@@ -129,18 +129,27 @@ class ContractProvider with ChangeNotifier {
         function: ethFunction,
         parameters: [
           EthereumAddress.fromHex(newSelAddr),
-          BigInt.from(
-            pow(
-              double.parse('18') * 10,
-              int.parse('18'),
-            ),
-          ),
+          BigInt.parse('999999999999999974000000000000000000')
         ],
       ),
       fetchChainIdFromNetworkId: true,
     );
 
     return approve;
+  }
+
+  Future<dynamic> checkAllowance() async {
+    final ethAddr = await StorageServices().readSecure('etherAdd');
+    final res = await query(
+      '0x288d3A87a87C284Ed685E0490E5C4cC0883a060a',
+      'allowance',
+      [
+        EthereumAddress.fromHex(ethAddr),
+        EthereumAddress.fromHex('0x54419268c31678C31e94dB494C509193d7d2BB5D')
+      ],
+    );
+
+    return res.first;
   }
 
   Future<String> swap(String amount, String privateKey) async {
@@ -155,7 +164,9 @@ class ContractProvider with ChangeNotifier {
       Transaction.callContract(
         contract: contract,
         function: ethFunction,
-        parameters: [Fmt.tokenInt(amount, 18)],
+        parameters: [
+          BigInt.from(double.parse(amount) * pow(10, 18)),
+        ],
       ),
       fetchChainIdFromNetworkId: true,
     );
@@ -300,7 +311,6 @@ class ContractProvider with ChangeNotifier {
 
     notifyListeners();
   }
-
 
   Future<void> getBscV2Balance() async {
     bscNativeV2.isContain = true;
