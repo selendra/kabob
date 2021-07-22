@@ -307,7 +307,7 @@ class _AssetInfoState extends State<AssetInfo> {
                 forceElevated: innerBox,
                 automaticallyImplyLeading: false,
                 leading: Container(),
-                backgroundColor: Colors.white,
+                backgroundColor: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : Colors.white,
                 flexibleSpace: Container(
                   padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Column(
@@ -357,12 +357,13 @@ class _AssetInfoState extends State<AssetInfo> {
                               child: MyText(
                                 fontSize: 16.0,
                                 text: widget.org == 'BEP-20' ? 'BEP-20' : '',
+                                color: isDarkTheme ? AppColors.whiteHexaColor : AppColors.darkCard,
                               )
                             ),
                           ],
                         )
                       ),
-                      Divider(height: 3, color: Colors.grey.shade400)
+                      Divider(height: 3, color: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : Colors.grey.shade400)
                     ]
                   )
                 ),

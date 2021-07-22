@@ -63,6 +63,9 @@ class MyFlatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+
     return Container(
       padding: edgePadding,
       margin: edgeMargin,
@@ -82,14 +85,14 @@ class MyFlatButton extends StatelessWidget {
       child: FlatButton(
         onPressed: action,
         color: hexaCodeToColor(buttonColor),
-        disabledColor: Colors.grey.shade400,
+        disabledColor: isDarkTheme ? Colors.grey.shade700 : Colors.grey.shade400,
         focusColor: hexaCodeToColor(AppColors.secondary),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: MyText(
           pTop: 20,
           pBottom: 20,
           text: textButton,
-          color: action != null ? '#FFFFFF' : AppColors.textBtnColor,
+          color: isDarkTheme ? '#FFFFFF' : AppColors.textBtnColor,
           fontWeight: fontWeight,
         ),
       ),
@@ -267,9 +270,19 @@ class MyAppBar extends StatelessWidget {
         height: 65.0,
         width: MediaQuery.of(context).size.width,
         margin: margin,
-        color: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkCard)
-          : hexaCodeToColor(AppColors.whiteHexaColor),
+        decoration: BoxDecoration(
+          color: isDarkTheme
+            ? hexaCodeToColor(AppColors.darkCard)
+            : hexaCodeToColor(AppColors.whiteHexaColor),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.black54.withOpacity(0.5),
+          //     blurRadius: 8.0,
+          //     spreadRadius: 1.0,
+          //     offset: const Offset(0, 2),
+          //   )
+          // ]
+        ),
         // color ?? hexaCodeToColor(AppColors.whiteHexaColor),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

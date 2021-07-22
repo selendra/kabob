@@ -17,7 +17,6 @@ class PortFolioCus extends StatelessWidget {
         color: isDarkTheme
           ? hexaCodeToColor(AppColors.darkCard)
           : hexaCodeToColor(AppColors.whiteHexaColor),
-        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -41,7 +40,7 @@ class PortFolioCus extends StatelessWidget {
                           showLegends: false,
                         ),
                         colorList: [
-                          Colors.grey.shade400
+                          isDarkTheme ? hexaCodeToColor(AppColors.darkBgd) : Colors.grey.shade400
                         ],
                         chartValuesOptions: ChartValuesOptions(
                           showChartValues: false,

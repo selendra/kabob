@@ -118,8 +118,6 @@ dependencies:
   circular_check_box: ^1.0.4
   flutter_launcher_icons: ^0.8.1
 
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

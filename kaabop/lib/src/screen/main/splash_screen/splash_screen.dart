@@ -18,7 +18,7 @@ class MySplashScreenState extends State<MySplashScreen> with SingleTickerProvide
 
   Future<void> getCurrentAccount() async {
 
-    // Navigator.push(context, MaterialPageRoute(builder: (context) => ImportAcc(reimport: "hello") ));
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => ImportUserInfo("hello") ));
 
     await Future.delayed(const Duration(milliseconds: 1000), () async {
 

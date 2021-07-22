@@ -145,21 +145,22 @@ class AddAssetBody extends StatelessWidget {
                   height: 65,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: hexaCodeToColor(AppColors.whiteHexaColor),
+                    color: hexaCodeToColor(isDarkTheme ? AppColors.darkCard : AppColors.whiteHexaColor),
                     borderRadius: BorderRadius.circular(8.0),
                     border: Border.all(width: initialValue != null ? 1 : 0, color: initialValue != null ? hexaCodeToColor(AppColors.secondary) : Colors.transparent)
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const MyText(
+                      MyText(
                         left: 16.0,
                         text: 'Select Network',
+                        color: isDarkTheme ? AppColors.whiteHexaColor : AppColors.darkCard,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: ReuseDropDown(
-                          style: TextStyle(color: hexaCodeToColor(AppColors.textColor)),
+                          style: TextStyle(color: hexaCodeToColor(isDarkTheme ? AppColors.whiteHexaColor : AppColors.darkCard)),
                           initialValue: initialValue,
                           itemsList: const [
                             'Ethereum',

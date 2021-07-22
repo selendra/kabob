@@ -223,7 +223,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             child: homeAppBar(context)
           ),
 
-          Divider(height: 4, color: isDarkTheme ? Colors.black : Colors.grey.shade400,),
+          Divider(height: 2, color: isDarkTheme ? Colors.black : Colors.grey.shade400,),
 
           Flexible(
             child: RefreshIndicator(

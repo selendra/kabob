@@ -11,8 +11,10 @@ class MenuHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final acc = Provider.of<ApiProvider>(context).accountM;
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, AppText.accountView);
@@ -33,8 +35,8 @@ class MenuHeader extends StatelessWidget {
                       height: 60,
                       margin: const EdgeInsets.only(right: 5),
                       decoration: BoxDecoration(
-                        color: hexaCodeToColor(AppColors.whiteHexaColor),
-                        borderRadius: BorderRadius.circular(60),
+                        color: isDarkTheme ? hexaCodeToColor(AppColors.whiteHexaColor) : Colors.grey.shade400,
+                        shape: BoxShape.circle,
                       ),
                       child: SvgPicture.string(acc.addressIcon ?? 'hello world'),
                     ),

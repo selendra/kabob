@@ -53,12 +53,12 @@ class ReceiveWalletBody extends StatelessWidget {
             : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+
                 Container(
                   margin: const EdgeInsets.only(
                     bottom: 45.0,
                     left: 16.0,
                     right: 16.0,
-                    top: 16.0,
                   ),
                   width: double.infinity,
                   child: RepaintBoundary(
@@ -70,12 +70,21 @@ class ReceiveWalletBody extends StatelessWidget {
                       ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8.0),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black54.withOpacity(0.3),
+                            blurRadius: 8.0,
+                            spreadRadius: 2.0,
+                            offset: const Offset(0, 3.0),
+                          )
+                        ],
                         color: isDarkTheme
                           ? hexaCodeToColor(AppColors.darkCard)
                           : hexaCodeToColor(AppColors.whiteHexaColor),
                       ),
                       child: Column(
                         children: [
+
                           Stack(
                             children: [
                               Align(
@@ -86,8 +95,8 @@ class ReceiveWalletBody extends StatelessWidget {
                                     text: 'Wallet',
                                     fontSize: 20.0,
                                     color: isDarkTheme
-                                        ? AppColors.whiteColorHexa
-                                        : AppColors.textColor,
+                                      ? AppColors.whiteColorHexa
+                                      : AppColors.textColor,
                                   ),
                                 ),
                               ),
@@ -123,6 +132,7 @@ class ReceiveWalletBody extends StatelessWidget {
                                 ),
                             ],
                           ),
+
                           qrCodeGenerator(
                             wallet,
                             AppConfig.logoQrEmbedded,
@@ -133,8 +143,8 @@ class ReceiveWalletBody extends StatelessWidget {
                             bottom: 16,
                             top: 16,
                             color: isDarkTheme
-                                ? AppColors.whiteColorHexa
-                                : AppColors.textColor,
+                              ? AppColors.whiteColorHexa
+                              : AppColors.textColor,
                           ),
                           MyText(
                             width: 300,
@@ -155,6 +165,7 @@ class ReceiveWalletBody extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 Container(
                   margin: const EdgeInsets.only(bottom: 21),
                   // ignore: deprecated_member_use

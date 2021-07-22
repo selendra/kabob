@@ -44,10 +44,11 @@ class ImportUserInfoBody extends StatelessWidget {
           },
         ),
         
-        Expanded(
-          child: Form(
-            key: modelUserInfo.formStateAddUserInfo,
-            child: BodyScaffold(
+        Flexible(
+          child: BodyScaffold(
+            height: MediaQuery.of(context).size.height - 70, 
+            child: Form(
+              key: modelUserInfo.formStateAddUserInfo,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -110,25 +111,25 @@ class ImportUserInfoBody extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ),
+
+                  Flexible(child: Container()),
+                  MyFlatButton(
+                    textButton: "Submit",
+                    edgeMargin: const EdgeInsets.only(
+                      top: 29,
+                      left: 66,
+                      right: 66,
+                      bottom: 16
+                    ),
+                    hasShadow: modelUserInfo.enable,
+                    action: modelUserInfo.enable == false ? null : submitProfile,
                   )
                 ],
               ),
             )
           )
         ),
-
-        Expanded(child: Container()),
-        MyFlatButton(
-          edgePadding: EdgeInsets.symmetric(vertical: 16),
-          textButton: "Submit",
-          edgeMargin: const EdgeInsets.only(
-            top: 29,
-            left: 66,
-            right: 66,
-          ),
-          hasShadow: modelUserInfo.enable,
-          action: modelUserInfo.enable == false ? null : submitProfile,
-        )
       ],
     );
   }
