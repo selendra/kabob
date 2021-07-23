@@ -109,10 +109,10 @@ class AddAssetState extends State<AddAsset> {
     setState(() {
       _modelAsset.loading = true;
     });
-    final resEther =
-        await validateEtherAddress(_modelAsset.controllerAssetCode.text);
+    final resEther = await validateEtherAddress(_modelAsset.controllerAssetCode.text);
     final res = await validateAddress(_modelAsset.controllerAssetCode.text);
-
+    print("ResEther $resEther");
+    print("Res $res");
     if (res || resEther) {
       if (res) {
         if (_modelAsset.controllerAssetCode.text == AppConfig.kmpiAddr) {
@@ -137,12 +137,13 @@ class AddAssetState extends State<AddAsset> {
         }
       }
     } else {
+
       await showDialog(
-        context: context,
+      context: context,
         builder: (context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             title: Align(
               child: Text('Opps'),
             ),
@@ -151,11 +152,11 @@ class AddAssetState extends State<AddAsset> {
               child: Text('Invalid token contract address!'),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Close'),
               ),
-            ],
+            ]
           );
         },
       );
@@ -234,9 +235,6 @@ class AddAssetState extends State<AddAsset> {
   Widget build(BuildContext context) {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
-      backgroundColor: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkCard)
-          : hexaCodeToColor("#F5F5F5"),
       key: globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,

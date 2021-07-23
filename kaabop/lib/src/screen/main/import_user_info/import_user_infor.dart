@@ -6,6 +6,7 @@ import 'package:bip39/bip39.dart' as bip39;
 import 'package:wallet_apps/src/screen/main/import_user_info/import_user_info_body.dart';
 
 class ImportUserInfo extends StatefulWidget {
+
   final String passPhrase;
 
   static const route = '/importUserInfo';
@@ -42,6 +43,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
   Future<void> _importFromMnemonic() async {
     try {
+
       final json = await ApiProvider.sdk.api.keyring.importAccount(
         ApiProvider.keyring,
         keyType: KeyType.mnemonic,
@@ -58,12 +60,16 @@ class ImportUserInfoState extends State<ImportUserInfo> {
       );
 
       if (acc != null) {
+
         addBtcWallet();
+
         final resPk = await ApiProvider().getPrivateKey(widget.passPhrase);
+
         if (resPk != null) {
+
           ContractProvider().extractAddress(resPk);
-          final res = await ApiProvider.keyring.store
-              .encryptPrivateKey(resPk, _userInfoM.confirmPasswordCon.text);
+          
+          final res = await ApiProvider.keyring.store.encryptPrivateKey(resPk, _userInfoM.confirmPasswordCon.text);
 
           if (res != null) {
             await StorageServices().writeSecure('private', res);
@@ -80,8 +86,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
 
         isKgoContain();
 
-        Provider.of<MarketProvider>(context, listen: false)
-            .fetchTokenMarketPrice(context);
+        Provider.of<MarketProvider>(context, listen: false).fetchTokenMarketPrice(context);
 
         Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
         Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
@@ -94,8 +99,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             title: const Align(
               child: Text('Message'),
             ),
@@ -104,7 +108,7 @@ class ImportUserInfoState extends State<ImportUserInfo> {
               child: Text(e.message.toString()),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Close'),
               ),
@@ -122,22 +126,17 @@ class ImportUserInfoState extends State<ImportUserInfo> {
     final hdWallet = HDWallet.fromSeed(seed);
     final keyPair = ECPair.fromWIF(hdWallet.wif);
 
-    final bech32Address = new P2WPKH(
-            data: new PaymentData(pubkey: keyPair.publicKey), network: bitcoin)
-        .data
-        .address;
+    final bech32Address = new P2WPKH(data: new PaymentData(pubkey: keyPair.publicKey), network: bitcoin).data.address;
 
     await StorageServices.setData(bech32Address, 'bech32');
 
-    final res = await ApiProvider.keyring.store
-        .encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
+    final res = await ApiProvider.keyring.store.encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
 
     if (res != null) {
       await StorageServices().writeSecure('btcwif', res);
     }
 
-    Provider.of<ApiProvider>(context, listen: false)
-        .getBtcBalance(hdWallet.address);
+    Provider.of<ApiProvider>(context, listen: false).getBtcBalance(hdWallet.address);
     Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
 
     Provider.of<ApiProvider>(context, listen: false).setBtcAddr(bech32Address);
@@ -145,42 +144,62 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   }
 
   Future<void> isKgoContain() async {
-    Provider.of<ContractProvider>(context, listen: false)
-        .getKgoDecimal()
-        .then((value) {
+    Provider.of<ContractProvider>(context, listen: false).getKgoDecimal().then((value) {
       Provider.of<ContractProvider>(context, listen: false).getKgoBalance();
     });
   }
 
   // ignore: avoid_void_async
   void switchBiometric(bool switchValue) async {
-    _localAuth = LocalAuthentication();
+    // _localAuth = LocalAuthentication();
 
-    await _localAuth.canCheckBiometrics.then((value) async {
-      if (value == false) {
-        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
-      } else {
-        if (switchValue) {
-          await authenticateBiometric(_localAuth).then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.saveBio(_menuModel.switchBio);
-            }
-          });
-        } else {
-          await authenticateBiometric(_localAuth).then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.removeKey('bio');
-            }
-          });
-        }
-      }
-    });
+    // await _localAuth.canCheckBiometrics.then((value) async {
+    //   if (value == false) {
+    //     snackBar(context, "Your device doesn't have finger print");
+    //   } else {
+    //     if (switchValue) {
+    //       await authenticateBiometric(_localAuth).then((values) async {
+    //         if (_menuModel.authenticated) {
+    //           setState(() {
+    //             _menuModel.switchBio = switchValue;
+    //           });
+    //           await StorageServices.saveBio(_menuModel.switchBio);
+    //         }
+    //       });
+    //     } else {
+    //       await authenticateBiometric(_localAuth).then((values) async {
+    //         if (_menuModel.authenticated) {
+    //           setState(() {
+    //             _menuModel.switchBio = switchValue;
+    //           });
+    //           await StorageServices.removeKey('bio');
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            child: Text("Oops"),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text("This feature has not implemented yet!", textAlign: TextAlign.center),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
@@ -289,25 +308,19 @@ class ImportUserInfoState extends State<ImportUserInfo> {
   Widget build(BuildContext context) {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
-      backgroundColor: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkCard)
-          : hexaCodeToColor("#F5F5F5"),
       key: _userInfoM.globalKey,
-      body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: ImportUserInfoBody(
-          modelUserInfo: _userInfoM,
-          onSubmit: onSubmit,
-          onChanged: onChanged,
-          validateFirstName: validateFirstName,
-          validatepassword: validatePassword,
-          validateConfirmPassword: validateConfirmPassword,
-          submitProfile: submitProfile,
-          popScreen: popScreen,
-          switchBio: switchBiometric,
-          menuModel: _menuModel,
-          item: item,
-        ),
+      body: ImportUserInfoBody(
+        modelUserInfo: _userInfoM,
+        onSubmit: onSubmit,
+        onChanged: onChanged,
+        validateFirstName: validateFirstName,
+        validatepassword: validatePassword,
+        validateConfirmPassword: validateConfirmPassword,
+        submitProfile: submitProfile,
+        popScreen: popScreen,
+        switchBio: switchBiometric,
+        menuModel: _menuModel,
+        item: item,
       ),
     );
   }

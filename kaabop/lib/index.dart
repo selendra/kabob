@@ -180,3 +180,5 @@ export 'src/screen/home/asset_info/asset_info.dart';
 export 'src/screen/home/asset_info/asset_info_c.dart';
 export 'src/screen/home/asset_info/att_activity.dart';
 export 'src/screen/home/passcode/passcode.dart';
+
+

@@ -49,7 +49,7 @@ class PortfolioBody extends StatelessWidget {
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
-                  color: hexaCodeToColor(AppColors.cardColor),
+                  color: hexaCodeToColor(AppColors.whiteHexaColor),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -136,7 +136,7 @@ class PortfolioBody extends StatelessWidget {
                     ),
                     VerticalDivider(
                       thickness: 2,
-                      color: hexaCodeToColor(AppColors.cardColor),
+                      color: hexaCodeToColor(AppColors.whiteHexaColor),
                     ),
                     Expanded(
                       child: Column(

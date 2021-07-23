@@ -46,19 +46,27 @@ class _SwapState extends State<Swap> {
       try {
         final res = await getPrivateKey(value);
 
-        print(_amountController.text);
-
         if (res != null) {
           dialogLoading(context);
           final hash = await contract.swap(_amountController.text, res);
           if (hash != null) {
-            setState(() {});
+            await Future.delayed(const Duration(seconds: 5));
+            final res = await contract.getPending(hash);
 
-            contract.getBscBalance();
+            if (res) {
+              setState(() {});
+
+              contract.getBscBalance();
+              Navigator.pop(context);
+              enableAnimation(
+                  'swapped ${_amountController.text} of SEL v1 to SEL v2.');
+              _amountController.text = '';
+            } else {
+              Navigator.pop(context);
+              await customDialog('Opps', 'Something went wrong.');
+            }
+          } else {
             Navigator.pop(context);
-            enableAnimation(
-                'swapped ${_amountController.text} of SEL v1 to SEL v2.');
-            _amountController.text = '';
           }
         }
       } catch (e) {
@@ -347,9 +355,6 @@ class _SwapState extends State<Swap> {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     final contract = Provider.of<ContractProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkBgd)
-          : hexaCodeToColor(AppColors.whiteColorHexa),
       body: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: Stack(
@@ -360,17 +365,20 @@ class _SwapState extends State<Swap> {
                     title: "Swap SEL v2",
                     color: isDarkTheme
                         ? hexaCodeToColor(AppColors.darkCard)
-                        : hexaCodeToColor(AppColors.cardColor),
+                        : hexaCodeToColor(AppColors.whiteHexaColor),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                     tile: GestureDetector(
                       onTap: () async {
+                        dialogLoading(context);
                         final res = await ContractProvider().checkAllowance();
 
                         if (res.toString() == '0') {
+                          Navigator.pop(context);
                           approve();
                         } else {
+                          Navigator.pop(context);
                           customDialog('Opps', 'You have already approved.');
                         }
                       },
@@ -408,7 +416,7 @@ class _SwapState extends State<Swap> {
                         decoration: BoxDecoration(
                           color: isDarkTheme
                               ? hexaCodeToColor(AppColors.darkCard)
-                              : hexaCodeToColor(AppColors.cardColor),
+                              : hexaCodeToColor(AppColors.whiteHexaColor),
                           borderRadius: BorderRadius.all(
                             Radius.circular(
                                 8.0), //                 <--- border radius here
@@ -424,7 +432,8 @@ class _SwapState extends State<Swap> {
                                 decoration: BoxDecoration(
                                   color: isDarkTheme
                                       ? hexaCodeToColor(AppColors.darkBgd)
-                                      : hexaCodeToColor(AppColors.cardColor),
+                                      : hexaCodeToColor(
+                                          AppColors.whiteColorHexa),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(
                                         8.0), //                 <--- border radius here

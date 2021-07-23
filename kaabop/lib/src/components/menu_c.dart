@@ -11,8 +11,10 @@ class MenuHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final acc = Provider.of<ApiProvider>(context).accountM;
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, AppText.accountView);
@@ -25,6 +27,7 @@ class MenuHeader extends StatelessWidget {
             builder: (context, value, child) {
               return Row(
                 children: [
+
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -32,19 +35,21 @@ class MenuHeader extends StatelessWidget {
                       height: 60,
                       margin: const EdgeInsets.only(right: 5),
                       decoration: BoxDecoration(
-                        color: hexaCodeToColor(AppColors.cardColor),
-                        borderRadius: BorderRadius.circular(60),
+                        color: isDarkTheme ? hexaCodeToColor(AppColors.whiteHexaColor) : Colors.grey.shade400,
+                        shape: BoxShape.circle,
                       ),
-                      child: SvgPicture.string(acc.addressIcon),
+                      child: SvgPicture.string(acc.addressIcon ?? 'hello world'),
                     ),
                   ),
+
                   const SizedBox(width: 5),
+
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       MyText(
-                        text: acc.name,
+                        text: acc.name ?? '',
                         color: isDarkTheme ? AppColors.whiteColorHexa : AppColors.textColor,
                         fontSize: 16,
                       ),
@@ -107,10 +112,11 @@ class MyListTile extends StatelessWidget {
       enabled: enable,
       onTap: onTap,
       leading: SvgPicture.asset(
-          MenuModel.listTile[index]['sub'][subIndex]['icon'].toString(),
-          color: isDarkTheme ? Colors.white : Colors.black ,
-          width: 30,
-          height: 30),
+        MenuModel.listTile[index]['sub'][subIndex]['icon'].toString(),
+        color: isDarkTheme ? Colors.white : Colors.black ,
+        width: 30,
+        height: 30
+      ),
       title: MyText(
         text: MenuModel.listTile[index]['sub'][subIndex]['subTitle'].toString(),
         color: isDarkTheme ?   AppColors.whiteColorHexa : AppColors.textColor,

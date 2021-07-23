@@ -32,7 +32,7 @@ class NavigationDrawer extends StatelessWidget {
                         bottom: 25,
                       ),
                       decoration: BoxDecoration(
-                        color: hexaCodeToColor(AppColors.cardColor),
+                        color: hexaCodeToColor(AppColors.whiteHexaColor),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(

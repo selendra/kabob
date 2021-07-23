@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../index.dart';
 
 class AssetList extends StatelessWidget {
+
   final _formKey = GlobalKey<FormState>();
   final passphraseController = TextEditingController();
   final pinController = TextEditingController();
@@ -74,7 +75,7 @@ class AssetList extends StatelessWidget {
                 child: Text('PIN verification failed'),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Close'),
                 ),
@@ -127,7 +128,7 @@ class AssetList extends StatelessWidget {
                 child: Text('You have created bitcoin wallet.'),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Close'),
                 ),
@@ -256,9 +257,7 @@ class AssetList extends StatelessWidget {
                       builder: (context, value, child) {
                         return GestureDetector(
                           onTap: () {
-                            Provider.of<ContractProvider>(context,
-                                    listen: false)
-                                .fetchKmpiBalance();
+                            Provider.of<ContractProvider>(context, listen: false).fetchKmpiBalance();
                             Navigator.push(
                               context,
                               RouteAnimation(

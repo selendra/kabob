@@ -21,19 +21,24 @@ class QrScannerState extends State<QrScanner> {
   String code;
 
   void _onQrViewCreated(QRViewController controller) {
-    controller.scannedDataStream.listen((scanData) async {
-      await controller.pauseCamera();
-      // code = scanData.code;
-      Navigator.pop(context, scanData.code);
-      // await Future.delayed(Duration(seconds: 2), () async {
-      //   // _backend.mapData = await Navigator.push(
-      //   //     context,
-      //   //     MaterialPageRoute(
-      //   //         builder: (context) => SubmitTrx(scanData.code, false,
-      //   //             widget.portList, widget.sdk, widget.keyring)));
+    try {
 
-      // });
-    });
+      controller.scannedDataStream.listen((scanData) async {
+        await controller.pauseCamera();
+        // code = scanData.code;
+        Navigator.pop(context, scanData.code);
+        // await Future.delayed(Duration(seconds: 2), () async {
+        //   // _backend.mapData = await Navigator.push(
+        //   //     context,
+        //   //     MaterialPageRoute(
+        //   //         builder: (context) => SubmitTrx(scanData.code, false,
+        //   //             widget.portList, widget.sdk, widget.keyring)));
+
+        // });
+      });
+    } catch (e) {
+      print("Error $e");
+    }
   }
 
   @override
@@ -41,6 +46,7 @@ class QrScannerState extends State<QrScanner> {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: BodyScaffold(
+        physic: const NeverScrollableScrollPhysics(),
         height: MediaQuery.of(context).size.height,
         bottom: 0,
         child: Column(
@@ -48,14 +54,13 @@ class QrScannerState extends State<QrScanner> {
             MyAppBar(
               title: "Scanning",
               color: isDarkTheme
-                  ? hexaCodeToColor(AppColors.darkCard)
-                  : hexaCodeToColor(AppColors.cardColor),
+                ? hexaCodeToColor(AppColors.darkCard)
+                : hexaCodeToColor(AppColors.whiteHexaColor),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             Expanded(
-              flex: 5,
               child: QRView(
                 key: qrKey,
                 onQRViewCreated: _onQrViewCreated,
@@ -63,7 +68,7 @@ class QrScannerState extends State<QrScanner> {
                   borderRadius: 10,
                   borderWidth: 10,
                 ),
-              ),
+              )
             ),
           ],
         ),

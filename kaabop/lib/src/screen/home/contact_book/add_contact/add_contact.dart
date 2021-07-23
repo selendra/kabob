@@ -150,11 +150,7 @@ class _AddContactState extends State<AddContact> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
-      backgroundColor: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkBgd)
-          : hexaCodeToColor(AppColors.whiteColorHexa),
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
         child: AddContactBody(

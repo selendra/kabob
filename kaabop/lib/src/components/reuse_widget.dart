@@ -250,7 +250,7 @@ Future<void> successDialog(BuildContext context ,String operationText) async {
                     text: 'You have successfully ' + operationText,
                   ),
                   SizedBox(
-                    height: 60,
+                    height: 50,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -868,7 +868,7 @@ Widget customDropDown(
       right: 14.0,
     ),
     decoration: BoxDecoration(
-      color: hexaCodeToColor(AppColors.cardColor),
+      color: hexaCodeToColor(AppColors.whiteHexaColor),
       borderRadius: BorderRadius.circular(size5),
     ),
     child: Row(

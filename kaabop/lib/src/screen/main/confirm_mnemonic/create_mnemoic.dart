@@ -38,7 +38,7 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
             MyAppBar(
               color: isDarkTheme
                   ? hexaCodeToColor(AppColors.darkCard)
-                  : hexaCodeToColor(AppColors.cardColor),
+                  : hexaCodeToColor(AppColors.whiteHexaColor),
               title: AppText.createAccTitle,
               onPressed: enableScreenShot,
             ),
@@ -82,7 +82,7 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
                     Card(
                       color: isDarkTheme
                           ? hexaCodeToColor(AppColors.darkCard)
-                          : hexaCodeToColor(AppColors.cardColor),
+                          : hexaCodeToColor(AppColors.whiteHexaColor),
                       child: MyText(
                         text: widget.passPhrase ?? '',
                         textAlign: TextAlign.left,
@@ -108,8 +108,7 @@ class _CreateMnemonicState extends State<CreateMnemonic> {
               ),
             ),
             MyFlatButton(
-              edgeMargin:
-                  const EdgeInsets.only(left: 66, right: 66, bottom: 16),
+              edgeMargin: const EdgeInsets.only(left: 66, right: 66, bottom: 16),
               textButton: AppText.next,
               action: () async {
                 Navigator.push(

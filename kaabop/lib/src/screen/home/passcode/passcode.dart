@@ -4,6 +4,7 @@ import 'package:vibration/vibration.dart';
 import 'package:minimize_app/minimize_app.dart';
 
 class Passcode extends StatefulWidget {
+
   final String isHome;
   final bool isAppBar;
   const Passcode({this.isAppBar = false, this.isHome});
@@ -150,31 +151,16 @@ class _PasscodeState extends State<Passcode> {
             child: Center(
               child: Column(
                 children: <Widget>[
-                  if (widget.isAppBar)
-                    MyAppBar(
-                      title: "Passcode",
-                      color: isDarkTheme
-                          ? hexaCodeToColor(AppColors.darkCard)
-                          : hexaCodeToColor("#F5F5F5"),
-                      onPressed: () {
-                        Navigator.pop(context);
-                        // if (widget.isHome != null) {
-                        //   if (Platform.isAndroid) {
-                        //     Future.delayed(const Duration(milliseconds: 1000),
-                        //         () {
-                        //       SystemChannels.platform
-                        //           .invokeMethod('SystemNavigator.pop');
-                        //     });
-                        //   } else if (Platform.isIOS) {
-                        //     MinimizeApp.minimizeApp();
-                        //   }
-                        // } else {
-                        //   Navigator.pop(context);
-                        // }
-                      },
-                    )
-                  else
-                    Container(),
+
+                  // Show AppBar Only In Landing Pages
+                  if(widget.isAppBar) MyAppBar(
+                    title: "Set Passcode",
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ) 
+                  else Container(),
+
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.05,
                   ),

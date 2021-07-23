@@ -34,7 +34,7 @@ class About extends StatelessWidget {
               title: "About",
               color: isDarkTheme
                   ? hexaCodeToColor(AppColors.darkCard)
-                  : hexaCodeToColor(AppColors.cardColor),
+                  : hexaCodeToColor(AppColors.whiteHexaColor),
               onPressed: () {
                 Navigator.pop(context);
               },

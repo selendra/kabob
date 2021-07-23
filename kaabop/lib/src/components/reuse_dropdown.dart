@@ -9,19 +9,20 @@ class ReuseDropDown extends StatelessWidget {
   final TextStyle style;
   final List<String> itemsList;
 
-  const ReuseDropDown(
-      {this.onChanged,
-      this.initialValue,
-      this.icon,
-      this.style,
-      this.itemsList});
+  const ReuseDropDown({
+    this.onChanged,
+    this.initialValue,
+    this.icon,
+    this.style,
+    this.itemsList
+  });
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
       value: initialValue,
       underline: Container(
-        color: Colors.white,
+        color: Colors.blue,
       ),
       style: style,
       icon: icon,

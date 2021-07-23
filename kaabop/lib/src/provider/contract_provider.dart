@@ -11,7 +11,9 @@ import '../../index.dart';
 
 class ContractProvider with ChangeNotifier {
   final WalletSDK sdk = ApiProvider.sdk;
+
   final Keyring keyring = ApiProvider.keyring;
+
   String ethAdd = '';
 
   Atd atd = Atd();
@@ -55,7 +57,9 @@ class ContractProvider with ChangeNotifier {
     org: 'Smart Chain',
     isContain: true,
   );
+
   Client _httpClient;
+
   Web3Client _web3client, _etherClient;
 
   List<TokenModel> token = [];
@@ -68,6 +72,15 @@ class ContractProvider with ChangeNotifier {
   Future<void> initEtherClient() async {
     _httpClient = Client();
     _etherClient = Web3Client(AppConfig.etherMainet, _httpClient);
+  }
+
+  Future<bool> getPending(String txHash) async {
+    //final res = await client.getTransactionByHash('0x97fc5915fcf8e73e1c3eaa631d23c9833164b1664974592c7f1eb52f08b72045');
+
+    final res = await _web3client.getTransactionReceipt(txHash);
+
+    return res.status;
+    //print(r);
   }
 
   Future<void> getEtherBalance() async {

@@ -316,7 +316,7 @@ class _AccountState extends State<Account> {
                         title: "Account",
                         color: isDarkTheme
                             ? hexaCodeToColor(AppColors.darkCard)
-                            : hexaCodeToColor(AppColors.cardColor),
+                            : hexaCodeToColor(AppColors.whiteHexaColor),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -329,7 +329,7 @@ class _AccountState extends State<Account> {
                             borderRadius: BorderRadius.circular(5),
                             color: isDarkTheme
                                 ? hexaCodeToColor(AppColors.darkCard)
-                                : hexaCodeToColor(AppColors.cardColor),
+                                : hexaCodeToColor(AppColors.whiteHexaColor),
                           ),
                           child: Column(
                             children: [
@@ -345,7 +345,7 @@ class _AccountState extends State<Account> {
                                   borderRadius: BorderRadius.circular(5),
                                   color: isDarkTheme
                                       ? hexaCodeToColor(AppColors.darkCard)
-                                      : hexaCodeToColor(AppColors.cardColor),
+                                      : hexaCodeToColor(AppColors.whiteHexaColor),
                                 ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

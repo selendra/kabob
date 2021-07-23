@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class Home extends StatefulWidget {
+  
   final bool apiConnected;
   // ignore: avoid_positional_boolean_parameters
   const Home({this.apiConnected});
@@ -15,14 +16,15 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
+
   MenuModel menuModel = MenuModel();
   final HomeModel _homeM = HomeModel();
-  BuildContext dialogContext;
-
+  
   String status = '';
 
   @override
   void initState() {
+
     Timer(const Duration(seconds: 2), () {
       setPortfolio();
     });
@@ -47,7 +49,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void setPortfolio() {
+
     final walletProvider = Provider.of<WalletProvider>(context, listen: false);
+
     walletProvider.clearPortfolio();
 
     final contract = Provider.of<ContractProvider>(context, listen: false);
@@ -159,26 +163,93 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
+  Future<void> scrollRefresh() async  {
+
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+    final api = Provider.of<ApiProvider>(context, listen: false);
+    final market = Provider.of<MarketProvider>(context, listen: false);
+
+    await Future.delayed(const Duration(milliseconds: 300)).then((value) async {
+      setPortfolio();
+      market.fetchTokenMarketPrice(context);
+      if (contract.bnbNative.isContain) {
+        contract.getBnbBalance();
+      }
+      if (contract.bscNative.isContain) {
+        contract.getBscBalance();
+      }
+
+      if (contract.bscNativeV2.isContain) {
+        contract.getBscV2Balance();
+      }
+
+      if (contract.etherNative.isContain) {
+        contract.getEtherBalance();
+      }
+
+      if (contract.kgoNative.isContain) {
+        contract.getKgoBalance();
+      }
+
+      if (api.btc.isContain) {
+        api.getBtcBalance(api.btcAdd);
+      }
+
+      if (contract.token.isNotEmpty) {
+        contract.fetchNonBalance();
+        contract.fetchEtherNonBalance();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+
     return Scaffold(
+
       key: _homeM.globalKey,
+
       drawer: Theme(
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
         child: Menu(_homeM.userData),
       ),
-      body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: HomeBody(
-          setPortfolio: setPortfolio,
-        ),
+
+      body: Column(
+        children: [
+          
+          SafeArea(
+            child: homeAppBar(context)
+          ),
+
+          Divider(height: 2, color: isDarkTheme ? Colors.black : Colors.grey.shade400,),
+
+          Flexible(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await scrollRefresh();
+              },
+              child: BodyScaffold(
+                bottom: 0,
+                isSafeArea: false,
+                child: HomeBody(
+                  setPortfolio: setPortfolio,
+                  scrollRefresh: scrollRefresh
+                ),
+              )
+            )
+          )
+        ]
       ),
-      floatingActionButton: SizedBox(
-        width: 64,
-        height: 64,
+
+      floatingActionButton: Container(
+        width: 65,
+        height: 65,
+        // padding: EdgeInsets.all(5),
         child: FloatingActionButton(
-          backgroundColor:
-              hexaCodeToColor(AppColors.secondary).withOpacity(1.0),
+          elevation: 0,
+          backgroundColor: hexaCodeToColor(AppColors.secondary).withOpacity(1.0),
           onPressed: () async {
             await TrxOptionMethod.scanQR(
               context,

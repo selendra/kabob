@@ -17,7 +17,7 @@ class Confirmation extends StatelessWidget {
               title: "Account",
               color: isDarkTheme
                   ? hexaCodeToColor(AppColors.darkCard)
-                  : hexaCodeToColor(AppColors.cardColor),
+                  : hexaCodeToColor(AppColors.whiteColorHexa),
               onPressed: () {
                 Navigator.pop(context);
               },

@@ -9,6 +9,7 @@ import '../../../../index.dart';
 import 'asset_detail.dart';
 
 class AssetInfo extends StatefulWidget {
+
   final String id;
   final String assetLogo;
   final String balance;
@@ -18,15 +19,16 @@ class AssetInfo extends StatefulWidget {
   final String priceChange24h;
   final Market marketData;
 
-  const AssetInfo(
-      {this.id,
-      this.assetLogo,
-      this.balance,
-      this.tokenSymbol,
-      this.org,
-      this.marketPrice,
-      this.priceChange24h,
-      this.marketData});
+  const AssetInfo({
+    this.id,
+    this.assetLogo,
+    this.balance,
+    this.tokenSymbol,
+    this.org,
+    this.marketPrice,
+    this.priceChange24h,
+    this.marketData
+  });
   @override
   _AssetInfoState createState() => _AssetInfoState();
 }
@@ -266,12 +268,13 @@ class _AssetInfoState extends State<AssetInfo> {
 
   @override
   void dispose() {
-    //controller.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    
     if (widget.balance != AppText.loadingPattern &&
         widget.marketPrice != null) {
       var res = double.parse(widget.balance) * double.parse(widget.marketPrice);
@@ -300,65 +303,79 @@ class _AssetInfoState extends State<AssetInfo> {
             return [
               SliverAppBar(
                 pinned: true,
-                expandedHeight: 65,
+                expandedHeight: 77,
                 forceElevated: innerBox,
-                leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: isDarkTheme ? Colors.white : Colors.black,
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                backgroundColor: isDarkTheme
-                    ? hexaCodeToColor(AppColors.darkBgd)
-                    : hexaCodeToColor(AppColors.cardColor),
-                flexibleSpace: FlexibleSpaceBar(
-                  title: Row(
+                automaticallyImplyLeading: false,
+                leading: Container(),
+                backgroundColor: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : Colors.white,
+                flexibleSpace: Container(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Column(
                     children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        margin: const EdgeInsets.only(right: 16),
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Image.asset(
-                          widget.assetLogo,
-                          fit: BoxFit.contain,
-                        ),
+
+                      Flexible(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.pop(context);
+                              }, 
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                padding: const EdgeInsets.only(right: 15, left: 10),
+                                child: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios, color: isDarkTheme ? Colors.white : Colors.black, size: 28)
+                              )
+                            ),
+
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(right: 8),
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Image.asset(
+                                widget.assetLogo,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            MyText(
+                              fontSize: 18.0,
+                              color: isDarkTheme ? "#FFFFFF" : AppColors.blackColor,
+                              text: widget.id == null
+                                ? widget.tokenSymbol
+                                : widget.id.toUpperCase(),
+                            ),
+
+                            Expanded(child: Container()),
+
+                            // Right Text 
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: MyText(
+                                fontSize: 16.0,
+                                text: widget.org == 'BEP-20' ? 'BEP-20' : '',
+                                color: isDarkTheme ? AppColors.whiteHexaColor : AppColors.darkCard,
+                              )
+                            ),
+                          ],
+                        )
                       ),
-                      MyText(
-                        fontSize: 16.0,
-                        color: isDarkTheme
-                            ? AppColors.whiteColorHexa
-                            : AppColors.textColor,
-                        text: widget.id == null
-                            ? widget.tokenSymbol
-                            : widget.id.toUpperCase(),
-                      ),
-                    ],
-                  ),
+                      Divider(height: 3, color: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : Colors.grey.shade400)
+                    ]
+                  )
                 ),
-                actions: <Widget>[
-                  MyText(
-                    color: isDarkTheme
-                        ? AppColors.whiteColorHexa
-                        : AppColors.textColor,
-                    top: 12.0,
-                    right: 16.0,
-                    fontSize: 16.0,
-                    text: widget.org == 'BEP-20' ? 'BEP-20' : '',
-                  ),
-                ],
               ),
+
               SliverList(
                 delegate: SliverChildListDelegate(
                   <Widget>[
                     Container(
                       color: isDarkTheme
                           ? hexaCodeToColor(AppColors.darkBgd)
-                          : hexaCodeToColor(AppColors.cardColor),
+                          : hexaCodeToColor(AppColors.whiteHexaColor),
                       child: Column(
                         children: [
                           if (widget.tokenSymbol == "ATD")
@@ -509,7 +526,7 @@ class _AssetInfoState extends State<AssetInfo> {
                       height: 32.0,
                       color: isDarkTheme
                           ? hexaCodeToColor(AppColors.darkBgd)
-                          : hexaCodeToColor(AppColors.cardColor),
+                          : hexaCodeToColor(AppColors.whiteHexaColor),
                     ),
                     Container(
                       //padding: const EdgeInsets.only(top: 32.0),
@@ -526,7 +543,7 @@ class _AssetInfoState extends State<AssetInfo> {
                                 decoration: BoxDecoration(
                                   color: isDarkTheme
                                       ? hexaCodeToColor(AppColors.darkCard)
-                                      : hexaCodeToColor(AppColors.cardColor),
+                                      : hexaCodeToColor(AppColors.whiteHexaColor),
                                   border: Border(
                                     bottom: BorderSide(
                                       color: _tabIndex == 0
@@ -558,7 +575,7 @@ class _AssetInfoState extends State<AssetInfo> {
                                 decoration: BoxDecoration(
                                   color: isDarkTheme
                                       ? hexaCodeToColor(AppColors.darkCard)
-                                      : hexaCodeToColor(AppColors.cardColor),
+                                      : hexaCodeToColor(AppColors.whiteHexaColor),
                                   border: Border(
                                     bottom: BorderSide(
                                       color: _tabIndex == 1
@@ -597,14 +614,14 @@ class _AssetInfoState extends State<AssetInfo> {
                 Container(
                   color: isDarkTheme
                       ? hexaCodeToColor(AppColors.darkCard)
-                      : hexaCodeToColor(AppColors.cardColor),
+                      : hexaCodeToColor(AppColors.whiteHexaColor),
                   child: AssetDetail(widget.marketData),
                 )
               else
                 Container(
                   color: isDarkTheme
                       ? hexaCodeToColor(AppColors.darkCard)
-                      : hexaCodeToColor(AppColors.cardColor),
+                      : hexaCodeToColor(AppColors.whiteHexaColor),
                   child: Center(
                     child: SvgPicture.asset(
                       'assets/icons/no_data.svg',
@@ -616,7 +633,7 @@ class _AssetInfoState extends State<AssetInfo> {
               Container(
                 color: isDarkTheme
                     ? hexaCodeToColor(AppColors.darkCard)
-                    : hexaCodeToColor(AppColors.cardColor),
+                    : hexaCodeToColor(AppColors.whiteHexaColor),
                 child: Center(
                     child: SvgPicture.asset(
                   'assets/icons/no_data.svg',

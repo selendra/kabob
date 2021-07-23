@@ -33,6 +33,7 @@ class MenuBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        
         MenuHeader(userInfo: userInfo),
 
         // History
@@ -103,8 +104,7 @@ class MenuBody extends StatelessWidget {
           trailing: Switch(
             value: model.switchPasscode,
             onChanged: (value) {
-             // Navigator.pushNamed(context, AppText.passcodeView);
-
+              // Navigator.pushNamed(context, AppText.passcodeView);
               Navigator.push(context, MaterialPageRoute(builder: (context)=> const Passcode(isAppBar: true,)));
             },
           ),
@@ -118,7 +118,8 @@ class MenuBody extends StatelessWidget {
           trailing: Switch(
             value: model.switchBio,
             onChanged: (value) {
-              switchBio(value);
+              print("$value");
+              switchBio(context, value);
             },
           ),
           onTap: null,

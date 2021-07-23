@@ -28,7 +28,7 @@ class TrxHistoryDetailsBody extends StatelessWidget {
               )
             ],
             borderRadius: BorderRadius.circular(5.0),
-            color: hexaCodeToColor(AppColors.cardColor),
+            color: hexaCodeToColor(AppColors.whiteHexaColor),
           ),
           child: Column(
             children: <Widget>[

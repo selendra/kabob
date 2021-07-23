@@ -59,7 +59,7 @@ class _ContactBookBodyState extends State<ContactBookBody> {
           title: "Contact List",
           color: isDarkTheme
               ? hexaCodeToColor(AppColors.darkCard)
-              : hexaCodeToColor(AppColors.cardColor),
+              : hexaCodeToColor(AppColors.whiteHexaColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -213,7 +213,7 @@ class _ContactBookBodyState extends State<ContactBookBody> {
                               child: Card(
                                 color: isDarkTheme
                                     ? hexaCodeToColor(AppColors.darkCard)
-                                    : hexaCodeToColor(AppColors.cardColor),
+                                    : hexaCodeToColor(AppColors.whiteHexaColor),
                                 margin: const EdgeInsets.only(bottom: 16.0),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8),

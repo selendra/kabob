@@ -44,7 +44,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                 alignment: Alignment.center,
                 color: isDarkTheme
                     ? hexaCodeToColor(AppColors.darkCard)
-                    : hexaCodeToColor(AppColors.cardColor),
+                    : hexaCodeToColor(AppColors.whiteHexaColor),
                 padding: const EdgeInsets.only(
                   left: 4,
                   right: 4,
@@ -137,7 +137,7 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
             MyAppBar(
               color: isDarkTheme
                   ? hexaCodeToColor(AppColors.darkCard)
-                  : hexaCodeToColor(AppColors.cardColor),
+                  : hexaCodeToColor(AppColors.whiteHexaColor),
               title: AppText.createAccTitle,
               onPressed: () {
                 Navigator.pop(context);
@@ -205,26 +205,28 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                 ],
               ),
             ),
+
             _buildWordsButtons(),
             Expanded(
               child: Container(),
             ),
+            
             MyFlatButton(
-              edgeMargin:
-                  const EdgeInsets.only(left: 66, right: 66, bottom: 16),
+              hasShadow: enable,
+              edgeMargin: const EdgeInsets.only(left: 66, right: 66, bottom: 16),
               textButton: AppText.next,
               action: enable == false
-                  ? null
-                  : () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyUserInfo(
-                            widget.passPhrase,
-                          ),
-                        ),
-                      );
-                    },
+                ? null
+                : () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyUserInfo(
+                        widget.passPhrase,
+                      ),
+                    ),
+                  );
+                },
             )
           ],
         ),

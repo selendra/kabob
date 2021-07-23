@@ -26,7 +26,7 @@ class AddContactBody extends StatelessWidget {
           title: "Add Contact",
           color: isDarkTheme
               ? hexaCodeToColor(AppColors.darkCard)
-              : hexaCodeToColor(AppColors.cardColor),
+              : hexaCodeToColor(AppColors.whiteHexaColor),
           onPressed: () {
             Navigator.pop(context);
           },

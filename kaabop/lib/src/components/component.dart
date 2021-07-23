@@ -63,14 +63,16 @@ class MyFlatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+
     return Container(
       padding: edgePadding,
       margin: edgeMargin,
       width: width,
       height: height,
 
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(size5), boxShadow: [
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(size5), boxShadow: [
         if (hasShadow)
           BoxShadow(
             color: Colors.black54.withOpacity(0.3),
@@ -83,14 +85,14 @@ class MyFlatButton extends StatelessWidget {
       child: FlatButton(
         onPressed: action,
         color: hexaCodeToColor(buttonColor),
-        disabledColor: Colors.grey[700],
+        disabledColor: isDarkTheme ? Colors.grey.shade700 : Colors.grey.shade400,
         focusColor: hexaCodeToColor(AppColors.secondary),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         child: MyText(
           pTop: 20,
           pBottom: 20,
           text: textButton,
-          color: action != null ? '#FFFFFF' : AppColors.textBtnColor,
+          color: isDarkTheme ? '#FFFFFF' : AppColors.textBtnColor,
           fontWeight: fontWeight,
         ),
       ),
@@ -146,9 +148,10 @@ class MyText extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-              fontWeight: fontWeight,
-              color: Color(AppUtils.convertHexaColor(color)),
-              fontSize: fontSize),
+            fontWeight: fontWeight,
+            color: Color(AppUtils.convertHexaColor(color)),
+            fontSize: fontSize
+          ),
           textAlign: textAlign,
           overflow: overflow,
         ),
@@ -247,25 +250,40 @@ class MyAppBar extends StatelessWidget {
   final Color color;
   final Widget tile;
 
-  const MyAppBar(
-      {this.pLeft = 0,
-      this.pTop = 0,
-      this.pRight = 0,
-      this.pBottom = 0,
-      this.margin = const EdgeInsets.fromLTRB(0, 0, 0, 0),
-      @required this.title,
-      this.color,
-      this.onPressed,
-      this.tile});
+  const MyAppBar({
+    this.pLeft = 0,
+    this.pTop = 0,
+    this.pRight = 0,
+    this.pBottom = 0,
+    this.margin = const EdgeInsets.fromLTRB(0, 0, 0, 0),
+    @required this.title,
+    this.color,
+    this.onPressed,
+    this.tile
+  });
 
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
-    return Container(
+    return SafeArea(
+      child: Container(
         height: 65.0,
         width: MediaQuery.of(context).size.width,
         margin: margin,
-        color: color ?? hexaCodeToColor(AppColors.cardColor),
+        decoration: BoxDecoration(
+          color: isDarkTheme
+            ? hexaCodeToColor(AppColors.darkCard)
+            : hexaCodeToColor(AppColors.whiteHexaColor),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.black54.withOpacity(0.5),
+          //     blurRadius: 8.0,
+          //     spreadRadius: 1.0,
+          //     offset: const Offset(0, 2),
+          //   )
+          // ]
+        ),
+        // color ?? hexaCodeToColor(AppColors.whiteHexaColor),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -277,7 +295,7 @@ class MyAppBar extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 30),
                   iconSize: 40.0,
                   icon: Icon(
-                    LineAwesomeIcons.arrow_left,
+                    Platform.isAndroid ? LineAwesomeIcons.arrow_left : LineAwesomeIcons.angle_left,
                     color: isDarkTheme ? Colors.white : Colors.black,
                     size: 30,
                   ),
@@ -285,25 +303,31 @@ class MyAppBar extends StatelessWidget {
                 ),
                 MyText(
                   color: isDarkTheme
-                      ? AppColors.whiteColorHexa
-                      : AppColors.textColor,
+                    ? AppColors.whiteColorHexa
+                    : AppColors.textColor,
                   text: title,
                   left: 15,
                   fontSize: 22,
+                  fontWeight: FontWeight.w600
                 ),
               ],
             ),
             tile ?? Container()
           ],
-        ));
+        )
+      )
+    );
   }
 }
 
 class BodyScaffold extends StatelessWidget {
+  
   final double left, top, right, bottom;
   final Widget child;
   final double width;
   final double height;
+  final ScrollPhysics physic;
+  final bool isSafeArea;
 
   const BodyScaffold({
     this.left = 0,
@@ -313,22 +337,25 @@ class BodyScaffold extends StatelessWidget {
     this.child,
     this.height,
     this.width,
+    this.physic,
+    this.isSafeArea = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: height,
-          color: isDarkTheme
-              ? Color(AppUtils.convertHexaColor(AppColors.darkBgd))
-              : Color(AppUtils.convertHexaColor("#F5F5F5")),
-          padding: EdgeInsets.fromLTRB(left, top, right, bottom),
-          child: SafeArea(child: child),
-        ));
+      physics: physic,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: height,
+        color: isDarkTheme
+          ? Color(AppUtils.convertHexaColor(AppColors.darkBgd))
+          : Color(AppUtils.convertHexaColor("#F5F5F5")),
+        padding: EdgeInsets.fromLTRB(left, top, right, bottom),
+        child: isSafeArea ? SafeArea(child: child) : child,
+      )
+    );
   }
 }
 
@@ -470,7 +497,7 @@ class MyTabBar extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 16.0, right: 16.0),
         decoration: BoxDecoration(
-            color: hexaCodeToColor(AppColors.cardColor),
+            color: hexaCodeToColor(AppColors.whiteHexaColor),
             borderRadius: BorderRadius.circular(8)),
         width: 125.0,
         height: 48,
@@ -504,13 +531,14 @@ class MyTabBar extends StatelessWidget {
 }
 
 /* Trigger Snack Bar Function */
-void snackBar(GlobalKey<ScaffoldState> globalKey, String contents) {
+void snackBar(BuildContext context, String contents) {
   final snackbar = SnackBar(
     duration: const Duration(seconds: 2),
     content: Text(contents),
   );
   // ignore: deprecated_member_use
-  globalKey.currentState.showSnackBar(snackbar);
+  ScaffoldMessenger.of(context).showSnackBar(snackbar);
+  // globalKey.currentState.showSnackBar(snackbar);
 }
 
 class MyPinput extends StatelessWidget {

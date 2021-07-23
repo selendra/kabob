@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class MyUserInfoBody extends StatelessWidget {
+
   final ModelUserInfo modelUserInfo;
   final Function onSubmit;
   final String Function(String) onChanged;
@@ -37,7 +38,7 @@ class MyUserInfoBody extends StatelessWidget {
           title: "User Information",
           color: isDarkTheme
               ? hexaCodeToColor(AppColors.darkCard)
-              : hexaCodeToColor(AppColors.cardColor),
+              : hexaCodeToColor(AppColors.whiteHexaColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -72,11 +73,7 @@ class MyUserInfoBody extends StatelessWidget {
                       obscureText: true,
                       controller: modelUserInfo.passwordCon,
                       textInputAction: TextInputAction.next,
-                      style: TextStyle(
-                          color: isDarkTheme
-                              ? hexaCodeToColor(AppColors.whiteColorHexa)
-                              : hexaCodeToColor(AppColors.textColor),
-                          fontSize: 18.0),
+                      style: TextStyle(color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
                       decoration: InputDecoration(
                         labelText: "Pin",
                         labelStyle: TextStyle(
@@ -97,7 +94,7 @@ class MyUserInfoBody extends StatelessWidget {
                         filled: true,
                         fillColor: isDarkTheme
                             ? hexaCodeToColor(AppColors.darkCard)
-                            : hexaCodeToColor(AppColors.cardColor),
+                            : hexaCodeToColor(AppColors.whiteHexaColor),
                         enabledBorder: myTextInputBorder(
                           modelUserInfo.passwordCon.text != ""
                               ? isDarkTheme
@@ -164,7 +161,7 @@ class MyUserInfoBody extends StatelessWidget {
                           filled: true,
                           fillColor: isDarkTheme
                               ? hexaCodeToColor(AppColors.darkCard)
-                              : hexaCodeToColor(AppColors.cardColor),
+                              : hexaCodeToColor(AppColors.whiteHexaColor),
                           enabledBorder: myTextInputBorder(
                             modelUserInfo.passwordCon.text != ""
                                 ? isDarkTheme
@@ -205,8 +202,29 @@ class MyUserInfoBody extends StatelessWidget {
                           width: 50,
                           child: Switch(
                             value: model.switchBio,
-                            onChanged: (value) {
-                              switchBio(value);
+                            onChanged: (value) async {
+                              // switchBio(value);
+                              await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                                    title: Align(
+                                      child: Text("Oops"),
+                                    ),
+                                    content: Padding(
+                                      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                      child: Text("This feature has not implemented yet!", textAlign: TextAlign.center),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('Close'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
                         ),

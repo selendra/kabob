@@ -18,8 +18,8 @@ class SearchAsset extends SearchDelegate {
       //     ? hexaCodeToColor(AppColors.darkBgd)
       //     : hexaCodeToColor(AppColors.cardColor),
       scaffoldBackgroundColor: isDarkTheme
-          ? hexaCodeToColor(AppColors.darkBgd)
-          : hexaCodeToColor(AppColors.cardColor),
+        ? hexaCodeToColor(AppColors.darkBgd)
+        : hexaCodeToColor(AppColors.whiteHexaColor),
       inputDecorationTheme: InputDecorationTheme(
         hintStyle: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
       ),
@@ -190,7 +190,7 @@ class SearchAsset extends SearchDelegate {
             offset: Offset(1.0, 1.0),
           )
         ],
-        color: hexaCodeToColor(AppColors.cardColor),
+        color: hexaCodeToColor(AppColors.whiteHexaColor),
         borderRadius: BorderRadius.circular(8),
       ),
       child: child,
