@@ -208,6 +208,7 @@ class AssetList extends StatelessWidget {
             );
           },
         ),
+
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return GestureDetector(
@@ -242,6 +243,7 @@ class AssetList extends StatelessWidget {
             );
           },
         ),
+
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return value.kmpi.isContain
@@ -563,6 +565,7 @@ class AssetList extends StatelessWidget {
             ),
           );
         }),
+        
         Consumer<ContractProvider>(builder: (context, value, child) {
           return value.token.isNotEmpty
               ? ListView.builder(

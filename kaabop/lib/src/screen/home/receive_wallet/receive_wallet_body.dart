@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/components/reuse_dropdown.dart';
+import 'package:wallet_apps/src/screen/home/receive_wallet/appbar_wallet.dart';
 
 class ReceiveWalletBody extends StatelessWidget {
   final GlobalKey keyQrShare;
@@ -40,6 +41,8 @@ class ReceiveWalletBody extends StatelessWidget {
 
         Expanded(
           child: BodyScaffold(
+            isSafeArea: false,
+            bottom: 0,
             child: 
             (wallet == 'wallet address') ? Expanded(
               child: Column(
@@ -51,117 +54,72 @@ class ReceiveWalletBody extends StatelessWidget {
               ),
             )
             : Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
 
-                Container(
-                  margin: const EdgeInsets.only(
-                    bottom: 45.0,
-                    left: 16.0,
-                    right: 16.0,
-                  ),
-                  width: double.infinity,
-                  child: RepaintBoundary(
-                    key: keyQrShare,
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        top: 30.0,
-                        bottom: 30.0,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black54.withOpacity(0.3),
-                            blurRadius: 8.0,
-                            spreadRadius: 2.0,
-                            offset: const Offset(0, 3.0),
-                          )
-                        ],
-                        color: isDarkTheme
-                          ? hexaCodeToColor(AppColors.darkCard)
-                          : hexaCodeToColor(AppColors.whiteHexaColor),
-                      ),
-                      child: Column(
-                        children: [
+                RepaintBoundary(
+                  key: keyQrShare,
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      bottom: 45.0,
+                      left: 16.0,
+                      right: 16.0,
+                      top: 16.0
+                    ),
+                    padding: const EdgeInsets.all(30),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black54.withOpacity(0.3),
+                          blurRadius: 8.0,
+                          spreadRadius: 2.0,
+                          offset: const Offset(0, 3.0),
+                        )
+                      ],
+                      color: isDarkTheme
+                        ? hexaCodeToColor(AppColors.darkCard)
+                        : hexaCodeToColor(AppColors.whiteHexaColor),
+                    ),
+                    child: Column(
+                      children: [
 
-                          Stack(
-                            children: [
-                              Align(
-                                child: Container(
-                                  padding: const EdgeInsets.only(top: 14.0),
-                                  margin: const EdgeInsets.only(bottom: 36.0),
-                                  child: MyText(
-                                    text: 'Wallet',
-                                    fontSize: 20.0,
-                                    color: isDarkTheme
-                                      ? AppColors.whiteColorHexa
-                                      : AppColors.textColor,
-                                  ),
-                                ),
-                              ),
-                              if (assetInfo != null)
-                                Container()
-                              else
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: Container(
-                                    padding:
-                                        const EdgeInsets.only(right: 16.0),
-                                    margin:
-                                        const EdgeInsets.only(bottom: 36.0),
-                                    child: Consumer<WalletProvider>(
-                                      builder: (context, value, child) {
-                                        return ReuseDropDown(
-                                          initialValue: initialValue,
-                                          onChanged: onChanged,
-                                          
-                                          itemsList: value.listSymbol,
-                                          style: TextStyle(
-                                            color: isDarkTheme
-                                                ? hexaCodeToColor(
-                                                    AppColors.darkSecondaryText)
-                                                : hexaCodeToColor(
-                                                    AppColors.textColor,
-                                                  ),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
+                        QrViewTitle(
+                          assetInfo: assetInfo,
+                          initialValue: initialValue,
+                          onChanged: onChanged,
+                        ),
 
-                          qrCodeGenerator(
-                            wallet,
-                            AppConfig.logoQrEmbedded,
-                            keyQrShare,
-                          ),
-                          MyText(
-                            text: name,
-                            bottom: 16,
-                            top: 16,
-                            color: isDarkTheme
-                              ? AppColors.whiteColorHexa
-                              : AppColors.textColor,
-                          ),
-                          MyText(
-                            width: 300,
-                            text: wallet,
-                            color: AppColors.secondarytext,
-                            fontSize: 16,
-                            bottom: 16,
-                          ),
-                          MyText(
-                            text: "Scan the qr code to perform transaction",
-                            fontSize: 16,
-                            color: isDarkTheme
-                                ? AppColors.whiteColorHexa
-                                : AppColors.textColor,
-                          ),
-                        ],
-                      ),
+                        // Qr View
+                        qrCodeGenerator(
+                          wallet,
+                          AppConfig.logoQrEmbedded,
+                          keyQrShare,
+                        ),
+
+                        MyText(
+                          text: name,
+                          bottom: 16,
+                          top: 16,
+                          color: isDarkTheme
+                            ? AppColors.whiteColorHexa
+                            : AppColors.textColor,
+                        ),
+                        MyText(
+                          width: 300,
+                          text: wallet,
+                          color: AppColors.secondarytext,
+                          fontSize: 16,
+                          bottom: 16,
+                        ),
+                        MyText(
+                          text: "Scan the qr code to perform transaction",
+                          fontSize: 16,
+                          color: isDarkTheme
+                            ? AppColors.whiteColorHexa
+                            : AppColors.textColor,
+                        ),
+                      ],
                     ),
                   ),
                 ),

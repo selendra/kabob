@@ -285,18 +285,20 @@ class _AssetInfoState extends State<AssetInfo> {
     return Scaffold(
       key: _globalKey,
       floatingActionButton: widget.tokenSymbol != "ATD"
-          ? Container()
-          : FloatingActionButton(
-              onPressed: () {
-                qrRes();
-              },
-              backgroundColor: hexaCodeToColor(AppColors.secondary),
-              child: const Icon(
-                Icons.location_on,
-                size: 30,
-              ),
+        ? Container()
+        : FloatingActionButton(
+            onPressed: () {
+              qrRes();
+            },
+            backgroundColor: hexaCodeToColor(AppColors.secondary),
+            child: const Icon(
+              Icons.location_on,
+              size: 30,
             ),
+          ),
+
       body: BodyScaffold(
+        bottom: 0,
         height: MediaQuery.of(context).size.height,
         child: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBox) {

@@ -42,31 +42,32 @@ Route transitionRoute(
   sigmaY = 10.0,
 }) {
   return PageRouteBuilder(
-      opaque: false,
-      pageBuilder: (context, animation, secondaryAnimation) => child,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        final begin = Offset(double.parse(offsetLeft.toString()),
-            double.parse(offsetRight.toString()));
-        const end = Offset.zero;
-        final curve = Curves.fastOutSlowIn;
-        final tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-        return SlideTransition(
-            position: animation.drive(tween),
-            child: FadeTransition(
-              opacity: animation,
-              child: Material(
-                color: Colors.white.withOpacity(0.1),
-                child: BackdropFilter(
-                  filter: ui.ImageFilter.blur(
-                    sigmaX: double.parse(sigmaX.toString()),
-                    sigmaY: double.parse(sigmaY.toString()),
-                  ),
-                  child: child,
+    opaque: false,
+    pageBuilder: (context, animation, secondaryAnimation) => child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      final begin = Offset(double.parse(offsetLeft.toString()),
+          double.parse(offsetRight.toString()));
+      const end = Offset.zero;
+      final curve = Curves.fastOutSlowIn;
+      final tween =
+          Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+          position: animation.drive(tween),
+          child: FadeTransition(
+            opacity: animation,
+            child: Material(
+              color: Colors.white.withOpacity(0.1),
+              child: BackdropFilter(
+                filter: ui.ImageFilter.blur(
+                  sigmaX: double.parse(sigmaX.toString()),
+                  sigmaY: double.parse(sigmaY.toString()),
                 ),
+                child: child,
               ),
-            ));
-      });
+            ),
+          ));
+    }
+  );
 }
 
 /* User Input Text */

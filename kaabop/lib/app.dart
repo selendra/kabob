@@ -189,7 +189,6 @@ class AppState extends State<App> {
             return Consumer<ThemeProvider>(
               builder: (context, value, child) {
                 return MaterialApp(
-                  debugShowCheckedModeBanner: false,
                   navigatorKey: AppUtils.globalKey,
                   title: AppText.appName,
                   theme: AppStyle.myTheme(context),

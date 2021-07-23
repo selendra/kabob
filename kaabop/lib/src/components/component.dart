@@ -274,19 +274,11 @@ class MyAppBar extends StatelessWidget {
           color: isDarkTheme
             ? hexaCodeToColor(AppColors.darkCard)
             : hexaCodeToColor(AppColors.whiteHexaColor),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Colors.black54.withOpacity(0.5),
-          //     blurRadius: 8.0,
-          //     spreadRadius: 1.0,
-          //     offset: const Offset(0, 2),
-          //   )
-          // ]
         ),
-        // color ?? hexaCodeToColor(AppColors.whiteHexaColor),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+
             Row(
               children: [
                 IconButton(
@@ -323,7 +315,7 @@ class MyAppBar extends StatelessWidget {
 class BodyScaffold extends StatelessWidget {
   
   final double left, top, right, bottom;
-  final Widget child;
+  final Widget child; 
   final double width;
   final double height;
   final ScrollPhysics physic;

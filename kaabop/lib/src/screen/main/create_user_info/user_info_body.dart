@@ -210,7 +210,7 @@ class MyUserInfoBody extends StatelessWidget {
                                   return AlertDialog(
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                                     title: Align(
-                                      child: Text("Oops"),
+                                      child: MyText(text: "Oops", fontWeight: FontWeight.w600,),
                                     ),
                                     content: Padding(
                                       padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),

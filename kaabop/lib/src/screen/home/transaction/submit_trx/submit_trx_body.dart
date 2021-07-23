@@ -120,7 +120,7 @@ class SubmitTrxBody extends StatelessWidget {
                               onChanged: resetAssetsDropDown,
                               itemsList: list,
                               style: TextStyle(
-                                color: hexaCodeToColor(AppColors.blackColor),
+                                color: isDarkTheme ? Colors.white : hexaCodeToColor(AppColors.blackColor),
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600
                               ),
