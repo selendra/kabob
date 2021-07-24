@@ -344,11 +344,6 @@ class AddAssetBody extends StatelessWidget {
             shadow(
               hexaCode: isDark ? Colors.black.withOpacity(0.3) : null 
             )
-            // BoxShadow(
-            //   color: Colors.black12,
-            //   blurRadius: 2.0,
-            //   offset: Offset(1.0, 1.0)
-            // )
           ],
           color: hexaCodeToColor(isDark ? AppColors.darkCard : AppColors.whiteHexaColor),
           borderRadius: BorderRadius.circular(8),
