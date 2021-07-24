@@ -268,7 +268,7 @@ class _AssetInfoState extends State<AssetInfo> {
 
   @override
   void dispose() {
-    //controller.dispose();
+    controller.dispose();
     super.dispose();
   }
 

@@ -218,14 +218,10 @@ class SubmitTrxState extends State<SubmitTrx> {
         } else {
           Navigator.pop(context);
           await customDialog('Opps', 'Something went wrong!');
-          // await dialog(
-          //     context, const Text('Something went wrong!'), const Text("Opps"));
         }
       } catch (e) {
-        // print(e.message);
         Navigator.pop(context);
         await customDialog('Opps', e.message.toString());
-        // dialog(context, Text(e.message.toString()), const Text("Opps"));
       }
     } else {
       Navigator.pop(context);
@@ -275,9 +271,10 @@ class SubmitTrxState extends State<SubmitTrx> {
 
       if (hash != null) {
         await enableAnimation();
+      } else {
+        Navigator.pop(context);
       }
     } catch (e) {
-      // print(e.message);
       Navigator.pop(context);
 
       await customDialog('Opps', e.message.toString());
@@ -426,11 +423,11 @@ class SubmitTrxState extends State<SubmitTrx> {
 
     final api = Provider.of<ApiProvider>(context, listen: false);
 
-    final res = await api.validateBtcAddr(to);
+    final resAdd = await api.validateBtcAddr(to);
 
     final wif = await getBtcPrivateKey(pin);
 
-    if (res) {
+    if (resAdd) {
       final res =
           api.sendTxBtc(context, api.btcAdd, to, double.parse(amount), wif);
       if (res == 200) {
@@ -509,7 +506,6 @@ class SubmitTrxState extends State<SubmitTrx> {
         );
 
         if (hash != null) {
-          // Provider.of<ContractProvider>(context, listen: false).getBscBalance();
           enableAnimation();
         } else {
           Navigator.pop(context);

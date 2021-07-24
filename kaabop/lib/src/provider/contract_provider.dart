@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import '../../index.dart';
 
 class ContractProvider with ChangeNotifier {
-
   final WalletSDK sdk = ApiProvider.sdk;
 
   final Keyring keyring = ApiProvider.keyring;
@@ -27,7 +26,7 @@ class ContractProvider with ChangeNotifier {
     org: 'BEP-20',
     isContain: true,
   );
-   NativeM bscNativeV2 = NativeM(
+  NativeM bscNativeV2 = NativeM(
     id: 'selendra v2',
     logo: 'assets/SelendraCircle-Blue.png',
     symbol: 'SEL (v2)',
@@ -75,11 +74,21 @@ class ContractProvider with ChangeNotifier {
     _etherClient = Web3Client(AppConfig.etherMainet, _httpClient);
   }
 
+  Future<bool> getPending(String txHash) async {
+    //final res = await client.getTransactionByHash('0x97fc5915fcf8e73e1c3eaa631d23c9833164b1664974592c7f1eb52f08b72045');
+
+    final res = await _web3client.getTransactionReceipt(txHash);
+
+    return res.status;
+    //print(r);
+  }
+
   Future<void> getEtherBalance() async {
     initEtherClient();
 
     final ethAddr = await StorageServices().readSecure('etherAdd');
-    final EtherAmount ethbalance = await _etherClient.getBalance(EthereumAddress.fromHex(ethAddr));
+    final EtherAmount ethbalance =
+        await _etherClient.getBalance(EthereumAddress.fromHex(ethAddr));
     etherNative.balance = ethbalance.getValueInUnit(EtherUnit.ether).toString();
 
     notifyListeners();
@@ -133,18 +142,27 @@ class ContractProvider with ChangeNotifier {
         function: ethFunction,
         parameters: [
           EthereumAddress.fromHex(newSelAddr),
-          BigInt.from(
-            pow(
-              double.parse('18') * 10,
-              int.parse('18'),
-            ),
-          ),
+          BigInt.parse('999999999999999974000000000000000000')
         ],
       ),
       fetchChainIdFromNetworkId: true,
     );
 
     return approve;
+  }
+
+  Future<dynamic> checkAllowance() async {
+    final ethAddr = await StorageServices().readSecure('etherAdd');
+    final res = await query(
+      '0x288d3A87a87C284Ed685E0490E5C4cC0883a060a',
+      'allowance',
+      [
+        EthereumAddress.fromHex(ethAddr),
+        EthereumAddress.fromHex('0x54419268c31678C31e94dB494C509193d7d2BB5D')
+      ],
+    );
+
+    return res.first;
   }
 
   Future<String> swap(String amount, String privateKey) async {
@@ -159,7 +177,9 @@ class ContractProvider with ChangeNotifier {
       Transaction.callContract(
         contract: contract,
         function: ethFunction,
-        parameters: [Fmt.tokenInt(amount, 18)],
+        parameters: [
+          BigInt.from(double.parse(amount) * pow(10, 18)),
+        ],
       ),
       fetchChainIdFromNetworkId: true,
     );
@@ -304,7 +324,6 @@ class ContractProvider with ChangeNotifier {
 
     notifyListeners();
   }
-
 
   Future<void> getBscV2Balance() async {
     bscNativeV2.isContain = true;

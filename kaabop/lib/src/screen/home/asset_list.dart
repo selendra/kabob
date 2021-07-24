@@ -39,8 +39,7 @@ class AssetList extends StatelessWidget {
           context: context,
           builder: (context) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
               title: const Align(
                 child: Text('Opps'),
               ),
@@ -65,8 +64,7 @@ class AssetList extends StatelessWidget {
           context: context,
           builder: (context) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
               title: const Align(
                 child: Text('Opps'),
               ),
@@ -89,31 +87,23 @@ class AssetList extends StatelessWidget {
         final seed = bip39.mnemonicToSeed(passphraseController.text);
         final hdWallet = HDWallet.fromSeed(seed);
         final keyPair = ECPair.fromWIF(hdWallet.wif);
-        final bech32Address = new P2WPKH(
-                data: new PaymentData(pubkey: keyPair.publicKey),
-                network: bitcoin)
-            .data
-            .address;
+        final bech32Address = new P2WPKH(data: new PaymentData(pubkey: keyPair.publicKey), network: bitcoin).data.address;
 
         await StorageServices.setData(bech32Address, 'bech32');
-        final res = await ApiProvider.keyring.store
-            .encryptPrivateKey(hdWallet.wif, pinController.text);
+        final res = await ApiProvider.keyring.store.encryptPrivateKey(hdWallet.wif, pinController.text);
 
         if (res != null) {
           await StorageServices().writeSecure('btcwif', res);
         }
 
-        Provider.of<ApiProvider>(context, listen: false)
-            .getBtcBalance(hdWallet.address);
-        Provider.of<ApiProvider>(context, listen: false)
-            .isBtcAvailable('contain');
+        Provider.of<ApiProvider>(context, listen: false).getBtcBalance(hdWallet.address);
+        Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
 
-        Provider.of<ApiProvider>(context, listen: false)
-            .setBtcAddr(bech32Address);
-        Provider.of<WalletProvider>(context, listen: false)
-            .addTokenSymbol('BTC');
+        Provider.of<ApiProvider>(context, listen: false).setBtcAddr(bech32Address);
+        Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BTC');
         Navigator.pop(context);
         Navigator.pop(context);
+
         await showDialog(
           context: context,
           builder: (context) {
@@ -144,6 +134,8 @@ class AssetList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+
+        // SEL Verion 1
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return GestureDetector(
@@ -176,6 +168,8 @@ class AssetList extends StatelessWidget {
             );
           },
         ),
+
+        // SEL Verion 2
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return GestureDetector(
@@ -209,6 +203,7 @@ class AssetList extends StatelessWidget {
           },
         ),
 
+        // KGO Token
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return GestureDetector(
@@ -219,8 +214,7 @@ class AssetList extends StatelessWidget {
                     enterPage: AssetInfo(
                       id: value.kgoNative.id,
                       assetLogo: value.kgoNative.logo,
-                      balance:
-                          value.kgoNative.balance ?? AppText.loadingPattern,
+                      balance: value.kgoNative.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.kgoNative.symbol ?? '',
                       org: value.kgoNative.org,
                       marketData: value.kgoNative.marketData,
@@ -244,89 +238,94 @@ class AssetList extends StatelessWidget {
           },
         ),
 
+        // Koompi Token
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return value.kmpi.isContain
-                ? Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    background: DismissibleBackground(),
-                    onDismissed: (direct) {
-                      value.removeToken(value.kmpi.symbol, context);
-                      // setPortfolio();
-                    },
-                    child: Consumer<ContractProvider>(
-                      builder: (context, value, child) {
-                        return GestureDetector(
-                          onTap: () {
-                            Provider.of<ContractProvider>(context, listen: false).fetchKmpiBalance();
-                            Navigator.push(
-                              context,
-                              RouteAnimation(
-                                enterPage: AssetInfo(
-                                  id: value.kmpi.id,
-                                  assetLogo: value.kmpi.logo,
-                                  balance: value.kmpi.balance ??
-                                      AppText.loadingPattern,
-                                  tokenSymbol: value.kmpi.symbol,
-                                  org: value.kmpi.org,
-                                ),
-                              ),
-                            );
-                          },
-                          child: AssetItem(
-                            value.kmpi.logo,
-                            value.kmpi.symbol,
-                            value.kmpi.org,
-                            value.kmpi.balance,
-                            Colors.black,
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                : Container();
-          },
-        ),
-        Consumer<ContractProvider>(
-          builder: (coontext, value, child) {
-            return value.atd.isContain
-                ? Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    background: DismissibleBackground(),
-                    onDismissed: (direct) {
-                      value.removeToken(value.atd.symbol, context);
-                      //setPortfolio();
-                    },
-                    child: GestureDetector(
+            ? Dismissible(
+                key: UniqueKey(),
+                direction: DismissDirection.endToStart,
+                background: DismissibleBackground(),
+                onDismissed: (direct) {
+                  value.removeToken(value.kmpi.symbol, context);
+                  // setPortfolio();
+                },
+                child: Consumer<ContractProvider>(
+                  builder: (context, value, child) {
+                    return GestureDetector(
                       onTap: () {
+                        Provider.of<ContractProvider>(context, listen: false).fetchKmpiBalance();
                         Navigator.push(
                           context,
                           RouteAnimation(
                             enterPage: AssetInfo(
-                              id: value.atd.id,
-                              assetLogo: value.atd.logo,
-                              balance:
-                                  value.atd.balance ?? AppText.loadingPattern,
-                              tokenSymbol: value.atd.symbol,
-                              org: value.atd.org,
+                              id: value.kmpi.id,
+                              assetLogo: value.kmpi.logo,
+                              balance: value.kmpi.balance ??
+                                  AppText.loadingPattern,
+                              tokenSymbol: value.kmpi.symbol,
+                              org: value.kmpi.org,
                             ),
                           ),
                         );
                       },
                       child: AssetItem(
-                        value.atd.logo,
-                        value.atd.symbol,
-                        value.atd.org,
-                        value.atd.balance,
+                        value.kmpi.logo,
+                        value.kmpi.symbol,
+                        value.kmpi.org,
+                        value.kmpi.balance,
                         Colors.black,
                       ),
-                    ),
-                  )
-                : Container();
+                    );
+                  },
+                ),
+              )
+            : Container();
           },
         ),
+
+        // Koompi ATD Token
+        Consumer<ContractProvider>(
+          builder: (coontext, value, child) {
+            return value.atd.isContain
+            ? Dismissible(
+                key: UniqueKey(),
+                direction: DismissDirection.endToStart,
+                background: DismissibleBackground(),
+                onDismissed: (direct) {
+                  value.removeToken(value.atd.symbol, context);
+                  //setPortfolio();
+                },
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      RouteAnimation(
+                        enterPage: AssetInfo(
+                          id: value.atd.id,
+                          assetLogo: value.atd.logo,
+                          balance:
+                              value.atd.balance ?? AppText.loadingPattern,
+                          tokenSymbol: value.atd.symbol,
+                          org: value.atd.org,
+                        ),
+                      ),
+                    );
+                  },
+                  child: AssetItem(
+                    value.atd.logo,
+                    value.atd.symbol,
+                    value.atd.org,
+                    value.atd.balance,
+                    Colors.black,
+                  ),
+                ),
+              )
+            : Container();
+          },
+        ),
+
+        // BNB Token
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return GestureDetector(
@@ -361,6 +360,8 @@ class AssetList extends StatelessWidget {
             );
           },
         ),
+
+        // Bitcion Token
         Consumer<ApiProvider>(
           builder: (context, value, child) {
             final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
@@ -474,6 +475,8 @@ class AssetList extends StatelessWidget {
             );
           },
         ),
+
+        // Ethereum Token
         Consumer<ContractProvider>(builder: (context, value, child) {
           return GestureDetector(
             onTap: () {
@@ -540,6 +543,8 @@ class AssetList extends StatelessWidget {
             );
           },
         ),
+
+        // SEL Test Net
         Consumer<ApiProvider>(builder: (context, value, child) {
           return GestureDetector(
             onTap: () {
@@ -566,54 +571,51 @@ class AssetList extends StatelessWidget {
           );
         }),
         
+        // ERC or Token After Added 
         Consumer<ContractProvider>(builder: (context, value, child) {
-          return value.token.isNotEmpty
-              ? ListView.builder(
-                  shrinkWrap: true,
-                  addAutomaticKeepAlives: false,
-                  primary: false,
-                  itemCount: value.token.length,
-                  itemBuilder: (context, index) {
-                    return Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.endToStart,
-                      background: DismissibleBackground(),
-                      onDismissed: (direct) {
-                        if (value.token[index].org == 'ERC-20') {
-                          value.removeEtherToken(
-                              value.token[index].symbol, context);
-                        } else {
-                          value.removeToken(value.token[index].symbol, context);
-                        }
+          return value.token.isNotEmpty ?
+          Column(
+            children: [
+              for(int index = 0; index< value.token.length; index++)
+              Dismissible(
+                key: UniqueKey(),
+                direction: DismissDirection.endToStart,
+                background: DismissibleBackground(),
+                onDismissed: (direct) {
+                  if (value.token[index].org == 'ERC-20') {
+                    value.removeEtherToken(value.token[index].symbol, context);
+                  } else {
+                    value.removeToken(value.token[index].symbol, context);
+                  }
 
-                        //setPortfolio();
-                      },
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            RouteAnimation(
-                              enterPage: AssetInfo(
-                                assetLogo: 'assets/circle.png',
-                                balance: value.token[index].balance ??
-                                    AppText.loadingPattern,
-                                tokenSymbol: value.token[index].symbol ?? '',
-                                org: value.token[index].org,
-                              ),
-                            ),
-                          );
-                        },
-                        child: AssetItem(
-                          'assets/circle.png',
-                          value.token[index].symbol ?? '',
-                          value.token[index].org ?? '',
-                          value.token[index].balance ?? AppText.loadingPattern,
-                          Colors.transparent,
+                  //setPortfolio();
+                },
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      RouteAnimation(
+                        enterPage: AssetInfo(
+                          assetLogo: 'assets/circle.png',
+                          balance: value.token[index].balance ?? AppText.loadingPattern,
+                          tokenSymbol: value.token[index].symbol ?? '',
+                          org: value.token[index].org,
                         ),
                       ),
                     );
-                  })
-              : Container();
+                  },
+                  child: AssetItem(
+                    'assets/circle.png',
+                    value.token[index].symbol ?? '',
+                    value.token[index].org ?? '',
+                    value.token[index].balance ?? AppText.loadingPattern,
+                    Colors.transparent,
+                  ),
+                ),
+              )
+            ],
+          )
+          : Container();
         }),
       ],
     );

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/screen/home/menu/swap_des.dart';
 
 class Swap extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class _SwapState extends State<Swap> {
           if (hash != null) {
             contract.getBscBalance();
             Navigator.pop(context);
-            enableAnimation();
+            enableAnimation('approved balance to swap.');
           }
         }
       } catch (e) {
@@ -39,35 +40,40 @@ class _SwapState extends State<Swap> {
     });
   }
 
-  Future<void> swap(String amount) async {
+  Future<void> swap() async {
     final contract = Provider.of<ContractProvider>(context, listen: false);
+    await dialogBox().then((value) async {
+      try {
+        final res = await getPrivateKey(value);
 
-    if (double.parse(amount) > double.parse(contract.bscNative.balance) ||
-        double.parse(contract.bscNative.balance) == 0) {
-      await customDialog(
-          'Insufficient Balance', 'Your loaded balance is not enough to swap.');
-    } else {
-      await dialogBox().then((value) async {
-        try {
-          final res = await getPrivateKey(value);
+        if (res != null) {
+          dialogLoading(context);
+          final hash = await contract.swap(_amountController.text, res);
+          if (hash != null) {
+            await Future.delayed(const Duration(seconds: 5));
+            final res = await contract.getPending(hash);
 
-          if (res != null) {
-            dialogLoading(context);
-            final hash = await contract.swap(amount, res);
-            if (hash != null) {
+            if (res) {
               setState(() {});
-              _amountController.text = '';
+
               contract.getBscBalance();
               Navigator.pop(context);
-              enableAnimation();
+              enableAnimation(
+                  'swapped ${_amountController.text} of SEL v1 to SEL v2.');
+              _amountController.text = '';
+            } else {
+              Navigator.pop(context);
+              await customDialog('Opps', 'Something went wrong.');
             }
+          } else {
+            Navigator.pop(context);
           }
-        } catch (e) {
-          Navigator.pop(context);
-          await customDialog('Opps', e.message.toString());
         }
-      });
-    }
+      } catch (e) {
+        Navigator.pop(context);
+        await customDialog('Opps', e.message.toString());
+      }
+    });
   }
 
   Future<String> getPrivateKey(String pin) async {
@@ -83,7 +89,27 @@ class _SwapState extends State<Swap> {
     return privateKey;
   }
 
-  Future enableAnimation() async {
+  void validateSwap() async {
+    final contract = Provider.of<ContractProvider>(context, listen: false);
+
+    if (double.parse(_amountController.text) >
+            double.parse(contract.bscNative.balance) ||
+        double.parse(contract.bscNative.balance) == 0) {
+      customDialog(
+          'Insufficient Balance', 'Your loaded balance is not enough to swap.');
+    } else {
+      final res = await ContractProvider().checkAllowance();
+
+      if (res.toString() == '0') {
+        customDialog(
+            'Approval Required', 'Your haven\'t approved to swap balance.');
+      } else {
+        confirmDialog(_amountController.text, swap);
+      }
+    }
+  }
+
+  Future enableAnimation(String operationText) async {
     setState(() {
       _success = true;
     });
@@ -94,8 +120,8 @@ class _SwapState extends State<Swap> {
       setState(() {
         _success = false;
       });
-      // Navigator.pushNamedAndRemoveUntil(
-      //     context, Home.route, ModalRoute.withName('/'));
+
+      successDialog(operationText);
     });
   }
 
@@ -110,6 +136,7 @@ class _SwapState extends State<Swap> {
             child: FillPin(),
           );
         });
+
     return _result;
   }
 
@@ -133,6 +160,170 @@ class _SwapState extends State<Swap> {
               child: const Text('Close'),
             ),
           ],
+        );
+      },
+    );
+  }
+
+  Future<void> successDialog(String operationText) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 2.5,
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 36,
+                  ),
+                  SvgPicture.asset(
+                    'assets/icons/tick.svg',
+                    height: 110,
+                    width: 110,
+                  ),
+                  const MyText(
+                    text: 'SUCCESS!',
+                    fontSize: 28,
+                    top: 45,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  MyText(
+                    top: 8.0,
+                    fontSize: 16,
+                    text: 'You have successfully ' + operationText,
+                  ),
+                  SizedBox(
+                    height: 60,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // ignore: deprecated_member_use
+                      SizedBox(
+                        height: 50,
+                        width: 140,
+                        child: RaisedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          color: Colors.grey[50],
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Text(
+                            'Close',
+                            style: TextStyle(
+                              color: hexaCodeToColor(AppColors.secondarytext),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // ignore: deprecated_member_use
+                      SizedBox(
+                        height: 50,
+                        width: 140,
+                        child: RaisedButton(
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, Home.route, ModalRoute.withName('/'));
+                          },
+                          color: hexaCodeToColor(AppColors.secondary),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Text(
+                            'Go to wallet',
+                            style: TextStyle(
+                              color: hexaCodeToColor('#ffffff'),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> confirmDialog(String amount, Function swap) async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          content: Container(
+            height: MediaQuery.of(context).size.height / 2.3,
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  const MyText(
+                    text: 'Swapping',
+                    //color: '#000000',
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  SvgPicture.asset(
+                    'assets/icons/arrow.svg',
+                    height: 100,
+                    width: 100,
+                    color: hexaCodeToColor(AppColors.secondary),
+                  ),
+                  const MyText(
+                    text: 'SEL v1 to SEL v2',
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    top: 40,
+                    bottom: 8.0,
+                  ),
+                  MyText(
+                    text: '$amount of SEL v1',
+                    fontSize: 16,
+                  ),
+                  SizedBox(
+                    height: 50,
+                  ),
+                  SizedBox(
+                    height: 60,
+                    width: 200,
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        swap();
+                      },
+                      color: hexaCodeToColor(AppColors.secondary),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Text(
+                        'CONFIRM',
+                        style: TextStyle(
+                          color: hexaCodeToColor('#ffffff'),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
         );
       },
     );
@@ -162,7 +353,7 @@ class _SwapState extends State<Swap> {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
-
+    final contract = Provider.of<ContractProvider>(context, listen: false);
     return Scaffold(
       body: BodyScaffold(
           height: MediaQuery.of(context).size.height,
@@ -178,10 +369,46 @@ class _SwapState extends State<Swap> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
+                    tile: GestureDetector(
+                      onTap: () async {
+                        dialogLoading(context);
+                        final res = await ContractProvider().checkAllowance();
+
+                        if (res.toString() == '0') {
+                          Navigator.pop(context);
+                          approve();
+                        } else {
+                          Navigator.pop(context);
+                          customDialog('Opps', 'You have already approved.');
+                        }
+                      },
+                      child: MyText(
+                        text: 'Approve',
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.secondarytext,
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                        right: 30,
+                      ),
+                    ),
                   ),
                   SizedBox(height: 16.0),
                   Column(
                     children: [
+                      MyText(
+                        width: double.infinity,
+                        text:
+                            'Available Balance:  ${contract.bscNative.balance} SEL v1',
+                        fontWeight: FontWeight.bold,
+                        color: isDarkTheme
+                            ? AppColors.darkSecondaryText
+                            : AppColors.textColor,
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                        bottom: 20.0,
+                        top: 16.0,
+                        left: 16.0,
+                      ),
                       Container(
                         width: double.infinity,
                         margin: const EdgeInsets.only(left: 16.0, right: 16.0),
@@ -195,185 +422,124 @@ class _SwapState extends State<Swap> {
                                 8.0), //                 <--- border radius here
                           ),
                         ),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 150,
-                              width: double.infinity,
-                              padding: const EdgeInsets.all(16.0),
-                              decoration: BoxDecoration(
-                                color: isDarkTheme
-                                    ? hexaCodeToColor(AppColors.darkBgd)
-                                    : hexaCodeToColor(AppColors.whiteHexaColor),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      8.0), //                 <--- border radius here
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 150,
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  color: isDarkTheme
+                                      ? hexaCodeToColor(AppColors.darkBgd)
+                                      : hexaCodeToColor(
+                                          AppColors.whiteColorHexa),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                        8.0), //                 <--- border radius here
+                                  ),
                                 ),
-                              ),
-                              child: Form(
-                                key: _swapKey,
-                                child: Column(
-                                  children: [
-                                    MyText(
-                                      width: double.infinity,
-                                      text: 'Amount',
-                                      fontWeight: FontWeight.bold,
-                                      color: isDarkTheme
-                                          ? AppColors.darkSecondaryText
-                                          : AppColors.textColor,
-                                      textAlign: TextAlign.left,
-                                      overflow: TextOverflow.ellipsis,
-                                      bottom: 4.0,
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        alignment: Alignment.bottomLeft,
-                                        child: TextFormField(
-                                          controller: _amountController,
-                                          keyboardType: TextInputType.number,
-                                          textInputAction: TextInputAction.done,
-                                          style: TextStyle(
-                                              color: isDarkTheme
-                                                  ? hexaCodeToColor(
-                                                      AppColors.whiteColorHexa)
-                                                  : hexaCodeToColor(
-                                                      AppColors.textColor),
-                                              fontSize: 18.0),
-                                          decoration: InputDecoration(
-                                            suffixIcon: GestureDetector(
-                                              onTap: () {
-                                                fetchMax();
-                                              },
-                                              child: MyText(
-                                                textAlign: TextAlign.left,
-                                                text: 'Max',
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: AppColors.secondarytext,
-                                              ),
-                                            ),
-                                            prefixIconConstraints:
-                                                BoxConstraints(
-                                              minWidth: 0,
-                                              minHeight: 0,
-                                            ),
-                                            border: InputBorder.none,
-                                            hintText: '0.00',
-                                            hintStyle: TextStyle(
-                                              fontSize: 20.0,
-                                              color: isDarkTheme
-                                                  ? hexaCodeToColor(AppColors
-                                                      .darkSecondaryText)
-                                                  : hexaCodeToColor(
-                                                          AppColors.textColor)
-                                                      .withOpacity(0.3),
-                                            ),
-                                            contentPadding:
-                                                const EdgeInsets.all(
-                                                    0), // Default padding =
-                                          ),
-                                          validator: (value) => value.isEmpty
-                                              ? 'Please fill in amount'
-                                              : null,
-
-                                          /* Limit Length Of Text Input */
-                                          onChanged: null,
-                                          onFieldSubmitted: (value) {},
-                                        ),
+                                child: Form(
+                                  key: _swapKey,
+                                  child: Column(
+                                    children: [
+                                      MyText(
+                                        width: double.infinity,
+                                        text: 'Amount',
+                                        fontWeight: FontWeight.bold,
+                                        color: isDarkTheme
+                                            ? AppColors.darkSecondaryText
+                                            : AppColors.textColor,
+                                        textAlign: TextAlign.left,
+                                        overflow: TextOverflow.ellipsis,
+                                        bottom: 4.0,
                                       ),
-                                    )
-                                  ],
+                                      Expanded(
+                                        child: Container(
+                                          alignment: Alignment.bottomLeft,
+                                          child: TextFormField(
+                                            controller: _amountController,
+                                            keyboardType: TextInputType.number,
+                                            textInputAction:
+                                                TextInputAction.done,
+                                            style: TextStyle(
+                                                color: isDarkTheme
+                                                    ? hexaCodeToColor(AppColors
+                                                        .whiteColorHexa)
+                                                    : hexaCodeToColor(
+                                                        AppColors.textColor),
+                                                fontSize: 18.0),
+                                            decoration: InputDecoration(
+                                              suffixIcon: GestureDetector(
+                                                onTap: () {
+                                                  fetchMax();
+                                                },
+                                                child: MyText(
+                                                  textAlign: TextAlign.left,
+                                                  text: 'Max',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                  color:
+                                                      AppColors.secondarytext,
+                                                ),
+                                              ),
+                                              prefixIconConstraints:
+                                                  BoxConstraints(
+                                                minWidth: 0,
+                                                minHeight: 0,
+                                              ),
+                                              border: InputBorder.none,
+                                              hintText: '0.00',
+                                              hintStyle: TextStyle(
+                                                fontSize: 20.0,
+                                                color: isDarkTheme
+                                                    ? hexaCodeToColor(AppColors
+                                                        .darkSecondaryText)
+                                                    : hexaCodeToColor(
+                                                            AppColors.textColor)
+                                                        .withOpacity(0.3),
+                                              ),
+                                              contentPadding:
+                                                  const EdgeInsets.all(
+                                                      0), // Default padding =
+                                            ),
+                                            validator: (value) => value.isEmpty
+                                                ? 'Please fill in amount'
+                                                : null,
+
+                                            /* Limit Length Of Text Input */
+                                            onChanged: null,
+                                            onFieldSubmitted: (value) {},
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                            MyFlatButton(
-                              edgeMargin:
-                                  const EdgeInsets.only(bottom: 16, top: 42),
-                              textButton: 'Swap',
-                              action: () {
-                                if (_swapKey.currentState.validate()) {
-                                  FocusScopeNode currentFocus =
-                                      FocusScope.of(context);
+                              MyFlatButton(
+                                edgeMargin:
+                                    const EdgeInsets.only(bottom: 16, top: 42),
+                                textButton: 'Swap',
+                                action: () async {
+                                  if (_swapKey.currentState.validate()) {
+                                    FocusScopeNode currentFocus =
+                                        FocusScope.of(context);
 
-                                  if (!currentFocus.hasPrimaryFocus) {
-                                    currentFocus.unfocus();
+                                    if (!currentFocus.hasPrimaryFocus) {
+                                      currentFocus.unfocus();
+                                    }
+
+                                    validateSwap();
                                   }
-                                  swap(_amountController.text);
-                                }
-
-                                //Navigator.pushNamed(context, AppText.importAccView);
-                              },
-                            ),
-                            MyFlatButton(
-                              edgeMargin: const EdgeInsets.only(bottom: 16),
-                              textButton: 'Approve',
-                              action: () {
-                                approve();
-                                //Navigator.pushNamed(context, AppText.importAccView);
-                              },
-                            )
-                          ],
+                                },
+                              ),
+                              SwapDescription(),
+                            ],
+                          ),
                         ),
                       ),
                     ],
-                  ),
-                  MyText(
-                    width: double.infinity,
-                    text: 'The SEL Token v2 features:',
-                    fontWeight: FontWeight.bold,
-                    color: isDarkTheme
-                        ? AppColors.whiteColorHexa
-                        : AppColors.textColor,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.left,
-                    bottom: 4.0,
-                    top: 32.0,
-                    left: 16.0,
-                  ),
-                  MyText(
-                    width: double.infinity,
-                    text:
-                        '🚀 Token contract verification and other related informations to SEL token v2, all available on BSCscan like Whitepaper, Social Channels and other official info.',
-                    fontWeight: FontWeight.bold,
-                    color: isDarkTheme
-                        ? AppColors.darkSecondaryText
-                        : AppColors.textColor,
-                    fontSize: 14.0,
-                    textAlign: TextAlign.start,
-                    bottom: 4.0,
-                    top: 16.0,
-                    left: 16.0,
-                    right: 16.0,
-                  ),
-                  MyText(
-                    width: double.infinity,
-                    text:
-                        '🚀 For future cross-chains transaction; this version is designed to work with others chains like Polygon, Ethereum and other networks.',
-                    fontWeight: FontWeight.bold,
-                    color: isDarkTheme
-                        ? AppColors.darkSecondaryText
-                        : AppColors.textColor,
-                    fontSize: 14.0,
-                    textAlign: TextAlign.start,
-                    bottom: 4.0,
-                    top: 16.0,
-                    left: 16.0,
-                    right: 16.0,
-                  ),
-                  MyText(
-                    width: double.infinity,
-                    text:
-                        '🚀 Use the Token to purchase invitations and share the referral link to join Selendra airdrop opportunity.',
-                    fontWeight: FontWeight.bold,
-                    color: isDarkTheme
-                        ? AppColors.darkSecondaryText
-                        : AppColors.textColor,
-                    fontSize: 14.0,
-                    textAlign: TextAlign.start,
-                    bottom: 4.0,
-                    top: 16.0,
-                    left: 16.0,
-                    right: 16.0,
                   ),
                 ],
               ),
