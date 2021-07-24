@@ -179,17 +179,17 @@ class _SwapState extends State<Swap> {
               child: Column(
                 children: [
                   SizedBox(
-                    height: 36,
+                    height: MediaQuery.of(context).size.width * 0.08,
                   ),
                   SvgPicture.asset(
                     'assets/icons/tick.svg',
-                    height: 110,
-                    width: 110,
+                    height: 100,
+                    width: 100,
                   ),
-                  const MyText(
+                  MyText(
                     text: 'SUCCESS!',
                     fontSize: 28,
-                    top: 45,
+                    top: MediaQuery.of(context).size.width * 0.1,
                     fontWeight: FontWeight.bold,
                   ),
                   MyText(
@@ -198,7 +198,7 @@ class _SwapState extends State<Swap> {
                     text: 'You have successfully ' + operationText,
                   ),
                   SizedBox(
-                    height: 60,
+                    height: MediaQuery.of(context).size.width * 0.2,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -263,7 +263,7 @@ class _SwapState extends State<Swap> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           content: Container(
-            height: MediaQuery.of(context).size.height / 2.3,
+            height: MediaQuery.of(context).size.height / 2.2,
             width: MediaQuery.of(context).size.width * 0.7,
             child: SingleChildScrollView(
               child: Column(
@@ -278,7 +278,7 @@ class _SwapState extends State<Swap> {
                     fontWeight: FontWeight.bold,
                   ),
                   SizedBox(
-                    height: 40,
+                    height: MediaQuery.of(context).size.width * 0.1,
                   ),
                   SvgPicture.asset(
                     'assets/icons/arrow.svg',
@@ -298,7 +298,7 @@ class _SwapState extends State<Swap> {
                     fontSize: 16,
                   ),
                   SizedBox(
-                    height: 50,
+                    height: MediaQuery.of(context).size.width * 0.15,
                   ),
                   SizedBox(
                     height: 60,
@@ -530,7 +530,10 @@ class _SwapState extends State<Swap> {
                                       currentFocus.unfocus();
                                     }
 
-                                    validateSwap();
+                                    // validateSwap();
+
+                                    // successDialog('');
+                                    confirmDialog('w', swap);
                                   }
                                 },
                               ),

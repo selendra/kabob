@@ -11,21 +11,20 @@ class MySplashScreen extends StatefulWidget {
   }
 }
 
-class MySplashScreenState extends State<MySplashScreen> with SingleTickerProviderStateMixin {
-
+class MySplashScreenState extends State<MySplashScreen>
+    with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation<double> animation;
 
   Future<void> getCurrentAccount() async {
-
     // Navigator.push(context, MaterialPageRoute(builder: (context) => ImportUserInfo("hello") ));
 
     await Future.delayed(const Duration(milliseconds: 1000), () async {
-
       final List<KeyPairData> ls = ApiProvider.keyring.keyPairs.toList();
 
       if (ls.isEmpty) {
-        Navigator.pushReplacement(context, RouteAnimation(enterPage: Welcome()));
+        Navigator.pushReplacement(
+            context, RouteAnimation(enterPage: Welcome()));
       } else {
         final ethAddr = await StorageServices().readSecure('etherAdd');
 
@@ -33,9 +32,11 @@ class MySplashScreenState extends State<MySplashScreen> with SingleTickerProvide
           await dialogSuccess(
             context,
             const Padding(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              child: Text('Please reimport your seed phrases to add support to new update.', textAlign: TextAlign.center,)
-            ),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Text(
+                  'Please reimport your seed phrases to add support to new update.',
+                  textAlign: TextAlign.center,
+                )),
             const Text('New Update!'),
             action: TextButton(
               onPressed: () {
@@ -48,7 +49,8 @@ class MySplashScreenState extends State<MySplashScreen> with SingleTickerProvide
                   ),
                 );
               },
-              child: const MyText(text: 'Continue', color: AppColors.secondarytext),
+              child: const MyText(
+                  text: 'Continue', color: AppColors.secondarytext),
             ),
           );
         } else {
@@ -59,14 +61,11 @@ class MySplashScreenState extends State<MySplashScreen> with SingleTickerProvide
   }
 
   Future<void> checkBio() async {
-
     final bio = await StorageServices.readSaveBio();
 
     final passCode = await StorageServices().readSecure('passcode');
 
-    await StorageServices().readSecure('private').then((value) {
-      print("My private key: $value");
-    });
+    await StorageServices().readSecure('private').then((value) {});
 
     if (bio && passCode != null) {
       Navigator.pushReplacement(
@@ -76,7 +75,6 @@ class MySplashScreenState extends State<MySplashScreen> with SingleTickerProvide
         ),
       );
     } else {
-      
       if (bio) {
         Navigator.pushReplacement(
           context,

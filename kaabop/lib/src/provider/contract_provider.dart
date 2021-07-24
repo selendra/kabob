@@ -75,12 +75,9 @@ class ContractProvider with ChangeNotifier {
   }
 
   Future<bool> getPending(String txHash) async {
-    //final res = await client.getTransactionByHash('0x97fc5915fcf8e73e1c3eaa631d23c9833164b1664974592c7f1eb52f08b72045');
-
     final res = await _web3client.getTransactionReceipt(txHash);
 
     return res.status;
-    //print(r);
   }
 
   Future<void> getEtherBalance() async {
@@ -132,7 +129,6 @@ class ContractProvider with ChangeNotifier {
     final contract = await initBsc(oldSelAddr);
     final ethFunction = contract.function('approve');
 
-    // final credentials = EthPrivateKey('0x5f64cd3fe9ed1f0639e2ce4f072ca8f58a5947b6f55ff92c456dbe005b614687'as Uint8List);
     final credentials = await _web3client.credentialsFromPrivateKey(privateKey);
 
     final approve = await _web3client.sendTransaction(

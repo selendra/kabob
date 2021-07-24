@@ -250,7 +250,7 @@ Future<void> successDialog(BuildContext context ,String operationText) async {
                     text: 'You have successfully ' + operationText,
                   ),
                   SizedBox(
-                    height: 50,
+                    height: MediaQuery.of(context).size.width * 0.15,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
