@@ -245,9 +245,6 @@ class AddAssetBody extends StatelessWidget {
                             },
                             child: Container(
                               padding: const EdgeInsets.only(right: 16.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(color: hexaCodeToColor(AppColors.secondary))
-                              ),
                               child: SvgPicture.asset(
                                 'assets/icons/qr_code.svg',
                                 width: 40,
@@ -343,12 +340,15 @@ class AddAssetBody extends StatelessWidget {
         margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
         padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
         decoration: BoxDecoration(
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 2.0,
-              offset: Offset(1.0, 1.0)
+          boxShadow:[
+            shadow(
+              hexaCode: isDark ? Colors.black.withOpacity(0.3) : null 
             )
+            // BoxShadow(
+            //   color: Colors.black12,
+            //   blurRadius: 2.0,
+            //   offset: Offset(1.0, 1.0)
+            // )
           ],
           color: hexaCodeToColor(isDark ? AppColors.darkCard : AppColors.whiteHexaColor),
           borderRadius: BorderRadius.circular(8),

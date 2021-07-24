@@ -80,7 +80,7 @@ class _AccountState extends State<Account> {
           actions: <Widget>[
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const MyText(text: 'Close', color: AppColors.darkText),
+              child: const MyText(text: 'Close', color: AppColors.blackColor),
             ),
             TextButton(
               onPressed: _deleteAccount,

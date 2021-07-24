@@ -414,9 +414,9 @@ class AssetList extends StatelessWidget {
                                   labelText: 'Pin',
                                   obcureText: true,
                                   validateField: (value) =>
-                                      value.isEmpty || value.length < 4
-                                          ? 'Please fill in old 4 digits pin'
-                                          : null,
+                                    value.isEmpty || value.length < 4
+                                      ? 'Please fill in old 4 digits pin'
+                                      : null,
                                   textInputFormatter: [
                                     LengthLimitingTextInputFormatter(4)
                                   ],
@@ -573,10 +573,12 @@ class AssetList extends StatelessWidget {
         
         // ERC or Token After Added 
         Consumer<ContractProvider>(builder: (context, value, child) {
+
           return value.token.isNotEmpty ?
           Column(
             children: [
               for(int index = 0; index< value.token.length; index++)
+              
               Dismissible(
                 key: UniqueKey(),
                 direction: DismissDirection.endToStart,

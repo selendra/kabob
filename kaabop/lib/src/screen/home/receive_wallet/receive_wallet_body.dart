@@ -42,7 +42,6 @@ class ReceiveWalletBody extends StatelessWidget {
         Expanded(
           child: BodyScaffold(
             isSafeArea: false,
-            bottom: 0,
             child: 
             (wallet == 'wallet address') ? Expanded(
               child: Column(
@@ -70,12 +69,7 @@ class ReceiveWalletBody extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8.0),
                       boxShadow: [
-                        BoxShadow(
-                          color: Colors.black54.withOpacity(0.3),
-                          blurRadius: 8.0,
-                          spreadRadius: 2.0,
-                          offset: const Offset(0, 3.0),
-                        )
+                        shadow()
                       ],
                       color: isDarkTheme
                         ? hexaCodeToColor(AppColors.darkCard)

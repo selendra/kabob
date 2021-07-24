@@ -113,9 +113,18 @@ OutlineInputBorder errorOutline() {
 }
 
 /* Button shadow */
-BoxShadow shadow(Color hexaCode, double blurRadius, double spreadRadius) {
+BoxShadow shadow({
+  Color hexaCode, 
+  double blurRadius, 
+  double spreadRadius,
+  Offset offset
+  }) {
   return BoxShadow(
-      color: hexaCode, blurRadius: blurRadius, spreadRadius: spreadRadius);
+    color: hexaCode ?? Colors.grey.withOpacity(0.2), 
+    blurRadius: blurRadius ?? 6.0, 
+    spreadRadius: spreadRadius ?? 2.0,
+    offset: offset ?? Offset(0.5, 2.0),
+  );
 }
 
 Widget customFlatButton(
@@ -226,82 +235,81 @@ Future<void> successDialog(BuildContext context ,String operationText) async {
             borderRadius: BorderRadius.circular(10.0),
           ),
           content: Container(
-            height: MediaQuery.of(context).size.height / 2.6,
+            // height: MediaQuery.of(context).size.height / 2.6,
             width: MediaQuery.of(context).size.width * 0.7,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 36,
-                  ),
-                  SvgPicture.asset(
-                    'assets/icons/tick.svg',
-                    height: 110,
-                    width: 110,
-                  ),
-                  const MyText(
-                    text: 'SUCCESS!',
-                    fontSize: 28,
-                    top: 45,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  MyText(
-                    top: 8.0,
-                    fontSize: 16,
-                    text: 'You have successfully ' + operationText,
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      // ignore: deprecated_member_use
-                      // SizedBox(
-                      //   height: 50,
-                      //   width: 140,
-                      //   child: RaisedButton(
-                      //     onPressed: () {
-                      //       Navigator.pop(context);
-                      //     },
-                      //     color: Colors.grey[50],
-                      //     shape: RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(8)),
-                      //     child: Text(
-                      //       'Close',
-                      //       style: TextStyle(
-                      //         color: hexaCodeToColor(AppColors.secondarytext),
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      // ignore: deprecated_member_use
-                      SizedBox(
-                        height: 50,
-                        width: 140,
-                        child: RaisedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, Home.route, ModalRoute.withName('/'));
-                          },
-                          color: hexaCodeToColor(AppColors.secondary),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Text(
-                            'Continue',
-                            style: TextStyle(
-                              color: hexaCodeToColor('#ffffff'),
-                              fontWeight: FontWeight.bold,
-                            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 36,
+                ),
+                SvgPicture.asset(
+                  'assets/icons/tick.svg',
+                  height: 110,
+                  width: 110,
+                ),
+                const MyText(
+                  text: 'SUCCESS!',
+                  fontSize: 28,
+                  top: 45,
+                  fontWeight: FontWeight.bold,
+                ),
+                MyText(
+                  top: 8.0,
+                  fontSize: 16,
+                  text: 'You have successfully ' + operationText,
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    // ignore: deprecated_member_use
+                    // SizedBox(
+                    //   height: 50,
+                    //   width: 140,
+                    //   child: RaisedButton(
+                    //     onPressed: () {
+                    //       Navigator.pop(context);
+                    //     },
+                    //     color: Colors.grey[50],
+                    //     shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(8)),
+                    //     child: Text(
+                    //       'Close',
+                    //       style: TextStyle(
+                    //         color: hexaCodeToColor(AppColors.secondarytext),
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // ignore: deprecated_member_use
+                    SizedBox(
+                      height: 50,
+                      width: 140,
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, Home.route, ModalRoute.withName('/'));
+                        },
+                        color: hexaCodeToColor(AppColors.secondary),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          'Continue',
+                          style: TextStyle(
+                            color: hexaCodeToColor('#ffffff'),
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
             ),
           ),
         );

@@ -284,7 +284,7 @@ class MyAppBar extends StatelessWidget {
                 IconButton(
                   /* Menu Icon */
 
-                  padding: const EdgeInsets.only(left: 30),
+                  padding: const EdgeInsets.only(left: 20),
                   iconSize: 40.0,
                   icon: Icon(
                     Platform.isAndroid ? LineAwesomeIcons.arrow_left : LineAwesomeIcons.angle_left,
@@ -298,7 +298,6 @@ class MyAppBar extends StatelessWidget {
                     ? AppColors.whiteColorHexa
                     : AppColors.textColor,
                   text: title,
-                  left: 15,
                   fontSize: 22,
                   fontWeight: FontWeight.w600
                 ),
