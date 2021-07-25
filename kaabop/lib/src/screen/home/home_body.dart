@@ -12,7 +12,9 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+    
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

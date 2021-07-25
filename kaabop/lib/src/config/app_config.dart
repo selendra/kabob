@@ -105,16 +105,17 @@ class AppConfig {
     },
   ];
 
-  static const testInviteLink =
-      'https://selendra-airdrop.netlify.app/invitation?ref=';
+  static const testInviteLink = 'https://selendra-airdrop.netlify.app/invitation?ref=';
 
-  static const testInviteLink1 =
-      'https://selendra-airdrop.netlify.app/claim-\$sel?ref=';
+  static const testInviteLink1 = 'https://selendra-airdrop.netlify.app/claim-\$sel?ref=';
 
   static const baseInviteLink = 'https://airdrop.selendra.org/claim-\$sel?ref=';
 
-  
+  static const credentials = '';
 
+  //
+  // sld_market net API
+  // https://sld_marketnet-api.selendra.com/pub/v1
   //
   // sld_market net API
   // https://sld_marketnet-api.selendra.com/pub/v1

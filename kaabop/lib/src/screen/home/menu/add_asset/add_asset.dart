@@ -11,6 +11,7 @@ class AddAsset extends StatefulWidget {
 }
 
 class AddAssetState extends State<AddAsset> {
+
   final ModelAsset _modelAsset = ModelAsset();
 
   final FlareControls _flareController = FlareControls();
@@ -169,8 +170,7 @@ class AddAssetState extends State<AddAsset> {
 
   Future<void> searchEtherContract() async {
     try {
-      final res = await Provider.of<ContractProvider>(context, listen: false)
-          .queryEther(_modelAsset.controllerAssetCode.text, 'symbol', []);
+      final res = await Provider.of<ContractProvider>(context, listen: false).queryEther(_modelAsset.controllerAssetCode.text, 'symbol', []);
 
       if (res != null) {
         setState(() {
@@ -236,43 +236,41 @@ class AddAssetState extends State<AddAsset> {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       key: globalKey,
-      body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            AddAssetBody(
-              assetM: _modelAsset,
-              initialValue: initialValue,
-              onChangeDropDown: onChangeDropDown,
-              addAsset: addAsset,
-              popScreen: popScreen,
-              onChanged: onChanged,
-              qrRes: qrRes,
-              tokenSymbol: _tokenSymbol,
-              onSubmit: onSubmit,
-              submitAsset: submitAsset,
+      body: Stack(
+        children: [
+          
+          AddAssetBody(
+            assetM: _modelAsset,
+            initialValue: initialValue,
+            onChangeDropDown: onChangeDropDown,
+            addAsset: addAsset,
+            popScreen: popScreen,
+            onChanged: onChanged,
+            qrRes: qrRes,
+            tokenSymbol: _tokenSymbol,
+            onSubmit: onSubmit,
+            submitAsset: submitAsset,
+          ),
+          if (_modelAsset.added == false)
+            Container()
+          else
+            BackdropFilter(
+            // Fill Blur Background
+            filter: ImageFilter.blur(
+              sigmaX: 5.0,
+              sigmaY: 5.0,
             ),
-            if (_modelAsset.added == false)
-              Container()
-            else
-              BackdropFilter(
-                // Fill Blur Background
-                filter: ImageFilter.blur(
-                  sigmaX: 5.0,
-                  sigmaY: 5.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: CustomAnimation.flareAnimation(_flareController,
+                      "assets/animation/check.flr", "Checkmark"),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: CustomAnimation.flareAnimation(_flareController,
-                          "assets/animation/check.flr", "Checkmark"),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

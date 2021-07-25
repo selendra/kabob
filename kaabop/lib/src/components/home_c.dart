@@ -314,16 +314,14 @@ class AddAssetRowButton extends StatelessWidget {
 // }
 
 // Portfolow Row Decoration
-Widget rowDecorationStyle(
-    {Widget child, double mTop = 0, double mBottom = 16}) {
+Widget rowDecorationStyle({Widget child, double mTop = 0, double mBottom = 16}) {
   return Container(
     margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
     padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
     height: 90,
     decoration: BoxDecoration(
       boxShadow: const [
-        BoxShadow(
-            color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
+        BoxShadow(color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
       ],
       color: hexaCodeToColor(AppColors.whiteHexaColor),
       borderRadius: BorderRadius.circular(8),

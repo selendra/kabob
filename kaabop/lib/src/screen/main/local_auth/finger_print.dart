@@ -24,31 +24,32 @@ class _FingerPrintState extends State<FingerPrint> {
   }
 
   Future<void> authenticate() async {
+
     bool authenticate = false;
 
     try {
-      authenticate = await localAuth.authenticateWithBiometrics(
-          localizedReason: '', stickyAuth: true);
 
+      authenticate = await localAuth.authenticate( localizedReason: 'Please complete the biometrics to proceed.', stickyAuth: true);
       if (authenticate) {
         Navigator.pushReplacementNamed(context, Home.route);
       }
     } on SocketException catch (e) {
+
       await Future.delayed(const Duration(milliseconds: 300), () {});
       AppServices.openSnackBar(globalkey, e.message);
     } catch (e) {
+
       await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             title: const Align(
               child: Text('Message'),
             ),
             content: Padding(
               padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: Text(e.message.toString()),
+              child: MyText(text: e.message.toString()),
             ),
             actions: <Widget>[
               FlatButton(

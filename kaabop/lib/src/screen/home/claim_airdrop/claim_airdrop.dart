@@ -145,7 +145,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
   }
 
   Future<bool> findAddress(String address) async {
-    final gsheets = GSheets(AppConfig.credentials);
+    final gsheets = GSheets(address);
     // fetch spreadsheet by its id
     final ss = await gsheets.spreadsheet(_spreadsheetId);
     // get worksheet by its title

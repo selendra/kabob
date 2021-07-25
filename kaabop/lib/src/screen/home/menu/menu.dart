@@ -1,4 +1,6 @@
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:local_auth/local_auth.dart' as auth;
 import 'package:wallet_apps/index.dart';
 
 class Menu extends StatefulWidget {
@@ -71,85 +73,55 @@ class MenuState extends State<Menu> {
     });
   }
 
-  Future<bool> _checkBiometrics() async {
-    bool canCheckBiometrics = false;
-    try {
-      canCheckBiometrics = await _localAuth.canCheckBiometrics;
-      print("Check bio $canCheckBiometrics");
-      // ignore: unused_catch_clause
-    } on PlatformException catch (e) {
-      print("Erorr $e");
-      // canCheckBiometrics = false;
-    }
-
-    return canCheckBiometrics;
-  }
-
   // ignore: avoid_positional_boolean_parameters
   Future<void> switchBiometric(BuildContext context, bool switchValue) async {
-    // try{
 
-    //   final canCheck = await _checkBiometrics();
-    //   print("After check $canCheck");
+    try{
 
-    //   if (canCheck == false) {
-    //     // snackBar(context, "Your device doesn't have finger print");
+      final canCheck = await AppServices().checkBiometrics(context);
 
-    //     await showDialog(
-    //       context: context,
-    //       builder: (context) {
-    //         return AlertDialog(
-    //           shape:
-    //               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    //           title: Align(
-    //             child: Text("Oops"),
-    //           ),
-    //           content: Padding(
-    //             padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-    //             child: Text("Your device doesn't have finger print!", textAlign: TextAlign.center),
-    //           ),
-    //           actions: <Widget>[
-    //             FlatButton(
-    //               onPressed: () => Navigator.pop(context),
-    //               child: const Text('Close'),
-    //             ),
-    //           ],
-      //       );
-      //     },
-      //   );
-      // } else {
-      //   if (switchValue) {
-      //     await authenticateBiometric().then((values) async {
-      //       if (_menuModel.authenticated) {
-      //         setState(() {
-      //           _menuModel.switchBio = switchValue;
-      //         });
-      //         await StorageServices.saveBio(_menuModel.switchBio);
-      //       }
-      //     });
-      //   } else {
-      //     await authenticateBiometric().then((values) async {
-      //       if (_menuModel.authenticated) {
-      //         setState(() {
-      //           _menuModel.switchBio = switchValue;
-      //         });
-      //         await StorageServices.removeKey('bio');
-      //       }
-      //     });
-      //   }
-      // }
-    // } catch (e){
+      if (canCheck == false) {  
+        snackBar(context, "Your device doesn't have finger print! Set up to enable this feature");
+      } else {
+
+        // Check New Enable Bio
+        if (switchValue) {
+          await authenticateBiometric().then((values) async {
+
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.saveBio(_menuModel.switchBio);
+            }
+          });
+        } 
+        // Check Disable Bio
+        else {
+          await authenticateBiometric().then((values) async {
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.removeKey('bio');
+            }
+          });
+        }
+      }
+    } catch (e){
+      print("error auth $e");
+        
       await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             title: Align(
-              child: Text("Oops"),
+              child: MyText(text: "Oops", fontWeight: FontWeight.w600,),
             ),
             content: Padding(
               padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: Text("This feature has not implemented yet!", textAlign: TextAlign.center),
+              child: Text(e.toString(), textAlign: TextAlign.center),
             ),
             actions: <Widget>[
               FlatButton(
@@ -160,7 +132,7 @@ class MenuState extends State<Menu> {
           );
         },
       );
-    // }
+    }
   }
 
   Future<bool> authenticateBiometric() async {
@@ -168,18 +140,17 @@ class MenuState extends State<Menu> {
       // Trigger Authentication By Finger Print
       // ignore: deprecated_member_use
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-        localizedReason: '',
+        localizedReason: 'Please complete the biometrics to proceed.',
         stickyAuth: true,
       );
+
+      print("Authen ${_menuModel.authenticated}");
 
       // ignore: empty_catches
     } on PlatformException {}
 
     return _menuModel.authenticated;
   }
-
-
- 
 
   /* ----------------------Side Bar -------------------------*/
 
@@ -195,8 +166,7 @@ class MenuState extends State<Menu> {
             child: MenuBody(
               userInfo: widget._userData,
               model: _menuModel,
-              switchBio: switchBiometric,
-             
+              switchBio: switchBiometric,        
             ),
           ),
         ),

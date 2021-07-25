@@ -4,16 +4,18 @@ import 'package:wallet_apps/theme/color.dart';
 import '../../../../index.dart';
 
 class AccountC {
+
   void showChangePin(
-      BuildContext context,
-      GlobalKey<FormState> _changePinKey,
-      TextEditingController _oldPinController,
-      TextEditingController _newPinController,
-      FocusNode _oldNode,
-      FocusNode _newNode,
-      Function onChanged,
-      Function onSubmit,
-      Function submitChangePin) {
+    BuildContext context,
+    GlobalKey<FormState> _changePinKey,
+    TextEditingController _oldPinController,
+    TextEditingController _newPinController,
+    FocusNode _oldNode,
+    FocusNode _newNode,
+    Function onChanged,
+    Function onSubmit,
+    Function submitChangePin
+  ) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,

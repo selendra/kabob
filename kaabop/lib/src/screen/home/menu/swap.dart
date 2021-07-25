@@ -50,20 +50,24 @@ class _SwapState extends State<Swap> {
           dialogLoading(context);
           final hash = await contract.swap(_amountController.text, res);
           if (hash != null) {
-            await Future.delayed(const Duration(seconds: 5));
+            await Future.delayed(const Duration(seconds: 7));
             final res = await contract.getPending(hash);
 
-            if (res) {
-              setState(() {});
+            print(res);
 
-              contract.getBscBalance();
-              Navigator.pop(context);
-              enableAnimation(
-                  'swapped ${_amountController.text} of SEL v1 to SEL v2.');
-              _amountController.text = '';
-            } else {
-              Navigator.pop(context);
-              await customDialog('Opps', 'Something went wrong.');
+            if (res != null) {
+              if (res) {
+                setState(() {});
+
+                contract.getBscBalance();
+                Navigator.pop(context);
+                enableAnimation(
+                    'swapped ${_amountController.text} of SEL v1 to SEL v2.');
+                _amountController.text = '';
+              } else {
+                Navigator.pop(context);
+                await customDialog('Opps', 'Something went wrong.');
+              }
             }
           } else {
             Navigator.pop(context);
@@ -173,7 +177,7 @@ class _SwapState extends State<Swap> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           content: Container(
-            height: MediaQuery.of(context).size.height / 2.5,
+            //height: MediaQuery.of(context).size.height / 2.5,
             width: MediaQuery.of(context).size.width * 0.7,
             child: SingleChildScrollView(
               child: Column(
@@ -188,7 +192,7 @@ class _SwapState extends State<Swap> {
                   ),
                   MyText(
                     text: 'SUCCESS!',
-                    fontSize: 28,
+                    fontSize: 22,
                     top: MediaQuery.of(context).size.width * 0.1,
                     fontWeight: FontWeight.bold,
                   ),
@@ -263,7 +267,7 @@ class _SwapState extends State<Swap> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           content: Container(
-            height: MediaQuery.of(context).size.height / 2.2,
+            // height: MediaQuery.of(context).size.height / 2.2,
             width: MediaQuery.of(context).size.width * 0.7,
             child: SingleChildScrollView(
               child: Column(
@@ -274,7 +278,7 @@ class _SwapState extends State<Swap> {
                   const MyText(
                     text: 'Swapping',
                     //color: '#000000',
-                    fontSize: 28,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                   SizedBox(
@@ -288,7 +292,7 @@ class _SwapState extends State<Swap> {
                   ),
                   const MyText(
                     text: 'SEL v1 to SEL v2',
-                    fontSize: 28,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     top: 40,
                     bottom: 8.0,
@@ -530,10 +534,10 @@ class _SwapState extends State<Swap> {
                                       currentFocus.unfocus();
                                     }
 
-                                    // validateSwap();
+                                    validateSwap();
 
                                     // successDialog('');
-                                    confirmDialog('w', swap);
+
                                   }
                                 },
                               ),

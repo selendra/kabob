@@ -112,9 +112,14 @@ OutlineInputBorder errorOutline() {
 }
 
 /* Button shadow */
-BoxShadow shadow(Color hexaCode, double blurRadius, double spreadRadius) {
+BoxShadow shadow(
+    {Color hexaCode, double blurRadius, double spreadRadius, Offset offset}) {
   return BoxShadow(
-      color: hexaCode, blurRadius: blurRadius, spreadRadius: spreadRadius);
+    color: hexaCode ?? Colors.grey.withOpacity(0.2),
+    blurRadius: blurRadius ?? 6.0,
+    spreadRadius: spreadRadius ?? 2.0,
+    offset: offset ?? Offset(0.5, 2.0),
+  );
 }
 
 Widget customFlatButton(
@@ -214,33 +219,32 @@ BoxDecoration signOutColor() {
 /* Dialog of response from server */
 // ignore: type_annotate_public_apis
 
-
-Future<void> successDialog(BuildContext context ,String operationText) async {
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
+Future<void> successDialog(BuildContext context, String operationText) async {
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0),
           ),
           content: Container(
-            height: MediaQuery.of(context).size.height / 2.6,
+            // height: MediaQuery.of(context).size.height / 2.6,
             width: MediaQuery.of(context).size.width * 0.7,
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   SizedBox(
-                    height: 36,
+                    height: 28,
                   ),
                   SvgPicture.asset(
                     'assets/icons/tick.svg',
-                    height: 110,
-                    width: 110,
+                    height: 100,
+                    width: 100,
                   ),
                   const MyText(
                     text: 'SUCCESS!',
-                    fontSize: 28,
+                    fontSize: 22,
                     top: 45,
                     fontWeight: FontWeight.bold,
                   ),
@@ -250,31 +254,11 @@ Future<void> successDialog(BuildContext context ,String operationText) async {
                     text: 'You have successfully ' + operationText,
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.width * 0.15,
+                    height: MediaQuery.of(context).size.width * 0.1,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      // ignore: deprecated_member_use
-                      // SizedBox(
-                      //   height: 50,
-                      //   width: 140,
-                      //   child: RaisedButton(
-                      //     onPressed: () {
-                      //       Navigator.pop(context);
-                      //     },
-                      //     color: Colors.grey[50],
-                      //     shape: RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(8)),
-                      //     child: Text(
-                      //       'Close',
-                      //       style: TextStyle(
-                      //         color: hexaCodeToColor(AppColors.secondarytext),
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                       // ignore: deprecated_member_use
                       SizedBox(
                         height: 50,
@@ -296,19 +280,16 @@ Future<void> successDialog(BuildContext context ,String operationText) async {
                             ),
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
-          ),
-        );
-      },
-    );
-  }
-
-
+          ));
+    },
+  );
+}
 
 // Future<void> dialog(BuildContext context, Widget text, Widget title,
 //     {Widget action, Color bgColor}) async {

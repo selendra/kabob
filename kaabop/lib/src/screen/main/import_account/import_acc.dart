@@ -211,14 +211,17 @@ class ImportAccState extends State<ImportAcc> {
 
     return Scaffold(
       key: globalKey,
-      body: ImportAccBody(
-        reImport: widget.reimport,
-        importAccModel: _importAccModel,
-        onChanged: widget.reimport != null ? null : onChanged,
-        onSubmit: widget.reimport != null ? onSubmitIm : submit,
-        clearInput: clearInput,
-        enable: enable,
-        submit: widget.reimport != null ? onSubmitIm : submit,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        child: ImportAccBody(
+          reImport: widget.reimport,
+          importAccModel: _importAccModel,
+          onChanged: widget.reimport != null ? null : onChanged,
+          onSubmit: widget.reimport != null ? onSubmitIm : submit,
+          clearInput: clearInput,
+          enable: enable,
+          submit: widget.reimport != null ? onSubmitIm : submit,
+        ),
       )
     );
   }

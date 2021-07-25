@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class AssetItem extends StatefulWidget {
+
   final String asset;
   final String tokenSymbol;
   final String org;
@@ -22,6 +23,7 @@ class AssetItem extends StatefulWidget {
 }
 
 class _AssetItemState extends State<AssetItem> {
+
   String totalUsd = '';
 
   final int _divider = 5;
@@ -77,8 +79,7 @@ class _AssetItemState extends State<AssetItem> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.balance != AppText.loadingPattern &&
-        widget.marketPrice != null) {
+    if (widget.balance != AppText.loadingPattern && widget.marketPrice != null) {
       var res = double.parse(widget.balance) * double.parse(widget.marketPrice);
       totalUsd = res.toStringAsFixed(2);
     }
