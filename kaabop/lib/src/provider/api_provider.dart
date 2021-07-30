@@ -153,11 +153,7 @@ class ApiProvider with ChangeNotifier {
       for (final i in res) {
         if (i['status']['confirmed'] == true) {
           txb.addInput(
-            i['txid'],
-            int.parse(i['vout'].toString()),
-            null,
-            p2wpkh.output
-          );
+              i['txid'], int.parse(i['vout'].toString()), null, p2wpkh.output);
           totalSatoshi += int.parse(i['value'].toString());
           input++;
         }
@@ -310,6 +306,12 @@ class ApiProvider with ChangeNotifier {
   Future<bool> validateAddress(String address) async {
     final res = await sdk.api.keyring.validateAddress(address);
     return res;
+  }
+
+  Future<String> swapToken(String privateKey, String amount) async {
+   // final res = await sdk.api.swapToken(privateKey, amount);
+    await sdk.api.connectBsc();
+    return 'res';
   }
 
   Future<void> getChainDecimal() async {

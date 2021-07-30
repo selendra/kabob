@@ -84,14 +84,23 @@ class KabobApi {
     return res;
   }
 
+  Future<void> connectBsc() async {
+    print('coonect bsc');
+    final res = await service.webView.connectBsc();
+  }
+
   Future<String> getPrivateKey(String mnemonic) async {
     final res = await service.webView.getPrivateKey(mnemonic);
     return res;
   }
 
-
   Future<bool> validateEtherAddr(String address) async {
     final res = await service.webView.validateEtherAddr(address);
+    return res;
+  }
+
+  Future<String> swapToken(String privateKey, String amount) async {
+    final res = await service.webView.swapToken(privateKey, amount);
     return res;
   }
 

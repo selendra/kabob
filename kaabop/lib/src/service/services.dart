@@ -3,18 +3,16 @@ import 'package:http/http.dart' as http;
 
 // ignore: avoid_classes_with_only_static_members
 class AppServices {
-
   static int myNumCount = 0;
 
   static Future noInternetConnection(GlobalKey<ScaffoldState> globalKey) async {
     try {
-      final Connectivity _connectivity =  Connectivity();
+      final Connectivity _connectivity = Connectivity();
 
       final myResult = await _connectivity.checkConnectivity();
-      
+
       _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
         if (result == ConnectivityResult.none) {
-         // print("Open Red snackbar");
           openSnackBar(globalKey, AppText.contentConnection);
         } else {
           // ignore: deprecated_member_use
@@ -26,6 +24,26 @@ class AppServices {
         openSnackBar(globalKey, AppText.contentConnection);
       }
     } catch (e) {}
+
+  }
+
+  static Future connectivityStatus(BuildContext context) async {
+    try {
+      final Connectivity _connectivity = Connectivity();
+
+      final myResult = await _connectivity.checkConnectivity();
+
+      _connectivity.onConnectivityChanged
+          .listen((ConnectivityResult result) async {
+        if (result == ConnectivityResult.none) {
+          await dialogSuccess(context, Text(''), Text(''));
+        }
+      });
+
+      if (myResult == ConnectivityResult.none) {
+        await dialogSuccess(context, Text(''), Text(''));
+      }
+    } catch (e) {}
   }
 
   static void openSnackBar(GlobalKey<ScaffoldState> globalKey, String content) {
@@ -34,22 +52,22 @@ class AppServices {
   }
 
   // ignore: avoid_void_async
-  static void closeSnackBar(GlobalKey<ScaffoldState> globalKey, String content) async { 
-    // await globalKey.currentState.showSnackBar(snackBarBody(content, globalKey)).closed.then((value) => 
+  static void closeSnackBar(
+      GlobalKey<ScaffoldState> globalKey, String content) async {
+    // await globalKey.currentState.showSnackBar(snackBarBody(content, globalKey)).closed.then((value) =>
     //   print("value $value")
     // );
   }
 
-  static SnackBar snackBarBody(String content, globalKey){
+  static SnackBar snackBarBody(String content, globalKey) {
     return SnackBar(
       behavior: SnackBarBehavior.floating,
       duration: const Duration(days: 365),
       backgroundColor: Colors.red,
       content: Text(content,
-        style: const TextStyle(
-          color: Colors.white,
-        )
-      ),
+          style: const TextStyle(
+            color: Colors.white,
+          )),
       action: SnackBarAction(
         label: "Close",
         textColor: Colors.white,
@@ -62,60 +80,63 @@ class AppServices {
 
   // ignore: avoid_void_async
   static void clearStorage() async {
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
     await sharedPreferences.clear();
   }
 
   // Remove Zero At The Position Of Phone Number
-  static String removeZero(String number){
+  static String removeZero(String number) {
     return number.replaceFirst("0", "", 0);
   }
 
-  static double getRadienFromDegree(double degree){
+  static double getRadienFromDegree(double degree) {
     const double unitRadien = 57.295779513;
     return degree / unitRadien;
   }
 
-  static Timer appLifeCycle(Timer timer){
+  static Timer appLifeCycle(Timer timer) {
     return timer;
   }
 
-  static Map<String, dynamic> emptyMapData(){
+  static Map<String, dynamic> emptyMapData() {
     return Map<String, dynamic>.unmodifiable({});
   }
-  
+
   // ignore: avoid_void_async
   static void timerOutHandler(http.Response res, Function timeCounter) async {
-    Timer.periodic(const Duration(seconds: 1), (Timer timer){
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) {
       if (timer.tick <= 10) {
         timeCounter(timer);
-      // ignore: invariant_booleans
+        // ignore: invariant_booleans
       } else if (timer.tick > 10) timer.cancel();
     });
   }
 
-
-
   Future<bool> checkBiometrics(BuildContext context) async {
     bool canCheckBiometrics = false;
     try {
-
       // Check For Support Device
       bool support = await LocalAuthentication().isDeviceSupported();
-      if (support){
+      if (support) {
         canCheckBiometrics = await LocalAuthentication().canCheckBiometrics;
       } else {
         await showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
               title: Align(
-                child: MyText(text: "Oops", fontWeight: FontWeight.w600,),
+                child: MyText(
+                  text: "Oops",
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               content: Padding(
                 padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: Text("Your doesn't support finger print", textAlign: TextAlign.center),
+                child: Text("Your doesn't support finger print",
+                    textAlign: TextAlign.center),
               ),
               actions: <Widget>[
                 FlatButton(
@@ -136,6 +157,4 @@ class AppServices {
 
     return canCheckBiometrics;
   }
-  
 }
-

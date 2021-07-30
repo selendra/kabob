@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
+import 'package:wallet_apps/src/components/network_sensitive.dart';
 import 'package:wallet_apps/src/screen/home/menu/swap_des.dart';
 
 class Swap extends StatefulWidget {
@@ -12,6 +13,7 @@ class Swap extends StatefulWidget {
 class _SwapState extends State<Swap> {
   FlareControls flareController = FlareControls();
   final GlobalKey<FormState> _swapKey = GlobalKey<FormState>();
+  GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
 
   TextEditingController _amountController;
 
@@ -53,8 +55,6 @@ class _SwapState extends State<Swap> {
             await Future.delayed(const Duration(seconds: 7));
             final res = await contract.getPending(hash);
 
-            print(res);
-
             if (res != null) {
               if (res) {
                 setState(() {});
@@ -66,11 +66,20 @@ class _SwapState extends State<Swap> {
                 _amountController.text = '';
               } else {
                 Navigator.pop(context);
-                await customDialog('Opps', 'Something went wrong.');
+                await customDialog('Transaction failed',
+                    'Something went wrong with your transaction.');
               }
+            } else {
+              Navigator.pop(context);
+              await customDialog('Transaction failed',
+                  'Something went wrong with your transaction.');
             }
           } else {
+            contract.getBscBalance();
             Navigator.pop(context);
+            enableAnimation(
+                'swapped ${_amountController.text} of SEL v1 to SEL v2.');
+            _amountController.text = '';
           }
         }
       } catch (e) {
@@ -345,6 +354,8 @@ class _SwapState extends State<Swap> {
         composing: TextRange.empty,
       );
     });
+
+    AppServices.noInternetConnection(globalKey);
     super.initState();
   }
 
@@ -359,7 +370,9 @@ class _SwapState extends State<Swap> {
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     final contract = Provider.of<ContractProvider>(context, listen: false);
     return Scaffold(
-      body: BodyScaffold(
+      key: globalKey,
+      body: NetworkSensitive(
+        child: BodyScaffold(
           height: MediaQuery.of(context).size.height,
           child: Stack(
             children: [
@@ -401,8 +414,9 @@ class _SwapState extends State<Swap> {
                     children: [
                       MyText(
                         width: double.infinity,
-                        text:
-                            'Available Balance:  ${contract.bscNative.balance} SEL v1',
+                        text: contract.bscNative.balance != null
+                            ? 'Available Balance:  ${contract.bscNative.balance} SEL v1'
+                            : '',
                         fontWeight: FontWeight.bold,
                         color: isDarkTheme
                             ? AppColors.darkSecondaryText
@@ -573,13 +587,15 @@ class _SwapState extends State<Swap> {
                   ),
                 ),
             ],
-          )),
+          ),
+        ),
+      ),
     );
   }
 
   void fetchMax() async {
     final contract = Provider.of<ContractProvider>(context, listen: false);
-    contract.getBscBalance();
+    await contract.getBscBalance();
 
     setState(() {
       _amountController.value = TextEditingValue(

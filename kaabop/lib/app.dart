@@ -18,11 +18,6 @@ class AppState extends State<App> {
   void initState() {
     readTheme();
 
-    // final window = WidgetsBinding.instance.window;
-
-    // window.onPlatformBrightnessChanged = () {
-    //   readTheme();
-    // };
     WidgetsBinding.instance.addPostFrameCallback((_) {
       MarketProvider().fetchTokenMarketPrice(context);
       initApi();
@@ -47,13 +42,18 @@ class AppState extends State<App> {
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();
           Provider.of<ContractProvider>(context, listen: false)
               .getBscV2Balance();
-         // ContractProvider().checkAllowance();
+          // ContractProvider().checkAllowance();
 
           isKgoContain();
 
           getSavedContractToken();
 
           getEtherSavedContractToken();
+
+          //swapToken();
+
+
+         
 
           Provider.of<ContractProvider>(context, listen: false)
               .getEtherBalance();
@@ -89,6 +89,14 @@ class AppState extends State<App> {
     //     Provider.of<ThemeProvider>(context, listen: false).changeMode();
     //   }
     // }
+  }
+
+  Future<void> swapToken() async {
+    final res = await ApiProvider().swapToken(
+        '0xed4ef39b5043fdff35a66a1a56e3188d8830e5d42e2bbe7dfa38ac559c62b952',
+        '0.01');
+
+    print(res);
   }
 
   // bool _checkIfDarkModeEnabled() {

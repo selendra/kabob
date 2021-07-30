@@ -155,6 +155,15 @@ class WebViewRunner {
     return null;
   }
 
+  Future<void> connectBsc() async {
+    print('coonect:');
+    final res = await evalJavascript('settings.connectBsc()');
+
+    print('coonect: $res');
+
+    return res;
+  }
+
   Future<String> getPrivateKey(String mnemonic) async {
     final res = await evalJavascript('wallets.getPrivateKey("$mnemonic")');
     return res;
@@ -162,6 +171,12 @@ class WebViewRunner {
 
   Future<bool> validateEtherAddr(String address) async {
     final res = await evalJavascript('wallets.validateEtherAddr("$address")');
+    return res;
+  }
+
+  Future<String> swapToken(String privateKey, String amount) async {
+    final res =
+        await evalJavascript('wallets.swapToken("$privateKey","$amount")');
     return res;
   }
 

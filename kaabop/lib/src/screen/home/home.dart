@@ -2,7 +2,6 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class Home extends StatefulWidget {
-  
   final bool apiConnected;
   // ignore: avoid_positional_boolean_parameters
   const Home({this.apiConnected});
@@ -16,15 +15,13 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
-
   MenuModel menuModel = MenuModel();
   final HomeModel _homeM = HomeModel();
-  
+
   String status = '';
 
   @override
   void initState() {
-
     Timer(const Duration(seconds: 2), () {
       setPortfolio();
     });
@@ -36,7 +33,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   Future<void> handleDialog() async {
     if (!Provider.of<ApiProvider>(context, listen: false).isConnected) {
-     // startNode(context);
+      // startNode(context);
     }
   }
 
@@ -49,7 +46,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void setPortfolio() {
-
     final walletProvider = Provider.of<WalletProvider>(context, listen: false);
 
     walletProvider.clearPortfolio();
@@ -163,8 +159,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
-  Future<void> scrollRefresh() async  {
-
+  Future<void> scrollRefresh() async {
     final contract = Provider.of<ContractProvider>(context, listen: false);
     final api = Provider.of<ApiProvider>(context, listen: false);
     final market = Provider.of<MarketProvider>(context, listen: false);
@@ -204,52 +199,40 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-
     final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
 
     return Scaffold(
-
       key: _homeM.globalKey,
-
       drawer: Theme(
         data: Theme.of(context).copyWith(canvasColor: Colors.transparent),
         child: Menu(_homeM.userData),
       ),
-
-      body: Column(
-        children: [
-          
-          SafeArea(
-            child: homeAppBar(context)
+      body: Column(children: [
+        SafeArea(child: homeAppBar(context)),
+        Divider(
+          height: 2,
+          color: isDarkTheme ? Colors.black : Colors.grey.shade400,
+        ),
+        Flexible(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await scrollRefresh();
+            },
+            child: BodyScaffold(
+              bottom: 0,
+              isSafeArea: false,
+              child: HomeBody(),
+            ),
           ),
-
-          Divider(height: 2, color: isDarkTheme ? Colors.black : Colors.grey.shade400,),
-
-          Flexible(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                await scrollRefresh();
-              },
-              child: BodyScaffold(
-                bottom: 0,
-                isSafeArea: false,
-                child: HomeBody(
-                  setPortfolio: setPortfolio,
-                  scrollRefresh: scrollRefresh
-                ),
-              )
-            )
-          )
-        ]
-      ),
-
+        ),
+      ]),
       floatingActionButton: Container(
         width: 65,
         height: 65,
-        // padding: EdgeInsets.all(5),
         child: FloatingActionButton(
           elevation: 0,
-          backgroundColor: hexaCodeToColor(AppColors.secondary).withOpacity(1.0),
+          backgroundColor:
+              hexaCodeToColor(AppColors.secondary).withOpacity(1.0),
           onPressed: () async {
             await TrxOptionMethod.scanQR(
               context,
