@@ -78,13 +78,18 @@ class MyUserInfoState extends State<MyUserInfo> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           title: Align(
-            child: MyText(text: "Oops", fontWeight: FontWeight.w600,),
+            child: MyText(
+              text: "Oops",
+              fontWeight: FontWeight.w600,
+            ),
           ),
           content: Padding(
             padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-            child: Text("This feature has not implemented yet!", textAlign: TextAlign.center),
+            child: Text("This feature has not implemented yet!",
+                textAlign: TextAlign.center),
           ),
           actions: <Widget>[
             FlatButton(
@@ -157,6 +162,7 @@ class MyUserInfoState extends State<MyUserInfo> {
     }
     return null;
   }
+
   void validateAll() {
     if (_userInfoM.userNameCon.text.isNotEmpty &&
         _userInfoM.passwordCon.text.isNotEmpty &&
@@ -339,9 +345,6 @@ class MyUserInfoState extends State<MyUserInfo> {
   }
 
   Future<void> isKgoContain() async {
-    // Provider.of<WalletProvider>(context, listen: false)
-    //     .addTokenSymbol('KGO (BEP-20)');
-    // Provider.of<ContractProvider>(context, listen: false).getKgoSymbol();
     Provider.of<ContractProvider>(context, listen: false)
         .getKgoDecimal()
         .then((value) {
@@ -362,7 +365,6 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       key: _userInfoM.globalKey,
       body: BodyScaffold(

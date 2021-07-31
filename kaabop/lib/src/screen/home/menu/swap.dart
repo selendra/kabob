@@ -17,6 +17,8 @@ class _SwapState extends State<Swap> {
 
   TextEditingController _amountController;
 
+  FocusNode _amountNode;
+
   bool _success = false;
 
   Future<void> approve() async {
@@ -32,7 +34,21 @@ class _SwapState extends State<Swap> {
           if (hash != null) {
             contract.getBscBalance();
             Navigator.pop(context);
-            enableAnimation('approved balance to swap.');
+            enableAnimation('approved balance to swap.', 'Continue swap', () {
+              Navigator.pop(context);
+              if (_swapKey.currentState.validate()) {
+                FocusScopeNode currentFocus = FocusScope.of(context);
+
+                if (!currentFocus.hasPrimaryFocus) {
+                  currentFocus.unfocus();
+                }
+
+                validateSwap();
+
+                // successDialog('');
+
+              }
+            });
           }
         }
       } catch (e) {
@@ -60,9 +76,14 @@ class _SwapState extends State<Swap> {
                 setState(() {});
 
                 contract.getBscBalance();
+                contract.getBscV2Balance();
                 Navigator.pop(context);
                 enableAnimation(
-                    'swapped ${_amountController.text} of SEL v1 to SEL v2.');
+                    'swapped ${_amountController.text} of SEL v1 to SEL v2.',
+                    'Go to wallet', () {
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Home.route, ModalRoute.withName('/'));
+                });
                 _amountController.text = '';
               } else {
                 Navigator.pop(context);
@@ -76,10 +97,8 @@ class _SwapState extends State<Swap> {
             }
           } else {
             contract.getBscBalance();
+            contract.getBscV2Balance();
             Navigator.pop(context);
-            enableAnimation(
-                'swapped ${_amountController.text} of SEL v1 to SEL v2.');
-            _amountController.text = '';
           }
         }
       } catch (e) {
@@ -122,7 +141,8 @@ class _SwapState extends State<Swap> {
     }
   }
 
-  Future enableAnimation(String operationText) async {
+  Future enableAnimation(
+      String operationText, String btnText, Function onPressed) async {
     setState(() {
       _success = true;
     });
@@ -134,7 +154,7 @@ class _SwapState extends State<Swap> {
         _success = false;
       });
 
-      successDialog(operationText);
+      successDialog(operationText, btnText, onPressed);
     });
   }
 
@@ -178,7 +198,8 @@ class _SwapState extends State<Swap> {
     );
   }
 
-  Future<void> successDialog(String operationText) async {
+  Future<void> successDialog(
+      String operationText, String btnText, Function onPressed) async {
     await showDialog(
       context: context,
       builder: (context) {
@@ -241,15 +262,12 @@ class _SwapState extends State<Swap> {
                         height: 50,
                         width: 140,
                         child: RaisedButton(
-                          onPressed: () {
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, Home.route, ModalRoute.withName('/'));
-                          },
+                          onPressed: onPressed,
                           color: hexaCodeToColor(AppColors.secondary),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           child: Text(
-                            'Go to wallet',
+                            btnText,
                             style: TextStyle(
                               color: hexaCodeToColor('#ffffff'),
                               fontWeight: FontWeight.bold,
@@ -345,6 +363,7 @@ class _SwapState extends State<Swap> {
   @override
   void initState() {
     _amountController = TextEditingController();
+    _amountNode = FocusNode();
     _amountController.addListener(() {
       final text = _amountController.text.toLowerCase();
       _amountController.value = _amountController.value.copyWith(
@@ -355,7 +374,6 @@ class _SwapState extends State<Swap> {
       );
     });
 
-    AppServices.noInternetConnection(globalKey);
     super.initState();
   }
 
@@ -478,6 +496,7 @@ class _SwapState extends State<Swap> {
                                           child: TextFormField(
                                             controller: _amountController,
                                             keyboardType: TextInputType.number,
+                                            focusNode: _amountNode,
                                             textInputAction:
                                                 TextInputAction.done,
                                             style: TextStyle(
@@ -551,7 +570,6 @@ class _SwapState extends State<Swap> {
                                     validateSwap();
 
                                     // successDialog('');
-
                                   }
                                 },
                               ),

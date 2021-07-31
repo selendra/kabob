@@ -11,6 +11,7 @@ class NetworkSensitive extends StatefulWidget {
 
 class _NetworkSensitiveState extends State<NetworkSensitive> {
   final Connectivity _connectivity = Connectivity();
+  ConnectivityResult _result;
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
@@ -31,9 +32,9 @@ class _NetworkSensitiveState extends State<NetworkSensitive> {
   Future<void> initConnectivity() async {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      final result = await _connectivity.checkConnectivity();
-      print(result);
-      _updateConnectionStatus(result);
+      _result = await _connectivity.checkConnectivity();
+
+      _updateConnectionStatus(_result);
     } on PlatformException catch (e) {
       print(e.toString());
     }
@@ -49,14 +50,15 @@ class _NetworkSensitiveState extends State<NetworkSensitive> {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
-    print(result);
+    _result = result;
     switch (result) {
       case ConnectivityResult.wifi:
         break;
       case ConnectivityResult.mobile:
         break;
       case ConnectivityResult.none:
-        await customDialog(context, 'Please check your internet connection', '');
+        await customDialog(
+            context, 'Please check your internet connection!', '');
         break;
       default:
         break;
@@ -78,20 +80,35 @@ class _NetworkSensitiveState extends State<NetworkSensitive> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
           title: Align(
-            child: Text(text1),
-          ),
-          content: Padding(
-            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-            child: Text(text2),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0, top: 8.0),
+              child: Text(
+                text1,
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+              ),
+            ),
           ),
           actions: <Widget>[
             FlatButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('CANCEL'),
+              child: const Text('CANCEL',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16)),
             ),
             FlatButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('RETRY'),
+              onPressed: () async {
+                final result = await _connectivity.checkConnectivity();
+                if (result != ConnectivityResult.none) {
+                  Navigator.pop(context);
+                }
+              },
+              child: Text(
+                'RETRY',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: hexaCodeToColor(AppColors.secondary),
+                ),
+              ),
             ),
           ],
         );
