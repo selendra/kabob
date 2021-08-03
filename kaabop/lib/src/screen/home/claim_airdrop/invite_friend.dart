@@ -40,14 +40,19 @@ class InviteFriend extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ethAdd = Provider.of<ContractProvider>(context, listen: false).ethAdd;
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       key: _globalKey,
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
+            
             MyAppBar(
               title: 'Invite Friends',
+              color: isDarkTheme
+                  ? hexaCodeToColor(AppColors.darkCard)
+                  : hexaCodeToColor(AppColors.whiteHexaColor),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -98,11 +103,11 @@ class InviteFriend extends StatelessWidget {
                   ),
                   _referallRow(
                     'Referral ID :    ',
-                    ethAdd,//.substring(ethAdd.length - 12),
+                    ethAdd, //.substring(ethAdd.length - 12),
                     200,
                     () {
                       copyAndShowSnackBar(
-                        ethAdd,//.substring(ethAdd.length - 12),
+                        ethAdd, //.substring(ethAdd.length - 12),
                         'Referral ID Copied',
                         _globalKey,
                       );
@@ -114,12 +119,12 @@ class InviteFriend extends StatelessWidget {
                   _referallRow(
                     'Referral Link :',
                     AppConfig.testInviteLink1 +
-                        ethAdd,//.substring(ethAdd.length - 12),
+                        ethAdd, //.substring(ethAdd.length - 12),
                     200,
                     () {
                       copyAndShowSnackBar(
                         AppConfig.testInviteLink1 +
-                            ethAdd,//s.substring(ethAdd.length - 12),
+                            ethAdd, //s.substring(ethAdd.length - 12),
                         'Referral Link Copied',
                         _globalKey,
                       );
@@ -133,7 +138,7 @@ class InviteFriend extends StatelessWidget {
                         referralShare(
                           _globalKey,
                           AppConfig.testInviteLink1 +
-                              ethAdd,//.substring(ethAdd.length - 12),
+                              ethAdd, //.substring(ethAdd.length - 12),
                         );
                       },
                       child: Row(

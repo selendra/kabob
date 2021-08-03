@@ -46,33 +46,60 @@ class MyUserInfoState extends State<MyUserInfo> {
 
   // ignore: avoid_positional_boolean_parameters
   Future<void> switchBiometric(bool switchValue) async {
-    _localAuth = LocalAuthentication();
+    // _localAuth = LocalAuthentication();
 
-    await _localAuth.canCheckBiometrics.then((value) async {
-      if (value == false) {
-        snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
-      } else {
-        if (switchValue) {
-          await authenticateBiometric(_localAuth).then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.saveBio(_menuModel.switchBio);
-            }
-          });
-        } else {
-          await authenticateBiometric(_localAuth).then((values) async {
-            if (_menuModel.authenticated) {
-              setState(() {
-                _menuModel.switchBio = switchValue;
-              });
-              await StorageServices.removeKey('bio');
-            }
-          });
-        }
-      }
-    });
+    // await _localAuth.canCheckBiometrics.then((value) async {
+    //   if (value == false) {
+    //     snackBar(context, "Your device doesn't have finger print");
+    //   } else {
+    //     if (switchValue) {
+    //       await authenticateBiometric(_localAuth).then((values) async {
+    //         if (_menuModel.authenticated) {
+    //           setState(() {
+    //             _menuModel.switchBio = switchValue;
+    //           });
+    //           await StorageServices.saveBio(_menuModel.switchBio);
+    //         }
+    //       });
+    //     } else {
+    //       await authenticateBiometric(_localAuth).then((values) async {
+    //         if (_menuModel.authenticated) {
+    //           setState(() {
+    //             _menuModel.switchBio = switchValue;
+    //           });
+    //           await StorageServices.removeKey('bio');
+    //         }
+    //       });
+    //     }
+    //   }
+    // });
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+          title: Align(
+            child: MyText(
+              text: "Oops",
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          content: Padding(
+            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+            child: Text("This feature has not implemented yet!",
+                textAlign: TextAlign.center),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<bool> authenticateBiometric(LocalAuthentication _localAuth) async {
@@ -197,11 +224,14 @@ class MyUserInfoState extends State<MyUserInfo> {
           Provider.of<ApiProvider>(context, listen: false).connectPolNon();
           Provider.of<ContractProvider>(context, listen: false).getBnbBalance();
           Provider.of<ContractProvider>(context, listen: false).getBscBalance();
+          Provider.of<ContractProvider>(context, listen: false)
+              .getBscV2Balance();
 
           isKgoContain();
           await addBtcWallet();
 
-          MarketProvider().fetchTokenMarketPrice(context);
+          Provider.of<MarketProvider>(context, listen: false)
+              .fetchTokenMarketPrice(context);
 
           Provider.of<ApiProvider>(context, listen: false).getChainDecimal();
           Provider.of<ApiProvider>(context, listen: false).getAddressIcon();
@@ -218,20 +248,7 @@ class MyUserInfoState extends State<MyUserInfo> {
           // Close Loading Process
           Navigator.pop(context);
           enableScreenshot();
-          await dialogSuccess(
-            context,
-            const Text("You haved imported successfully"),
-            const Text('Congratulation'),
-            // ignore: deprecated_member_use
-            action: FlatButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, Home.route, ModalRoute.withName('/'));
-              },
-              child: const Text('Continue'),
-            ),
-          );
+          await successDialog(context, "created your account.");
         },
       );
     } catch (e) {
@@ -259,7 +276,6 @@ class MyUserInfoState extends State<MyUserInfo> {
       );
     }
   }
-
   // Future<void> isDotContain() async {
   //   // Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('DOT');
   //   // Provider.of<ApiProvider>(context, listen: false).isDotContain();
@@ -305,7 +321,13 @@ class MyUserInfoState extends State<MyUserInfo> {
     final seed = bip39.mnemonicToSeed(widget.passPhrase);
     final hdWallet = HDWallet.fromSeed(seed);
 
-    await StorageServices.setData(hdWallet.address, 'btcaddress');
+    final keyPair = ECPair.fromWIF(hdWallet.wif);
+    final bech32Address = new P2WPKH(
+            data: new PaymentData(pubkey: keyPair.publicKey), network: bitcoin)
+        .data
+        .address;
+
+    await StorageServices.setData(bech32Address, 'bech32');
 
     final res = await ApiProvider.keyring.store
         .encryptPrivateKey(hdWallet.wif, _userInfoM.confirmPasswordCon.text);
@@ -318,15 +340,11 @@ class MyUserInfoState extends State<MyUserInfo> {
         .getBtcBalance(hdWallet.address);
     Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
 
-    Provider.of<ApiProvider>(context, listen: false)
-        .setBtcAddr(hdWallet.address);
+    Provider.of<ApiProvider>(context, listen: false).setBtcAddr(bech32Address);
     Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BTC');
   }
 
   Future<void> isKgoContain() async {
-    // Provider.of<WalletProvider>(context, listen: false)
-    //     .addTokenSymbol('KGO (BEP-20)');
-    // Provider.of<ContractProvider>(context, listen: false).getKgoSymbol();
     Provider.of<ContractProvider>(context, listen: false)
         .getKgoDecimal()
         .then((value) {

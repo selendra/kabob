@@ -5,7 +5,7 @@ class MenuModel {
   bool switchPasscode = false;
   bool authenticated;
 
-  GlobalKey<ScaffoldState> globalKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> globalKey;
 
   Map result = {};
 
@@ -30,6 +30,7 @@ class MenuModel {
         {'icon': "assets/icons/form.svg", 'subTitle': 'Claim SEL'},
         {'icon': "assets/icons/form.svg", 'subTitle': 'Claim KGO'},
         {'icon': "assets/icons/add_people.svg", 'subTitle': 'Invite Friends'},
+        {'icon': "assets/icons/swap.svg", 'subTitle': 'Swap SEL v2'},
       ]
     },
     {
@@ -40,16 +41,16 @@ class MenuModel {
       ]
     },
     {
-      'title': "Join community",
+      'title': "Display",
       'sub': [
-        {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Account'},
+        {'icon': "assets/icons/moon.svg", 'subTitle': 'Dark Mode'},
       ]
     },
     {
       'title': "About",
       'sub': [
-        {'icon': "assets/icons/about.svg", 'subTitle': 'About'},
-       // {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Term of Use'},
+        {'icon': "assets/icons/info.svg", 'subTitle': 'About'},
+        // {'icon': "assets/icons/edit_user.svg", 'subTitle': 'Term of Use'},
       ]
     },
   ];

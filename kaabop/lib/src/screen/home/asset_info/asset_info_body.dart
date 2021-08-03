@@ -39,7 +39,7 @@ class AssetInfoBody extends StatelessWidget {
           // ),
           MyText(
             text: '$balance${' $assetSymbol'}',
-            color: '#FFFFFF', //AppColors.secondarytext,
+            color: AppColors.textColor, //AppColors.secondarytext,
             fontSize: 32,
             fontWeight: FontWeight.bold,
             overflow: TextOverflow.ellipsis,
@@ -47,7 +47,7 @@ class AssetInfoBody extends StatelessWidget {
           const MyText(
             top: 8.0,
             text: '\$0.00',
-            color: '#FFFFFF', //AppColors.secondarytext,
+            color: AppColors.textColor, //AppColors.secondarytext,
             fontSize: 28,
             //fontWeight: FontWeight.bold,
           ),

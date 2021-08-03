@@ -1,10 +1,11 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:fl_chart/fl_chart.dart';
 
 const fontSizePort = 17.0;
 const fontColorPort = Colors.white;
 
-List<Color> gradientColors = [
+List<Color> _gradientColors = [
   hexaCodeToColor(AppColors.secondary),
   hexaCodeToColor("#00ff6b")
 ];
@@ -90,7 +91,7 @@ final portfolioChart = LineChartData(
         FlSpot(6, 1),
       ],
       isCurved: true,
-      colors: gradientColors,
+      colors: _gradientColors,
       barWidth: 2.5,
       // isStrokeCapRound: true,
       dotData: FlDotData(
@@ -98,16 +99,17 @@ final portfolioChart = LineChartData(
       ),
       belowBarData: BarAreaData(
         show: false,
-        colors: gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+        colors: _gradientColors.map((color) => color.withOpacity(0.3)).toList(),
       ),
     ),
   ],
 );
 
 Widget homeAppBar(BuildContext context) {
+  final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
   return Container(
     height: 70,
-    color: hexaCodeToColor(AppColors.bgdColor),
+    color: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : hexaCodeToColor(AppColors.whiteHexaColor),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -120,8 +122,8 @@ Widget homeAppBar(BuildContext context) {
           padding: const EdgeInsets.only(right: 16.0),
           child: IconButton(
             iconSize: 30,
-            color: Colors.white,
-            icon: const Icon(Icons.add_circle_outline),
+            color: isDarkTheme ? Colors.white : Colors.black,
+            icon: const Icon(LineAwesomeIcons.plus_circle),
             onPressed: () async {
               Navigator.push(
                 context,
@@ -312,18 +314,16 @@ class AddAssetRowButton extends StatelessWidget {
 // }
 
 // Portfolow Row Decoration
-Widget rowDecorationStyle(
-    {Widget child, double mTop = 0, double mBottom = 16}) {
+Widget rowDecorationStyle({Widget child, double mTop = 0, double mBottom = 16}) {
   return Container(
     margin: EdgeInsets.only(top: mTop, left: 16, right: 16, bottom: 16),
     padding: const EdgeInsets.fromLTRB(15, 9, 15, 9),
     height: 90,
     decoration: BoxDecoration(
       boxShadow: const [
-        BoxShadow(
-            color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
+        BoxShadow(color: Colors.black12, blurRadius: 2.0, offset: Offset(1.0, 1.0))
       ],
-      color: hexaCodeToColor(AppColors.cardColor),
+      color: hexaCodeToColor(AppColors.whiteHexaColor),
       borderRadius: BorderRadius.circular(8),
     ),
     child: child,
@@ -351,64 +351,67 @@ class MyBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.transparent,
-      child: BottomAppBar(
-        color: hexaCodeToColor(AppColors.cardColor),
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8.0,
-        child: SizedBox(
-          height: 65,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Expanded(
-                  child: MyIconButton(
-                icon: 'telegram.svg',
-                iconSize: 36,
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+    return BottomAppBar(
+      elevation: 10,
+      color: isDarkTheme ? hexaCodeToColor(AppColors.darkCard) : hexaCodeToColor(AppColors.whiteHexaColor),
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 8.0,
+      child: SizedBox(
+        height: 65,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: MyIconButton(
+              icon: 'telegram.svg',
+              iconSize: 36,
+              onPressed: !apiStatus
+                ? null
+                : () async {
+                  await MyBottomSheet().trxOptions(
+                    context: context,
+                    portfolioList: homeM.portfolioList,
+                  );
+                },
+            )),
+            Expanded(
+              child: MyIconButton(
+              icon: 'wallet.svg',
+              iconSize: 36,
+              onPressed: !apiStatus
+                ? null
+                : () async {
+                  toReceiveToken();
+                },
+            )),
+            Expanded(child: Container()),
+            Expanded(
+              child: MyIconButton(
+                icon: 'contact_list.svg',
+                iconSize: 26,
                 onPressed: !apiStatus
-                    ? null
-                    : () async {
-                        await MyBottomSheet().trxOptions(
-                          context: context,
-                          portfolioList: homeM.portfolioList,
-                        );
-                      },
-              )),
-              Expanded(
-                  child: MyIconButton(
-                icon: 'wallet.svg',
-                iconSize: 36,
-                onPressed: !apiStatus
-                    ? null
-                    : () async {
-                        toReceiveToken();
-                      },
-              )),
-              Expanded(child: Container()),
-              Expanded(
-                child: MyIconButton(
-                  icon: 'contact_list.svg',
-                  iconSize: 26,
-                  onPressed: !apiStatus
-                      ? null
-                      : () async {
-                          Navigator.pushNamed(context, AppText.contactBookView);
-                        },
-                ),
+                  ? null
+                  : () async {
+                    Navigator.pushNamed(context, AppText.contactBookView);
+                  },
               ),
-              Expanded(
-                child: MyIconButton(
-                  icon: 'menu.svg',
-                  iconSize: 27,
-                  onPressed: !apiStatus ? null : openDrawer,
-                ),
-              )
-            ],
-          ),
+            ),
+            Expanded(
+              child: MyIconButton(
+                icon: 'menu.svg',
+                iconSize: 27,
+                onPressed: !apiStatus ? null : openDrawer,
+              ),
+            )
+          ],
         ),
       ),
     );
+    // Container(
+    //   color: isDarkTheme ? hexaCodeToColor(AppColors.darkBgd):  hexaCodeToColor(AppColors.whiteColorHexa),
+    //   child: ,
+    // );
   }
 }
 
@@ -581,7 +584,7 @@ LineChartData mainData() {
           FlSpot(6, 1),
         ],
         isCurved: true,
-        colors: gradientColors,
+        colors: _gradientColors,
         barWidth: 3,
         // isStrokeCapRound: true,
         dotData: FlDotData(
@@ -590,7 +593,7 @@ LineChartData mainData() {
         belowBarData: BarAreaData(
           show: true,
           colors:
-              gradientColors.map((color) => color.withOpacity(0.3)).toList(),
+             _gradientColors.map((color) => color.withOpacity(0.3)).toList(),
         ),
       ),
     ],

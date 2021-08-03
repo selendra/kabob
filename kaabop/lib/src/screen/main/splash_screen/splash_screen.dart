@@ -1,6 +1,7 @@
+import 'package:flutter/scheduler.dart';
 import 'package:polkawallet_sdk/storage/types/keyPairData.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
-
 
 class MySplashScreen extends StatefulWidget {
   //static const route = '/';
@@ -16,7 +17,9 @@ class MySplashScreenState extends State<MySplashScreen>
   Animation<double> animation;
 
   Future<void> getCurrentAccount() async {
-    await Future.delayed(const Duration(milliseconds: 700), () async {
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => ImportUserInfo("hello") ));
+
+    await Future.delayed(const Duration(milliseconds: 1000), () async {
       final List<KeyPairData> ls = ApiProvider.keyring.keyPairs.toList();
 
       if (ls.isEmpty) {
@@ -28,10 +31,14 @@ class MySplashScreenState extends State<MySplashScreen>
         if (ethAddr == null) {
           await dialogSuccess(
             context,
-            const Text(
-                'Please reimport your seed phrases to add support to new update.'),
+            const Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Text(
+                  'Please reimport your seed phrases to add support to new update.',
+                  textAlign: TextAlign.center,
+                )),
             const Text('New Update!'),
-            action: FlatButton(
+            action: TextButton(
               onPressed: () {
                 Navigator.pushReplacement(
                   context,
@@ -42,7 +49,8 @@ class MySplashScreenState extends State<MySplashScreen>
                   ),
                 );
               },
-              child: const Text('Continue'),
+              child: const MyText(
+                  text: 'Continue', color: AppColors.secondarytext),
             ),
           );
         } else {
@@ -56,6 +64,8 @@ class MySplashScreenState extends State<MySplashScreen>
     final bio = await StorageServices.readSaveBio();
 
     final passCode = await StorageServices().readSecure('passcode');
+
+    await StorageServices().readSecure('private').then((value) {});
 
     if (bio && passCode != null) {
       Navigator.pushReplacement(
@@ -102,10 +112,49 @@ class MySplashScreenState extends State<MySplashScreen>
 
   @override
   void initState() {
-    // dialogLoading(context);
+    // readTheme();
     getCurrentAccount();
 
+    // final window = WidgetsBinding.instance.window;
+    // window.onPlatformBrightnessChanged = () {
+    //   readTheme();
+    // };
+
     super.initState();
+  }
+
+  void readTheme() async {
+    final res = await StorageServices.fetchData('dark');
+    final sysTheme = _checkIfDarkModeEnabled();
+
+    if (res != null) {
+      Provider.of<ThemeProvider>(context, listen: false).changeMode();
+    } else {
+      if (sysTheme) {
+        Provider.of<ThemeProvider>(context, listen: false).changeMode();
+      } else {
+        Provider.of<ThemeProvider>(context, listen: false).changeMode();
+      }
+    }
+  }
+
+  void systemThemeChange() async {
+    final res = await StorageServices.fetchData('dark');
+    final sysTheme = _checkIfDarkModeEnabled();
+
+    if (res == null) {
+      if (sysTheme) {
+        Provider.of<ThemeProvider>(context, listen: false).changeMode();
+      } else {
+        Provider.of<ThemeProvider>(context, listen: false).changeMode();
+      }
+    }
+  }
+
+  bool _checkIfDarkModeEnabled() {
+    var brightness = SchedulerBinding.instance.window.platformBrightness;
+    bool darkModeOn = brightness == Brightness.dark;
+    return darkModeOn;
   }
 
   @override
@@ -115,8 +164,8 @@ class MySplashScreenState extends State<MySplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(),
+    return Scaffold(
+      body: Container(),
     );
   }
 }

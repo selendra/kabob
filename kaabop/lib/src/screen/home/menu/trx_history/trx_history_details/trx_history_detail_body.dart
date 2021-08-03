@@ -20,15 +20,11 @@ class TrxHistoryDetailsBody extends StatelessWidget {
           /* Activity Information */
           margin: const EdgeInsets.only(top: 30, left: 16, right: 16),
           decoration: BoxDecoration(
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 2.0,
-                offset: Offset(1.0, 1.0),
-              )
+            boxShadow: [
+              shadow()
             ],
             borderRadius: BorderRadius.circular(5.0),
-            color: hexaCodeToColor(AppColors.cardColor),
+            color: hexaCodeToColor(AppColors.whiteHexaColor),
           ),
           child: Column(
             children: <Widget>[

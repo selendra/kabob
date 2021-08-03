@@ -37,4 +37,5 @@ class AppText {
   static const String claimAirdropView = '/claimairdrop';
   static const String navigationDrawerView ='/navigationdrawer';
   static const String inviteFriendView = '/invitefriend';
+  static const String setupAccView = '/importUserInfo';
 }

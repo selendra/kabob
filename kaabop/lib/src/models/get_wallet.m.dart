@@ -18,7 +18,7 @@ class GetWalletModel {
     return BoxDecoration(
       // border: Border.all(color: Colors.deepPurpleAccent),
       borderRadius: BorderRadius.circular(10.0),
-      color: hexaCodeToColor(AppColors.cardColor)
+      color: hexaCodeToColor(AppColors.whiteHexaColor)
     );
   }
 

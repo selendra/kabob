@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/edit_contact/edit_contact_body.dart';
@@ -201,6 +202,7 @@ class _EditContactState extends State<EditContact> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,

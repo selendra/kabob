@@ -53,7 +53,7 @@ class AttActivity extends StatelessWidget {
                             offset: Offset(1.0, 1.0),
                           )
                         ],
-                        color: hexaCodeToColor(AppColors.cardColor),
+                        color: hexaCodeToColor(AppColors.whiteHexaColor),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(

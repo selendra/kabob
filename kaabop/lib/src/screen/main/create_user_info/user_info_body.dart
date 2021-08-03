@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class MyUserInfoBody extends StatelessWidget {
@@ -29,10 +30,14 @@ class MyUserInfoBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: <Widget>[
         MyAppBar(
           title: "User Information",
+          color: isDarkTheme
+              ? hexaCodeToColor(AppColors.darkCard)
+              : hexaCodeToColor(AppColors.whiteHexaColor),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -68,39 +73,55 @@ class MyUserInfoBody extends StatelessWidget {
                       controller: modelUserInfo.passwordCon,
                       textInputAction: TextInputAction.next,
                       style: TextStyle(
-                          color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
+                          color: isDarkTheme
+                              ? hexaCodeToColor(AppColors.whiteColorHexa)
+                              : hexaCodeToColor(AppColors.textColor),
+                          fontSize: 18.0),
                       decoration: InputDecoration(
                         labelText: "Pin",
                         labelStyle: TextStyle(
-                            fontSize: 18.0,
-                            color: modelUserInfo.passwordNode.hasFocus ||
-                                    modelUserInfo.passwordCon.text != ""
-                                ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
-                                : hexaCodeToColor(AppColors.textColor)),
+                          fontSize: 18.0,
+                          color: modelUserInfo.passwordNode.hasFocus ||
+                                  modelUserInfo.passwordCon.text != ""
+                              ? isDarkTheme
+                                  ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                      .withOpacity(0.3)
+                                  : hexaCodeToColor(AppColors.textColor)
+                                      .withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.darkSecondaryText),
+                        ),
                         prefixStyle: TextStyle(
                             color: hexaCodeToColor(AppColors.textColor),
                             fontSize: 18.0),
                         /* Prefix Text */
                         filled: true,
-                        fillColor: hexaCodeToColor(AppColors.cardColor),
+                        fillColor: isDarkTheme
+                            ? hexaCodeToColor(AppColors.darkCard)
+                            : hexaCodeToColor(AppColors.whiteHexaColor),
                         enabledBorder: myTextInputBorder(
-                            modelUserInfo.passwordCon.text != ""
-                                ? hexaCodeToColor("#FFFFFF").withOpacity(0.3)
-                                : Colors.transparent),
+                          modelUserInfo.passwordCon.text != ""
+                              ? isDarkTheme
+                                  ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                      .withOpacity(0.3)
+                                  : hexaCodeToColor(AppColors.textColor)
+                                      .withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.secondary)
+                                  .withOpacity(0.3),
+                        ),
                         /* Enable Border But Not Show Error */
                         border: errorOutline(),
                         /* Show Error And Red Border */
-                        focusedBorder: myTextInputBorder(
-                            hexaCodeToColor("#FFFFFF").withOpacity(0.3)),
+                        focusedBorder: myTextInputBorder(isDarkTheme
+                            ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                .withOpacity(0.3)
+                            : hexaCodeToColor(AppColors.secondary)),
                         /* Default Focuse Border Color*/
-                        focusColor: hexaCodeToColor("#ffffff"),
+                        focusColor: isDarkTheme
+                            ? hexaCodeToColor("#ffffff")
+                            : hexaCodeToColor(AppColors.textColor),
                         /* Border Color When Focusing */
                         contentPadding: const EdgeInsets.fromLTRB(
-                          21,
-                          23,
-                          21,
-                          23,
-                        ), // Default padding =
+                            21, 23, 21, 23), // Default padding =
                       ),
                       inputFormatters: [LengthLimitingTextInputFormatter(4)],
                       /* Limit Length Of Text Input */
@@ -122,32 +143,49 @@ class MyUserInfoBody extends StatelessWidget {
                         obscureText: true,
                         textInputAction: TextInputAction.done,
                         style: TextStyle(
-                            color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
+                            color: isDarkTheme
+                                ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                : hexaCodeToColor(AppColors.textColor),
+                            fontSize: 18.0),
                         decoration: InputDecoration(
                           labelText: "Confirm Pin",
                           labelStyle: TextStyle(
-                              fontSize: 18.0,
-                              color: modelUserInfo.passwordNode.hasFocus ||
-                                      modelUserInfo.passwordCon.text != ""
-                                  ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
-                                  : hexaCodeToColor(AppColors.textColor)),
-                          prefixStyle: TextStyle(
-                              color: hexaCodeToColor(AppColors.textColor),
-                              fontSize: 18.0),
+                            fontSize: 18.0,
+                            color: modelUserInfo.passwordNode.hasFocus ||
+                                    modelUserInfo.passwordCon.text != ""
+                                ? isDarkTheme
+                                    ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                        .withOpacity(0.3)
+                                    : hexaCodeToColor(AppColors.textColor)
+                                        .withOpacity(0.3)
+                                : hexaCodeToColor(AppColors.darkSecondaryText),
+                          ),
                           /* Prefix Text */
                           filled: true,
-                          fillColor: hexaCodeToColor(AppColors.cardColor),
+                          fillColor: isDarkTheme
+                              ? hexaCodeToColor(AppColors.darkCard)
+                              : hexaCodeToColor(AppColors.whiteHexaColor),
                           enabledBorder: myTextInputBorder(
-                              modelUserInfo.passwordCon.text != ""
-                                  ? hexaCodeToColor("#FFFFFF").withOpacity(0.3)
-                                  : Colors.transparent),
+                            modelUserInfo.passwordCon.text != ""
+                                ? isDarkTheme
+                                    ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                        .withOpacity(0.3)
+                                    : hexaCodeToColor(AppColors.textColor)
+                                        .withOpacity(0.3)
+                                : hexaCodeToColor(AppColors.secondary)
+                                    .withOpacity(0.3),
+                          ),
                           /* Enable Border But Not Show Error */
                           border: errorOutline(),
                           /* Show Error And Red Border */
-                          focusedBorder: myTextInputBorder(
-                              hexaCodeToColor("#FFFFFF").withOpacity(0.3)),
+                          focusedBorder: myTextInputBorder(isDarkTheme
+                              ? hexaCodeToColor(AppColors.whiteColorHexa)
+                                  .withOpacity(0.3)
+                              : hexaCodeToColor(AppColors.secondary)),
                           /* Default Focuse Border Color*/
-                          focusColor: hexaCodeToColor("#ffffff"),
+                          focusColor: isDarkTheme
+                              ? hexaCodeToColor("#ffffff")
+                              : hexaCodeToColor(AppColors.textColor),
                           /* Border Color When Focusing */
                           contentPadding: const EdgeInsets.fromLTRB(
                               21, 23, 21, 23), // Default padding =
@@ -167,14 +205,45 @@ class MyUserInfoBody extends StatelessWidget {
                           width: 50,
                           child: Switch(
                             value: model.switchBio,
-                            onChanged: (value) {
-                              switchBio(value);
+                            onChanged: (value) async {
+                              // switchBio(value);
+                              await showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0)),
+                                    title: Align(
+                                      child: MyText(
+                                        text: "Oops",
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    content: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 15.0, bottom: 15.0),
+                                      child: Text(
+                                          "This feature has not implemented yet!",
+                                          textAlign: TextAlign.center),
+                                    ),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('Close'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                           ),
                         ),
-                        const MyText(
+                        MyText(
                           text: "Fingerprint",
-                          color: "#FFFFFF",
+                          color: isDarkTheme
+                              ? AppColors.whiteColorHexa
+                              : AppColors.textColor,
                         )
                       ],
                     ),

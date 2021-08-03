@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -20,37 +21,46 @@ class QrScannerState extends State<QrScanner> {
   String code;
 
   void _onQrViewCreated(QRViewController controller) {
-    controller.scannedDataStream.listen((scanData) async {
-      await controller.pauseCamera();
-      // code = scanData.code;
-      Navigator.pop(context, scanData.code);
-      // await Future.delayed(Duration(seconds: 2), () async {
-      //   // _backend.mapData = await Navigator.push(
-      //   //     context,
-      //   //     MaterialPageRoute(
-      //   //         builder: (context) => SubmitTrx(scanData.code, false,
-      //   //             widget.portList, widget.sdk, widget.keyring)));
+    try {
 
-      // });
-    });
+      controller.scannedDataStream.listen((scanData) async {
+        await controller.pauseCamera();
+        // code = scanData.code;
+        Navigator.pop(context, scanData.code);
+        // await Future.delayed(Duration(seconds: 2), () async {
+        //   // _backend.mapData = await Navigator.push(
+        //   //     context,
+        //   //     MaterialPageRoute(
+        //   //         builder: (context) => SubmitTrx(scanData.code, false,
+        //   //             widget.portList, widget.sdk, widget.keyring)));
+
+        // });
+      });
+    } catch (e) {
+      print("Error $e");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: BodyScaffold(
+        physic: const NeverScrollableScrollPhysics(),
         height: MediaQuery.of(context).size.height,
         bottom: 0,
         child: Column(
           children: [
             MyAppBar(
               title: "Scanning",
+              color: isDarkTheme
+                ? hexaCodeToColor(AppColors.darkCard)
+                : hexaCodeToColor(AppColors.whiteHexaColor),
               onPressed: () {
                 Navigator.pop(context);
               },
             ),
             Expanded(
-              flex: 5,
               child: QRView(
                 key: qrKey,
                 onQRViewCreated: _onQrViewCreated,
@@ -58,7 +68,7 @@ class QrScannerState extends State<QrScanner> {
                   borderRadius: 10,
                   borderWidth: 10,
                 ),
-              ),
+              )
             ),
           ],
         ),

@@ -49,7 +49,7 @@ class PortfolioBody extends StatelessWidget {
                 width: double.infinity,
                 height: 200,
                 decoration: BoxDecoration(
-                  color: hexaCodeToColor(AppColors.cardColor),
+                  color: hexaCodeToColor(AppColors.whiteHexaColor),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -118,43 +118,43 @@ class PortfolioBody extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                          const MyText(bottom: 16, text: "Wallet"),
-                         const MyPercentText(
-                            value: "+10.5",
-                          ),
-                          LinearPercentIndicator(
-                            alignment: MainAxisAlignment.center,
-                            width: 100.0,
-                            percent: 0.5,
-                            backgroundColor:
-                                hexaCodeToColor(AppColors.cardColor),
-                            progressColor:
-                                hexaCodeToColor(AppColors.secondarytext),
-                            animation: true,
-                          )
+                        //  const MyPercentText(
+                        //     value: "+10.5",
+                        //   ),
+                        //   LinearPercentIndicator(
+                        //     alignment: MainAxisAlignment.center,
+                        //     width: 100.0,
+                        //     percent: 0.5,
+                        //     backgroundColor:
+                        //         hexaCodeToColor(AppColors.cardColor),
+                        //     progressColor:
+                        //         hexaCodeToColor(AppColors.secondarytext),
+                        //     animation: true,
+                        //   )
                         ],
                       ),
                     ),
                     VerticalDivider(
                       thickness: 2,
-                      color: hexaCodeToColor(AppColors.cardColor),
+                      color: hexaCodeToColor(AppColors.whiteHexaColor),
                     ),
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const MyText(bottom: 16, text: "Market"),
-                          const MyPercentText(
-                            value: "0.0",
-                          ),
-                          LinearPercentIndicator(
-                            alignment: MainAxisAlignment.center,
-                            width: 100.0,
-                            percent: 0.5,
-                            backgroundColor:
-                                hexaCodeToColor(AppColors.cardColor),
-                            progressColor: hexaCodeToColor("#00FFF0"),
-                            animation: true,
-                          )
+                          // const MyPercentText(
+                          //   value: "0.0",
+                          // ),
+                          // LinearPercentIndicator(
+                          //   alignment: MainAxisAlignment.center,
+                          //   width: 100.0,
+                          //   percent: 0.5,
+                          //   backgroundColor:
+                          //       hexaCodeToColor(AppColors.cardColor),
+                          //   progressColor: hexaCodeToColor("#00FFF0"),
+                          //   animation: true,
+                          // )
                         ],
                       ),
                     )

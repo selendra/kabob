@@ -1,4 +1,5 @@
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class FingerPrint extends StatefulWidget {
@@ -23,31 +24,32 @@ class _FingerPrintState extends State<FingerPrint> {
   }
 
   Future<void> authenticate() async {
+
     bool authenticate = false;
 
     try {
-      authenticate = await localAuth.authenticateWithBiometrics(
-          localizedReason: '', stickyAuth: true);
 
+      authenticate = await localAuth.authenticate( localizedReason: 'Please complete the biometrics to proceed.', stickyAuth: true);
       if (authenticate) {
         Navigator.pushReplacementNamed(context, Home.route);
       }
     } on SocketException catch (e) {
+
       await Future.delayed(const Duration(milliseconds: 300), () {});
       AppServices.openSnackBar(globalkey, e.message);
     } catch (e) {
+
       await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
             title: const Align(
               child: Text('Message'),
             ),
             content: Padding(
               padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-              child: Text(e.message.toString()),
+              child: MyText(text: e.message.toString()),
             ),
             actions: <Widget>[
               FlatButton(
@@ -64,6 +66,7 @@ class _FingerPrintState extends State<FingerPrint> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       key: globalkey,
       body: GestureDetector(
@@ -78,10 +81,14 @@ class _FingerPrintState extends State<FingerPrint> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const MyText(
-                  text: 'Bitriel Locked',
-                  fontSize: 27.0,
-                  fontWeight: FontWeight.bold),
+              MyText(
+                text: 'Bitriel Locked',
+                fontSize: 27.0,
+                fontWeight: FontWeight.bold,
+                color: isDarkTheme
+                    ? AppColors.whiteColorHexa
+                    : AppColors.textColor,
+              ),
               const SizedBox(
                 height: 40.0,
               ),
@@ -90,7 +97,13 @@ class _FingerPrintState extends State<FingerPrint> {
               const SizedBox(
                 height: 40.0,
               ),
-              const MyText(top: 19.0, text: 'Authentication Required'),
+              MyText(
+                top: 19.0,
+                text: 'Authentication Required',
+                color: isDarkTheme
+                    ? AppColors.whiteColorHexa
+                    : AppColors.textColor,
+              ),
             ],
           ),
         ),

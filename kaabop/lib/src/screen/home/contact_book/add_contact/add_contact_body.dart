@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
 
@@ -18,10 +19,14 @@ class AddContactBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: [
         MyAppBar(
           title: "Add Contact",
+          color: isDarkTheme
+              ? hexaCodeToColor(AppColors.darkCard)
+              : hexaCodeToColor(AppColors.whiteHexaColor),
           onPressed: () {
             Navigator.pop(context);
           },

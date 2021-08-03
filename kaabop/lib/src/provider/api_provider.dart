@@ -32,24 +32,24 @@ class ApiProvider with ChangeNotifier {
     //   org: 'KOOMPI',
     //   color: Colors.transparent,
     // ),
-    TokenModel(
-      logo: 'assets/icons/polkadot.png',
-      symbol: 'DOT',
-      org: '',
-      color: Colors.transparent,
-    ),
-    TokenModel(
-      logo: 'assets/bnb-2.png',
-      symbol: 'BNB',
-      org: 'Smart Chain',
-      color: Colors.transparent,
-    ),
-    TokenModel(
-      logo: 'assets/SelendraCircle-Blue.png',
-      symbol: 'SEL',
-      org: 'BEP-20',
-      color: Colors.transparent,
-    ),
+    // TokenModel(
+    //   logo: 'assets/icons/polkadot.png',
+    //   symbol: 'DOT',
+    //   org: '',
+    //   color: Colors.transparent,
+    // ),
+    // TokenModel(
+    //   logo: 'assets/bnb-2.png',
+    //   symbol: 'BNB',
+    //   org: 'Smart Chain',
+    //   color: Colors.transparent,
+    // ),
+    // TokenModel(
+    //   logo: 'assets/SelendraCircle-Blue.png',
+    //   symbol: 'SEL',
+    //   org: 'BEP-20',
+    //   color: Colors.transparent,
+    // ),
   ];
 
   ContractProvider contractProvider;
@@ -126,7 +126,7 @@ class ApiProvider with ChangeNotifier {
   }
 
   Future<bool> validateBtcAddr(String address) async {
-    return Address.validateAddress(address, testnet);
+    return Address.validateAddress(address, bitcoin);
   }
 
   void setBtcAddr(String btcAddress) {
@@ -140,6 +140,10 @@ class ApiProvider with ChangeNotifier {
     int input = 0;
     final alice = ECPair.fromWIF(wif);
 
+    final p2wpkh = new P2WPKH(
+      data: new PaymentData(pubkey: alice.publicKey),
+    ).data;
+
     final txb = TransactionBuilder();
     txb.setVersion(1);
 
@@ -149,9 +153,7 @@ class ApiProvider with ChangeNotifier {
       for (final i in res) {
         if (i['status']['confirmed'] == true) {
           txb.addInput(
-            i['txid'],
-            int.parse(i['vout'].toString()),
-          );
+              i['txid'], int.parse(i['vout'].toString()), null, p2wpkh.output);
           totalSatoshi += int.parse(i['value'].toString());
           input++;
         }
@@ -264,11 +266,12 @@ class ApiProvider with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void setDotMarket(
-      Market marketData, String currentPrice, String priceChange24h) {
+  void setDotMarket(Market marketData, List<List<double>> lineChartData,
+      String currentPrice, String priceChange24h) {
     dot.marketData = marketData;
     dot.marketPrice = currentPrice;
     dot.change24h = priceChange24h;
+    dot.lineChartData = lineChartData;
 
     notifyListeners();
   }
@@ -280,11 +283,12 @@ class ApiProvider with ChangeNotifier {
     }
   }
 
-  void setBtcMarket(
-      Market marketData, String currentPrice, String priceChange24h) {
+  void setBtcMarket(Market marketData, List<List<double>> lineChartData,
+      String currentPrice, String priceChange24h) {
     btc.marketData = marketData;
     btc.marketPrice = currentPrice;
     btc.change24h = priceChange24h;
+    btc.lineChartData = lineChartData;
 
     notifyListeners();
   }
@@ -302,6 +306,12 @@ class ApiProvider with ChangeNotifier {
   Future<bool> validateAddress(String address) async {
     final res = await sdk.api.keyring.validateAddress(address);
     return res;
+  }
+
+  Future<String> swapToken(String privateKey, String amount) async {
+   // final res = await sdk.api.swapToken(privateKey, amount);
+    await sdk.api.connectBsc();
+    return 'res';
   }
 
   Future<void> getChainDecimal() async {

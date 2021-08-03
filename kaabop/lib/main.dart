@@ -6,7 +6,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  
+
   // Catch Error During Callback
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.dumpErrorToConsole(details);
@@ -19,11 +19,17 @@ void main() {
         ChangeNotifierProvider<WalletProvider>(
           create: (context) => WalletProvider(),
         ),
+        ChangeNotifierProvider<MarketProvider>(
+          create: (context) => MarketProvider(),
+        ),
         ChangeNotifierProvider<ApiProvider>(
           create: (context) => ApiProvider(),
         ),
         ChangeNotifierProvider<ContractProvider>(
           create: (context) => ContractProvider(),
+        ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(),
         ),
       ],
       child: App(),

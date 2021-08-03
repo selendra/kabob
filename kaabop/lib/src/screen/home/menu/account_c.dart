@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/theme/color.dart';
 import '../../../../index.dart';
 
 class AccountC {
+
   void showChangePin(
-      BuildContext context,
-      GlobalKey<FormState> _changePinKey,
-      TextEditingController _oldPinController,
-      TextEditingController _newPinController,
-      FocusNode _oldNode,
-      FocusNode _newNode,
-      Function onChanged,
-      Function onSubmit,
-      Function submitChangePin) {
+    BuildContext context,
+    GlobalKey<FormState> _changePinKey,
+    TextEditingController _oldPinController,
+    TextEditingController _newPinController,
+    FocusNode _oldNode,
+    FocusNode _newNode,
+    Function onChanged,
+    Function onSubmit,
+    Function submitChangePin
+  ) {
     showModalBottomSheet(
       isScrollControlled: true,
       context: context,
       builder: (context) {
+        final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
         return Container(
           padding: const EdgeInsets.all(25.0),
           height: MediaQuery.of(context).size.height / 1.5,
-          color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
+          color: isDarkTheme
+              ? Color(AppUtils.convertHexaColor(AppColors.darkBgd))
+              : Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
           child: Form(
             key: _changePinKey,
             child: SingleChildScrollView(
@@ -30,7 +36,6 @@ class AccountC {
                     labelText: 'Old Pin',
                     controller: _oldPinController,
                     focusNode: _oldNode,
-               
                     obcureText: true,
                     validateField: (value) => value.isEmpty || value.length < 4
                         ? 'Please fill in old 4 digits pin'
@@ -43,9 +48,8 @@ class AccountC {
                     labelText: 'New Pin',
                     controller: _newPinController,
                     focusNode: _newNode,
-                    
                     obcureText: true,
-                    validateField: (value) => value.isEmpty|| value.length < 6
+                    validateField: (value) => value.isEmpty || value.length < 6
                         ? 'Please fill in new 4 digits pin'
                         : null,
                     textInputFormatter: [LengthLimitingTextInputFormatter(4)],
@@ -85,10 +89,13 @@ class AccountC {
       isScrollControlled: true,
       context: context,
       builder: (context) {
+        final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
         return Container(
           padding: const EdgeInsets.all(25.0),
           height: MediaQuery.of(context).size.height / 2,
-          color: Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
+          color: isDarkTheme
+              ? Color(AppUtils.convertHexaColor(AppColors.darkBgd))
+              : Color(AppUtils.convertHexaColor(AppColors.bgdColor)),
           child: Form(
             key: _backupKey,
             child: SingleChildScrollView(

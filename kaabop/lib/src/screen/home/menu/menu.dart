@@ -1,3 +1,6 @@
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:local_auth/local_auth.dart' as auth;
 import 'package:wallet_apps/index.dart';
 
 class Menu extends StatefulWidget {
@@ -19,11 +22,8 @@ class MenuState extends State<Menu> {
   final LocalAuthentication _localAuth = LocalAuthentication();
 
   /* Login Inside Dialog */
-  bool isProgress = false,
-      isFetch = false,
-      isTick = false,
-      isSuccessPin = false,
-      isHaveWallet = false;
+  bool isDarkTheme = false;
+
 
   /* InitState */
   @override
@@ -73,44 +73,65 @@ class MenuState extends State<Menu> {
     });
   }
 
-  Future<bool> _checkBiometrics() async {
-    bool canCheckBiometrics;
-    try {
-      canCheckBiometrics = await _localAuth.canCheckBiometrics;
-      // ignore: unused_catch_clause
-    } on PlatformException catch (e) {
-      canCheckBiometrics = false;
-    }
-
-    return canCheckBiometrics;
-  }
-
   // ignore: avoid_positional_boolean_parameters
-  Future<void> switchBiometric(bool switchValue) async {
-    final canCheck = await _checkBiometrics();
+  Future<void> switchBiometric(BuildContext context, bool switchValue) async {
 
-    if (canCheck == false) {
-      snackBar(_menuModel.globalKey, "Your device doesn't have finger print");
-    } else {
-      if (switchValue) {
-        await authenticateBiometric().then((values) async {
-          if (_menuModel.authenticated) {
-            setState(() {
-              _menuModel.switchBio = switchValue;
-            });
-            await StorageServices.saveBio(_menuModel.switchBio);
-          }
-        });
+    try{
+
+      final canCheck = await AppServices().checkBiometrics(context);
+
+      if (canCheck == false) {  
+        snackBar(context, "Your device doesn't have finger print! Set up to enable this feature");
       } else {
-        await authenticateBiometric().then((values) async {
-          if (_menuModel.authenticated) {
-            setState(() {
-              _menuModel.switchBio = switchValue;
-            });
-            await StorageServices.removeKey('bio');
-          }
-        });
+
+        // Check New Enable Bio
+        if (switchValue) {
+          await authenticateBiometric().then((values) async {
+
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.saveBio(_menuModel.switchBio);
+            }
+          });
+        } 
+        // Check Disable Bio
+        else {
+          await authenticateBiometric().then((values) async {
+            if (_menuModel.authenticated) {
+              setState(() {
+                _menuModel.switchBio = switchValue;
+              });
+              await StorageServices.removeKey('bio');
+            }
+          });
+        }
       }
+    } catch (e){
+      print("error auth $e");
+        
+      await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            title: Align(
+              child: MyText(text: "Oops", fontWeight: FontWeight.w600,),
+            ),
+            content: Padding(
+              padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+              child: Text(e.toString(), textAlign: TextAlign.center),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -119,9 +140,11 @@ class MenuState extends State<Menu> {
       // Trigger Authentication By Finger Print
       // ignore: deprecated_member_use
       _menuModel.authenticated = await _localAuth.authenticateWithBiometrics(
-        localizedReason: '',
+        localizedReason: 'Please complete the biometrics to proceed.',
         stickyAuth: true,
       );
+
+      print("Authen ${_menuModel.authenticated}");
 
       // ignore: empty_catches
     } on PlatformException {}
@@ -133,16 +156,17 @@ class MenuState extends State<Menu> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context,listen: false).isDark;
     return Drawer(
       key: _menuModel.globalKey,
       child: SafeArea(
         child: Container(
-          color: hexaCodeToColor(AppColors.bgdColor),
+          color: isDarkTheme ?  hexaCodeToColor(AppColors.darkBgd) :  hexaCodeToColor(AppColors.bgdColor),
           child: SingleChildScrollView(
             child: MenuBody(
               userInfo: widget._userData,
               model: _menuModel,
-              switchBio: switchBiometric,
+              switchBio: switchBiometric,        
             ),
           ),
         ),

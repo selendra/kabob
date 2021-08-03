@@ -7,7 +7,7 @@ class RouteAnimation extends PageRouteBuilder {
   RouteAnimation({this.enterPage, this.exitPage, this.routeName})
       : super(
           pageBuilder: (context, animation, secondaryAnimation) => exitPage,
-          transitionDuration: const Duration(milliseconds: 100),
+          transitionDuration: const Duration(milliseconds: 50),
           settings: RouteSettings(name: routeName),
           transitionsBuilder: (context, animation, secondaryAnimation, child) =>
               Stack(

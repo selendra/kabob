@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class ConfirmMnemonic extends StatefulWidget {
@@ -37,38 +38,40 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                     _wordsLeft.length > (r + 1) * 3
                         ? (r + 1) * 3
                         : _wordsLeft.length)
-                .map(
-                  (i) => Container(
-                    alignment: Alignment.center,
-                    color: hexaCodeToColor(AppColors.cardColor),
-                    padding: const EdgeInsets.only(
-                      left: 4,
-                      right: 4,
-                      bottom: 4,
-                    ),
-                    margin: const EdgeInsets.only(
-                      left: 4,
-                      right: 4,
-                      bottom: 4,
-                    ),
-                    // ignore: deprecated_member_use
-                    child: FlatButton(
-                      onPressed: () {
-                        setState(() {
-                          _wordsLeft.remove(i);
-                          _wordsSelected.add(i.toString());
-                        });
-                        if (_wordsLeft.isEmpty) validationMnemonic();
-                      },
-                      child: MyText(
-                        text: i.toString(),
-                        color: AppColors.secondarytext,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                .map((i) {
+              final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+              return Container(
+                alignment: Alignment.center,
+                color: isDarkTheme
+                    ? hexaCodeToColor(AppColors.darkCard)
+                    : hexaCodeToColor(AppColors.whiteHexaColor),
+                padding: const EdgeInsets.only(
+                  left: 4,
+                  right: 4,
+                  bottom: 4,
+                ),
+                margin: const EdgeInsets.only(
+                  left: 4,
+                  right: 4,
+                  bottom: 4,
+                ),
+                // ignore: deprecated_member_use
+                child: FlatButton(
+                  onPressed: () {
+                    setState(() {
+                      _wordsLeft.remove(i);
+                      _wordsSelected.add(i.toString());
+                    });
+                    if (_wordsLeft.isEmpty) validationMnemonic();
+                  },
+                  child: MyText(
+                    text: i.toString(),
+                    color: AppColors.secondarytext,
+                    fontWeight: FontWeight.bold,
                   ),
-                )
-                .toList(),
+                ),
+              );
+            }).toList(),
           ),
         );
       }
@@ -125,13 +128,16 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             MyAppBar(
-              color: hexaCodeToColor(AppColors.cardColor),
+              color: isDarkTheme
+                  ? hexaCodeToColor(AppColors.darkCard)
+                  : hexaCodeToColor(AppColors.whiteHexaColor),
               title: AppText.createAccTitle,
               onPressed: () {
                 Navigator.pop(context);
@@ -147,7 +153,9 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                       text: AppText.confirmMnemonic,
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.whiteColorHexa,
+                      color: isDarkTheme
+                          ? AppColors.whiteColorHexa
+                          : AppColors.textColor,
                       bottom: 12,
                     ),
                   ),
@@ -156,7 +164,9 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                     textAlign: TextAlign.left,
                     text: AppText.clickMnemonic,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.whiteColorHexa,
+                    color: isDarkTheme
+                        ? AppColors.whiteColorHexa
+                        : AppColors.textColor,
                     bottom: 12,
                   ),
 
@@ -180,7 +190,9 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                     height: 80,
                     width: double.infinity,
                     margin: const EdgeInsets.only(bottom: 16),
-                    color: hexaCodeToColor(AppColors.cardColor),
+                    color: isDarkTheme
+                        ? hexaCodeToColor(AppColors.darkCard)
+                        : hexaCodeToColor(AppColors.darkCard),
                     padding: const EdgeInsets.all(16),
                     alignment: Alignment.centerLeft,
                     child: MyText(
@@ -193,26 +205,28 @@ class _ConfirmMnemonicState extends State<ConfirmMnemonic> {
                 ],
               ),
             ),
+
             _buildWordsButtons(),
             Expanded(
               child: Container(),
             ),
+            
             MyFlatButton(
-              edgeMargin:
-                  const EdgeInsets.only(left: 66, right: 66, bottom: 16),
+              hasShadow: enable,
+              edgeMargin: const EdgeInsets.only(left: 66, right: 66, bottom: 16),
               textButton: AppText.next,
               action: enable == false
-                  ? null
-                  : () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MyUserInfo(
-                            widget.passPhrase,
-                          ),
-                        ),
-                      );
-                    },
+                ? null
+                : () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyUserInfo(
+                        widget.passPhrase,
+                      ),
+                    ),
+                  );
+                },
             )
           ],
         ),

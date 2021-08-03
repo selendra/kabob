@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gsheets/gsheets.dart';
 import 'package:provider/provider.dart';
 import 'package:wallet_apps/src/components/component.dart';
+import 'package:wallet_apps/src/components/network_sensitive.dart';
 
 import '../../../../index.dart';
 
@@ -145,7 +146,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
   }
 
   Future<bool> findAddress(String address) async {
-    final gsheets = GSheets(AppConfig.credentials);
+    final gsheets = GSheets(address);
     // fetch spreadsheet by its id
     final ss = await gsheets.spreadsheet(_spreadsheetId);
     // get worksheet by its title
@@ -335,38 +336,45 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
   @override
   Widget build(BuildContext context) {
     _walletController.text = Provider.of<ContractProvider>(context).ethAdd;
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
-      body: BodyScaffold(
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                MyAppBar(
-                  title: 'Claim Airdrop',
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Expanded(
-                  child: Form(
-                    key: airdropKey,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(20),
-                            width: MediaQuery.of(context).size.width,
-                            child: ClipRRect(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10.0)),
-                              child: Image.asset(
-                                'assets/bep20.png',
-                                height: 180,
-                                fit: BoxFit.cover,
+      body: NetworkSensitive(
+        child: BodyScaffold(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  MyAppBar(
+                    title: 'Claim Airdrop',
+                    color: isDarkTheme
+                        ? hexaCodeToColor(AppColors.darkCard)
+                        : hexaCodeToColor(AppColors.whiteHexaColor),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  Expanded(
+                    child: Form(
+                      key: airdropKey,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              width: MediaQuery.of(context).size.width,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(10.0)),
+                                child: Image.asset(
+                                  'assets/bep20.png',
+                                  height: 180,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
+<<<<<<< HEAD
                           ),
                           MyInputField(
                             pBottom: 24,
@@ -434,84 +442,153 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                             textInputFormatter: [
                               LengthLimitingTextInputFormatter(
                                 TextField.noMaxLength,
-                              ),
-                            ],
-                            controller: _socialController,
-                            focusNode: _socialFocusNode,
-                            onChanged: onChanged,
-                            onSubmit: onSubmit,
-                          ),
-                          MyText(
-                            text: AppText.claimAirdropNote,
-                            textAlign: TextAlign.start,
-                            left: 16.0,
-                            right: 16.0,
-                            fontSize: 16.0,
-                          ),
-                          // MyInputField(
-                          //   pTop: 24.0,
-                          //   pBottom: 8,
-                          //   labelText: "Referral ID",
-                          //   textInputFormatter: [
-                          //     LengthLimitingTextInputFormatter(
-                          //       TextField.noMaxLength,
-                          //     ),
-                          //   ],
-                          //   suffix: GestureDetector(
-                          //     onTap: () {
-                          //       pasteDataToClipboard();
-                          //     },
-                          //     child: const MyText(
-                          //       text: 'PASTE',
-                          //     ),
-                          //   ),
-                          //   controller: _referralController,
-                          //   focusNode: _referralNode,
-                          //   onChanged: onChanged,
-                          //   onSubmit: onSubmit,
-                          // ),
-                          const SizedBox(height: 20),
-                          MyFlatButton(
-                            textButton: "Claim Airdrop",
-                            edgeMargin: const EdgeInsets.only(
-                              top: 40,
-                              left: 66,
-                              right: 66,
+=======
+                            MyInputField(
+                              pBottom: 24,
+                              labelText:
+                                  "Email (by submitting will get +5 \$SEL)",
+                              inputType: TextInputType.emailAddress,
+                              textInputFormatter: [
+                                LengthLimitingTextInputFormatter(
+                                  TextField.noMaxLength,
+                                ),
+                              ],
+                              controller: _emailController,
+                              focusNode: _emailFocusNode,
+                              validateField: validateEmailField,
+                              onChanged: onChangedEmail,
+                              onSubmit: onSubmit,
                             ),
-                            hasShadow: true,
-                            action: _enableButton ? submitForm : null,
-                          ),
-                          const SizedBox(height: 200),
-                        ],
+                            MyInputField(
+                              pBottom: 24,
+                              labelText:
+                                  "Phone Number (by submitting will get +5 \$SEL)",
+                              textInputFormatter: [
+                                LengthLimitingTextInputFormatter(
+                                  TextField.noMaxLength,
+                                ),
+                              ],
+                              controller: _phoneController,
+                              focusNode: _phoneFocusNode,
+                              inputType: TextInputType.number,
+                              validateField: (value) => value.isEmpty
+                                  ? 'Please fill in phone number'
+                                  : null,
+                              onChanged: onChanged,
+                              onSubmit: onSubmit,
+                            ),
+                            MyInputField(
+                              pBottom: 8,
+                              labelText:
+                                  "Wallet Address (0xe0e5c149b9cdf9d2279b6ddfda9bc0a4a975285c)",
+                              textInputFormatter: [
+                                LengthLimitingTextInputFormatter(
+                                  TextField.noMaxLength,
+                                ),
+                              ],
+                              controller: _walletController,
+                              focusNode: _walletFocusNode,
+                              validateField: (value) => value.isEmpty
+                                  ? 'Please fill in wallet address'
+                                  : null,
+                              onChanged: onChanged,
+                              onSubmit: onSubmit,
+                            ),
+                            const MyText(
+                              text:
+                                  'Get Wallet (each address will get 100 \$SEL)',
+                              textAlign: TextAlign.left,
+                              left: 16.0,
+                              right: 16.0,
+                              fontSize: 16.0,
+                            ),
+                            MyInputField(
+                              pTop: 24.0,
+                              pBottom: 8,
+                              labelText: "Social Post Links (optional)",
+                              textInputFormatter: [
+                                LengthLimitingTextInputFormatter(
+                                  TextField.noMaxLength,
+                                ),
+                              ],
+                              controller: _socialController,
+                              focusNode: _socialFocusNode,
+                              onChanged: onChanged,
+                              onSubmit: onSubmit,
+                            ),
+                            MyText(
+                              text: AppText.claimAirdropNote,
+                              textAlign: TextAlign.start,
+                              left: 16.0,
+                              right: 16.0,
+                              fontSize: 16.0,
+                            ),
+                            // MyInputField(
+                            //   pTop: 24.0,
+                            //   pBottom: 8,
+                            //   labelText: "Referral ID",
+                            //   textInputFormatter: [
+                            //     LengthLimitingTextInputFormatter(
+                            //       TextField.noMaxLength,
+                            //     ),
+                            //   ],
+                            //   suffix: GestureDetector(
+                            //     onTap: () {
+                            //       pasteDataToClipboard();
+                            //     },
+                            //     child: const MyText(
+                            //       text: 'PASTE',
+                            //     ),
+                            //   ),
+                            //   controller: _referralController,
+                            //   focusNode: _referralNode,
+                            //   onChanged: onChanged,
+                            //   onSubmit: onSubmit,
+                            // ),
+                            const SizedBox(height: 20),
+                            MyFlatButton(
+                              textButton: "Claim Airdrop",
+                              edgeMargin: const EdgeInsets.only(
+                                top: 40,
+                                left: 66,
+                                right: 66,
+>>>>>>> 76ef0d98e8b704635e7d7d8167918d76efe99a05
+                              ),
+                              hasShadow: true,
+                              action: _enableButton ? submitForm : null,
+                            ),
+                            const SizedBox(height: 200),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            if (_submitted == false)
-              Container()
-            else
-              BackdropFilter(
-                // Fill Blur Background
-                filter: ImageFilter.blur(
-                  sigmaX: 5.0,
-                  sigmaY: 5.0,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: CustomAnimation.flareAnimation(
-                        flareController,
-                        "assets/animation/check.flr",
-                        "Checkmark",
-                      ),
-                    ),
-                  ],
-                ),
+                ],
               ),
-          ],
+              if (_submitted == false)
+                Container()
+              else
+                BackdropFilter(
+                  // Fill Blur Background
+                  filter: ImageFilter.blur(
+                    sigmaX: 5.0,
+                    sigmaY: 5.0,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: CustomAnimation.flareAnimation(
+                          flareController,
+                          "assets/animation/check.flr",
+                          "Checkmark",
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

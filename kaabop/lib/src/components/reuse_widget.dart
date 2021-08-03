@@ -112,9 +112,14 @@ OutlineInputBorder errorOutline() {
 }
 
 /* Button shadow */
-BoxShadow shadow(Color hexaCode, double blurRadius, double spreadRadius) {
+BoxShadow shadow(
+    {Color hexaCode, double blurRadius, double spreadRadius, Offset offset}) {
   return BoxShadow(
-      color: hexaCode, blurRadius: blurRadius, spreadRadius: spreadRadius);
+    color: hexaCode ?? Colors.grey.withOpacity(0.2),
+    blurRadius: blurRadius ?? 6.0,
+    spreadRadius: spreadRadius ?? 2.0,
+    offset: offset ?? Offset(0.5, 2.0),
+  );
 }
 
 Widget customFlatButton(
@@ -214,56 +219,74 @@ BoxDecoration signOutColor() {
 /* Dialog of response from server */
 // ignore: type_annotate_public_apis
 
-Future<void> startNode(BuildContext context) async {
-  await Future.delayed(
-    const Duration(milliseconds: 50),
-    () {
-      showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (context) {
-          // ignore: parameter_assignments
-
-          return disableNativePopBackButton(
-            AlertDialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              title: Column(
+Future<void> successDialog(BuildContext context, String operationText) async {
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) {
+      return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          content: Container(
+            // height: MediaQuery.of(context).size.height / 2.6,
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: SingleChildScrollView(
+              child: Column(
                 children: [
-                  CircularProgressIndicator(
-                    backgroundColor: Colors.transparent,
-                    valueColor: AlwaysStoppedAnimation(
-                      hexaCodeToColor(
-                        AppColors.secondary,
-                      ),
-                    ),
+                  SizedBox(
+                    height: 28,
                   ),
-                  Shimmer.fromColors(
-                    baseColor: Colors.red,
-                    highlightColor: Colors.yellow,
-                    child: const Align(
-                      child: MyText(
-                        text: "\nConnecting to Remote Node...",
-                        color: "#000000",
-                        fontWeight: FontWeight.bold,
+                  SvgPicture.asset(
+                    'assets/icons/tick.svg',
+                    height: 100,
+                    width: 100,
+                  ),
+                  const MyText(
+                    text: 'SUCCESS!',
+                    fontSize: 22,
+                    top: 45,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  MyText(
+                    top: 8.0,
+                    fontSize: 16,
+                    text: 'You have successfully ' + operationText,
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.width * 0.1,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // ignore: deprecated_member_use
+                      SizedBox(
+                        height: 50,
+                        width: 140,
+                        child: RaisedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, Home.route, ModalRoute.withName('/'));
+                          },
+                          color: hexaCodeToColor(AppColors.secondary),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Text(
+                            'Continue',
+                            style: TextStyle(
+                              color: hexaCodeToColor('#ffffff'),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
-              content: const Padding(
-                padding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                child: MyText(
-                  text: "Please wait ! This might be taking some time.",
-                  color: "#000000",
-                ),
-              ),
             ),
-          );
-        },
-      );
+          ));
     },
   );
 }
@@ -826,7 +849,7 @@ Widget customDropDown(
       right: 14.0,
     ),
     decoration: BoxDecoration(
-      color: hexaCodeToColor(AppColors.cardColor),
+      color: hexaCodeToColor(AppColors.whiteHexaColor),
       borderRadius: BorderRadius.circular(size5),
     ),
     child: Row(

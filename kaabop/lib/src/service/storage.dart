@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class StorageServices {
   static String _decode;
   static SharedPreferences _preferences;
+  
   final _storage = const FlutterSecureStorage();
 
   Future<String> readSecure(String key) async {

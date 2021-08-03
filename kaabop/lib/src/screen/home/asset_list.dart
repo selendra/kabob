@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../index.dart';
 
 class AssetList extends StatelessWidget {
+
   final _formKey = GlobalKey<FormState>();
   final passphraseController = TextEditingController();
   final pinController = TextEditingController();
@@ -38,8 +39,7 @@ class AssetList extends StatelessWidget {
           context: context,
           builder: (context) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
               title: const Align(
                 child: Text('Opps'),
               ),
@@ -64,8 +64,7 @@ class AssetList extends StatelessWidget {
           context: context,
           builder: (context) {
             return AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
               title: const Align(
                 child: Text('Opps'),
               ),
@@ -74,7 +73,7 @@ class AssetList extends StatelessWidget {
                 child: Text('PIN verification failed'),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Close'),
                 ),
@@ -87,26 +86,24 @@ class AssetList extends StatelessWidget {
       if (isValidSeed && isValidPw) {
         final seed = bip39.mnemonicToSeed(passphraseController.text);
         final hdWallet = HDWallet.fromSeed(seed);
+        final keyPair = ECPair.fromWIF(hdWallet.wif);
+        final bech32Address = new P2WPKH(data: new PaymentData(pubkey: keyPair.publicKey), network: bitcoin).data.address;
 
-        await StorageServices.setData(hdWallet.address, 'btcaddress');
-        final res = await ApiProvider.keyring.store
-            .encryptPrivateKey(hdWallet.wif, pinController.text);
+        await StorageServices.setData(bech32Address, 'bech32');
+        final res = await ApiProvider.keyring.store.encryptPrivateKey(hdWallet.wif, pinController.text);
 
         if (res != null) {
           await StorageServices().writeSecure('btcwif', res);
         }
 
-        Provider.of<ApiProvider>(context, listen: false)
-            .getBtcBalance(hdWallet.address);
-        Provider.of<ApiProvider>(context, listen: false)
-            .isBtcAvailable('contain');
+        Provider.of<ApiProvider>(context, listen: false).getBtcBalance(hdWallet.address);
+        Provider.of<ApiProvider>(context, listen: false).isBtcAvailable('contain');
 
-        Provider.of<ApiProvider>(context, listen: false)
-            .setBtcAddr(hdWallet.address);
-        Provider.of<WalletProvider>(context, listen: false)
-            .addTokenSymbol('BTC');
+        Provider.of<ApiProvider>(context, listen: false).setBtcAddr(bech32Address);
+        Provider.of<WalletProvider>(context, listen: false).addTokenSymbol('BTC');
         Navigator.pop(context);
         Navigator.pop(context);
+
         await showDialog(
           context: context,
           builder: (context) {
@@ -121,7 +118,7 @@ class AssetList extends StatelessWidget {
                 child: Text('You have created bitcoin wallet.'),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text('Close'),
                 ),
@@ -137,6 +134,8 @@ class AssetList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+
+        // SEL Verion 1
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return GestureDetector(
@@ -169,6 +168,42 @@ class AssetList extends StatelessWidget {
             );
           },
         ),
+
+        // SEL Verion 2
+        Consumer<ContractProvider>(
+          builder: (context, value, child) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  RouteAnimation(
+                    enterPage: AssetInfo(
+                      id: value.bscNativeV2.id,
+                      assetLogo: value.bscNativeV2.logo,
+                      balance:
+                          value.bscNativeV2.balance ?? AppText.loadingPattern,
+                      tokenSymbol: value.bscNativeV2.symbol ?? '',
+                      org: value.bscNativeV2.org,
+                      marketPrice: value.bscNativeV2.marketPrice,
+                      priceChange24h: value.bscNativeV2.change24h,
+                    ),
+                  ),
+                );
+              },
+              child: AssetItem(
+                value.bscNativeV2.logo,
+                value.bscNativeV2.symbol ?? '',
+                'BEP-20',
+                value.bscNativeV2.balance ?? AppText.loadingPattern,
+                Colors.transparent,
+                marketPrice: value.bscNativeV2.marketPrice,
+                priceChange24h: value.bscNativeV2.change24h,
+              ),
+            );
+          },
+        ),
+
+        // KGO Token
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return GestureDetector(
@@ -179,8 +214,7 @@ class AssetList extends StatelessWidget {
                     enterPage: AssetInfo(
                       id: value.kgoNative.id,
                       assetLogo: value.kgoNative.logo,
-                      balance:
-                          value.kgoNative.balance ?? AppText.loadingPattern,
+                      balance: value.kgoNative.balance ?? AppText.loadingPattern,
                       tokenSymbol: value.kgoNative.symbol ?? '',
                       org: value.kgoNative.org,
                       marketData: value.kgoNative.marketData,
@@ -198,95 +232,100 @@ class AssetList extends StatelessWidget {
                 Colors.transparent,
                 marketPrice: value.kgoNative.marketPrice,
                 priceChange24h: value.kgoNative.change24h,
+                lineChartData: value.kgoNative.lineChartData,
               ),
             );
           },
         ),
+
+        // Koompi Token
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return value.kmpi.isContain
-                ? Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    background: DismissibleBackground(),
-                    onDismissed: (direct) {
-                      value.removeToken(value.kmpi.symbol, context);
-                      // setPortfolio();
-                    },
-                    child: Consumer<ContractProvider>(
-                      builder: (context, value, child) {
-                        return GestureDetector(
-                          onTap: () {
-                            Provider.of<ContractProvider>(context,
-                                    listen: false)
-                                .fetchKmpiBalance();
-                            Navigator.push(
-                              context,
-                              RouteAnimation(
-                                enterPage: AssetInfo(
-                                  id: value.kmpi.id,
-                                  assetLogo: value.kmpi.logo,
-                                  balance: value.kmpi.balance ??
-                                      AppText.loadingPattern,
-                                  tokenSymbol: value.kmpi.symbol,
-                                  org: value.kmpi.org,
-                                ),
-                              ),
-                            );
-                          },
-                          child: AssetItem(
-                            value.kmpi.logo,
-                            value.kmpi.symbol,
-                            value.kmpi.org,
-                            value.kmpi.balance,
-                            Colors.black,
-                          ),
-                        );
-                      },
-                    ),
-                  )
-                : Container();
-          },
-        ),
-        Consumer<ContractProvider>(
-          builder: (coontext, value, child) {
-            return value.atd.isContain
-                ? Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.endToStart,
-                    background: DismissibleBackground(),
-                    onDismissed: (direct) {
-                      value.removeToken(value.atd.symbol, context);
-                      //setPortfolio();
-                    },
-                    child: GestureDetector(
+            ? Dismissible(
+                key: UniqueKey(),
+                direction: DismissDirection.endToStart,
+                background: DismissibleBackground(),
+                onDismissed: (direct) {
+                  value.removeToken(value.kmpi.symbol, context);
+                  // setPortfolio();
+                },
+                child: Consumer<ContractProvider>(
+                  builder: (context, value, child) {
+                    return GestureDetector(
                       onTap: () {
+                        Provider.of<ContractProvider>(context, listen: false).fetchKmpiBalance();
                         Navigator.push(
                           context,
                           RouteAnimation(
                             enterPage: AssetInfo(
-                              id: value.atd.id,
-                              assetLogo: value.atd.logo,
-                              balance:
-                                  value.atd.balance ?? AppText.loadingPattern,
-                              tokenSymbol: value.atd.symbol,
-                              org: value.atd.org,
+                              id: value.kmpi.id,
+                              assetLogo: value.kmpi.logo,
+                              balance: value.kmpi.balance ??
+                                  AppText.loadingPattern,
+                              tokenSymbol: value.kmpi.symbol,
+                              org: value.kmpi.org,
                             ),
                           ),
                         );
                       },
                       child: AssetItem(
-                        value.atd.logo,
-                        value.atd.symbol,
-                        value.atd.org,
-                        value.atd.balance,
+                        value.kmpi.logo,
+                        value.kmpi.symbol,
+                        value.kmpi.org,
+                        value.kmpi.balance,
                         Colors.black,
                       ),
-                    ),
-                  )
-                : Container();
+                    );
+                  },
+                ),
+              )
+            : Container();
           },
         ),
+
+        // Koompi ATD Token
+        Consumer<ContractProvider>(
+          builder: (coontext, value, child) {
+            return value.atd.isContain
+            ? Dismissible(
+                key: UniqueKey(),
+                direction: DismissDirection.endToStart,
+                background: DismissibleBackground(),
+                onDismissed: (direct) {
+                  value.removeToken(value.atd.symbol, context);
+                  //setPortfolio();
+                },
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      RouteAnimation(
+                        enterPage: AssetInfo(
+                          id: value.atd.id,
+                          assetLogo: value.atd.logo,
+                          balance:
+                              value.atd.balance ?? AppText.loadingPattern,
+                          tokenSymbol: value.atd.symbol,
+                          org: value.atd.org,
+                        ),
+                      ),
+                    );
+                  },
+                  child: AssetItem(
+                    value.atd.logo,
+                    value.atd.symbol,
+                    value.atd.org,
+                    value.atd.balance,
+                    Colors.black,
+                  ),
+                ),
+              )
+            : Container();
+          },
+        ),
+
+        // BNB Token
         Consumer<ContractProvider>(
           builder: (context, value, child) {
             return GestureDetector(
@@ -316,12 +355,16 @@ class AssetList extends StatelessWidget {
                 marketPrice: value.bnbNative.marketPrice,
                 priceChange24h: value.bnbNative.change24h,
                 size: 60,
+                lineChartData: value.bnbNative.lineChartData,
               ),
             );
           },
         ),
+
+        // Bitcion Token
         Consumer<ApiProvider>(
           builder: (context, value, child) {
+            final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
             return GestureDetector(
               onTap: () async {
                 if (!value.btc.isContain) {
@@ -333,19 +376,26 @@ class AssetList extends StatelessWidget {
                       return Container(
                         padding: const EdgeInsets.all(25.0),
                         height: MediaQuery.of(context).size.height / 1.2,
-                        color: Color(
-                            AppUtils.convertHexaColor(AppColors.bgdColor)),
+                        color: isDarkTheme
+                            ? Color(
+                                AppUtils.convertHexaColor(AppColors.darkBgd),
+                              )
+                            : Color(
+                                AppUtils.convertHexaColor(AppColors.bgdColor),
+                              ),
                         child: Form(
                           key: _formKey,
                           child: SingleChildScrollView(
                             child: Column(
                               children: [
-                                const MyText(
+                                MyText(
                                   top: 16.0,
                                   bottom: 16.0,
                                   fontSize: 22,
                                   text: 'Create Bitcoin Wallet',
-                                  color: '#FFFFFFF',
+                                  color: isDarkTheme
+                                      ? AppColors.whiteColorHexa
+                                      : AppColors.textColor,
                                 ),
                                 const SizedBox(height: 16.0),
                                 MyInputField(
@@ -364,9 +414,9 @@ class AssetList extends StatelessWidget {
                                   labelText: 'Pin',
                                   obcureText: true,
                                   validateField: (value) =>
-                                      value.isEmpty || value.length < 4
-                                          ? 'Please fill in old 4 digits pin'
-                                          : null,
+                                    value.isEmpty || value.length < 4
+                                      ? 'Please fill in old 4 digits pin'
+                                      : null,
                                   textInputFormatter: [
                                     LengthLimitingTextInputFormatter(4)
                                   ],
@@ -404,6 +454,8 @@ class AssetList extends StatelessWidget {
                         tokenSymbol: value.btc.symbol,
                         org: value.btc.org ?? '',
                         marketData: value.btc.marketData,
+                        marketPrice: value.btc.marketPrice,
+                        priceChange24h: value.btc.change24h,
                       ),
                     ),
                   );
@@ -416,12 +468,15 @@ class AssetList extends StatelessWidget {
                 value.btc.balance ?? AppText.loadingPattern,
                 Colors.transparent,
                 size: 60,
-                marketPrice: value.btc.marketPrice ?? '',
-                priceChange24h: value.btc.change24h ?? '',
+                marketPrice: value.btc.marketPrice,
+                priceChange24h: value.btc.change24h,
+                lineChartData: value.btc.lineChartData,
               ),
             );
           },
         ),
+
+        // Ethereum Token
         Consumer<ContractProvider>(builder: (context, value, child) {
           return GestureDetector(
             onTap: () {
@@ -450,6 +505,7 @@ class AssetList extends StatelessWidget {
               Colors.transparent,
               marketPrice: value.etherNative.marketPrice,
               priceChange24h: value.etherNative.change24h,
+              lineChartData: value.etherNative.lineChartData,
             ),
           );
         }),
@@ -482,10 +538,13 @@ class AssetList extends StatelessWidget {
                 size: 60,
                 marketPrice: value.dot.marketPrice,
                 priceChange24h: value.dot.change24h,
+                lineChartData: value.dot.lineChartData,
               ),
             );
           },
         ),
+
+        // SEL Test Net
         Consumer<ApiProvider>(builder: (context, value, child) {
           return GestureDetector(
             onTap: () {
@@ -511,54 +570,54 @@ class AssetList extends StatelessWidget {
             ),
           );
         }),
+        
+        // ERC or Token After Added 
         Consumer<ContractProvider>(builder: (context, value, child) {
-          return value.token.isNotEmpty
-              ? ListView.builder(
-                  shrinkWrap: true,
-                  addAutomaticKeepAlives: false,
-                  primary: false,
-                  itemCount: value.token.length,
-                  itemBuilder: (context, index) {
-                    return Dismissible(
-                      key: UniqueKey(),
-                      direction: DismissDirection.endToStart,
-                      background: DismissibleBackground(),
-                      onDismissed: (direct) {
-                        if (value.token[index].org == 'ERC-20') {
-                          value.removeEtherToken(
-                              value.token[index].symbol, context);
-                        } else {
-                          value.removeToken(value.token[index].symbol, context);
-                        }
 
-                        //setPortfolio();
-                      },
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            RouteAnimation(
-                              enterPage: AssetInfo(
-                                assetLogo: 'assets/circle.png',
-                                balance: value.token[index].balance ??
-                                    AppText.loadingPattern,
-                                tokenSymbol: value.token[index].symbol ?? '',
-                                org: value.token[index].org,
-                              ),
-                            ),
-                          );
-                        },
-                        child: AssetItem(
-                          'assets/circle.png',
-                          value.token[index].symbol ?? '',
-                          value.token[index].org ?? '',
-                          value.token[index].balance ?? AppText.loadingPattern,
-                          Colors.transparent,
+          return value.token.isNotEmpty ?
+          Column(
+            children: [
+              for(int index = 0; index< value.token.length; index++)
+              
+              Dismissible(
+                key: UniqueKey(),
+                direction: DismissDirection.endToStart,
+                background: DismissibleBackground(),
+                onDismissed: (direct) {
+                  if (value.token[index].org == 'ERC-20') {
+                    value.removeEtherToken(value.token[index].symbol, context);
+                  } else {
+                    value.removeToken(value.token[index].symbol, context);
+                  }
+
+                  //setPortfolio();
+                },
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      RouteAnimation(
+                        enterPage: AssetInfo(
+                          assetLogo: 'assets/circle.png',
+                          balance: value.token[index].balance ?? AppText.loadingPattern,
+                          tokenSymbol: value.token[index].symbol ?? '',
+                          org: value.token[index].org,
                         ),
                       ),
                     );
-                  })
-              : Container();
+                  },
+                  child: AssetItem(
+                    'assets/circle.png',
+                    value.token[index].symbol ?? '',
+                    value.token[index].org ?? '',
+                    value.token[index].balance ?? AppText.loadingPattern,
+                    Colors.transparent,
+                  ),
+                ),
+              )
+            ],
+          )
+          : Container();
         }),
       ],
     );

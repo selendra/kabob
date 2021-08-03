@@ -10,6 +10,13 @@ import { genLinks } from "./utils/config/config";
 import { Abi, ContractPromise } from '@polkadot/api-contract';
 import metadata from "./metadata.json";
 import ametadata from "./meta/metadata.json";
+import { ethers, Wallet } from 'ethers';
+import { resolveModuleName } from "typescript";
+
+
+
+
+let url = 'https://bsc-dataseed.binance.org/';
 
 // send message to JSChannel: PolkaWallet
 function send(path: string, data: any) {
@@ -44,6 +51,25 @@ async function connect(nodes: string[]) {
       resolve(null);
     }
   });
+}
+
+
+async function connectBsc() {
+
+
+  return new Promise(async (resolve, reject) => {
+    let provider = new ethers.providers.JsonRpcProvider(url);
+
+
+    let res = await provider.getGasPrice();
+
+    let etherString = ethers.utils.formatEther(res);
+
+    resolve(etherString);
+  });
+
+
+
 }
 
 async function connectNon(nodes: string[]) {
@@ -276,6 +302,7 @@ const settings = {
   test,
   connect,
   connectNon,
+  connectBsc,
   getChainDecimal,
   callContract,
   initAttendant,

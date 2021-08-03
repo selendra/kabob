@@ -1,6 +1,8 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class ImportUserInfoBody extends StatelessWidget {
+
   final ModelUserInfo modelUserInfo;
   final Function onSubmit;
   final String Function(String) onChanged;
@@ -14,37 +16,43 @@ class ImportUserInfoBody extends StatelessWidget {
   final MenuModel menuModel;
   final PopupMenuItem Function(Map<String, dynamic>) item;
 
-  const ImportUserInfoBody(
-      {this.modelUserInfo,
-      this.onSubmit,
-      this.onChanged,
-      this.changeGender,
-      this.validateFirstName,
-      this.validatepassword,
-      this.validateConfirmPassword,
-      this.submitProfile,
-      this.popScreen,
-      this.switchBio,
-      this.menuModel,
-      this.item});
+  const ImportUserInfoBody({
+    this.modelUserInfo,
+    this.onSubmit,
+    this.onChanged,
+    this.changeGender,
+    this.validateFirstName,
+    this.validatepassword,
+    this.validateConfirmPassword,
+    this.submitProfile,
+    this.popScreen,
+    this.switchBio,
+    this.menuModel,
+    this.item
+  });
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Column(
       children: <Widget>[
+
         MyAppBar(
           title: "User Information",
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        Container(
-            margin: const EdgeInsets.only(top: 16),
+        
+        Flexible(
+          child: BodyScaffold(
+            height: MediaQuery.of(context).size.height - 70, 
             child: Form(
               key: modelUserInfo.formStateAddUserInfo,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  
                   MyInputField(
                     pBottom: 16.0,
                     labelText: "Username",
@@ -59,116 +67,31 @@ class ImportUserInfoBody extends StatelessWidget {
                     onChanged: onChanged,
                     onSubmit: onSubmit,
                   ),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(
-                        16,
-                        0,
-                        16,
-                        0,
-                      ),
-                      child: TextFormField(
-                        key: key,
-                        enabled: true,
-                        focusNode: modelUserInfo.passwordNode,
-                        validator: validatepassword,
-                        keyboardType: TextInputType.text,
-                        obscureText: true,
-                        controller: modelUserInfo.passwordCon,
-                        textInputAction: TextInputAction.next,
-                        style: TextStyle(
-                          color: hexaCodeToColor("#FFFFFF"),
-                          fontSize: 18.0,
-                        ),
-                        decoration: InputDecoration(
-                          labelText: "Pin",
-                          labelStyle: TextStyle(
-                            fontSize: 18.0,
-                            color: modelUserInfo.passwordNode.hasFocus ||
-                                    modelUserInfo.passwordCon.text != ""
-                                ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
-                                : hexaCodeToColor(AppColors.textColor),
-                          ),
-                          prefixStyle: TextStyle(
-                            color: hexaCodeToColor(AppColors.textColor),
-                            fontSize: 18.0,
-                          ),
-                          /* Prefix Text */
-                          filled: true,
-                          fillColor: hexaCodeToColor(
-                            AppColors.cardColor,
-                          ),
-                          enabledBorder: myTextInputBorder(
-                              modelUserInfo.passwordCon.text != ""
-                                  ? hexaCodeToColor("#FFFFFF").withOpacity(0.3)
-                                  : Colors.transparent),
-                          /* Enable Border But Not Show Error */
-                          border: errorOutline(),
-                          /* Show Error And Red Border */
-                          focusedBorder: myTextInputBorder(
-                              hexaCodeToColor("#FFFFFF").withOpacity(0.3)),
-                          /* Default Focuse Border Color*/
-                          focusColor: hexaCodeToColor("#ffffff"),
-                          /* Border Color When Focusing */
-                          contentPadding: const EdgeInsets.fromLTRB(
-                              21, 23, 21, 23), // Default padding =
-                        ),
-                        inputFormatters: [LengthLimitingTextInputFormatter(4)],
-                        /* Limit Length Of Text Input */
-                        onChanged: onChanged,
-                        onFieldSubmitted: (value) {
-                          onSubmit();
-                        },
-                      )),
-                  Container(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-                      child: TextFormField(
-                        key: key,
-                        enabled: true,
-                        controller: modelUserInfo.confirmPasswordCon,
-                        focusNode: modelUserInfo.confirmPasswordNode,
-                        validator: validateConfirmPassword,
-                        keyboardType: TextInputType.text,
-                        obscureText: true,
-                        textInputAction: TextInputAction.done,
-                        style: TextStyle(
-                            color: hexaCodeToColor("#FFFFFF"), fontSize: 18.0),
-                        decoration: InputDecoration(
-                          labelText: "Confirm Pin",
-                          labelStyle: TextStyle(
-                              fontSize: 18.0,
-                              color: modelUserInfo
-                                          .confirmPasswordNode.hasFocus ||
-                                      modelUserInfo.passwordCon.text != ""
-                                  ? hexaCodeToColor("#FFFFF").withOpacity(0.3)
-                                  : hexaCodeToColor(AppColors.textColor)),
-                          prefixStyle: TextStyle(
-                              color: hexaCodeToColor(AppColors.textColor),
-                              fontSize: 18.0),
-                          /* Prefix Text */
-                          filled: true,
-                          fillColor: hexaCodeToColor(AppColors.cardColor),
-                          enabledBorder: myTextInputBorder(
-                              modelUserInfo.passwordCon.text != ""
-                                  ? hexaCodeToColor("#FFFFFF").withOpacity(0.3)
-                                  : Colors.transparent),
-                          /* Enable Border But Not Show Error */
-                          border: errorOutline(),
-                          /* Show Error And Red Border */
-                          focusedBorder: myTextInputBorder(
-                              hexaCodeToColor("#FFFFFF").withOpacity(0.3)),
-                          /* Default Focuse Border Color*/
-                          focusColor: hexaCodeToColor("#ffffff"),
-                          /* Border Color When Focusing */
-                          contentPadding: const EdgeInsets.fromLTRB(
-                              21, 23, 21, 23), // Default padding =
-                        ),
-                        inputFormatters: [LengthLimitingTextInputFormatter(4)],
-                        /* Limit Length Of Text Input */
-                        onChanged: onChanged,
-                        onFieldSubmitted: (value) {
-                          onSubmit();
-                        },
-                      )),
+                  
+                  MyInputField(
+                    labelText: "Pin",
+                    pBottom: 16,
+                    controller: modelUserInfo.passwordCon,
+                    focusNode: modelUserInfo.passwordNode, 
+                    validateField: validatepassword,
+                    obcureText: true,
+                    onChanged: onChanged,
+                    textInputFormatter: [LengthLimitingTextInputFormatter(4)],
+                    onSubmit: onSubmit
+                  ),
+
+                  MyInputField(
+                    labelText: "Confirm Pin",
+                    pBottom: 16,
+                    controller: modelUserInfo.confirmPasswordCon,
+                    focusNode: modelUserInfo.confirmPasswordNode, 
+                    validateField: validateConfirmPassword,
+                    obcureText: true,
+                    onChanged: onChanged,
+                    textInputFormatter: [LengthLimitingTextInputFormatter(4)],
+                    onSubmit: onSubmit
+                  ),
+
                   Container(
                     padding: const EdgeInsets.only(left: 16.0),
                     child: Row(
@@ -182,29 +105,33 @@ class ImportUserInfoBody extends StatelessWidget {
                             },
                           ),
                         ),
-                        const MyText(
+                        MyText(
                           text: "Fingerprint",
-                          color: "#FFFFFF",
+                          color: isDarkTheme
+                            ? AppColors.whiteColorHexa
+                            : AppColors.textColor,
                         ),
                       ],
                     ),
+                  ),
+
+                  Flexible(child: Container()),
+                  MyFlatButton(
+                    textButton: "Submit",
+                    edgeMargin: const EdgeInsets.only(
+                      top: 29,
+                      left: 66,
+                      right: 66,
+                      bottom: 16
+                    ),
+                    hasShadow: modelUserInfo.enable,
+                    action: modelUserInfo.enable == false ? null : submitProfile,
                   )
                 ],
               ),
-            )),
-        Expanded(
-          child: Container(),
+            )
+          )
         ),
-        MyFlatButton(
-          textButton: "Submit",
-          edgeMargin: const EdgeInsets.only(
-            top: 29,
-            left: 66,
-            right: 66,
-          ),
-          hasShadow: modelUserInfo.enable,
-          action: modelUserInfo.enable == false ? null : submitProfile,
-        )
       ],
     );
   }

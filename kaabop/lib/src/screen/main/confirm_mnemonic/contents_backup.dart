@@ -1,4 +1,5 @@
 import 'package:polkawallet_sdk/kabob_sdk.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class ContentsBackup extends StatefulWidget {
@@ -27,14 +28,17 @@ class _ContentsBackupState extends State<ContentsBackup> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       body: BodyScaffold(
         height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             MyAppBar(
-              color: hexaCodeToColor(AppColors.cardColor),
               title: AppText.createAccTitle,
+              color: isDarkTheme
+                  ? hexaCodeToColor(AppColors.darkCard)
+                  : hexaCodeToColor(AppColors.whiteHexaColor),
               onPressed: () {
                 Navigator.pop(context);
               },
@@ -49,14 +53,18 @@ class _ContentsBackupState extends State<ContentsBackup> {
                         text: AppText.backup,
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.whiteColorHexa,
+                        color: isDarkTheme
+                            ? AppColors.whiteColorHexa
+                            : AppColors.textColor,
                         bottom: bpSize,
                       )),
                   MyText(
                     textAlign: TextAlign.left,
                     text: AppText.getMnemonic,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.whiteColorHexa,
+                    color: isDarkTheme
+                        ? AppColors.whiteColorHexa
+                        : AppColors.textColor,
                     bottom: bpSize,
                   ),
                   Align(
@@ -66,7 +74,9 @@ class _ContentsBackupState extends State<ContentsBackup> {
                         textAlign: TextAlign.left,
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.whiteColorHexa,
+                        color: isDarkTheme
+                            ? AppColors.whiteColorHexa
+                            : AppColors.textColor,
                         bottom: bpSize,
                       )),
                   Align(
@@ -75,7 +85,9 @@ class _ContentsBackupState extends State<ContentsBackup> {
                       textAlign: TextAlign.left,
                       text: AppText.keepMnemonic,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.whiteColorHexa,
+                      color: isDarkTheme
+                          ? AppColors.whiteColorHexa
+                          : AppColors.textColor,
                       bottom: bpSize,
                     ),
                   ),
@@ -85,14 +97,18 @@ class _ContentsBackupState extends State<ContentsBackup> {
                         text: AppText.offlineStorage,
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.whiteColorHexa,
+                        color: isDarkTheme
+                            ? AppColors.whiteColorHexa
+                            : AppColors.textColor,
                         bottom: bpSize,
                       )),
                   MyText(
                     textAlign: TextAlign.left,
                     text: AppText.mnemonicAdvise,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.whiteColorHexa,
+                    color: isDarkTheme
+                        ? AppColors.whiteColorHexa
+                        : AppColors.textColor,
                   ),
                 ],
               ),

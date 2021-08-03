@@ -1,4 +1,5 @@
 import 'package:fluttercontactpicker/fluttercontactpicker.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:wallet_apps/src/models/contact_book_m.dart';
 import 'package:wallet_apps/src/screen/home/contact_book/add_contact/add_contact_body.dart';
@@ -66,7 +67,7 @@ class _AddContactState extends State<AddContact> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0)),
             title: Align(
-              child: Text("Congratualtion"),
+              child: Text("Congratulation"),
             ),
             content: Padding(
               padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
@@ -77,7 +78,8 @@ class _AddContactState extends State<AddContact> {
               FlatButton(
                 onPressed: () {
                   Navigator.pop(context);
-                  Navigator.pop(context);
+                  Navigator.pop(context,true);
+                  
                 },
                 child: const Text('Close'),
               ),

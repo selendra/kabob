@@ -1,9 +1,13 @@
+import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 import 'package:vibration/vibration.dart';
+import 'package:minimize_app/minimize_app.dart';
 
 class Passcode extends StatefulWidget {
+
   final String isHome;
-  const Passcode({this.isHome});
+  final bool isAppBar;
+  const Passcode({this.isAppBar = false, this.isHome});
   //static const route = '/passcode';
 
   @override
@@ -137,6 +141,7 @@ class _PasscodeState extends State<Passcode> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Scaffold(
       key: globalkey,
       body: BodyScaffold(
@@ -146,25 +151,35 @@ class _PasscodeState extends State<Passcode> {
             child: Center(
               child: Column(
                 children: <Widget>[
+
+                  // Show AppBar Only In Landing Pages
+                  if(widget.isAppBar) MyAppBar(
+                    title: "Set Passcode",
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ) 
+                  else Container(),
+
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.1,
+                    height: MediaQuery.of(context).size.height * 0.05,
                   ),
                   if (_isFirst)
-                    const Text(
+                    Text(
                       'Re-enter 6-Digits Code',
                       style: TextStyle(
                         fontSize: 26.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: isDarkTheme ? Colors.white : Colors.black,
                       ),
                     )
                   else
-                    const Text(
+                    Text(
                       'Enter 6-Digits Code',
                       style: TextStyle(
                         fontSize: 26.0,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: isDarkTheme ? Colors.white : Colors.black,
                       ),
                     ),
                   const SizedBox(
@@ -360,11 +375,13 @@ class ReuseNumPad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _buildNumberPad(),
+      child: _buildNumberPad(context),
     );
   }
 
-  Widget _buildNumberPad() {
+  Widget _buildNumberPad(context) {
+    final isDarkTheme =
+        Provider.of<ThemeProvider>(context, listen: false).isDark;
     return Expanded(
       child: Container(
         alignment: Alignment.center,
@@ -436,9 +453,9 @@ class ReuseNumPad extends StatelessWidget {
                     onPressed: () {
                       clearPin();
                     },
-                    child: const Icon(
+                    child: Icon(
                       Icons.backspace,
-                      color: Colors.white,
+                      color: isDarkTheme ? Colors.white : Colors.black,
                     ),
                   ),
                 ),
@@ -458,18 +475,19 @@ class ReuseKeyBoardNum extends StatelessWidget {
   const ReuseKeyBoardNum(this.n, this.onPressed);
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Container(
-      //width: 70.0,
-      //width: M,
       width: 100,
       height: 70.0,
       alignment: Alignment.center,
       child: MaterialButton(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(18.0)),
+        color: isDarkTheme
+            ? Colors.transparent
+            : hexaCodeToColor(AppColors.secondary),
         padding: const EdgeInsets.all(8.0),
         onPressed: onPressed,
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.circular(60.0),
-        // ),
         height: 90,
         child: Text(
           '$n',

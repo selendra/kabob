@@ -2,8 +2,10 @@ import 'package:provider/provider.dart';
 import 'package:wallet_apps/index.dart';
 
 class ImportAcc extends StatefulWidget {
+
   final String reimport;
   const ImportAcc({this.reimport});
+  
   @override
   State<StatefulWidget> createState() {
     return ImportAccState();
@@ -93,7 +95,7 @@ class ImportAccState extends State<ImportAcc> {
               child: Text('Invalid seed phrases'),
             ),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 onPressed: () => Navigator.pop(context),
                 child: const Text('Close'),
               ),
@@ -205,20 +207,22 @@ class ImportAccState extends State<ImportAcc> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
+
     return Scaffold(
-        key: globalKey,
-        body: BodyScaffold(
-          height: MediaQuery.of(context).size.height,
-          child: ImportAccBody(
-            reImport: widget.reimport,
-            importAccModel: _importAccModel,
-            onChanged: widget.reimport != null ? null : onChanged,
-            onSubmit: widget.reimport != null ? onSubmitIm : submit,
-            clearInput: clearInput,
-            enable: enable,
-            submit: widget.reimport != null ? onSubmitIm : submit,
-          ),
-        ) //welcomeBody(context, navigatePage),
-        );
+      key: globalKey,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        child: ImportAccBody(
+          reImport: widget.reimport,
+          importAccModel: _importAccModel,
+          onChanged: widget.reimport != null ? null : onChanged,
+          onSubmit: widget.reimport != null ? onSubmitIm : submit,
+          clearInput: clearInput,
+          enable: enable,
+          submit: widget.reimport != null ? onSubmitIm : submit,
+        ),
+      )
+    );
   }
 }

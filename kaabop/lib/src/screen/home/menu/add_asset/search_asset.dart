@@ -12,14 +12,20 @@ class SearchAsset extends SearchDelegate {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return Theme.of(context).copyWith(
-      primaryColor: hexaCodeToColor(AppColors.cardColor),
-      inputDecorationTheme: const InputDecorationTheme(
-        hintStyle: TextStyle(color: Colors.white),
+      // primaryColor: isDarkTheme
+      //     ? hexaCodeToColor(AppColors.darkBgd)
+      //     : hexaCodeToColor(AppColors.cardColor),
+      scaffoldBackgroundColor: isDarkTheme
+        ? hexaCodeToColor(AppColors.darkBgd)
+        : hexaCodeToColor(AppColors.whiteHexaColor),
+      inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
       ),
-      textTheme: const TextTheme(
+      textTheme: TextTheme(
         headline6: TextStyle(
-          color: Colors.white,
+          color: isDarkTheme ? Colors.white : Colors.black,
           fontSize: 18,
         ),
       ),
@@ -28,10 +34,14 @@ class SearchAsset extends SearchDelegate {
 
   @override
   List<Widget> buildActions(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return [
       IconButton(
-        icon: const Icon(
+        icon: Icon(
           Icons.clear,
+          color: isDarkTheme
+              ? hexaCodeToColor(AppColors.whiteColorHexa)
+              : hexaCodeToColor(AppColors.textColor),
         ),
         onPressed: () {
           query = '';
@@ -42,9 +52,13 @@ class SearchAsset extends SearchDelegate {
 
   @override
   Widget buildLeading(BuildContext context) {
+    final isDarkTheme = Provider.of<ThemeProvider>(context).isDark;
     return IconButton(
-      icon: const Icon(
+      icon: Icon(
         Icons.arrow_back,
+        color: isDarkTheme
+            ? hexaCodeToColor(AppColors.whiteColorHexa)
+            : hexaCodeToColor(AppColors.textColor),
       ),
       onPressed: () {
         close(context, null);
@@ -176,7 +190,7 @@ class SearchAsset extends SearchDelegate {
             offset: Offset(1.0, 1.0),
           )
         ],
-        color: hexaCodeToColor(AppColors.cardColor),
+        color: hexaCodeToColor(AppColors.whiteHexaColor),
         borderRadius: BorderRadius.circular(8),
       ),
       child: child,

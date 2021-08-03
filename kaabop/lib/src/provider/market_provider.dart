@@ -5,7 +5,7 @@ import 'package:wallet_apps/src/provider/contract_provider.dart';
 
 import '../../index.dart';
 
-class MarketProvider {
+class MarketProvider with ChangeNotifier {
   List<String> id = [
     'kiwigo',
     'ethereum',
@@ -22,7 +22,26 @@ class MarketProvider {
       data = Market.fromJson(i as Map<String, dynamic>);
     }
     return data;
-    //print(parsed);
+  }
+
+  Future<List<List<double>>> fetchLineChartData(String id) async {
+    List<List<double>> prices;
+    final res = await http.get(Uri.parse(
+        'https://api.coingecko.com/api/v3/coins/$id/market_chart?vs_currency=usd&days=1'));
+
+    if (res.statusCode == 200) {
+      final data = jsonDecode(res.body);
+
+      //print(data);
+
+      CryptoData mData = CryptoData.fromJson(data);
+
+      prices = mData.prices;
+
+      //print(mData.marketCaps.first);
+    }
+
+    return prices ?? null;
   }
 
   Future<void> fetchTokenMarketPrice(BuildContext context) async {
@@ -33,6 +52,8 @@ class MarketProvider {
       try {
         final response =
             await http.get('${AppConfig.coingeckoBaseUrl}${id[i]}');
+        final lineChartData = await fetchLineChartData(id[i]);
+
         if (response.statusCode == 200) {
           final jsonResponse = convert.jsonDecode(response.body);
 
@@ -43,6 +64,7 @@ class MarketProvider {
           if (i == 0) {
             contract.setkiwigoMarket(
               res,
+              lineChartData,
               jsonResponse[0]['current_price'].toString(),
               jsonResponse[0]['price_change_percentage_24h']
                   .toStringAsFixed(2)
@@ -51,6 +73,7 @@ class MarketProvider {
           } else if (i == 1) {
             contract.setEtherMarket(
               res,
+              lineChartData,
               jsonResponse[0]['current_price'].toString(),
               jsonResponse[0]['price_change_percentage_24h']
                   .toStringAsFixed(2)
@@ -59,6 +82,7 @@ class MarketProvider {
           } else if (i == 2) {
             contract.setBnbMarket(
               res,
+              lineChartData,
               jsonResponse[0]['current_price'].toString(),
               jsonResponse[0]['price_change_percentage_24h']
                   .toStringAsFixed(2)
@@ -67,6 +91,7 @@ class MarketProvider {
           } else if (i == 3) {
             api.setDotMarket(
               res,
+              lineChartData,
               jsonResponse[0]['current_price'].toString(),
               jsonResponse[0]['price_change_percentage_24h']
                   .toStringAsFixed(2)
@@ -75,6 +100,7 @@ class MarketProvider {
           } else if (i == 4) {
             api.setBtcMarket(
               res,
+              lineChartData,
               jsonResponse[0]['current_price'].toString(),
               jsonResponse[0]['price_change_percentage_24h']
                   .toStringAsFixed(2)
@@ -89,5 +115,6 @@ class MarketProvider {
         contract.setReady();
       }
     }
+    notifyListeners();
   }
 }
