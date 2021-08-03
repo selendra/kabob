@@ -12,7 +12,7 @@ class InviteFriend extends StatelessWidget {
   Future<void> referralShare(GlobalKey globalKey, String referralLink) async {
     try {
       Share.share(
-          'Join me to claim more Selendra \$SEL token airdrop! Click $referralLink to claim your tokens! Connect with people in community @ t.me/selendraorg  http://twitter.com/selendraorg');
+          'Join me to claim more Selendra \$SEL token airdrop! Click $referralLink to claim free tokens! Connect with people in official community @ t.me/selendraorg  http://twitter.com/selendraorg');
 
       //Follow Selendra and get free $SEL tokens. Share twitter.com/selendraorg to get more $SEL. Claim it at https://selendra-airdrop.netlify.app/claim-$sel?ref=38034120c302. Join t.me/selendraorg to connect with others in the community.
       //Share.shareFiles([file.path], text: referralLink);

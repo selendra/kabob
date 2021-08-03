@@ -371,7 +371,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                           MyInputField(
                             pBottom: 24,
                             labelText:
-                                "Email (by submitting will get +5 \$SEL)",
+                                "Email address",
                             inputType: TextInputType.emailAddress,
                             textInputFormatter: [
                               LengthLimitingTextInputFormatter(
@@ -387,7 +387,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                           MyInputField(
                             pBottom: 24,
                             labelText:
-                                "Phone Number (by submitting will get +5 \$SEL)",
+                                "Phone Number",
                             textInputFormatter: [
                               LengthLimitingTextInputFormatter(
                                 TextField.noMaxLength,
@@ -421,7 +421,7 @@ class _ClaimAirDropState extends State<ClaimAirDrop> {
                           ),
                           const MyText(
                             text:
-                                'Get Wallet (each address will get 100 \$SEL)',
+                                'Get Wallet (this is where you will receive \$SEL)',
                             textAlign: TextAlign.left,
                             left: 16.0,
                             right: 16.0,
